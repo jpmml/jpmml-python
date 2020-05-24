@@ -27,10 +27,6 @@ import java.util.List;
 import com.google.common.io.ByteStreams;
 import numpy.DType;
 import numpy.core.NDArray;
-import org.jpmml.python.CompressedInputStreamStorage;
-import org.jpmml.python.InputStreamStorage;
-import org.jpmml.python.PickleUtil;
-import org.jpmml.python.Storage;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -155,5 +151,9 @@ public class PickleUtilTest {
 		}
 
 		return PickleUtil.unpickle(storage);
+	}
+
+	static {
+		PickleUtil.init("python2pmml.properties");
 	}
 }

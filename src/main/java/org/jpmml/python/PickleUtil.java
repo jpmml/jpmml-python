@@ -104,7 +104,7 @@ public class PickleUtil {
 	}
 
 	static
-	private void init(){
+	public void init(String name){
 		Thread thread = Thread.currentThread();
 
 		ClassLoader classLoader = thread.getContextClassLoader();
@@ -115,7 +115,7 @@ public class PickleUtil {
 		Enumeration<URL> urls;
 
 		try {
-			urls = classLoader.getResources("META-INF/python2pmml.properties");
+			urls = classLoader.getResources("META-INF/" + name);
 		} catch(IOException ioe){
 			logger.warn("Failed to find resources", ioe);
 
@@ -235,8 +235,4 @@ public class PickleUtil {
 	}
 
 	private static final Logger logger = LoggerFactory.getLogger(PickleUtil.class);
-
-	static {
-		PickleUtil.init();
-	}
 }
