@@ -125,6 +125,6 @@ public class ObjectConstructor implements IObjectConstructor {
 
 	static
 	private boolean isObject(ClassDict dict){
-		return ("__builtin__.object").equals(dict.get("__class__"));
+		return ("__builtin__.object").equals(dict.getClassName());
 	}
 }

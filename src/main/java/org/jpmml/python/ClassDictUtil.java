@@ -109,19 +109,8 @@ public class ClassDictUtil {
 	}
 
 	static
-	public String getName(ClassDict dict){
-		String clazz = (String)dict.get("__class__");
-
-		if(clazz == null){
-			throw new IllegalArgumentException();
-		}
-
-		return clazz;
-	}
-
-	static
-	public String getSimpleName(ClassDict dict){
-		String name = getName(dict);
+	public String getSimpleClassName(ClassDict dict){
+		String name = dict.getClassName();
 
 		int dot = name.lastIndexOf('.');
 		if(dot > -1){
@@ -133,7 +122,7 @@ public class ClassDictUtil {
 
 	static
 	public String formatMember(ClassDict dict, String name){
-		String clazz = (String)dict.get("__class__");
+		String clazz = dict.getClassName();
 
 		return (clazz + "." + name);
 	}
@@ -148,7 +137,7 @@ public class ClassDictUtil {
 		if(object instanceof ClassDict){
 			ClassDict dict = (ClassDict)object;
 
-			return "Python class " + getName(dict);
+			return "Python class " + dict.getClassName();
 		}
 
 		Class<?> clazz = object.getClass();
