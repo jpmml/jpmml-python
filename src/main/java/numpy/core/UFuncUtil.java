@@ -67,6 +67,7 @@ public class UFuncUtil {
 			case "cosh":
 				return PMMLUtil.createApply(PMMLFunctions.COSH, getOnlyElement(expressions));
 			case "degrees":
+			case "rad2deg":
 				return PMMLUtil.createApply(PMMLFunctions.MULTIPLY, getOnlyElement(expressions), PMMLUtil.createConstant(180d / Math.PI));
 			case "exp":
 				return PMMLUtil.createApply(PMMLFunctions.EXP, getOnlyElement(expressions));
@@ -74,6 +75,10 @@ public class UFuncUtil {
 				return PMMLUtil.createApply(PMMLFunctions.EXPM1, getOnlyElement(expressions));
 			case "floor":
 				return PMMLUtil.createApply(PMMLFunctions.FLOOR, getOnlyElement(expressions));
+			case "fmax":
+				return PMMLUtil.createApply(PMMLFunctions.MAX, getElement(expressions, 2, 0), getElement(expressions, 2, 1));
+			case "fmin":
+				return PMMLUtil.createApply(PMMLFunctions.MIN, getElement(expressions, 2, 0), getElement(expressions, 2, 1));
 			case "hypot":
 				return PMMLUtil.createApply(PMMLFunctions.HYPOT, getOnlyElement(expressions));
 			case "log":
@@ -85,6 +90,7 @@ public class UFuncUtil {
 			case "negative":
 				return PMMLUtil.createApply(PMMLFunctions.MULTIPLY, PMMLUtil.createConstant(-1), getOnlyElement(expressions));
 			case "radians":
+			case "deg2rad":
 				return PMMLUtil.createApply(PMMLFunctions.MULTIPLY, getOnlyElement(expressions), PMMLUtil.createConstant(Math.PI / 180d));
 			case "reciprocal":
 				return PMMLUtil.createApply(PMMLFunctions.DIVIDE, PMMLUtil.createConstant(1), getOnlyElement(expressions));
