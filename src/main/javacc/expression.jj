@@ -198,12 +198,7 @@ public class ExpressionTranslator extends AbstractTranslator {
 		} else
 
 		if(("numpy").equals(module) || ("np").equals(module)){
-
-			if(arguments.size() != 1){
-				throw new IllegalArgumentException();
-			}
-
-			return UFuncUtil.encodeUFunc("numpy", name, arguments.get(0));
+			return UFuncUtil.encodeUFunc("numpy", name, arguments);
 		}
 
 		throw new IllegalArgumentException(function);

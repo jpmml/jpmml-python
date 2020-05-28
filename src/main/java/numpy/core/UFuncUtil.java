@@ -18,6 +18,8 @@
  */
 package numpy.core;
 
+import java.util.List;
+
 import org.dmg.pmml.Expression;
 import org.dmg.pmml.PMMLFunctions;
 import org.jpmml.converter.PMMLUtil;
@@ -28,88 +30,103 @@ public class UFuncUtil {
 	}
 
 	static
-	public Expression encodeUFunc(UFunc ufunc, Expression expression){
-		return encodeUFunc(ufunc.getModule(), ufunc.getName(), expression);
+	public Expression encodeUFunc(UFunc ufunc, List<Expression> expressions){
+		return encodeUFunc(ufunc.getModule(), ufunc.getName(), expressions);
 	}
 
 	static
-	public Expression encodeUFunc(String module, String name, Expression expression){
+	public Expression encodeUFunc(String module, String name, List<Expression> expressions){
 
 		switch(module){
 			case "numpy":
 			case "numpy.core":
-				return encodeNumpyUFunc(name, expression);
+				return encodeNumpyUFunc(name, expressions);
 			default:
 				throw new IllegalArgumentException(module);
 		}
 	}
 
 	static
-	private Expression encodeNumpyUFunc(String name, Expression expression){
+	public Expression encodeNumpyUFunc(String name, List<Expression> expressions){
 
 		switch(name){
 			case "absolute":
-				return PMMLUtil.createApply(PMMLFunctions.ABS, expression);
+				return PMMLUtil.createApply(PMMLFunctions.ABS, getOnlyElement(expressions));
 			case "arccos":
-				return PMMLUtil.createApply(PMMLFunctions.ACOS, expression);
+				return PMMLUtil.createApply(PMMLFunctions.ACOS, getOnlyElement(expressions));
 			case "arcsin":
-				return PMMLUtil.createApply(PMMLFunctions.ASIN, expression);
+				return PMMLUtil.createApply(PMMLFunctions.ASIN, getOnlyElement(expressions));
 			case "arctan":
-				return PMMLUtil.createApply(PMMLFunctions.ATAN, expression);
+				return PMMLUtil.createApply(PMMLFunctions.ATAN, getOnlyElement(expressions));
 			case "arctan2":
-				return PMMLUtil.createApply(PMMLFunctions.ATAN2, expression);
+				return PMMLUtil.createApply(PMMLFunctions.ATAN2, getElement(expressions, 2, 0), getElement(expressions, 2, 1));
 			case "ceil":
-				return PMMLUtil.createApply(PMMLFunctions.CEIL, expression);
+				return PMMLUtil.createApply(PMMLFunctions.CEIL, getOnlyElement(expressions));
 			case "cos":
-				return PMMLUtil.createApply(PMMLFunctions.COS, expression);
+				return PMMLUtil.createApply(PMMLFunctions.COS, getOnlyElement(expressions));
 			case "cosh":
-				return PMMLUtil.createApply(PMMLFunctions.COSH, expression);
+				return PMMLUtil.createApply(PMMLFunctions.COSH, getOnlyElement(expressions));
 			case "degrees":
-				return PMMLUtil.createApply(PMMLFunctions.MULTIPLY, expression, PMMLUtil.createConstant(180d / Math.PI));
+				return PMMLUtil.createApply(PMMLFunctions.MULTIPLY, getOnlyElement(expressions), PMMLUtil.createConstant(180d / Math.PI));
 			case "exp":
-				return PMMLUtil.createApply(PMMLFunctions.EXP, expression);
+				return PMMLUtil.createApply(PMMLFunctions.EXP, getOnlyElement(expressions));
 			case "expm1":
-				return PMMLUtil.createApply(PMMLFunctions.EXPM1, expression);
+				return PMMLUtil.createApply(PMMLFunctions.EXPM1, getOnlyElement(expressions));
 			case "floor":
-				return PMMLUtil.createApply(PMMLFunctions.FLOOR, expression);
+				return PMMLUtil.createApply(PMMLFunctions.FLOOR, getOnlyElement(expressions));
 			case "hypot":
-				return PMMLUtil.createApply(PMMLFunctions.HYPOT, expression);
+				return PMMLUtil.createApply(PMMLFunctions.HYPOT, getOnlyElement(expressions));
 			case "log":
-				return PMMLUtil.createApply(PMMLFunctions.LN, expression);
+				return PMMLUtil.createApply(PMMLFunctions.LN, getOnlyElement(expressions));
 			case "log1p":
-				return PMMLUtil.createApply(PMMLFunctions.LN1P, expression);
+				return PMMLUtil.createApply(PMMLFunctions.LN1P, getOnlyElement(expressions));
 			case "log10":
-				return PMMLUtil.createApply(PMMLFunctions.LOG10, expression);
+				return PMMLUtil.createApply(PMMLFunctions.LOG10, getOnlyElement(expressions));
 			case "negative":
-				return PMMLUtil.createApply(PMMLFunctions.MULTIPLY, PMMLUtil.createConstant(-1), expression);
+				return PMMLUtil.createApply(PMMLFunctions.MULTIPLY, PMMLUtil.createConstant(-1), getOnlyElement(expressions));
 			case "radians":
-				return PMMLUtil.createApply(PMMLFunctions.MULTIPLY, expression, PMMLUtil.createConstant(Math.PI / 180d));
+				return PMMLUtil.createApply(PMMLFunctions.MULTIPLY, getOnlyElement(expressions), PMMLUtil.createConstant(Math.PI / 180d));
 			case "reciprocal":
-				return PMMLUtil.createApply(PMMLFunctions.DIVIDE, PMMLUtil.createConstant(1), expression);
+				return PMMLUtil.createApply(PMMLFunctions.DIVIDE, PMMLUtil.createConstant(1), getOnlyElement(expressions));
 			case "rint":
-				return PMMLUtil.createApply(PMMLFunctions.RINT, expression);
+				return PMMLUtil.createApply(PMMLFunctions.RINT, getOnlyElement(expressions));
 			case "sign":
-				return PMMLUtil.createApply(PMMLFunctions.IF, PMMLUtil.createApply(PMMLFunctions.LESSTHAN, expression, PMMLUtil.createConstant(0)),
+				return PMMLUtil.createApply(PMMLFunctions.IF, PMMLUtil.createApply(PMMLFunctions.LESSTHAN, getOnlyElement(expressions), PMMLUtil.createConstant(0)),
 					PMMLUtil.createConstant(-1), // x < 0
-					PMMLUtil.createApply(PMMLFunctions.IF, PMMLUtil.createApply(PMMLFunctions.GREATERTHAN, expression, PMMLUtil.createConstant(0)),
+					PMMLUtil.createApply(PMMLFunctions.IF, PMMLUtil.createApply(PMMLFunctions.GREATERTHAN, getOnlyElement(expressions), PMMLUtil.createConstant(0)),
 						PMMLUtil.createConstant(+1), // x > 0
 						PMMLUtil.createConstant(0) // x == 0
 					)
 				);
 			case "sin":
-				return PMMLUtil.createApply(PMMLFunctions.SIN, expression);
+				return PMMLUtil.createApply(PMMLFunctions.SIN, getOnlyElement(expressions));
 			case "sinh":
-				return PMMLUtil.createApply(PMMLFunctions.SINH, expression);
+				return PMMLUtil.createApply(PMMLFunctions.SINH, getOnlyElement(expressions));
 			case "sqrt":
-				return PMMLUtil.createApply(PMMLFunctions.SQRT, expression);
+				return PMMLUtil.createApply(PMMLFunctions.SQRT, getOnlyElement(expressions));
 			case "square":
-				return PMMLUtil.createApply(PMMLFunctions.MULTIPLY, expression, expression);
+				return PMMLUtil.createApply(PMMLFunctions.POW, getOnlyElement(expressions), PMMLUtil.createConstant(2));
 			case "tan":
-				return PMMLUtil.createApply(PMMLFunctions.TAN, expression);
+				return PMMLUtil.createApply(PMMLFunctions.TAN, getOnlyElement(expressions));
 			case "tanh":
-				return PMMLUtil.createApply(PMMLFunctions.TANH, expression);
+				return PMMLUtil.createApply(PMMLFunctions.TANH, getOnlyElement(expressions));
 			default:
 				throw new IllegalArgumentException(name);
 		}
+	}
+
+	static
+	private Expression getOnlyElement(List<Expression> expressions){
+		return getElement(expressions, 1, 0);
+	}
+
+	static
+	private Expression getElement(List<Expression> expressions, int expectedSize, int index){
+
+		if(expressions.size() != expectedSize){
+			throw new IllegalArgumentException();
+		}
+
+		return expressions.get(index);
 	}
 }
