@@ -159,6 +159,35 @@ public class PickleUtil {
 	static
 	private void init(ClassLoader classLoader, String key, String value){
 
+		if(("null").equals(value)){
+			registerNullConstructor(key);
+		} else
+
+		{
+			registerClassDictConstructor(classLoader, key, value);
+		}
+	}
+
+	static
+	private void registerNullConstructor(String key){
+		logger.debug("Mapping Python class {} to null");
+
+		int dot = key.lastIndexOf('.');
+		if(dot < 0){
+			logger.warn("Failed to identify the module and name parts of Python class {}", key);
+
+			return;
+		}
+
+		String module = key.substring(0, dot);
+		String name = key.substring(dot + 1);
+
+		Unpickler.registerConstructor(module, name, new NullConstructor());
+	}
+
+	static
+	private void registerClassDictConstructor(ClassLoader classLoader, String key, String value){
+
 		if(value == null || ("").equals(value)){
 			value = key;
 		}
