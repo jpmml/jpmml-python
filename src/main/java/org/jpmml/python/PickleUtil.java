@@ -216,11 +216,11 @@ public class PickleUtil {
 
 		ObjectConstructor constructor;
 
-		if((CClassDict.class).isAssignableFrom(clazz)){
-			constructor = new ExtensionObjectConstructor(module, name, (Class<? extends CClassDict>)clazz);
-		} else
-
 		if((PyClassDict.class).isAssignableFrom(clazz)){
+
+			if((CClassDict.class).isAssignableFrom(clazz)){
+				constructor = new ExtensionObjectConstructor(module, name, (Class<? extends CClassDict>)clazz);
+			} else
 
 			if((NamedTuple.class).isAssignableFrom(clazz)){
 				constructor = new NamedTupleConstructor(module, name, (Class<? extends NamedTuple>)clazz);

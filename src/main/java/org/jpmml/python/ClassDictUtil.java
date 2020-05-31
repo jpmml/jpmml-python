@@ -109,18 +109,6 @@ public class ClassDictUtil {
 	}
 
 	static
-	public String getSimpleClassName(ClassDict dict){
-		String name = dict.getClassName();
-
-		int dot = name.lastIndexOf('.');
-		if(dot > -1){
-			return name.substring(dot + 1);
-		}
-
-		return name;
-	}
-
-	static
 	public String formatMember(ClassDict dict, String name){
 		String clazz = dict.getClassName();
 

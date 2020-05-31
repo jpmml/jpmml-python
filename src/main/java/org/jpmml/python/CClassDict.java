@@ -21,50 +21,16 @@ package org.jpmml.python;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 
-import joblib.NDArrayWrapper;
 import net.razorvine.pickle.PickleException;
-import net.razorvine.pickle.objects.ClassDict;
-import numpy.core.NDArray;
-import numpy.core.NDArrayUtil;
 
-public class CClassDict extends ClassDict {
+abstract
+public class CClassDict extends PyClassDict {
 
 	public CClassDict(String module, String name){
 		super(module, name);
 
 		reset();
-	}
-
-	public List<?> getArray(String name){
-		Object object = get(name);
-
-		if(object instanceof HasArray){
-			HasArray hasArray = (HasArray)object;
-
-			return hasArray.getArrayContent();
-		}
-
-		throw new IllegalArgumentException("The value of \'" + ClassDictUtil.formatMember(this, name) + "\' attribute (" + ClassDictUtil.formatClass(object) + ") is not a supported array type");
-	}
-
-	public List<?> getArray(String name, String key){
-		Object object = get(name);
-
-		if(object instanceof NDArrayWrapper){
-			NDArrayWrapper arrayWrapper = (NDArrayWrapper)object;
-
-			object = arrayWrapper.getContent();
-		} // End if
-
-		if(object instanceof NDArray){
-			NDArray array = (NDArray)object;
-
-			return NDArrayUtil.getContent(array, key);
-		}
-
-		throw new IllegalArgumentException("The value of \'" + ClassDictUtil.formatMember(this, name) + "\' attribute (" + ClassDictUtil.formatClass(object) + ") is not a supported array type");
 	}
 
 	public void __init__(Object[] args){
@@ -102,7 +68,7 @@ public class CClassDict extends ClassDict {
 		super.__setstate__(state);
 	}
 
-	protected void reset(){
+	private void reset(){
 		HashMap<String, Object> state = new HashMap<>();
 
 		super.__setstate__(state);
