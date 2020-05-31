@@ -37,21 +37,21 @@ public class ClassDictConstructorUtil {
 		try {
 			module = (String)getFieldValue(classDictConstructor, "module");
 			name = (String)getFieldValue(classDictConstructor, "name");
-		} catch(Exception e){
-			throw new RuntimeException(e);
+		} catch(ReflectiveOperationException roe){
+			throw new RuntimeException(roe);
 		} // End try
 
 		try {
 			Constructor<? extends ClassDict> constructor = clazz.getDeclaredConstructor(String.class, String.class);
 
 			return clazz.cast(constructor.newInstance(module, name));
-		} catch(Exception e){
-			throw new RuntimeException(e);
+		} catch(ReflectiveOperationException roe){
+			throw new RuntimeException(roe);
 		}
 	}
 
 	static
-	private Object getFieldValue(ClassDictConstructor classDictConstructor, String name) throws Exception {
+	private Object getFieldValue(ClassDictConstructor classDictConstructor, String name) throws ReflectiveOperationException {
 		Field field = ClassDictConstructor.class.getDeclaredField(name);
 
 		if(!field.isAccessible()){

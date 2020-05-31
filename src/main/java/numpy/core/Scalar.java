@@ -26,11 +26,11 @@ import java.util.List;
 import com.google.common.base.Charsets;
 import com.google.common.collect.Iterables;
 import numpy.DType;
-import org.jpmml.python.CClassDict;
+import org.jpmml.python.CustomPythonObject;
 import org.jpmml.python.HasArray;
 import org.jpmml.python.HasContent;
 
-public class Scalar extends CClassDict implements HasArray, HasContent<List<?>> {
+public class Scalar extends CustomPythonObject implements HasArray, HasContent<List<?>> {
 
 	private List<?> content = null;
 

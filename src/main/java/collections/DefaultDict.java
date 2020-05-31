@@ -18,9 +18,9 @@
  */
 package collections;
 
-import org.jpmml.python.CClassDict;
+import org.jpmml.python.CustomPythonObject;
 
-public class DefaultDict extends CClassDict {
+public class DefaultDict extends CustomPythonObject {
 
 	public DefaultDict(String module, String name){
 		super(module, name);

@@ -21,9 +21,9 @@ package numpy.core;
 import java.util.HashMap;
 
 import numpy.DType;
-import org.jpmml.python.CClassDict;
+import org.jpmml.python.CustomPythonObject;
 
-public class MaskedArray extends CClassDict {
+public class MaskedArray extends CustomPythonObject {
 
 	public MaskedArray(String module, String name){
 		super(module, name);

@@ -18,9 +18,9 @@
  */
 package pandas.core;
 
-import org.jpmml.python.CClassDict;
+import org.jpmml.python.CustomPythonObject;
 
-public class Index extends CClassDict {
+public class Index extends CustomPythonObject {
 
 	public Index(String module, String name){
 		super(module, name);

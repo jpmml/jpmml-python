@@ -18,9 +18,9 @@
  */
 package pandas.core;
 
-import org.jpmml.python.CClassDict;
+import org.jpmml.python.CustomPythonObject;
 
-public class BlockManager extends CClassDict {
+public class BlockManager extends CustomPythonObject {
 
 	public BlockManager(String module, String name){
 		super(module, name);

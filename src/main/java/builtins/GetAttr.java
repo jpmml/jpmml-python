@@ -18,9 +18,9 @@
  */
 package builtins;
 
-import org.jpmml.python.CClassDict;
+import org.jpmml.python.CustomPythonObject;
 
-public class GetAttr extends CClassDict {
+public class GetAttr extends CustomPythonObject {
 
 	public GetAttr(String module, String name){
 		super(module, name);

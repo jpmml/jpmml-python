@@ -18,20 +18,20 @@
  */
 package org.jpmml.python;
 
-public class ExtensionObjectConstructor extends PythonObjectConstructor {
+public class CustomPythonObjectConstructor extends PythonObjectConstructor {
 
-	public ExtensionObjectConstructor(String module, String name, Class<? extends CClassDict> clazz){
+	public CustomPythonObjectConstructor(String module, String name, Class<? extends CustomPythonObject> clazz){
 		super(module, name, clazz);
 	}
 
 	@Override
-	public CClassDict newObject(){
-		return (CClassDict)super.newObject();
+	public CustomPythonObject newObject(){
+		return (CustomPythonObject)super.newObject();
 	}
 
 	@Override
-	public CClassDict construct(Object[] args){
-		CClassDict dict = newObject();
+	public CustomPythonObject construct(Object[] args){
+		CustomPythonObject dict = newObject();
 		dict.__init__(args);
 
 		return dict;

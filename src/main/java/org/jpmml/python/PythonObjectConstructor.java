@@ -85,10 +85,10 @@ public class PythonObjectConstructor implements IObjectConstructor {
 			}
 		} else
 
-		if(first instanceof ExtensionObjectConstructor){
-			ExtensionObjectConstructor constructor = (ExtensionObjectConstructor)first;
+		if(first instanceof CustomPythonObjectConstructor){
+			CustomPythonObjectConstructor constructor = (CustomPythonObjectConstructor)first;
 
-			CClassDict dict = constructor.construct(new Object[0]);
+			CustomPythonObject dict = constructor.construct(new Object[0]);
 
 			if(isObject(dict) && (second == null)){
 				return newObject();

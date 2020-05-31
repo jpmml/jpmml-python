@@ -28,9 +28,9 @@ import java.util.Set;
 
 import numpy.core.TypeDescriptor;
 import org.dmg.pmml.DataType;
-import org.jpmml.python.CClassDict;
+import org.jpmml.python.CustomPythonObject;
 
-public class DType extends CClassDict {
+public class DType extends CustomPythonObject {
 
 	public DType(String module, String name){
 		super(module, name);

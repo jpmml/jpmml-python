@@ -18,9 +18,9 @@
  */
 package builtins;
 
-import org.jpmml.python.CClassDict;
+import org.jpmml.python.CustomPythonObject;
 
-public class Slice extends CClassDict {
+public class Slice extends CustomPythonObject {
 
 	public Slice(String module, String name){
 		super(module, name);

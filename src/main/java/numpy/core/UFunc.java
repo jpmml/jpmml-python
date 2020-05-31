@@ -18,9 +18,9 @@
  */
 package numpy.core;
 
-import org.jpmml.python.CClassDict;
+import org.jpmml.python.CustomPythonObject;
 
-public class UFunc extends CClassDict {
+public class UFunc extends CustomPythonObject {
 
 	public UFunc(String module, String name){
 		super(module, name);

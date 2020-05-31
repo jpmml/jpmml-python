@@ -18,9 +18,9 @@
  */
 package numpy.random;
 
-import org.jpmml.python.CClassDict;
+import org.jpmml.python.CustomPythonObject;
 
-public class RandomState extends CClassDict {
+public class RandomState extends CustomPythonObject {
 
 	public RandomState(String module, String name){
 		super(module, name);
