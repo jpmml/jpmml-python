@@ -30,16 +30,9 @@ public class ClassDictConstructorUtil {
 	}
 
 	static
-	public <C extends ClassDict> C construct(ClassDictConstructor classDictConstructor, Class<? extends C> clazz){
-		String module;
-		String name;
-
-		try {
-			module = (String)getFieldValue(classDictConstructor, "module");
-			name = (String)getFieldValue(classDictConstructor, "name");
-		} catch(ReflectiveOperationException roe){
-			throw new RuntimeException(roe);
-		} // End try
+	public <C extends ClassDict> C construct(ClassDictConstructor dictConstructor, Class<? extends C> clazz){
+		String module = getModule(dictConstructor);
+		String name = getName(dictConstructor);
 
 		try {
 			Constructor<? extends ClassDict> constructor = clazz.getDeclaredConstructor(String.class, String.class);
@@ -51,13 +44,37 @@ public class ClassDictConstructorUtil {
 	}
 
 	static
-	private Object getFieldValue(ClassDictConstructor classDictConstructor, String name) throws ReflectiveOperationException {
-		Field field = ClassDictConstructor.class.getDeclaredField(name);
+	public String getClassName(ClassDictConstructor dictConstructor){
+		return getModule(dictConstructor) + "." + getName(dictConstructor);
+	}
 
-		if(!field.isAccessible()){
-			field.setAccessible(true);
+	static
+	public String getModule(ClassDictConstructor dictConstructor){
+
+		try {
+			Field field = ClassDictConstructor.class.getDeclaredField("module");
+			if(!field.isAccessible()){
+				field.setAccessible(true);
+			}
+
+			return (String)field.get(dictConstructor);
+		} catch(ReflectiveOperationException roe){
+			throw new RuntimeException(roe);
 		}
+	}
 
-		return field.get(classDictConstructor);
+	static
+	public String getName(ClassDictConstructor dictConstructor){
+
+		try {
+			Field field = ClassDictConstructor.class.getDeclaredField("name");
+			if(!field.isAccessible()){
+				field.setAccessible(true);
+			}
+
+			return (String)field.get(dictConstructor);
+		} catch(ReflectiveOperationException roe){
+			throw new RuntimeException(roe);
+		}
 	}
 }

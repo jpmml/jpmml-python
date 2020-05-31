@@ -29,8 +29,13 @@ public class NamedTupleConstructor extends PythonObjectConstructor {
 	}
 
 	@Override
+	public NamedTuple newObject(){
+		return (NamedTuple)super.newObject();
+	}
+
+	@Override
 	public NamedTuple construct(Object[] args){
-		NamedTuple dict = (NamedTuple)newObject();
+		NamedTuple dict = newObject();
 
 		String[] names = dict.names();
 

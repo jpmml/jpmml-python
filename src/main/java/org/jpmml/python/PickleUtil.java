@@ -214,20 +214,20 @@ public class PickleUtil {
 			return;
 		}
 
-		PythonObjectConstructor constructor;
+		PythonObjectConstructor dictConstructor;
 
 		if((PythonObject.class).isAssignableFrom(clazz)){
 
 			if((CustomPythonObject.class).isAssignableFrom(clazz)){
-				constructor = new CustomPythonObjectConstructor(module, name, (Class<? extends CustomPythonObject>)clazz);
+				dictConstructor = new CustomPythonObjectConstructor(module, name, (Class<? extends CustomPythonObject>)clazz);
 			} else
 
 			if((NamedTuple.class).isAssignableFrom(clazz)){
-				constructor = new NamedTupleConstructor(module, name, (Class<? extends NamedTuple>)clazz);
+				dictConstructor = new NamedTupleConstructor(module, name, (Class<? extends NamedTuple>)clazz);
 			} else
 
 			{
-				constructor = new PythonObjectConstructor(module, name, (Class<? extends PythonObject>)clazz);
+				dictConstructor = new PythonObjectConstructor(module, name, (Class<? extends PythonObject>)clazz);
 			}
 		} else
 
@@ -237,7 +237,7 @@ public class PickleUtil {
 			return;
 		}
 
-		Unpickler.registerConstructor(constructor.getModule(), constructor.getName(), constructor);
+		Unpickler.registerConstructor(dictConstructor.getModule(), dictConstructor.getName(), dictConstructor);
 	}
 
 	static

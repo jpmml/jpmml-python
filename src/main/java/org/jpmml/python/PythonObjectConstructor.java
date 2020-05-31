@@ -21,33 +21,25 @@ package org.jpmml.python;
 import java.lang.reflect.Constructor;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Objects;
 
-import net.razorvine.pickle.IObjectConstructor;
 import net.razorvine.pickle.PickleException;
 import net.razorvine.pickle.objects.ClassDict;
 import net.razorvine.pickle.objects.ClassDictConstructor;
 
-public class PythonObjectConstructor implements IObjectConstructor {
-
-	private String module = null;
-
-	private String name = null;
+public class PythonObjectConstructor extends ClassDictConstructor {
 
 	private Class<? extends PythonObject> clazz = null;
 
 
 	public PythonObjectConstructor(String module, String name, Class<? extends PythonObject> clazz){
-		setModule(module);
-		setName(name);
+		super(module, name);
+
 		setClazz(clazz);
 	}
 
 	public PythonObject newObject(){
 		Class<? extends PythonObject> clazz = getClazz();
-
-		if(clazz == null){
-			throw new RuntimeException();
-		}
 
 		try {
 			try {
@@ -75,9 +67,9 @@ public class PythonObjectConstructor implements IObjectConstructor {
 	public PythonObject reconstruct(Object first, Object second){
 
 		if(first instanceof ClassDictConstructor){
-			ClassDictConstructor constructor = (ClassDictConstructor)first;
+			ClassDictConstructor dictConstructor = (ClassDictConstructor)first;
 
-			ClassDict dict = (ClassDict)constructor.construct(new Object[0]);
+			ClassDict dict = (ClassDict)dictConstructor.construct(new Object[0]);
 			dict.__setstate__(new HashMap<String, Object>()); // Initializes the previously uninitialized "__class__" attribute
 
 			if(isObject(dict) && (second == null)){
@@ -86,32 +78,24 @@ public class PythonObjectConstructor implements IObjectConstructor {
 		} else
 
 		if(first instanceof CustomPythonObjectConstructor){
-			CustomPythonObjectConstructor constructor = (CustomPythonObjectConstructor)first;
+			CustomPythonObjectConstructor dictConstructor = (CustomPythonObjectConstructor)first;
 
-			CustomPythonObject dict = constructor.construct(new Object[0]);
+			CustomPythonObject dict = dictConstructor.construct(new Object[0]);
 
 			if(isObject(dict) && (second == null)){
 				return newObject();
 			}
 		}
 
-		throw new PickleException(getModule() + "." + getName() + ".reconstruct(" + first + ", " + second + ")");
+		throw new PickleException(ClassDictConstructorUtil.getClassName(this) + ".reconstruct(" + first + ", " + second + ")");
 	}
 
 	public String getModule(){
-		return this.module;
-	}
-
-	private void setModule(String module){
-		this.module = module;
+		return ClassDictConstructorUtil.getModule(this);
 	}
 
 	public String getName(){
-		return this.name;
-	}
-
-	private void setName(String name){
-		this.name = name;
+		return ClassDictConstructorUtil.getName(this);
 	}
 
 	public Class<? extends PythonObject> getClazz(){
@@ -119,7 +103,7 @@ public class PythonObjectConstructor implements IObjectConstructor {
 	}
 
 	private void setClazz(Class<? extends PythonObject> clazz){
-		this.clazz = clazz;
+		this.clazz = Objects.requireNonNull(clazz);
 	}
 
 	static
