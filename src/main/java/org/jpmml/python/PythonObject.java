@@ -31,13 +31,13 @@ import numpy.core.ScalarUtil;
 import org.jpmml.converter.ValueUtil;
 
 abstract
-public class PyClassDict extends ClassDict {
+public class PythonObject extends ClassDict {
 
-	public PyClassDict(String module, String name){
+	public PythonObject(String module, String name){
 		super(module, name);
 	}
 
-	public String getPyModule(){
+	public String getPythonModule(){
 		String className = getClassName();
 
 		int dot = className.lastIndexOf('.');
@@ -48,7 +48,7 @@ public class PyClassDict extends ClassDict {
 		return null;
 	}
 
-	public String getPyName(){
+	public String getPythonName(){
 		String className = getClassName();
 
 		int dot = className.lastIndexOf('.');
@@ -75,7 +75,7 @@ public class PyClassDict extends ClassDict {
 
 			@Override
 			protected String formatMessage(Object object){
-				return "Attribute \'" + ClassDictUtil.formatMember(PyClassDict.this, name) + "\' has an unsupported value (" + ClassDictUtil.formatClass(object) + ")";
+				return "Attribute \'" + ClassDictUtil.formatMember(PythonObject.this, name) + "\' has an unsupported value (" + ClassDictUtil.formatClass(object) + ")";
 			}
 		};
 
@@ -206,7 +206,7 @@ public class PyClassDict extends ClassDict {
 
 			@Override
 			protected String formatMessage(Object object){
-				return "Array attribute \'" + ClassDictUtil.formatMember(PyClassDict.this, name) + "\' contains an unsupported value (" + ClassDictUtil.formatClass(object) + ")";
+				return "Array attribute \'" + ClassDictUtil.formatMember(PythonObject.this, name) + "\' contains an unsupported value (" + ClassDictUtil.formatClass(object) + ")";
 			}
 		};
 
@@ -220,7 +220,7 @@ public class PyClassDict extends ClassDict {
 
 			@Override
 			protected String formatMessage(Object object){
-				return "Array attribute \'" + ClassDictUtil.formatMember(PyClassDict.this, name) + "\' contains an unsupported value (" + ClassDictUtil.formatClass(object) + ")";
+				return "Array attribute \'" + ClassDictUtil.formatMember(PythonObject.this, name) + "\' contains an unsupported value (" + ClassDictUtil.formatClass(object) + ")";
 			}
 		};
 
@@ -264,7 +264,7 @@ public class PyClassDict extends ClassDict {
 
 			@Override
 			protected String formatMessage(Object object){
-				return "List attribute \'" + ClassDictUtil.formatMember(PyClassDict.this, name) + "\' contains an unsupported value (" + ClassDictUtil.formatClass(object) + ")";
+				return "List attribute \'" + ClassDictUtil.formatMember(PythonObject.this, name) + "\' contains an unsupported value (" + ClassDictUtil.formatClass(object) + ")";
 			}
 		};
 
@@ -294,7 +294,7 @@ public class PyClassDict extends ClassDict {
 
 			@Override
 			protected String formatMessage(Object object){
-				return "Array or list attribute \'" + ClassDictUtil.formatMember(PyClassDict.this, name) + "\' contains an unsupported value (" + ClassDictUtil.formatClass(object) + ")";
+				return "Array or list attribute \'" + ClassDictUtil.formatMember(PythonObject.this, name) + "\' contains an unsupported value (" + ClassDictUtil.formatClass(object) + ")";
 			}
 		};
 

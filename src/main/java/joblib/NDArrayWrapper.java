@@ -26,10 +26,10 @@ import numpy.core.NDArray;
 import numpy.core.NDArrayUtil;
 import org.jpmml.python.HasArray;
 import org.jpmml.python.HasContent;
-import org.jpmml.python.PyClassDict;
+import org.jpmml.python.PythonObject;
 
 abstract
-public class NDArrayWrapper extends PyClassDict implements HasArray, HasContent<NDArray> {
+public class NDArrayWrapper extends PythonObject implements HasArray, HasContent<NDArray> {
 
 	private NDArray content = null;
 

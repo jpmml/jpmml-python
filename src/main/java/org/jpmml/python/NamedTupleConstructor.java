@@ -21,16 +21,15 @@ package org.jpmml.python;
 import java.util.Arrays;
 
 import net.razorvine.pickle.PickleException;
-import net.razorvine.pickle.objects.ClassDict;
 
-public class NamedTupleConstructor extends ObjectConstructor {
+public class NamedTupleConstructor extends PythonObjectConstructor {
 
 	public NamedTupleConstructor(String module, String name, Class<? extends NamedTuple> clazz){
 		super(module, name, clazz);
 	}
 
 	@Override
-	public ClassDict construct(Object[] args){
+	public NamedTuple construct(Object[] args){
 		NamedTuple dict = (NamedTuple)newObject();
 
 		String[] names = dict.names();

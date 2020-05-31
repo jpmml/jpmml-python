@@ -19,7 +19,6 @@
 package org.jpmml.python;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -28,23 +27,23 @@ import net.razorvine.pickle.PickleException;
 import net.razorvine.pickle.objects.ClassDict;
 import net.razorvine.pickle.objects.ClassDictConstructor;
 
-public class ObjectConstructor implements IObjectConstructor {
+public class PythonObjectConstructor implements IObjectConstructor {
 
 	private String module = null;
 
 	private String name = null;
 
-	private Class<? extends ClassDict> clazz = null;
+	private Class<? extends PythonObject> clazz = null;
 
 
-	public ObjectConstructor(String module, String name, Class<? extends ClassDict> clazz){
+	public PythonObjectConstructor(String module, String name, Class<? extends PythonObject> clazz){
 		setModule(module);
 		setName(name);
 		setClazz(clazz);
 	}
 
-	public ClassDict newObject(){
-		Class<? extends ClassDict> clazz = getClazz();
+	public PythonObject newObject(){
+		Class<? extends PythonObject> clazz = getClazz();
 
 		if(clazz == null){
 			throw new RuntimeException();
@@ -52,19 +51,19 @@ public class ObjectConstructor implements IObjectConstructor {
 
 		try {
 			try {
-				Constructor<? extends ClassDict> namedConstructor = clazz.getConstructor(String.class, String.class);
+				Constructor<? extends PythonObject> namedConstructor = clazz.getConstructor(String.class, String.class);
 
 				return namedConstructor.newInstance(getModule(), getName());
 			} catch(NoSuchMethodException nsme){
 				return clazz.newInstance();
 			}
-		} catch(IllegalAccessException | InstantiationException | InvocationTargetException e){
-			throw new RuntimeException(e);
+		} catch(ReflectiveOperationException roe){
+			throw new RuntimeException(roe);
 		}
 	}
 
 	@Override
-	public ClassDict construct(Object[] args){
+	public PythonObject construct(Object[] args){
 
 		if(args.length != 0){
 			throw new PickleException(Arrays.deepToString(args));
@@ -73,7 +72,7 @@ public class ObjectConstructor implements IObjectConstructor {
 		return newObject();
 	}
 
-	public ClassDict reconstruct(Object first, Object second){
+	public PythonObject reconstruct(Object first, Object second){
 
 		if(first instanceof ClassDictConstructor){
 			ClassDictConstructor constructor = (ClassDictConstructor)first;
@@ -115,11 +114,11 @@ public class ObjectConstructor implements IObjectConstructor {
 		this.name = name;
 	}
 
-	public Class<? extends ClassDict> getClazz(){
+	public Class<? extends PythonObject> getClazz(){
 		return this.clazz;
 	}
 
-	private void setClazz(Class<? extends ClassDict> clazz){
+	private void setClazz(Class<? extends PythonObject> clazz){
 		this.clazz = clazz;
 	}
 

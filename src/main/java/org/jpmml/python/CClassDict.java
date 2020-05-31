@@ -25,7 +25,7 @@ import java.util.LinkedHashMap;
 import net.razorvine.pickle.PickleException;
 
 abstract
-public class CClassDict extends PyClassDict {
+public class CClassDict extends PythonObject {
 
 	public CClassDict(String module, String name){
 		super(module, name);

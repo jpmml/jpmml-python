@@ -21,10 +21,10 @@ package joblib;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.jpmml.python.ObjectConstructor;
+import org.jpmml.python.PythonObjectConstructor;
 import org.jpmml.python.Storage;
 
-public class NDArrayWrapperConstructor extends ObjectConstructor {
+public class NDArrayWrapperConstructor extends PythonObjectConstructor {
 
 	private Storage storage = null;
 

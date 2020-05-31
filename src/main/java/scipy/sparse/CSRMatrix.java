@@ -21,9 +21,9 @@ package scipy.sparse;
 import java.util.List;
 
 import org.jpmml.python.HasArray;
-import org.jpmml.python.PyClassDict;
+import org.jpmml.python.PythonObject;
 
-public class CSRMatrix extends PyClassDict implements HasArray {
+public class CSRMatrix extends PythonObject implements HasArray {
 
 	public CSRMatrix(String module, String name){
 		super(module, name);

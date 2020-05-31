@@ -18,7 +18,7 @@
  */
 package org.jpmml.python;
 
-public class ExtensionObjectConstructor extends ObjectConstructor {
+public class ExtensionObjectConstructor extends PythonObjectConstructor {
 
 	public ExtensionObjectConstructor(String module, String name, Class<? extends CClassDict> clazz){
 		super(module, name, clazz);

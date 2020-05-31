@@ -64,12 +64,12 @@ public class PickleUtil {
 
 	static
 	public Object unpickle(Storage storage) throws IOException {
-		ObjectConstructor[] constructors = {
+		PythonObjectConstructor[] constructors = {
 			new NDArrayWrapperConstructor("joblib.numpy_pickle", "NDArrayWrapper", storage),
 			new NDArrayWrapperConstructor("sklearn.externals.joblib.numpy_pickle", "NDArrayWrapper", storage),
 		};
 
-		for(ObjectConstructor constructor : constructors){
+		for(PythonObjectConstructor constructor : constructors){
 			Unpickler.registerConstructor(constructor.getModule(), constructor.getName(), constructor);
 		}
 
@@ -214,9 +214,9 @@ public class PickleUtil {
 			return;
 		}
 
-		ObjectConstructor constructor;
+		PythonObjectConstructor constructor;
 
-		if((PyClassDict.class).isAssignableFrom(clazz)){
+		if((PythonObject.class).isAssignableFrom(clazz)){
 
 			if((CClassDict.class).isAssignableFrom(clazz)){
 				constructor = new ExtensionObjectConstructor(module, name, (Class<? extends CClassDict>)clazz);
@@ -227,7 +227,7 @@ public class PickleUtil {
 			} else
 
 			{
-				constructor = new ObjectConstructor(module, name, (Class<? extends PyClassDict>)clazz);
+				constructor = new PythonObjectConstructor(module, name, (Class<? extends PythonObject>)clazz);
 			}
 		} else
 

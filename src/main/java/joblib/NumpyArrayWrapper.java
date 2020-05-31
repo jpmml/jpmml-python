@@ -24,9 +24,9 @@ import java.io.InputStream;
 import numpy.DType;
 import numpy.core.NDArray;
 import numpy.core.NDArrayUtil;
-import org.jpmml.python.PyClassDict;
+import org.jpmml.python.PythonObject;
 
-public class NumpyArrayWrapper extends PyClassDict {
+public class NumpyArrayWrapper extends PythonObject {
 
 	public NumpyArrayWrapper(String module, String name){
 		super(module, name);

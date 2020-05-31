@@ -19,7 +19,7 @@
 package org.jpmml.python;
 
 abstract
-public class NamedTuple extends PyClassDict {
+public class NamedTuple extends PythonObject {
 
 	public NamedTuple(String module, String name){
 		super(module, name);

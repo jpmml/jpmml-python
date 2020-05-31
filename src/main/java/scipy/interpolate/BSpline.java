@@ -20,9 +20,9 @@ package scipy.interpolate;
 
 import java.util.List;
 
-import org.jpmml.python.PyClassDict;
+import org.jpmml.python.PythonObject;
 
-public class BSpline extends PyClassDict {
+public class BSpline extends PythonObject {
 
 	public BSpline(String module, String name){
 		super(module, name);
