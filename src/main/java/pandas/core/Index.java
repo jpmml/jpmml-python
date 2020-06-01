@@ -18,12 +18,18 @@
  */
 package pandas.core;
 
+import java.util.Map;
+
 import org.jpmml.python.CustomPythonObject;
 
 public class Index extends CustomPythonObject {
 
 	public Index(String module, String name){
 		super(module, name);
+	}
+
+	public Map<String, ?> getData(){
+		return get("data", Map.class);
 	}
 
 	@Override

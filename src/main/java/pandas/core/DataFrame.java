@@ -18,37 +18,15 @@
  */
 package pandas.core;
 
-import java.util.List;
+import org.jpmml.python.PythonObject;
 
-import org.jpmml.python.CustomPythonObject;
+public class DataFrame extends PythonObject {
 
-public class BlockManager extends CustomPythonObject {
-
-	public BlockManager(String module, String name){
+	public DataFrame(String module, String name){
 		super(module, name);
 	}
 
-	public List<Index> getAxesArray(){
-		return getList("axes_array", Index.class);
+	public BlockManager getData(){
+		return get("_data", BlockManager.class);
 	}
-
-	@Override
-	public void __setstate__(Object[] args){
-
-		if(args.length > 3){
-			Object[] newArgs = new Object[3];
-
-			System.arraycopy(args, 0, newArgs, 0, newArgs.length);
-
-			args = newArgs;
-		}
-
-		super.__setstate__(createAttributeMap(SETSTATE_ATTRIBUTES, args));
-	}
-
-	private static final String[] SETSTATE_ATTRIBUTES = {
-		"axes_array",
-		"block_values",
-		"block_items"
-	};
 }
