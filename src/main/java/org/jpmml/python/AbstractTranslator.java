@@ -31,16 +31,8 @@ public class AbstractTranslator {
 	private List<? extends Feature> features = null;
 
 
-	public List<? extends Feature> getFeatures(){
-		return this.features;
-	}
-
-	void setFeatures(List<? extends Feature> features){
-		this.features = features;
-	}
-
-	static
-	public Feature getFeature(List<? extends Feature> features, int index){
+	public Feature getFeature(int index){
+		List<? extends Feature> features = getFeatures();
 
 		if(index >= 0 && index < features.size()){
 			return features.get(index);
@@ -49,8 +41,8 @@ public class AbstractTranslator {
 		throw new IllegalArgumentException("Column index " + index + " not in range " + Arrays.asList(0, features.size()));
 	}
 
-	static
-	public Feature getFeature(List<? extends Feature> features, FieldName name){
+	public Feature getFeature(FieldName name){
+		List<? extends Feature> features = getFeatures();
 
 		for(Feature feature : features){
 
@@ -64,5 +56,13 @@ public class AbstractTranslator {
 			.collect(Collectors.toList());
 
 		throw new IllegalArgumentException("Column name \'" + name.getValue() + "\' not in " + names);
+	}
+
+	public List<? extends Feature> getFeatures(){
+		return this.features;
+	}
+
+	void setFeatures(List<? extends Feature> features){
+		this.features = features;
 	}
 }

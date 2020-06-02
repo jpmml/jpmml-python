@@ -42,8 +42,7 @@ import org.jpmml.converter.visitors.ExpressionCompactor;
 
 public class ExpressionTranslator extends AbstractTranslator {
 
-	static
-	public boolean isString(Expression expression, List<? extends Feature> features){ 
+	public boolean isString(Expression expression){ 
 
 		if(expression instanceof Constant){
 			Constant constant = (Constant)expression;
@@ -54,7 +53,7 @@ public class ExpressionTranslator extends AbstractTranslator {
 		if(expression instanceof FieldRef){
 			FieldRef fieldRef = (FieldRef)expression;
 
-			Feature feature = getFeature(features, fieldRef.getField());
+			Feature feature = getFeature(fieldRef.getField());
 
 			return (DataType.STRING).equals(feature.getDataType());
 		} else
@@ -462,9 +461,8 @@ Expression AdditiveExpression():
 }
 {
 	left = MultiplicativeExpression() ((operator = <PLUS> | operator = <MINUS>) right = MultiplicativeExpression() {
-		List<? extends Feature> features = getFeatures();
 
-		if((operator.kind == PLUS) && (isString(left, features) && isString(right, features))){
+		if((operator.kind == PLUS) && (isString(left) && isString(right))){
 			left = PMMLUtil.createApply(PMMLFunctions.CONCAT, left, right);
 		} else
 
@@ -556,8 +554,6 @@ FieldRef ArrayIndexingExpression():
 	)
 
 	{
-		List<? extends Feature> features = getFeatures();
-
 		if(!("X").equals(name.image)){
 			throw new IllegalArgumentException("Name \'" + name.image + "\' is not defined");
 		}
@@ -569,14 +565,14 @@ FieldRef ArrayIndexingExpression():
 				{
 					int colIndex = Integer.parseInt(column.image);
 
-					feature = getFeature(features, colIndex);
+					feature = getFeature(colIndex);
 				}
 				break;
 			case ExpressionTranslatorConstants.STRING:
 				{
 					String colName = column.image.substring(1, column.image.length() - 1);
 
-					feature = getFeature(features, FieldName.create(colName));
+					feature = getFeature(FieldName.create(colName));
 				}
 				break;
 			default:
