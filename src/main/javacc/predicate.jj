@@ -18,7 +18,7 @@
  */
 options {
 	JAVA_TEMPLATE_TYPE = "modern";
-	JDK_VERSION = "1.5";
+	JDK_VERSION = "1.8";
 	STATIC = false;
 }
 
@@ -361,11 +361,9 @@ FieldName ArrayIndexingExpression():
 	)
 
 	{
-		if(!("X").equals(name.image)){
-			throw new IllegalArgumentException("Name \'" + name.image + "\' is not defined");
-		}
+		requireArray(name.image);
 
-		Feature feature;
+		Feature feature = null;
 
 		switch(column.kind){
 			case PredicateTranslatorConstants.INT:
@@ -383,7 +381,7 @@ FieldName ArrayIndexingExpression():
 				}
 				break;
 			default:
-				throw new IllegalArgumentException();
+				break;
 		}
 
 		return feature.getName();
@@ -395,15 +393,7 @@ Object NameInvocationExpression():
 	Token name;
 }
 {
-	name = <NAME> {
-		if(("X").equals(name.image)){
-			throw new IllegalArgumentException("Name \'X\' refers to a row vector. Use an array indexing expression X[<column index>] or X[<column name>] to refer to a specific row vector element");
-		} else 
-	
-		{
-			throw new IllegalArgumentException("Name \'" + name.image + "\' is not defined");
-		}
-	}
+	name = <NAME> { requireArray(name.image); requireNonArray(name.image); }
 
 	{
 		return null;

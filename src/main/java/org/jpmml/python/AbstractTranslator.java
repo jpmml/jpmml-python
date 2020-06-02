@@ -31,6 +31,20 @@ public class AbstractTranslator {
 	private List<? extends Feature> features = null;
 
 
+	public void requireArray(String name){
+
+		if(!("X").equals(name)){
+			throw new IllegalArgumentException("Name \'" + name+ "\' is not defined");
+		}
+	}
+
+	public void requireNonArray(String name){
+
+		if(("X").equals(name)){
+			throw new IllegalArgumentException("Name \'X\' refers to a row vector. Use an array indexing expression X[<column index>] or X[<column name>] to refer to a specific row vector element");
+		}
+	}
+
 	public Feature getFeature(int index){
 		List<? extends Feature> features = getFeatures();
 

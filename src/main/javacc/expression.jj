@@ -18,7 +18,7 @@
  */
 options {
 	JAVA_TEMPLATE_TYPE = "modern";
-	JDK_VERSION = "1.5";
+	JDK_VERSION = "1.8";
 	STATIC = false;
 }
 
@@ -554,11 +554,9 @@ FieldRef ArrayIndexingExpression():
 	)
 
 	{
-		if(!("X").equals(name.image)){
-			throw new IllegalArgumentException("Name \'" + name.image + "\' is not defined");
-		}
+		requireArray(name.image);
 
-		Feature feature;
+		Feature feature = null;
 
 		switch(column.kind){
 			case ExpressionTranslatorConstants.INT:
@@ -576,7 +574,7 @@ FieldRef ArrayIndexingExpression():
 				}
 				break;
 			default:
-				throw new IllegalArgumentException();
+				break;
 		}
 
 		return feature.ref();
@@ -590,13 +588,7 @@ Expression FunctionInvocationExpression():
 	StringBuilder function = new StringBuilder();
 }
 {
-	name = <NAME> {
-		if(("X").equals(name.image)){
-			throw new IllegalArgumentException("Name \'X\' refers to a row vector. Use an array indexing expression X[<column index>] or X[<column name>] to refer to a specific row vector element");
-		}
-		
-		function.append(name.image);
-	} ( <DOT> name = <NAME> { function.append('.').append(name.image); })* arguments = Arguments()
+	name = <NAME> { requireNonArray(name.image); function.append(name.image); } ( <DOT> name = <NAME> { function.append('.').append(name.image); })* arguments = Arguments()
 
 	{
 		return translateFunction(function.toString(), arguments);
