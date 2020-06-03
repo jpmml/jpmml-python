@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Villu Ruusmann
+ * Copyright (c) 2020 Villu Ruusmann
  *
  * This file is part of JPMML-Python
  *
@@ -18,32 +18,21 @@
  */
 package org.jpmml.python;
 
-import java.util.Objects;
+import org.dmg.pmml.FieldName;
+import org.jpmml.converter.Feature;
 
 abstract
-public class AbstractTranslator {
+public class Scope {
 
-	private Scope scope = null;
+	abstract
+	public Feature getFeature(FieldName name);
 
+	abstract
+	public Feature getFeature(FieldName name, int columnIndex);
 
-	public AbstractTranslator(){
-	}
+	abstract
+	public Feature getFeature(FieldName name, FieldName columnName);
 
-	public Scope ensureScope(){
-		Scope scope = getScope();
-
-		if(scope == null){
-			throw new IllegalStateException();
-		}
-
-		return scope;
-	}
-
-	public Scope getScope(){
-		return this.scope;
-	}
-
-	public void setScope(Scope scope){
-		this.scope = Objects.requireNonNull(scope);
-	}
+	abstract
+	public Feature resolveFeature(FieldName name);
 }

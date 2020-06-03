@@ -42,12 +42,12 @@ import org.jpmml.converter.PMMLUtil;
 public class PredicateTranslator extends AbstractTranslator {
 
 	static
-	public Predicate translate(String string, List<? extends Feature> features){
+	public Predicate translate(String string, Scope scope){
 		Predicate predicate;
 
 		try {
 			PredicateTranslator predicateTranslator = new PredicateTranslator(string);
-			predicateTranslator.setFeatures(features);
+			predicateTranslator.setScope(scope);
 
 			predicate = predicateTranslator.translatePredicateInternal();
 		} catch(ParseException pe){
@@ -361,7 +361,7 @@ FieldName ArrayIndexingExpression():
 	)
 
 	{
-		requireArray(name.image);
+		Scope scope = ensureScope();
 
 		Feature feature = null;
 
@@ -370,14 +370,14 @@ FieldName ArrayIndexingExpression():
 				{
 					int colIndex = Integer.parseInt(column.image);
 
-					feature = getFeature(colIndex);
+					feature = scope.getFeature(FieldName.create(name.image), colIndex);
 				}
 				break;
 			case PredicateTranslatorConstants.STRING:
 				{
 					String colName = column.image.substring(1, column.image.length() - 1);
 
-					feature = getFeature(FieldName.create(colName));
+					feature = scope.getFeature(FieldName.create(name.image), FieldName.create(colName));
 				}
 				break;
 			default:
@@ -388,15 +388,19 @@ FieldName ArrayIndexingExpression():
 	}
 }
 
-Object NameInvocationExpression():
+FieldName NameInvocationExpression():
 {
 	Token name;
 }
 {
-	name = <NAME> { requireArray(name.image); requireNonArray(name.image); }
+	name = <NAME>
 
 	{
-		return null;
+		Scope scope = ensureScope();
+
+		Feature feature = scope.getFeature(FieldName.create(name.image));
+
+		return feature.getName();
 	}
 }
 

@@ -41,8 +41,9 @@ import org.jpmml.converter.PMMLUtil;
 import org.jpmml.converter.visitors.ExpressionCompactor;
 
 public class ExpressionTranslator extends AbstractTranslator {
-
-	public boolean isString(Expression expression){ 
+	
+	static
+	public boolean isString(Expression expression, Scope scope){ 
 
 		if(expression instanceof Constant){
 			Constant constant = (Constant)expression;
@@ -52,8 +53,11 @@ public class ExpressionTranslator extends AbstractTranslator {
 
 		if(expression instanceof FieldRef){
 			FieldRef fieldRef = (FieldRef)expression;
-
-			Feature feature = getFeature(fieldRef.getField());
+			
+			Feature feature = scope.resolveFeature(fieldRef.getField());
+			if(feature == null){
+				return false;
+			}
 
 			return (DataType.STRING).equals(feature.getDataType());
 		} else
@@ -81,17 +85,17 @@ public class ExpressionTranslator extends AbstractTranslator {
 	}
 
 	static
-	public Expression translate(String string, List<? extends Feature> features){
-		return translate(string, features, true);
+	public Expression translate(String string, Scope scope){
+		return translate(string, scope, true);
 	}
 
 	static
-	public Expression translate(String string, List<? extends Feature> features, boolean compact){
+	public Expression translate(String string, Scope scope, boolean compact){
 		Expression expression;
 		
 		try {
 			ExpressionTranslator expressionTranslator = new ExpressionTranslator(string);
-			expressionTranslator.setFeatures(features);
+			expressionTranslator.setScope(scope);
 
 			expression = expressionTranslator.translateExpressionInternal();
 		} catch(ParseException pe){
@@ -461,8 +465,9 @@ Expression AdditiveExpression():
 }
 {
 	left = MultiplicativeExpression() ((operator = <PLUS> | operator = <MINUS>) right = MultiplicativeExpression() {
-
-		if((operator.kind == PLUS) && (isString(left) && isString(right))){
+		Scope scope = ensureScope();
+		
+		if((operator.kind == PLUS) && (isString(left, scope) && isString(right, scope))){
 			left = PMMLUtil.createApply(PMMLFunctions.CONCAT, left, right);
 		} else
 
@@ -554,7 +559,7 @@ FieldRef ArrayIndexingExpression():
 	)
 
 	{
-		requireArray(name.image);
+		Scope scope = ensureScope();
 
 		Feature feature = null;
 
@@ -563,14 +568,14 @@ FieldRef ArrayIndexingExpression():
 				{
 					int colIndex = Integer.parseInt(column.image);
 
-					feature = getFeature(colIndex);
+					feature = scope.getFeature(FieldName.create(name.image), colIndex);
 				}
 				break;
 			case ExpressionTranslatorConstants.STRING:
 				{
 					String colName = column.image.substring(1, column.image.length() - 1);
 
-					feature = getFeature(FieldName.create(colName));
+					feature = scope.getFeature(FieldName.create(name.image), FieldName.create(colName));
 				}
 				break;
 			default:
@@ -588,7 +593,7 @@ Expression FunctionInvocationExpression():
 	StringBuilder function = new StringBuilder();
 }
 {
-	name = <NAME> { requireNonArray(name.image); function.append(name.image); } ( <DOT> name = <NAME> { function.append('.').append(name.image); })* arguments = Arguments()
+	name = <NAME> { function.append(name.image); } ( <DOT> name = <NAME> { function.append('.').append(name.image); })* arguments = Arguments()
 
 	{
 		return translateFunction(function.toString(), arguments);

@@ -18,7 +18,7 @@
  */
 package org.jpmml.python;
 
-import java.util.List;
+import java.util.Collections;
 
 import org.dmg.pmml.Constant;
 import org.dmg.pmml.DataType;
@@ -26,7 +26,6 @@ import org.dmg.pmml.Expression;
 import org.dmg.pmml.FieldName;
 import org.dmg.pmml.FieldRef;
 import org.dmg.pmml.PMMLFunctions;
-import org.jpmml.converter.Feature;
 import org.jpmml.converter.PMMLUtil;
 import org.jpmml.model.ReflectionUtil;
 import org.junit.Test;
@@ -45,14 +44,14 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 			)
 			.addExpressions(new FieldRef(FieldName.create("c")));
 
-		checkExpression(expected, string, booleanFeatures);
+		checkExpression(expected, string, new DataFrameScope(booleanFeatures));
 
 		string = "not X[\"a\"]";
 
 		expected = PMMLUtil.createApply(PMMLFunctions.NOT)
 			.addExpressions(new FieldRef(FieldName.create("a")));
 
-		checkExpression(expected, string, booleanFeatures);
+		checkExpression(expected, string, new DataFrameScope(booleanFeatures));
 	}
 
 	@Test
@@ -64,7 +63,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 		Expression expected = PMMLUtil.createApply(PMMLFunctions.ISMISSING)
 			.addExpressions(first);
 
-		checkExpression(expected, string, doubleFeatures);
+		checkExpression(expected, string, new DataFrameScope(doubleFeatures));
 
 		string = "(X['a'] + 1) is not None";
 
@@ -73,7 +72,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 				.addExpressions(first, PMMLUtil.createConstant("1", DataType.INTEGER))
 			);
 
-		checkExpression(expected, string, doubleFeatures);
+		checkExpression(expected, string, new DataFrameScope(doubleFeatures));
 	}
 
 	@Test
@@ -86,7 +85,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 		Expression expected = PMMLUtil.createApply(PMMLFunctions.AND)
 			.addExpressions(first, second);
 
-		checkExpression(expected, string, booleanFeatures);
+		checkExpression(expected, string, new DataFrameScope(booleanFeatures));
 
 		string = "X['a'] == True and X['b'] == False";
 
@@ -98,14 +97,14 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 				.addExpressions(second, PMMLUtil.createConstant("false", DataType.BOOLEAN))
 			);
 
-		checkExpression(expected, string, booleanFeatures);
+		checkExpression(expected, string, new DataFrameScope(booleanFeatures));
 
 		string = "X[0] in [0.0, 1.0]";
 
 		expected = PMMLUtil.createApply(PMMLFunctions.ISIN)
 			.addExpressions(first, PMMLUtil.createConstant("0.0", DataType.DOUBLE), PMMLUtil.createConstant("1.0", DataType.DOUBLE));
 
-		checkExpression(expected, string, doubleFeatures);
+		checkExpression(expected, string, new DataFrameScope(doubleFeatures));
 
 		string = "(X[0] + 1.0) not in [X[1]]";
 
@@ -115,14 +114,14 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 			)
 			.addExpressions(second);
 
-		checkExpression(expected, string, doubleFeatures);
+		checkExpression(expected, string, new DataFrameScope(doubleFeatures));
 
 		string = "X[\"a\"] > X[\"b\"]";
 
 		expected = PMMLUtil.createApply(PMMLFunctions.GREATERTHAN)
 			.addExpressions(first, second);
 
-		checkExpression(expected, string, doubleFeatures);
+		checkExpression(expected, string, new DataFrameScope(doubleFeatures));
 
 		string = "not X[\"a\"] < 0.0";
 
@@ -131,7 +130,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 				.addExpressions(first, PMMLUtil.createConstant("0.0", DataType.DOUBLE))
 			);
 
-		checkExpression(expected, string, doubleFeatures);
+		checkExpression(expected, string, new DataFrameScope(doubleFeatures));
 	}
 
 	@Test
@@ -150,11 +149,11 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 			)
 			.addExpressions(PMMLUtil.createConstant("-2", DataType.INTEGER));
 
-		checkExpression(expected, string, doubleFeatures);
+		checkExpression(expected, string, new DataFrameScope(doubleFeatures));
 
 		string = "(X[\"a\"] + X[\"b\"] - 1.0) / X['c'] * -2";
 
-		checkExpression(expected, string, doubleFeatures);
+		checkExpression(expected, string, new DataFrameScope(doubleFeatures));
 	}
 
 	@Test
@@ -167,11 +166,11 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 			)
 			.addExpressions(PMMLUtil.createConstant("-01-01", DataType.STRING));
 
-		checkExpression(expected, string, stringFeatures);
+		checkExpression(expected, string, new DataFrameScope(stringFeatures));
 
 		string = "\"19\" + X[\'a\'] + \"-01-01\"";
 
-		checkExpression(expected, string, stringFeatures);
+		checkExpression(expected, string, new DataFrameScope(stringFeatures));
 	}
 
 	@Test
@@ -192,7 +191,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 				.addExpressions(new FieldRef(FieldName.create("a")))
 			);
 
-		checkExpression(expected, string, stringFeatures);
+		checkExpression(expected, string, new DataFrameScope(stringFeatures));
 	}
 
 	@Test
@@ -200,14 +199,16 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 		Constant minusOne = PMMLUtil.createConstant("-1", DataType.INTEGER);
 		Constant plusOne = PMMLUtil.createConstant("1", DataType.INTEGER);
 
-		checkExpression(minusOne, "-1", doubleFeatures);
+		Scope scope = new DataFrameScope(Collections.emptyList());
 
-		checkExpression(plusOne, "1", doubleFeatures);
-		checkExpression(plusOne, "+1", doubleFeatures);
+		checkExpression(minusOne, "-1", scope);
 
-		checkExpression(minusOne, "-+1", doubleFeatures);
-		checkExpression(plusOne, "--1", doubleFeatures);
-		checkExpression(minusOne, "---1", doubleFeatures);
+		checkExpression(plusOne, "1", scope);
+		checkExpression(plusOne, "+1", scope);
+
+		checkExpression(minusOne, "-+1", scope);
+		checkExpression(plusOne, "--1", scope);
+		checkExpression(minusOne, "---1", scope);
 	}
 
 	@Test
@@ -223,12 +224,12 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 				.addExpressions(new FieldRef(FieldName.create("b")), new FieldRef(FieldName.create("c")))
 			);
 
-		checkExpression(expected, string, doubleFeatures);
+		checkExpression(expected, string, new DataFrameScope(doubleFeatures));
 	}
 
 	static
-	private void checkExpression(Expression expected, String string, List<Feature> features){
-		Expression actual = ExpressionTranslator.translate(string, features, false);
+	private void checkExpression(Expression expected, String string, Scope scope){
+		Expression actual = ExpressionTranslator.translate(string, scope, false);
 
 		assertTrue(ReflectionUtil.equals(expected, actual));
 	}

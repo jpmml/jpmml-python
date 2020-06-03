@@ -28,7 +28,6 @@ import org.dmg.pmml.FieldName;
 import org.dmg.pmml.Predicate;
 import org.dmg.pmml.SimplePredicate;
 import org.dmg.pmml.SimpleSetPredicate;
-import org.jpmml.converter.Feature;
 import org.jpmml.model.ReflectionUtil;
 import org.junit.Test;
 
@@ -52,7 +51,7 @@ public class PredicateTranslatorTest extends TranslatorTest {
 			)
 			.addPredicates(third);
 
-		checkPredicate(expected, string, doubleFeatures);
+		checkPredicate(expected, string, new DataFrameScope(doubleFeatures));
 
 		string = "(X[\"a\"] > 0.0) and ((X[\"b\"] > 0) or (X[\"c\"] > 0))";
 
@@ -62,17 +61,17 @@ public class PredicateTranslatorTest extends TranslatorTest {
 				.addPredicates(second, third)
 			);
 
-		checkPredicate(expected, string, doubleFeatures);
+		checkPredicate(expected, string, new DataFrameScope(doubleFeatures));
 	}
 
 	@Test
 	public void translateComparisonPredicate(){
 		Predicate expected = new SimplePredicate(FieldName.create("a"), SimplePredicate.Operator.GREATER_THAN, "0.0");
 
-		checkPredicate(expected, "X['a'] > 0.0", doubleFeatures);
+		checkPredicate(expected, "X['a'] > 0.0", new DataFrameScope(doubleFeatures));
 
 		try {
-			PredicateTranslator.translate("X['a'] > X['b']", doubleFeatures);
+			PredicateTranslator.translate("X['a'] > X['b']", new DataFrameScope(doubleFeatures));
 
 			fail();
 		} catch(ClassCastException cce){
@@ -80,27 +79,27 @@ public class PredicateTranslatorTest extends TranslatorTest {
 		}
 
 		expected = new SimplePredicate(FieldName.create("a"), SimplePredicate.Operator.IS_MISSING, null);
-		checkPredicate(expected, "X[0] is None", doubleFeatures);
+		checkPredicate(expected, "X[0] is None", new DataFrameScope(doubleFeatures));
 
 		expected = new SimplePredicate(FieldName.create("a"), SimplePredicate.Operator.IS_NOT_MISSING, null);
-		checkPredicate(expected, "X[0] is not None", doubleFeatures);
+		checkPredicate(expected, "X[0] is not None", new DataFrameScope(doubleFeatures));
 
 		expected = new SimplePredicate(FieldName.create("a"), SimplePredicate.Operator.EQUAL, "one");
-		checkPredicate(expected, "X[0] == \"one\"", stringFeatures);
+		checkPredicate(expected, "X[0] == \"one\"", new DataFrameScope(stringFeatures));
 
 		expected = createSimpleSetPredicate(FieldName.create("a"), SimpleSetPredicate.BooleanOperator.IS_IN, Arrays.asList("1", "2", "3"));
-		checkPredicate(expected, "X[0] in [1, 2, 3]", doubleFeatures);
+		checkPredicate(expected, "X[0] in [1, 2, 3]", new DataFrameScope(doubleFeatures));
 
 		expected = createSimpleSetPredicate(FieldName.create("a"), SimpleSetPredicate.BooleanOperator.IS_IN, Arrays.asList("one", "two", "three"));
-		checkPredicate(expected, "X[0] in ['one', 'two', 'three']", stringFeatures);
+		checkPredicate(expected, "X[0] in ['one', 'two', 'three']", new DataFrameScope(stringFeatures));
 
 		expected = createSimpleSetPredicate(FieldName.create("a"), SimpleSetPredicate.BooleanOperator.IS_NOT_IN, Arrays.asList("-1.5", "-1", "-0.5", "0"));
-		checkPredicate(expected, "X['a'] not in [-1.5, -1, -0.5, 0]", doubleFeatures);
+		checkPredicate(expected, "X['a'] not in [-1.5, -1, -0.5, 0]", new DataFrameScope(doubleFeatures));
 	}
 
 	static
-	private void checkPredicate(Predicate expected, String string, List<Feature> features){
-		Predicate actual = PredicateTranslator.translate(string, features);
+	private void checkPredicate(Predicate expected, String string, Scope scope){
+		Predicate actual = PredicateTranslator.translate(string, scope);
 
 		assertTrue(ReflectionUtil.equals(expected, actual));
 	}
