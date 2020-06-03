@@ -81,7 +81,7 @@ public class DataFrameScope extends Scope {
 			.map(feature -> "\'" + (feature.getName()).getValue() + "\'")
 			.collect(Collectors.toList());
 
-		throw new IllegalArgumentException("Column name \'" + columnName.getValue() + "\' not in " + columnNames);
+		throw new IllegalArgumentException("Column name \'" + columnName.getValue() + "\' is not in " + columnNames);
 	}
 
 	@Override

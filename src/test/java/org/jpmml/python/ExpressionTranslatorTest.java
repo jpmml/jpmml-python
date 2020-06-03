@@ -36,58 +36,76 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 	@Test
 	public void translateLogicalExpression(){
-		String string = "X[\"a\"] and X[\"b\"] or X[\"c\"]";
-
 		Expression expected = PMMLUtil.createApply(PMMLFunctions.OR)
 			.addExpressions(PMMLUtil.createApply(PMMLFunctions.AND)
 				.addExpressions(new FieldRef(FieldName.create("a")), new FieldRef(FieldName.create("b")))
 			)
 			.addExpressions(new FieldRef(FieldName.create("c")));
 
+		String string = "X[\"a\"] and X[\"b\"] or X[\"c\"]";
+
 		checkExpression(expected, string, new DataFrameScope(booleanFeatures));
 
-		string = "not X[\"a\"]";
+		string = "a and b or c";
+
+		checkExpression(expected, string, new BlockScope(booleanFeatures));
 
 		expected = PMMLUtil.createApply(PMMLFunctions.NOT)
 			.addExpressions(new FieldRef(FieldName.create("a")));
 
+		string = "not X[\"a\"]";
+
 		checkExpression(expected, string, new DataFrameScope(booleanFeatures));
+
+		string = "not a";
+
+		checkExpression(expected, string, new BlockScope(booleanFeatures));
 	}
 
 	@Test
 	public void translateIdentityComparisonExpression(){
-		String string = "X[0] is None";
-
 		FieldRef first = new FieldRef(FieldName.create("a"));
 
 		Expression expected = PMMLUtil.createApply(PMMLFunctions.ISMISSING)
 			.addExpressions(first);
 
+		String string = "X[0] is None";
+
 		checkExpression(expected, string, new DataFrameScope(doubleFeatures));
 
-		string = "(X['a'] + 1) is not None";
+		string = "a is None";
+
+		checkExpression(expected, string, new BlockScope(doubleFeatures));
 
 		expected = PMMLUtil.createApply(PMMLFunctions.ISNOTMISSING)
 			.addExpressions(PMMLUtil.createApply(PMMLFunctions.ADD)
 				.addExpressions(first, PMMLUtil.createConstant("1", DataType.INTEGER))
 			);
 
+		string = "(X['a'] + 1) is not None";
+
 		checkExpression(expected, string, new DataFrameScope(doubleFeatures));
+
+		string = "(a + 1) is not None";
+
+		checkExpression(expected, string, new BlockScope(doubleFeatures));
 	}
 
 	@Test
 	public void translateComparisonExpression(){
-		String string = "X['a'] and X['b']";
-
 		FieldRef first = new FieldRef(FieldName.create("a"));
 		FieldRef second = new FieldRef(FieldName.create("b"));
 
 		Expression expected = PMMLUtil.createApply(PMMLFunctions.AND)
 			.addExpressions(first, second);
 
+		String string = "X['a'] and X['b']";
+
 		checkExpression(expected, string, new DataFrameScope(booleanFeatures));
 
-		string = "X['a'] == True and X['b'] == False";
+		string = "a and b";
+
+		checkExpression(expected, string, new BlockScope(booleanFeatures));
 
 		expected = PMMLUtil.createApply(PMMLFunctions.AND)
 			.addExpressions(PMMLUtil.createApply(PMMLFunctions.EQUAL)
@@ -97,16 +115,24 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 				.addExpressions(second, PMMLUtil.createConstant("false", DataType.BOOLEAN))
 			);
 
+		string = "X['a'] == True and X['b'] == False";
+
 		checkExpression(expected, string, new DataFrameScope(booleanFeatures));
 
-		string = "X[0] in [0.0, 1.0]";
+		string = "a == True and b == False";
+
+		checkExpression(expected, string, new BlockScope(booleanFeatures));
 
 		expected = PMMLUtil.createApply(PMMLFunctions.ISIN)
 			.addExpressions(first, PMMLUtil.createConstant("0.0", DataType.DOUBLE), PMMLUtil.createConstant("1.0", DataType.DOUBLE));
 
+		string = "X[0] in [0.0, 1.0]";
+
 		checkExpression(expected, string, new DataFrameScope(doubleFeatures));
 
-		string = "(X[0] + 1.0) not in [X[1]]";
+		string = "a in [0.0, 1.0]";
+
+		checkExpression(expected, string, new BlockScope(doubleFeatures));
 
 		expected = PMMLUtil.createApply(PMMLFunctions.ISNOTIN)
 			.addExpressions(PMMLUtil.createApply(PMMLFunctions.ADD)
@@ -114,29 +140,41 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 			)
 			.addExpressions(second);
 
+		string = "(X[0] + 1.0) not in [X[1]]";
+
 		checkExpression(expected, string, new DataFrameScope(doubleFeatures));
 
-		string = "X[\"a\"] > X[\"b\"]";
+		string = "(a + 1.0) not in [b]";
+
+		checkExpression(expected, string, new BlockScope(doubleFeatures));
 
 		expected = PMMLUtil.createApply(PMMLFunctions.GREATERTHAN)
 			.addExpressions(first, second);
 
+		string = "X[\"a\"] > X[\"b\"]";
+
 		checkExpression(expected, string, new DataFrameScope(doubleFeatures));
 
-		string = "not X[\"a\"] < 0.0";
+		string = "a > b";
+
+		checkExpression(expected, string, new BlockScope(doubleFeatures));
 
 		expected = PMMLUtil.createApply(PMMLFunctions.NOT)
 			.addExpressions(PMMLUtil.createApply(PMMLFunctions.LESSTHAN)
 				.addExpressions(first, PMMLUtil.createConstant("0.0", DataType.DOUBLE))
 			);
 
+		string = "not X[\"a\"] < 0.0";
+
 		checkExpression(expected, string, new DataFrameScope(doubleFeatures));
+
+		string = "not a < 0.0";
+
+		checkExpression(expected, string, new BlockScope(doubleFeatures));
 	}
 
 	@Test
 	public void translateArithmeticExpression(){
-		String string = "(X[0] + X[1] - 1.0) / X[2] * -2";
-
 		Expression expected = PMMLUtil.createApply(PMMLFunctions.MULTIPLY)
 			.addExpressions(PMMLUtil.createApply(PMMLFunctions.DIVIDE)
 				.addExpressions(PMMLUtil.createApply(PMMLFunctions.SUBTRACT)
@@ -149,34 +187,42 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 			)
 			.addExpressions(PMMLUtil.createConstant("-2", DataType.INTEGER));
 
+		String string = "(X[0] + X[1] - 1.0) / X[2] * -2";
+
 		checkExpression(expected, string, new DataFrameScope(doubleFeatures));
 
 		string = "(X[\"a\"] + X[\"b\"] - 1.0) / X['c'] * -2";
 
 		checkExpression(expected, string, new DataFrameScope(doubleFeatures));
+
+		string = "(a + b - 1.0) / c * -2";
+
+		checkExpression(expected, string, new BlockScope(doubleFeatures));
 	}
 
 	@Test
 	public void translateStringConcatenationExpression(){
-		String string = "\'19\' + X[0] + \'-01-01\'";
-
 		Expression expected = PMMLUtil.createApply(PMMLFunctions.CONCAT)
 			.addExpressions(PMMLUtil.createApply(PMMLFunctions.CONCAT)
 				.addExpressions(PMMLUtil.createConstant("19", DataType.STRING), new FieldRef(FieldName.create("a")))
 			)
 			.addExpressions(PMMLUtil.createConstant("-01-01", DataType.STRING));
 
+		String string = "\'19\' + X[0] + \'-01-01\'";
+
 		checkExpression(expected, string, new DataFrameScope(stringFeatures));
 
 		string = "\"19\" + X[\'a\'] + \"-01-01\"";
 
 		checkExpression(expected, string, new DataFrameScope(stringFeatures));
+
+		string = "\"19\" + a + \"-01-01\"";
+
+		checkExpression(expected, string, new BlockScope(stringFeatures));
 	}
 
 	@Test
 	public void translateStringIfElseExpression(){
-		String string = "X[0].lower() if (X[1].strip()) == \'lowercase\' else X[0].upper()";
-
 		Expression expected = PMMLUtil.createApply(PMMLFunctions.IF)
 			.addExpressions(PMMLUtil.createApply(PMMLFunctions.EQUAL)
 				.addExpressions(PMMLUtil.createApply(PMMLFunctions.TRIMBLANKS)
@@ -191,6 +237,8 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 				.addExpressions(new FieldRef(FieldName.create("a")))
 			);
 
+		String string = "X[0].lower() if (X[1].strip()) == \'lowercase\' else X[0].upper()";
+
 		checkExpression(expected, string, new DataFrameScope(stringFeatures));
 	}
 
@@ -199,7 +247,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 		Constant minusOne = PMMLUtil.createConstant("-1", DataType.INTEGER);
 		Constant plusOne = PMMLUtil.createConstant("1", DataType.INTEGER);
 
-		Scope scope = new DataFrameScope(Collections.emptyList());
+		Scope scope = new BlockScope(Collections.emptyList());
 
 		checkExpression(minusOne, "-1", scope);
 
@@ -213,8 +261,6 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 	@Test
 	public void translateFunctionInvocationExpression(){
-		String string = "X[\"a\"] if pandas.notnull(X[\"a\"]) else X[\"b\"] + X[\"c\"]";
-
 		Expression expected = PMMLUtil.createApply(PMMLFunctions.IF)
 			.addExpressions(PMMLUtil.createApply(PMMLFunctions.ISNOTMISSING)
 				.addExpressions(new FieldRef(FieldName.create("a")))
@@ -224,7 +270,13 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 				.addExpressions(new FieldRef(FieldName.create("b")), new FieldRef(FieldName.create("c")))
 			);
 
+		String string = "X[\"a\"] if pandas.notnull(X[\"a\"]) else X[\"b\"] + X[\"c\"]";
+
 		checkExpression(expected, string, new DataFrameScope(doubleFeatures));
+
+		string = "a if pandas.notnull(a) else b + c";
+
+		checkExpression(expected, string, new BlockScope(doubleFeatures));
 	}
 
 	static

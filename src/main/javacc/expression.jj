@@ -529,7 +529,10 @@ Expression PrimaryExpression():
 		LOOKAHEAD(<NAME> <LBRACKET>)
 		expression = ArrayIndexingExpression() (<DOT> name = <NAME> arguments = Arguments())?
 		|
+		LOOKAHEAD(<NAME> (<DOT> | <LPAREN>))
 		expression = FunctionInvocationExpression()
+		|
+		expression = NameInvocationExpression()
 		|
 		expression = ParenthesizedExpression()
 		|
@@ -615,6 +618,22 @@ List<Expression> Arguments():
 
 	{
 		return expressions;
+	}
+}
+
+FieldRef NameInvocationExpression():
+{
+	Token name;
+}
+{
+	name = <NAME>
+	
+	{
+		Scope scope = ensureScope();
+		
+		Feature feature = scope.getFeature(FieldName.create(name.image));
+		
+		return feature.ref();
 	}
 }
 
