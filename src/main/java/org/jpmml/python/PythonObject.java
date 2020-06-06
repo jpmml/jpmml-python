@@ -305,4 +305,16 @@ public class PythonObject extends ClassDict {
 	public Map<String, ?> getDict(String name){
 		return (Map)get(name, Map.class);
 	}
+
+	public <E extends PythonObject> E getPythonObject(String name, E object){
+		Map<String, ?> map = getDict(name);
+
+		if(map.containsKey("__class__")){
+			throw new IllegalArgumentException("Dict attribute \'" + ClassDictUtil.formatMember(PythonObject.this, name) + "\' has a non-dict value (" + ClassDictUtil.formatClass(map) + ")");
+		}
+
+		object.putAll(map);
+
+		return object;
+	}
 }

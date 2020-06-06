@@ -18,9 +18,8 @@
  */
 package pandas.core;
 
-import java.util.Map;
-
 import org.jpmml.python.CustomPythonObject;
+import org.jpmml.python.PythonObject;
 
 public class Index extends CustomPythonObject {
 
@@ -28,8 +27,8 @@ public class Index extends CustomPythonObject {
 		super(module, name);
 	}
 
-	public Map<String, ?> getData(){
-		return getDict("data");
+	public Data getData(){
+		return getPythonObject("data", this.new Data("data"));
 	}
 
 	@Override
@@ -40,6 +39,13 @@ public class Index extends CustomPythonObject {
 	@Override
 	public void __setstate__(Object[] args){
 		super.__setstate__(createAttributeMap(SETSTATE_ATTRIBUTES, args));
+	}
+
+	public class Data extends PythonObject {
+
+		public Data(String name){
+			super(Index.this.getPythonModule() + "." + Index.this.getPythonName(), name);
+		}
 	}
 
 	private static final String[] INIT_ATTRIBUTES = {
