@@ -21,6 +21,7 @@ package org.jpmml.python;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import com.google.common.collect.Lists;
 import joblib.NDArrayWrapper;
@@ -299,5 +300,9 @@ public class PythonObject extends ClassDict {
 		};
 
 		return Lists.transform(values, castFunction);
+	}
+
+	public Map<String, ?> getDict(String name){
+		return (Map)get(name, Map.class);
 	}
 }

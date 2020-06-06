@@ -29,7 +29,7 @@ public class Index extends CustomPythonObject {
 	}
 
 	public Map<String, ?> getData(){
-		return get("data", Map.class);
+		return getDict("data");
 	}
 
 	@Override
