@@ -18,46 +18,20 @@
  */
 package pandas.core;
 
-import java.util.List;
-
-import org.jpmml.python.CustomPythonObject;
+import com.google.common.collect.Iterables;
 import org.jpmml.python.HasArray;
 
-public class BlockManager extends CustomPythonObject {
+public class SingleBlockManager extends BlockManager {
 
-	public BlockManager(String module, String name){
+	public SingleBlockManager(String module, String name){
 		super(module, name);
 	}
 
-	public List<Index> getAxesArray(){
-		return getList("axes_array", Index.class);
+	public Index getOnlyBlockItem(){
+		return Iterables.getOnlyElement(getBlockItems());
 	}
 
-	public List<Index> getBlockItems(){
-		return getList("block_items", Index.class);
+	public HasArray getOnlyBlockValue(){
+		return Iterables.getOnlyElement(getBlockValues());
 	}
-
-	public List<HasArray> getBlockValues(){
-		return getList("block_values", HasArray.class);
-	}
-
-	@Override
-	public void __setstate__(Object[] args){
-
-		if(args.length > 3){
-			Object[] newArgs = new Object[3];
-
-			System.arraycopy(args, 0, newArgs, 0, newArgs.length);
-
-			args = newArgs;
-		}
-
-		super.__setstate__(createAttributeMap(SETSTATE_ATTRIBUTES, args));
-	}
-
-	private static final String[] SETSTATE_ATTRIBUTES = {
-		"axes_array",
-		"block_values",
-		"block_items"
-	};
 }

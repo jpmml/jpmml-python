@@ -18,6 +18,8 @@
  */
 package pandas.core;
 
+import java.util.List;
+
 import org.jpmml.python.CustomPythonObject;
 import org.jpmml.python.PythonObject;
 
@@ -45,6 +47,10 @@ public class Index extends CustomPythonObject {
 
 		public Data(String name){
 			super(Index.this.getPythonModule() + "." + Index.this.getPythonName(), name);
+		}
+
+		public List<?> getData(){
+			return getArray("data");
 		}
 	}
 

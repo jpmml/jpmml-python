@@ -87,6 +87,8 @@ public class TypeDescriptor {
 					default:
 						throw new IllegalArgumentException(descr);
 				}
+			case OBJECT:
+				return DataType.STRING;
 			case STRING:
 			case UNICODE:
 				return DataType.STRING;
