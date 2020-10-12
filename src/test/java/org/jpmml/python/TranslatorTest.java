@@ -27,25 +27,28 @@ import org.jpmml.converter.BooleanFeature;
 import org.jpmml.converter.ContinuousFeature;
 import org.jpmml.converter.Feature;
 import org.jpmml.converter.ObjectFeature;
+import org.jpmml.converter.PMMLEncoder;
 
 abstract
 class TranslatorTest {
 
+	private static final PMMLEncoder encoder = new PMMLEncoder();
+
 	static final List<Feature> booleanFeatures = Arrays.asList(
-		new BooleanFeature(null, FieldName.create("a")),
-		new BooleanFeature(null, FieldName.create("b")),
-		new BooleanFeature(null, FieldName.create("c"))
+		new BooleanFeature(TranslatorTest.encoder, FieldName.create("a")),
+		new BooleanFeature(TranslatorTest.encoder, FieldName.create("b")),
+		new BooleanFeature(TranslatorTest.encoder, FieldName.create("c"))
 	);
 
 	static final List<Feature> doubleFeatures = Arrays.asList(
-		new ContinuousFeature(null, FieldName.create("a"), DataType.DOUBLE),
-		new ContinuousFeature(null, FieldName.create("b"), DataType.DOUBLE),
-		new ContinuousFeature(null, FieldName.create("c"), DataType.DOUBLE)
+		new ContinuousFeature(TranslatorTest.encoder, FieldName.create("a"), DataType.DOUBLE),
+		new ContinuousFeature(TranslatorTest.encoder, FieldName.create("b"), DataType.DOUBLE),
+		new ContinuousFeature(TranslatorTest.encoder, FieldName.create("c"), DataType.DOUBLE)
 	);
 
 	static final List<Feature> stringFeatures = Arrays.asList(
-		new ObjectFeature(null, FieldName.create("a"), DataType.STRING),
-		new ObjectFeature(null, FieldName.create("b"), DataType.STRING),
-		new ObjectFeature(null, FieldName.create("c"), DataType.STRING)
+		new ObjectFeature(TranslatorTest.encoder, FieldName.create("a"), DataType.STRING),
+		new ObjectFeature(TranslatorTest.encoder, FieldName.create("b"), DataType.STRING),
+		new ObjectFeature(TranslatorTest.encoder, FieldName.create("c"), DataType.STRING)
 	);
 }
