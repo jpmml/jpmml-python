@@ -62,6 +62,14 @@ public class UFuncUtil {
 				return PMMLUtil.createApply(PMMLFunctions.ATAN2, getElement(expressions, 2, 0), getElement(expressions, 2, 1));
 			case "ceil":
 				return PMMLUtil.createApply(PMMLFunctions.CEIL, getOnlyElement(expressions));
+			case "clip":
+				return PMMLUtil.createApply(PMMLFunctions.MIN,
+					PMMLUtil.createApply(PMMLFunctions.MAX,
+						getElement(expressions, 3, 0),
+						getElement(expressions, 3, 1)
+					),
+					getElement(expressions, 3, 2)
+				);
 			case "cos":
 				return PMMLUtil.createApply(PMMLFunctions.COS, getOnlyElement(expressions));
 			case "cosh":
@@ -89,6 +97,8 @@ public class UFuncUtil {
 				return PMMLUtil.createApply(PMMLFunctions.LOG10, getOnlyElement(expressions));
 			case "negative":
 				return PMMLUtil.createApply(PMMLFunctions.MULTIPLY, PMMLUtil.createConstant(-1), getOnlyElement(expressions));
+			case "power":
+				return PMMLUtil.createApply(PMMLFunctions.POW, getElement(expressions, 2, 0), getElement(expressions, 2, 1));
 			case "radians":
 			case "deg2rad":
 				return PMMLUtil.createApply(PMMLFunctions.MULTIPLY, getOnlyElement(expressions), PMMLUtil.createConstant(Math.PI / 180d));
