@@ -240,6 +240,20 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 		String string = "X[0].lower() if (X[1].strip()) == \'lowercase\' else X[0].upper()";
 
 		checkExpression(expected, string, new DataFrameScope(stringFeatures));
+
+		expected = PMMLUtil.createApply(PMMLFunctions.IF)
+			.addExpressions(PMMLUtil.createApply(PMMLFunctions.GREATERTHAN)
+				.addExpressions(PMMLUtil.createApply(PMMLFunctions.STRINGLENGTH)
+					.addExpressions(new FieldRef(FieldName.create("a")))
+				)
+				.addExpressions(PMMLUtil.createConstant("0", DataType.INTEGER))
+			)
+			.addExpressions(PMMLUtil.createConstant("true", DataType.BOOLEAN))
+			.addExpressions(PMMLUtil.createConstant("false", DataType.BOOLEAN));
+
+		string = "True if len(X[0]) > 0 else False";
+
+		checkExpression(expected, string, new DataFrameScope(stringFeatures));
 	}
 
 	@Test

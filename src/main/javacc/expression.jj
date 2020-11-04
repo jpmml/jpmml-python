@@ -176,13 +176,33 @@ public class ExpressionTranslator extends AbstractTranslator {
 
 	static
 	private Expression translateFunction(String function, List<Expression> arguments){
+		String module;
+		String name;
+
 		int dot = function.lastIndexOf('.');
-		if(dot < 0){
-			throw new IllegalArgumentException(function);
+		if(dot > -1){
+			module = function.substring(0, dot);
+			name = function.substring(dot + 1);
+		} else
+
+		{
+			module = "";
+			name = function;
 		}
 
-		String module = function.substring(0, dot);
-		String name = function.substring(dot + 1);
+		if(("").equals(module)){
+			
+			if(arguments.size() != 1){
+				throw new IllegalArgumentException();
+			}
+
+			switch(name){
+				case "len":
+					return PMMLUtil.createApply(PMMLFunctions.STRINGLENGTH, arguments.get(0));
+				default:
+					break;
+			}
+		} else
 
 		if(("pandas").equals(module) || ("pd").equals(module)){
 
