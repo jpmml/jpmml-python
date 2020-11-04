@@ -241,6 +241,10 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 		checkExpression(expected, string, new DataFrameScope(stringFeatures));
 
+		string = "a.lower() if (b.strip()) == \'lowercase\' else a.upper()";
+
+		checkExpression(expected, string, new BlockScope(stringFeatures));
+
 		expected = PMMLUtil.createApply(PMMLFunctions.IF)
 			.addExpressions(PMMLUtil.createApply(PMMLFunctions.GREATERTHAN)
 				.addExpressions(PMMLUtil.createApply(PMMLFunctions.STRINGLENGTH)
