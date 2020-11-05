@@ -226,9 +226,12 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 		Expression expected = PMMLUtil.createApply(PMMLFunctions.IF)
 			.addExpressions(PMMLUtil.createApply(PMMLFunctions.EQUAL)
 				.addExpressions(PMMLUtil.createApply(PMMLFunctions.TRIMBLANKS)
-					.addExpressions(new FieldRef(FieldName.create("b")))
+					.addExpressions(PMMLUtil.createApply(PMMLFunctions.SUBSTRING)
+						.addExpressions(new FieldRef(FieldName.create("b")))
+						.addExpressions(PMMLUtil.createConstant(1, DataType.INTEGER), PMMLUtil.createConstant(1, DataType.INTEGER))
+					)
 				)
-				.addExpressions(PMMLUtil.createConstant("lowercase", DataType.STRING))
+				.addExpressions(PMMLUtil.createConstant("low", DataType.STRING))
 			)
 			.addExpressions(PMMLUtil.createApply(PMMLFunctions.LOWERCASE)
 				.addExpressions(new FieldRef(FieldName.create("a")))
@@ -237,11 +240,11 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 				.addExpressions(new FieldRef(FieldName.create("a")))
 			);
 
-		String string = "X[0].lower() if (X[1].strip()) == \'lowercase\' else X[0].upper()";
+		String string = "X[0].lower() if (X[1][0:1].strip()) == \'low\' else X[0].upper()";
 
 		checkExpression(expected, string, new DataFrameScope(stringFeatures));
 
-		string = "a.lower() if (b.strip()) == \'lowercase\' else a.upper()";
+		string = "a.lower() if (b[0:1].strip()) == \'low\' else a.upper()";
 
 		checkExpression(expected, string, new BlockScope(stringFeatures));
 
@@ -255,7 +258,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 			.addExpressions(PMMLUtil.createConstant("true", DataType.BOOLEAN))
 			.addExpressions(PMMLUtil.createConstant("false", DataType.BOOLEAN));
 
-		string = "True if len(X[0]) > 0 else False";
+		string = "True if len(X[0][:]) > 0 else False";
 
 		checkExpression(expected, string, new DataFrameScope(stringFeatures));
 	}

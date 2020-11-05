@@ -250,6 +250,16 @@ public class ExpressionTranslator extends AbstractTranslator {
 
 		return image;
 	}
+
+	static
+	private int parseNonNegativeInt(String string){
+		int value = Integer.parseInt(string);
+		if(value < 0){
+			throw new IllegalArgumentException(string);
+		}
+
+		return value;
+	}
 }
 PARSER_END(ExpressionTranslator)
 
@@ -324,6 +334,8 @@ TOKEN:
 	< COMMA: "," >
 	|
 	< DOT: "." >
+	|
+	< COLON: ":" >
 }
 
 TOKEN:
@@ -547,14 +559,15 @@ Expression PrimaryExpression():
 	(
 		featureOrFunction = DottedName()
 		(
-			expression = ArrayIndexingExpression(featureOrFunction) ( expression = TrailerFunctionInvocationExpression(expression) )*
+			LOOKAHEAD(<LBRACKET> (<INT> | <STRING>) <RBRACKET>)
+			expression = ArrayIndexingExpression(featureOrFunction) ( expression = TrailerFunctionInvocationExpression(expression) | expression = StringSlicingExpression(expression) )*
 			|
-			expression = FunctionInvocationExpression(featureOrFunction) ( expression = TrailerFunctionInvocationExpression(expression) )*
+			expression = FunctionInvocationExpression(featureOrFunction) ( expression = TrailerFunctionInvocationExpression(expression) | expression = StringSlicingExpression(expression) )*
 			|
-			expression = NameInvocationExpression(featureOrFunction)
+			expression = NameInvocationExpression(featureOrFunction) ( expression = StringSlicingExpression(expression) ( expression = TrailerFunctionInvocationExpression(expression) | expression = StringSlicingExpression(expression) )* )?
 		)
 		|
-		expression = ParenthesizedExpression() ( expression = TrailerFunctionInvocationExpression(expression) )*
+		expression = ParenthesizedExpression() ( expression = TrailerFunctionInvocationExpression(expression) | expression = StringSlicingExpression(expression) )*
 		|
 		expression = LiteralExpression()
 	)
@@ -597,7 +610,7 @@ FieldRef ArrayIndexingExpression(String dottedName):
 		switch(column.kind){
 			case ExpressionTranslatorConstants.INT:
 				{
-					int colIndex = Integer.parseInt(column.image);
+					int colIndex = parseNonNegativeInt(column.image);
 
 					feature = scope.getFeature(FieldName.create(dottedName), colIndex);
 				}
@@ -670,6 +683,36 @@ List<Expression> Arguments():
 
 	{
 		return expressions;
+	}
+}
+
+Expression StringSlicingExpression(Expression expression):
+{
+	Token start = null;
+	Token stop = null;
+}
+{
+	<LBRACKET> (start = <INT>)? <COLON> (stop = <INT>)? <RBRACKET>
+	
+	{
+		if(start == null && stop == null){
+			return expression;
+		}
+		
+		int offset = 0;
+		int length = Integer.MAX_VALUE; // XXX
+
+		if(start != null){
+			offset = parseNonNegativeInt(start.image);
+		} // End if
+
+		if(stop != null){
+			length = (parseNonNegativeInt(stop.image) - offset);
+		}
+		
+		return PMMLUtil.createApply(PMMLFunctions.SUBSTRING)
+			.addExpressions(expression)
+			.addExpressions(PMMLUtil.createConstant(offset + 1, DataType.INTEGER), PMMLUtil.createConstant(length, DataType.INTEGER));
 	}
 }
 
