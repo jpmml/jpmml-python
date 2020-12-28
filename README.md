@@ -1,5 +1,5 @@
-JPMML-Python
-===============
+JPMML-Python [![Build Status](https://github.com/jpmml/jpmml-python/workflows/maven/badge.svg)](https://github.com/jpmml/jpmml-python/actions?query=workflow%3A%22maven%22)
+============
 
 Java library for converting Python models to PMML.
 
