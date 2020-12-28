@@ -19,9 +19,9 @@
 package numpy;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.LinkedHashSet;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -107,16 +107,9 @@ public class DType extends CustomPythonObject {
 
 		Set<String> valueKeys = values.keySet();
 
-		if((TREE_KEYS).equals(valueKeys)){
-			return formatDescr(TREE_KEYS, values);
-		} else
-
-		if((NODEDATA_KEYS).equals(valueKeys)){
-			return formatDescr(NODEDATA_KEYS, values);
-		} else
-
-		if((NODESTRUCT_KEYS).equals(valueKeys)){
-			return formatDescr(NODESTRUCT_KEYS, values);
+		List<String> definition = DType.definitions.get(valueKeys);
+		if(definition != null){
+			return formatDescr(definition, values);
 		}
 
 		throw new IllegalArgumentException();
@@ -132,6 +125,16 @@ public class DType extends CustomPythonObject {
 
 	public String getOrder(){
 		return (String)get("order");
+	}
+
+	static
+	public void addDefinition(List<String> definition){
+		DType.definitions.put(new HashSet<>(definition), definition);
+	}
+
+	static
+	public void removeDefinition(List<String> definition){
+		DType.definitions.remove(new HashSet<>(definition));
 	}
 
 	static
@@ -159,6 +162,8 @@ public class DType extends CustomPythonObject {
 		return (order != null ? (order + obj) : obj);
 	}
 
+	private static final Map<Set<String>, List<String>> definitions = new HashMap<>();
+
 	private static final String[] INIT_ATTRIBUTES = {
 		"obj",
 		"align",
@@ -175,8 +180,4 @@ public class DType extends CustomPythonObject {
 		"alignment",
 		"flags"
 	};
-
-	private static final Set<String> TREE_KEYS = new LinkedHashSet<>(Arrays.asList("left_child", "right_child", "feature", "threshold", "impurity", "n_node_samples", "weighted_n_node_samples"));
-	private static final Set<String> NODEDATA_KEYS = new LinkedHashSet<>(Arrays.asList("idx_start", "idx_end", "is_leaf", "radius"));
-	private static final Set<String> NODESTRUCT_KEYS = new LinkedHashSet<>(Arrays.asList("value", "count", "feature_idx", "threshold", "missing_go_to_left", "left", "right", "gain", "depth", "is_leaf", "bin_threshold"));
 }
