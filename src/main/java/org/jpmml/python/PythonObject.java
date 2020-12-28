@@ -194,7 +194,7 @@ public class PythonObject extends ClassDict {
 	public List<Number> getNumberArray(String name){
 		Object object = get(name);
 
-		if(Number.class.isInstance(object)){
+		if((Number.class).isInstance(object)){
 			return Collections.singletonList((Number)object);
 		}
 

@@ -129,7 +129,7 @@ public class PickleUtilTest {
 	private Object unpickle(String name) throws IOException {
 		byte[] bytes;
 
-		InputStream is = PickleUtilTest.class.getResourceAsStream("/dump/" + name);
+		InputStream is = (PickleUtilTest.class).getResourceAsStream("/dump/" + name);
 
 		try {
 			bytes = ByteStreams.toByteArray(is);

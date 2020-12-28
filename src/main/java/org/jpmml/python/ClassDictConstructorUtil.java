@@ -52,7 +52,7 @@ public class ClassDictConstructorUtil {
 	public String getModule(ClassDictConstructor dictConstructor){
 
 		try {
-			Field field = ClassDictConstructor.class.getDeclaredField("module");
+			Field field = (ClassDictConstructor.class).getDeclaredField("module");
 			if(!field.isAccessible()){
 				field.setAccessible(true);
 			}
@@ -67,7 +67,7 @@ public class ClassDictConstructorUtil {
 	public String getName(ClassDictConstructor dictConstructor){
 
 		try {
-			Field field = ClassDictConstructor.class.getDeclaredField("name");
+			Field field = (ClassDictConstructor.class).getDeclaredField("name");
 			if(!field.isAccessible()){
 				field.setAccessible(true);
 			}
