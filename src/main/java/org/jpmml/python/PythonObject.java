@@ -158,10 +158,6 @@ public class PythonObject extends ClassDict {
 			HasArray hasArray = (HasArray)object;
 
 			return hasArray.getArrayContent();
-		} // End if
-
-		if(object instanceof Number){
-			return Collections.singletonList(object);
 		}
 
 		throw new IllegalArgumentException("The value of \'" + ClassDictUtil.formatMember(this, name) + "\' attribute (" + ClassDictUtil.formatClass(object) + ") is not a supported array type");
@@ -196,6 +192,12 @@ public class PythonObject extends ClassDict {
 	}
 
 	public List<Number> getNumberArray(String name){
+		Object object = get(name);
+
+		if(Number.class.isInstance(object)){
+			return Collections.singletonList((Number)object);
+		}
+
 		List<?> values = getArray(name);
 
 		CastFunction<Number> castFunction = new CastFunction<Number>(Number.class){
@@ -289,6 +291,12 @@ public class PythonObject extends ClassDict {
 	}
 
 	public <E> List<E> getListLike(String name, Class<? extends E> clazz){
+		Object object = get(name);
+
+		if(clazz.isInstance(object)){
+			return Collections.singletonList(clazz.cast(object));
+		}
+
 		List<?> values = getListLike(name);
 
 		CastFunction<E> castFunction = new CastFunction<E>(clazz){
