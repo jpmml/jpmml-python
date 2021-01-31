@@ -64,6 +64,11 @@ public class PickleUtilTest {
 		unpickleNumpyArrays("python-3.4_numpy-1.13.3");
 	}
 
+	@Test
+	public void python37() throws IOException {
+		unpickleNumpyArrays("python-3.7_numpy-1.20.0");
+	}
+
 	private void unpickleNumpyArrays(String prefix) throws IOException {
 		unpickleNumpyArray(prefix + "_bool.pkl", Arrays.asList(false, true));
 
