@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.razorvine.pickle.objects.ClassDict;
+import net.razorvine.pickle.objects.ClassDictConstructor;
 
 public class ClassDictUtil {
 
@@ -126,6 +127,12 @@ public class ClassDictUtil {
 			ClassDict dict = (ClassDict)object;
 
 			return "Python class " + dict.getClassName();
+		} else
+
+		if(object instanceof ClassDictConstructor){
+			ClassDictConstructor classDictConstructor = (ClassDictConstructor)object;
+
+			return "Python class " + ClassDictConstructorUtil.getClassName(classDictConstructor);
 		}
 
 		Class<?> clazz = object.getClass();
