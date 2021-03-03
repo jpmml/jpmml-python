@@ -24,25 +24,25 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class UFuncTest extends PickleUtilTest {
+public class FunctionTest extends PickleUtilTest {
 
 	@Test
 	public void python27() throws IOException {
-		unpickleUFuncs("python-2.7_numpy-1.16.6");
+		unpickleNumpyFunctions("python-2.7_numpy-1.16.6");
 	}
 
 	@Test
 	public void python34() throws IOException {
-		unpickleUFuncs("python-3.4_numpy-1.13.3");
+		unpickleNumpyFunctions("python-3.4_numpy-1.13.3");
 	}
 
 	@Test
 	public void python37() throws IOException {
-		unpickleUFuncs("python-3.7_numpy-1.20.0");
+		unpickleNumpyFunctions("python-3.7_numpy-1.20.0");
 	}
 
 	static
-	private void unpickleUFuncs(String prefix) throws IOException {
+	private void unpickleNumpyFunctions(String prefix) throws IOException {
 		String[] names = {"absolute", "arccos", "arcsin", "arctan", "arctan2", "ceil", "clip", "cos", "cosh", "degrees", "rad2deg", "exp", "expm1", "floor", "fmax", "fmin", "hypot", "log", "log1p", "log10", "negative", "power", "radians", "deg2rad", "reciprocal", "rint", "sign", "sin", "sinh", "sqrt", "square", "tan", "tanh"};
 
 		for(String name : names){
@@ -54,9 +54,9 @@ public class UFuncTest extends PickleUtilTest {
 				object = dictConstructor.newObject();
 			}
 
-			Identifiable ufunc = (Identifiable)object;
+			Identifiable identifiable = (Identifiable)object;
 
-			assertEquals(name, ufunc.getName());
+			assertEquals(name, identifiable.getName());
 		}
 	}
 }

@@ -23,31 +23,32 @@ import java.util.List;
 import org.dmg.pmml.Expression;
 import org.dmg.pmml.PMMLFunctions;
 import org.jpmml.converter.PMMLUtil;
+import org.jpmml.python.Identifiable;
 
-public class UFuncUtil {
+public class FunctionUtil {
 
-	private UFuncUtil(){
+	private FunctionUtil(){
 	}
 
 	static
-	public Expression encodeUFunc(UFunc ufunc, List<Expression> expressions){
-		return encodeUFunc(ufunc.getModule(), ufunc.getName(), expressions);
+	public Expression encodeFunction(Identifiable identifiable, List<Expression> expressions){
+		return encodeFunction(identifiable.getModule(), identifiable.getName(), expressions);
 	}
 
 	static
-	public Expression encodeUFunc(String module, String name, List<Expression> expressions){
+	public Expression encodeFunction(String module, String name, List<Expression> expressions){
 
-		switch(module){
-			case "numpy":
-			case "numpy.core":
-				return encodeNumpyUFunc(name, expressions);
-			default:
-				throw new IllegalArgumentException(module);
+		if((module).equals("numpy") || (module).startsWith("numpy.")){
+			return encodeNumpyFunction(name, expressions);
+		} else
+
+		{
+			throw new IllegalArgumentException(module);
 		}
 	}
 
 	static
-	public Expression encodeNumpyUFunc(String name, List<Expression> expressions){
+	public Expression encodeNumpyFunction(String name, List<Expression> expressions){
 
 		switch(name){
 			case "absolute":

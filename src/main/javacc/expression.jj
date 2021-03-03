@@ -28,7 +28,7 @@ package org.jpmml.python;
 import java.util.ArrayList;
 import java.util.List;
 
-import numpy.core.UFuncUtil;
+import numpy.core.FunctionUtil;
 import org.dmg.pmml.Apply;
 import org.dmg.pmml.Constant;
 import org.dmg.pmml.DataType;
@@ -221,7 +221,7 @@ public class ExpressionTranslator extends AbstractTranslator {
 		} else
 
 		if(("numpy").equals(module) || ("np").equals(module)){
-			return UFuncUtil.encodeUFunc("numpy", name, arguments);
+			return FunctionUtil.encodeFunction("numpy", name, arguments);
 		}
 
 		throw new IllegalArgumentException(function);
