@@ -70,6 +70,14 @@ public class PythonObject extends ClassDict {
 			}
 
 			throw new IllegalArgumentException("Attribute \'" + ClassDictUtil.formatMember(this, name) + "\' has a missing (None/null) value");
+		} // End if
+
+		if(value instanceof PythonObjectConstructor){
+			PythonObjectConstructor dictConstructor = (PythonObjectConstructor)value;
+
+			if((Identifiable.class).isAssignableFrom(clazz)){
+				value = dictConstructor.newObject();
+			}
 		}
 
 		CastFunction<E> castFunction = new CastFunction<E>(clazz){
