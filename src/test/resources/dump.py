@@ -1,3 +1,5 @@
+from common import _pickle, _platform_module
+
 from sklearn.datasets import load_iris
 from sklearn.externals import joblib as sklearn_joblib
 from sklearn.linear_model import LogisticRegressionCV
@@ -5,22 +7,6 @@ from sklearn.linear_model import LogisticRegressionCV
 import joblib
 import numpy
 import pickle
-import platform
-
-def _platform():
-	version = platform.python_version_tuple()
-	return ("python-" + version[0] + "." + version[1])
-
-def _module(name, version):
-	return (name + "-" + version)
-
-def _platform_module(name, version):
-	return (_platform() + "_" + _module(name, version))
-
-def _pickle(obj, path, protocol = pickle.HIGHEST_PROTOCOL):
-	con = open(path, "wb")
-	pickle.dump(obj, con, protocol = protocol)
-	con.close()
 
 iris = load_iris()
 

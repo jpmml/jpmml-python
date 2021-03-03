@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Villu Ruusmann
+ * Copyright (c) 2021 Villu Ruusmann
  *
  * This file is part of JPMML-Python
  *
@@ -18,32 +18,22 @@
  */
 package numpy.core;
 
-import org.jpmml.python.CustomPythonObject;
 import org.jpmml.python.Identifiable;
+import org.jpmml.python.PythonObject;
 
-public class UFunc extends CustomPythonObject implements Identifiable {
+public class Function extends PythonObject implements Identifiable {
 
-	public UFunc(String module, String name){
+	public Function(String module, String name){
 		super(module, name);
 	}
 
 	@Override
-	public void __init__(Object[] args){
-		super.__setstate__(createAttributeMap(INIT_ATTRIBUTES, args));
-	}
-
-	@Override
 	public String getModule(){
-		return (String)get("module");
+		return getPythonModule();
 	}
 
 	@Override
 	public String getName(){
-		return (String)get("name");
+		return getPythonName();
 	}
-
-	private static final String[] INIT_ATTRIBUTES = {
-		"module",
-		"name"
-	};
 }

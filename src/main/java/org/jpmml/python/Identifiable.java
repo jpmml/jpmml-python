@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Villu Ruusmann
+ * Copyright (c) 2021 Villu Ruusmann
  *
  * This file is part of JPMML-Python
  *
@@ -16,34 +16,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with JPMML-Python.  If not, see <http://www.gnu.org/licenses/>.
  */
-package numpy.core;
+package org.jpmml.python;
 
-import org.jpmml.python.CustomPythonObject;
-import org.jpmml.python.Identifiable;
+public interface Identifiable {
 
-public class UFunc extends CustomPythonObject implements Identifiable {
+	String getModule();
 
-	public UFunc(String module, String name){
-		super(module, name);
-	}
-
-	@Override
-	public void __init__(Object[] args){
-		super.__setstate__(createAttributeMap(INIT_ATTRIBUTES, args));
-	}
-
-	@Override
-	public String getModule(){
-		return (String)get("module");
-	}
-
-	@Override
-	public String getName(){
-		return (String)get("name");
-	}
-
-	private static final String[] INIT_ATTRIBUTES = {
-		"module",
-		"name"
-	};
+	String getName();
 }
