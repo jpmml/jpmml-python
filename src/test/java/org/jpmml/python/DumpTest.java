@@ -25,6 +25,9 @@ import java.util.List;
 import numpy.DType;
 import numpy.core.NDArray;
 import org.junit.Test;
+import pandas.core.Index;
+import pandas.core.Series;
+import pandas.core.SingleBlockManager;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -49,6 +52,7 @@ public class DumpTest extends PickleUtilTest {
 		unpickle("python-3.4_joblib-0.9.3.pkl.z");
 		unpickle("python-3.4_joblib-0.9.4.pkl.z");
 		unpickle("python-3.4_joblib-0.10.0.pkl.z");
+		unpickle("python-3.4_joblib-0.13.2.pkl.z");
 
 		unpickle("python-3.4_pickle-p2.pkl");
 		unpickle("python-3.4_pickle-p3.pkl");
@@ -63,7 +67,17 @@ public class DumpTest extends PickleUtilTest {
 
 	@Test
 	public void python37() throws IOException {
+		unpickle("python-3.7_joblib-1.0.1.pkl.z");
+
+		unpickle("python-3.7_pickle-p2.pkl");
+		unpickle("python-3.7_pickle-p3.pkl");
+		unpickle("python-3.7_pickle-p4.pkl");
+
 		unpickleNumpyArrays("python-3.7_numpy-1.20.0");
+
+		unpicklePandasSeries("python-3.7_pandas-1.0.5");
+		unpicklePandasSeries("python-3.7_pandas-1.1.3");
+		unpicklePandasSeries("python-3.7_pandas-1.2.3");
 	}
 
 	private void unpickleNumpyArrays(String prefix) throws IOException {
@@ -125,6 +139,43 @@ public class DumpTest extends PickleUtilTest {
 				assertEquals(expectedValue.longValue(), value.longValue());
 			}
 		}
+	}
+
+	private void unpicklePandasSeries(String prefix) throws IOException {
+		unpicklePandasSeries(prefix + "_bool.pkl", Arrays.asList(false, true));
+		unpicklePandasSeries(prefix + "_int8.pkl", Byte.MIN_VALUE, Byte.MAX_VALUE, 1);
+		unpicklePandasSeries(prefix + "_int.pkl", Integer.MIN_VALUE, Integer.MAX_VALUE, 64 * 32767);
+	}
+
+	private void unpicklePandasSeries(String name, List<?> expectedValues) throws IOException {
+		Series series = (Series)unpickle(name);
+
+		List<?> data = getData(series);
+
+		assertEquals(expectedValues, data);
+	}
+
+	private void unpicklePandasSeries(String name, long min, long max, long step) throws IOException {
+		Series series = (Series)unpickle(name);
+
+		List<?> data = getData(series);
+
+		for(int i = 0; i < data.size(); i++){
+			Number expectedValue = min + (i * step);
+			Number value = (Number)data.get(i);
+
+			assertEquals(expectedValue.longValue(), value.longValue());
+		}
+	}
+
+	static
+	private List<?> getData(Series series){
+		SingleBlockManager data = series.getBlockManager();
+
+		Index blockItem = data.getOnlyBlockItem();
+		HasArray blockValue = data.getOnlyBlockValue();
+
+		return blockValue.getArrayContent();
 	}
 
 	static

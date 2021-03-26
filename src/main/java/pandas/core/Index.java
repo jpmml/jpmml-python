@@ -18,8 +18,11 @@
  */
 package pandas.core;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import net.razorvine.pickle.objects.ClassDictConstructor;
+import org.jpmml.python.ClassDictConstructorUtil;
 import org.jpmml.python.CustomPythonObject;
 import org.jpmml.python.PythonObject;
 
@@ -29,8 +32,21 @@ public class Index extends CustomPythonObject {
 		super(module, name);
 	}
 
+	public String getCls(){
+		ClassDictConstructor dictConstructor = get("cls", ClassDictConstructor.class);
+
+		return ClassDictConstructorUtil.getClassName(dictConstructor);
+	}
+
 	public Data getData(){
-		return getPythonObject("data", this.new Data("data"));
+		String cls = getCls();
+
+		switch(cls){
+			case "pandas.core.indexes.range.RangeIndex":
+				return getPythonObject("data", this.new RangeData());
+			default:
+				return getPythonObject("data", this.new Data(getPythonModule(), "data"));
+		}
 	}
 
 	@Override
@@ -43,10 +59,44 @@ public class Index extends CustomPythonObject {
 		super.__setstate__(createAttributeMap(SETSTATE_ATTRIBUTES, args));
 	}
 
+	public class RangeData extends Data {
+
+		public RangeData(){
+			super("pandas.core.indexes.range", "RangeIndex");
+		}
+
+		@Override
+		public List<?> getData(){
+			int start = getStart();
+			int stop = getStop();
+			int step = getStep();
+
+			List<Integer> result = new ArrayList<>();
+
+			for(int i = start; i < stop; i += step){
+				result.add(i);
+			}
+
+			return result;
+		}
+
+		public Integer getStart(){
+			return getInteger("start");
+		}
+
+		public Integer getStop(){
+			return getInteger("stop");
+		}
+
+		public Integer getStep(){
+			return getInteger("step");
+		}
+	}
+
 	public class Data extends PythonObject {
 
-		public Data(String name){
-			super(Index.this.getPythonModule() + "." + Index.this.getPythonName(), name);
+		public Data(String module, String name){
+			super(module, name);
 		}
 
 		public List<?> getData(){

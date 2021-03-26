@@ -26,8 +26,15 @@ public class Series extends PythonObject {
 		super(module, name);
 	}
 
-	public SingleBlockManager getData(){
-		return get("_data", SingleBlockManager.class);
+	public SingleBlockManager getBlockManager(){
+
+		// Pandas 1.0
+		if(containsKey("_data")){
+			return get("_data", SingleBlockManager.class);
+		}
+
+		// Pandas 1.1+
+		return get("_mgr", SingleBlockManager.class);
 	}
 
 	public String getName(){
