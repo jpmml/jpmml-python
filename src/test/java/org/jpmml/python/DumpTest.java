@@ -80,6 +80,20 @@ public class DumpTest extends PickleUtilTest {
 		unpicklePandasSeries("python-3.7_pandas-1.2.3");
 	}
 
+	@Test
+	public void python39() throws Exception {
+		unpickle("python-3.9_joblib-1.0.1.pkl.z");
+
+		unpickle("python-3.9_pickle-p2.pkl");
+		unpickle("python-3.9_pickle-p3.pkl");
+		unpickle("python-3.9_pickle-p4.pkl");
+		unpickle("python-3.9_pickle-p5.pkl");
+
+		unpickleNumpyArrays("python-3.9_numpy-1.20.2");
+
+		unpicklePandasSeries("python-3.9_pandas-1.2.3");
+	}
+
 	private void unpickleNumpyArrays(String prefix) throws IOException {
 		unpickleNumpyArray(prefix + "_bool.pkl", Arrays.asList(false, true));
 

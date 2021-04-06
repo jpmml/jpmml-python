@@ -35,6 +35,8 @@ import joblib.NDArrayWrapperConstructor;
 import joblib.NumpyArrayWrapper;
 import net.razorvine.pickle.Opcodes;
 import net.razorvine.pickle.Unpickler;
+import numpy.core.FromBuffer;
+import numpy.core.FromBufferConstructor;
 import numpy.core.NDArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -219,15 +221,24 @@ public class PickleUtil {
 		if((PythonObject.class).isAssignableFrom(clazz)){
 
 			if((CustomPythonObject.class).isAssignableFrom(clazz)){
-				dictConstructor = new CustomPythonObjectConstructor(module, name, (Class<? extends CustomPythonObject>)clazz);
-			} else
 
-			if((NamedTuple.class).isAssignableFrom(clazz)){
-				dictConstructor = new NamedTupleConstructor(module, name, (Class<? extends NamedTuple>)clazz);
+				if((FromBuffer.class).isAssignableFrom(clazz)){
+					dictConstructor = new FromBufferConstructor(module, name);
+				} else
+
+				{
+					dictConstructor = new CustomPythonObjectConstructor(module, name, (Class<? extends CustomPythonObject>)clazz);
+				}
 			} else
 
 			{
-				dictConstructor = new PythonObjectConstructor(module, name, (Class<? extends PythonObject>)clazz);
+				if((NamedTuple.class).isAssignableFrom(clazz)){
+					dictConstructor = new NamedTupleConstructor(module, name, (Class<? extends NamedTuple>)clazz);
+				} else
+
+				{
+					dictConstructor = new PythonObjectConstructor(module, name, (Class<? extends PythonObject>)clazz);
+				}
 			}
 		} else
 
