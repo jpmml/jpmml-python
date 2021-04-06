@@ -257,7 +257,7 @@ public class PickleUtil {
 
 		String[] strings = body.split("\\|");
 		for(String string : strings){
-			result.add(prefix + string + suffix);
+			result.addAll(expandComplexKey(prefix + string + suffix));
 		}
 
 		return result;
