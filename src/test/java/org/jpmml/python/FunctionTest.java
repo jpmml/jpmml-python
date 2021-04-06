@@ -41,6 +41,11 @@ public class FunctionTest extends PickleUtilTest {
 		unpickleNumpyFunctions("python-3.7_numpy-1.20.0");
 	}
 
+	@Test
+	public void python38() throws IOException {
+		unpickleNumpyFunctions("python-3.8_numpy-1.20.1");
+	}
+
 	static
 	private void unpickleNumpyFunctions(String prefix) throws IOException {
 		String[] names = {"absolute", "arccos", "arcsin", "arctan", "arctan2", "ceil", "clip", "cos", "cosh", "degrees", "rad2deg", "exp", "expm1", "floor", "fmax", "fmin", "hypot", "log", "log1p", "log10", "negative", "power", "radians", "deg2rad", "reciprocal", "rint", "sign", "sin", "sinh", "sqrt", "square", "tan", "tanh"};
