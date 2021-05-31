@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import numpy.core.FunctionUtil;
-import org.dmg.pmml.Apply;
 import org.dmg.pmml.Constant;
 import org.dmg.pmml.DataType;
 import org.dmg.pmml.Expression;
@@ -41,48 +40,6 @@ import org.jpmml.converter.PMMLUtil;
 import org.jpmml.converter.visitors.ExpressionCompactor;
 
 public class ExpressionTranslator extends AbstractTranslator {
-	
-	static
-	public boolean isString(Expression expression, Scope scope){ 
-
-		if(expression instanceof Constant){
-			Constant constant = (Constant)expression;
-
-			return (DataType.STRING).equals(constant.getDataType());
-		} else
-
-		if(expression instanceof FieldRef){
-			FieldRef fieldRef = (FieldRef)expression;
-			
-			Feature feature = scope.resolveFeature(fieldRef.getField());
-			if(feature == null){
-				return false;
-			}
-
-			return (DataType.STRING).equals(feature.getDataType());
-		} else
-
-		if(expression instanceof Apply){
-			Apply apply = (Apply)expression;
-
-			String function = apply.getFunction();
-			switch(function){
-				case PMMLFunctions.CONCAT:
-				case PMMLFunctions.FORMATDATETIME:
-				case PMMLFunctions.FORMATNUMBER:
-				case PMMLFunctions.LOWERCASE:
-				case PMMLFunctions.REPLACE:
-				case PMMLFunctions.SUBSTRING:
-				case PMMLFunctions.TRIMBLANKS:
-				case PMMLFunctions.UPPERCASE:
-					return true;
-				default:
-					return false;
-			}
-		}
-
-		return false;
-	}
 
 	static
 	public Expression translate(String string, Scope scope){
@@ -499,7 +456,7 @@ Expression AdditiveExpression():
 	left = MultiplicativeExpression() ((operator = <PLUS> | operator = <MINUS>) right = MultiplicativeExpression() {
 		Scope scope = ensureScope();
 		
-		if((operator.kind == PLUS) && (isString(left, scope) && isString(right, scope))){
+		if((operator.kind == PLUS) && (ExpressionUtil.isString(left, scope) && ExpressionUtil.isString(right, scope))){
 			left = PMMLUtil.createApply(PMMLFunctions.CONCAT, left, right);
 		} else
 
