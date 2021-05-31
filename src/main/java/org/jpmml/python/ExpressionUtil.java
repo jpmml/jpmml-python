@@ -18,6 +18,9 @@
  */
 package org.jpmml.python;
 
+import java.util.List;
+import java.util.Objects;
+
 import org.dmg.pmml.Apply;
 import org.dmg.pmml.Constant;
 import org.dmg.pmml.DataType;
@@ -33,11 +36,18 @@ public class ExpressionUtil {
 
 	static
 	public boolean isString(Expression expression, Scope scope){
+		DataType dataType = getDataType(expression, scope);
+
+		return (DataType.STRING).equals(dataType);
+	}
+
+	static
+	public DataType getDataType(Expression expression, Scope scope){
 
 		if(expression instanceof Constant){
 			Constant constant = (Constant)expression;
 
-			return (DataType.STRING).equals(constant.getDataType());
+			return constant.getDataType();
 		} else
 
 		if(expression instanceof FieldRef){
@@ -45,10 +55,10 @@ public class ExpressionUtil {
 
 			Feature feature = scope.resolveFeature(fieldRef.getField());
 			if(feature == null){
-				return false;
+				return null;
 			}
 
-			return (DataType.STRING).equals(feature.getDataType());
+			return feature.getDataType();
 		} else
 
 		if(expression instanceof Apply){
@@ -64,12 +74,33 @@ public class ExpressionUtil {
 				case PMMLFunctions.SUBSTRING:
 				case PMMLFunctions.TRIMBLANKS:
 				case PMMLFunctions.UPPERCASE:
-					return true;
+					return DataType.STRING;
+				case PMMLFunctions.IF:
+					{
+						List<Expression> expressions = apply.getExpressions();
+
+						if(expressions.size() > 1){
+							DataType trueDataType = getDataType(expressions.get(1), scope);
+
+							if(expressions.size() > 2){
+								DataType falseDataType = getDataType(expressions.get(2), scope);
+
+								if(Objects.equals(trueDataType, falseDataType)){
+									return trueDataType;
+								}
+
+								return null;
+							}
+
+							return trueDataType;
+						}
+					}
+					return null;
 				default:
-					return false;
+					return null;
 			}
 		}
 
-		return false;
+		return null;
 	}
 }
