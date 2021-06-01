@@ -22,6 +22,10 @@ import org.jpmml.python.PythonObject;
 
 public class Series extends PythonObject {
 
+	public Series(){
+		this("pandas.core.series", "Series");
+	}
+
 	public Series(String module, String name){
 		super(module, name);
 	}
@@ -35,6 +39,12 @@ public class Series extends PythonObject {
 
 		// Pandas 1.1+
 		return get("_mgr", SingleBlockManager.class);
+	}
+
+	public Series setBlockManager(SingleBlockManager singleBlockManager){
+		put("_mgr", singleBlockManager);
+
+		return this;
 	}
 
 	public String getName(){

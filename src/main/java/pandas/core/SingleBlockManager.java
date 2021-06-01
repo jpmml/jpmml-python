@@ -18,10 +18,16 @@
  */
 package pandas.core;
 
+import java.util.Collections;
+
 import com.google.common.collect.Iterables;
 import org.jpmml.python.HasArray;
 
 public class SingleBlockManager extends BlockManager {
+
+	public SingleBlockManager(){
+		this("pandas.core.internals.managers", "SingleBlockManager");
+	}
 
 	public SingleBlockManager(String module, String name){
 		super(module, name);
@@ -31,7 +37,19 @@ public class SingleBlockManager extends BlockManager {
 		return Iterables.getOnlyElement(getBlockItems());
 	}
 
+	public SingleBlockManager setOnlyBlockItem(Index index){
+		setBlockItems(Collections.singletonList(index));
+
+		return this;
+	}
+
 	public HasArray getOnlyBlockValue(){
 		return Iterables.getOnlyElement(getBlockValues());
+	}
+
+	public SingleBlockManager setOnlyBlockValue(HasArray hasArray){
+		setBlockValues(Collections.singletonList(hasArray));
+
+		return this;
 	}
 }

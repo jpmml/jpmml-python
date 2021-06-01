@@ -32,6 +32,10 @@ public class Index extends CustomPythonObject {
 		super(module, name);
 	}
 
+	public List<?> getDataData(){
+		return getData().getData();
+	}
+
 	public String getCls(){
 		ClassDictConstructor dictConstructor = get("cls", ClassDictConstructor.class);
 

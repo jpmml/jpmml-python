@@ -27,6 +27,11 @@ public class DataFrame extends PythonObject {
 	}
 
 	public BlockManager getData(){
-		return get("_data", BlockManager.class);
+
+		if(containsKey("_data")){
+			return get("_data", BlockManager.class);
+		}
+
+		return get("_mgr", BlockManager.class);
 	}
 }

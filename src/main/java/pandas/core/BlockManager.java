@@ -37,8 +37,20 @@ public class BlockManager extends CustomPythonObject {
 		return getList("block_items", Index.class);
 	}
 
+	public BlockManager setBlockItems(List<Index> blockItems){
+		put("block_items", blockItems);
+
+		return this;
+	}
+
 	public List<HasArray> getBlockValues(){
 		return getList("block_values", HasArray.class);
+	}
+
+	public BlockManager setBlockValues(List<HasArray> blockValues){
+		put("block_values", blockValues);
+
+		return this;
 	}
 
 	@Override
