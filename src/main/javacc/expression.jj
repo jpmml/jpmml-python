@@ -236,7 +236,7 @@ TOKEN:
 
 TOKEN:
 {
-	< IF: "if">
+	< IF: "if" >
 	|
 	< ELSE: "else" >
 	|
@@ -433,10 +433,10 @@ Expression ComparisonExpression():
 		left = AdditiveExpression() <IS> <NOT> <NONE> { left = PMMLUtil.createApply(PMMLFunctions.ISNOTMISSING, left); }
 		|
 		LOOKAHEAD(AdditiveExpression() <IN>)
-		left = AdditiveExpression() <IN> right = ListMakerExpression() { left = PMMLUtil.createApply(PMMLFunctions.ISIN, left).addExpressions(((List<Expression>)right).toArray(new Expression[0])); }
+		left = AdditiveExpression() <IN> right = ListMakerExpression() { left = PMMLUtil.createApply(PMMLFunctions.ISIN, left).addExpressions((Expression[])right); }
 		|
 		LOOKAHEAD(AdditiveExpression() <NOT> <IN>)
-		left = AdditiveExpression() <NOT> <IN> right = ListMakerExpression() { left = PMMLUtil.createApply(PMMLFunctions.ISNOTIN, left).addExpressions(((List<Expression>)right).toArray(new Expression[0])); }
+		left = AdditiveExpression() <NOT> <IN> right = ListMakerExpression() { left = PMMLUtil.createApply(PMMLFunctions.ISNOTIN, left).addExpressions((Expression[])right); }
 		|
 		left = AdditiveExpression() ((operator = <EQUAL> | operator = <NOT_EQUAL> | operator = <LESS_THAN> | operator = <LESS_OR_EQUAL> | operator = <GREATER_THAN> | operator = <GREATER_OR_EQUAL>) right = AdditiveExpression() { left = PMMLUtil.createApply(translateRelationalOperator(operator), left, (Expression)right); })?
 	)
@@ -725,7 +725,7 @@ Constant LiteralExpression():
 	}
 }
 
-List<Expression> ListMakerExpression():
+Expression[] ListMakerExpression():
 {
 	Expression expression;
 	List<Expression> expressions = new ArrayList<Expression>();
@@ -734,6 +734,6 @@ List<Expression> ListMakerExpression():
 	<LBRACKET> expression = Expression() { expressions.add(expression); } ( <COMMA> expression = Expression() { expressions.add(expression); })* <RBRACKET>
 
 	{
-		return expressions;
+		return expressions.toArray(new Expression[expressions.size()]);
 	}
 }
