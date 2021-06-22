@@ -667,9 +667,7 @@ Expression StringSlicingExpression(Expression expression):
 			length = (parseNonNegativeInt(stop.image) - offset);
 		}
 		
-		return PMMLUtil.createApply(PMMLFunctions.SUBSTRING)
-			.addExpressions(expression)
-			.addExpressions(PMMLUtil.createConstant(offset + 1, DataType.INTEGER), PMMLUtil.createConstant(length, DataType.INTEGER));
+		return PMMLUtil.createApply(PMMLFunctions.SUBSTRING, expression, PMMLUtil.createConstant(offset + 1, DataType.INTEGER), PMMLUtil.createConstant(length, DataType.INTEGER));
 	}
 }
 
