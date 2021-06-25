@@ -188,19 +188,31 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 	@Test
 	public void translateStringConcatenationExpression(){
-		Expression expected = PMMLUtil.createApply(PMMLFunctions.CONCAT, PMMLUtil.createApply(PMMLFunctions.CONCAT, PMMLUtil.createConstant("19", DataType.STRING), new FieldRef(FieldName.create("a"))), PMMLUtil.createConstant("-01-01", DataType.STRING));
+		Constant prefix = PMMLUtil.createConstant("19", DataType.STRING);
+		FieldRef content = new FieldRef(FieldName.create("a"));
+		Constant suffix = PMMLUtil.createConstant("-01-01", DataType.STRING);
+
+		Expression expected = PMMLUtil.createApply(PMMLFunctions.CONCAT, PMMLUtil.createApply(PMMLFunctions.CONCAT, prefix, content), suffix);
+		Expression expectedCompact = PMMLUtil.createApply(PMMLFunctions.CONCAT, prefix, content, suffix);
 
 		String string = "\'19\' + X[0] + \'-01-01\'";
 
-		checkExpression(expected, string, new DataFrameScope(stringFeatures));
+		Scope scope = new DataFrameScope(stringFeatures);
+
+		checkExpression(expected, string, scope);
+		checkExpressionCompact(expectedCompact, string, scope);
 
 		string = "\"19\" + X[\'a\'] + \"-01-01\"";
 
-		checkExpression(expected, string, new DataFrameScope(stringFeatures));
+		checkExpression(expected, string, scope);
+		checkExpressionCompact(expectedCompact, string, scope);
 
 		string = "\"19\" + a + \"-01-01\"";
 
-		checkExpression(expected, string, new BlockScope(stringFeatures));
+		scope = new BlockScope(stringFeatures);
+
+		checkExpression(expected, string, scope);
+		checkExpressionCompact(expectedCompact, string, scope);
 	}
 
 	@Test
@@ -267,6 +279,13 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 	static
 	private void checkExpression(Expression expected, String string, Scope scope){
 		Expression actual = ExpressionTranslator.translate(string, scope, false);
+
+		assertTrue(ReflectionUtil.equals(expected, actual));
+	}
+
+	static
+	private void checkExpressionCompact(Expression expected, String string, Scope scope){
+		Expression actual = ExpressionTranslator.translate(string, scope, true);
 
 		assertTrue(ReflectionUtil.equals(expected, actual));
 	}
