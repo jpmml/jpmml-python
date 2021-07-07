@@ -277,6 +277,8 @@ TOKEN:
 	< DIVIDE: "/" >
 	|
 	< MODULO: "%" >
+	|
+	< TILDE: "~" >
 }
 
 TOKEN:

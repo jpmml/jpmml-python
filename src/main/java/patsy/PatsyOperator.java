@@ -22,8 +22,12 @@ import org.jpmml.python.ExpressionTranslatorConstants;
 
 public enum PatsyOperator {
 
+	UNARY_TILDE(ExpressionTranslatorConstants.TILDE, 1, -100),
+
 	UNARY_PLUS(ExpressionTranslatorConstants.PLUS, 1, 100),
 	UNARY_MINUS(ExpressionTranslatorConstants.MINUS, 1, 100),
+
+	BINARY_TILDE(ExpressionTranslatorConstants.TILDE, 2, -100),
 
 	BINARY_ADD(ExpressionTranslatorConstants.PLUS, 2, 100),
 	BINARY_SUBTRACT(ExpressionTranslatorConstants.MINUS, 2, 100),

@@ -25,10 +25,18 @@ public class FormulaParserTest {
 
 	@Test
 	public void parseFormula() throws ParseException {
+		FormulaParser.parseFormula("a ~ b");
+
+		FormulaParser.parseFormula("(a ~ b)");
+		FormulaParser.parseFormula("a ~ ((((b))))");
+		FormulaParser.parseFormula("a ~ ((((+b))))");
+
 		FormulaParser.parseFormula("a + b + c");
+		FormulaParser.parseFormula("a + (b ~ c) + d");
 
 		FormulaParser.parseFormula("a + numpy.log(a)");
 
+		FormulaParser.parseFormula("a + b ~ c * d");
 		FormulaParser.parseFormula("a + b * c");
 		FormulaParser.parseFormula("-a:b");
 		FormulaParser.parseFormula("a + b:c");
@@ -36,5 +44,6 @@ public class FormulaParserTest {
 		FormulaParser.parseFormula("a*b:c");
 
 		FormulaParser.parseFormula("a+b / c");
+		FormulaParser.parseFormula("~ a");
 	}
 }
