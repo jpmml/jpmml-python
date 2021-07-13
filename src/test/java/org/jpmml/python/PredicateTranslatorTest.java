@@ -82,7 +82,7 @@ public class PredicateTranslatorTest extends TranslatorTest {
 		checkPredicate(expected, "X[0] is None", new DataFrameScope(doubleFeatures));
 
 		expected = new SimplePredicate(FieldName.create("a"), SimplePredicate.Operator.IS_NOT_MISSING, null);
-		checkPredicate(expected, "X[0] is not None", new DataFrameScope(doubleFeatures));
+		checkPredicate(expected, "X[-3] is not None", new DataFrameScope(doubleFeatures));
 
 		expected = new SimplePredicate(FieldName.create("a"), SimplePredicate.Operator.EQUAL, "one");
 		checkPredicate(expected, "X[0] == \"one\"", new DataFrameScope(stringFeatures));

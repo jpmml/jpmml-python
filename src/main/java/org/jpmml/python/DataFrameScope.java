@@ -57,11 +57,22 @@ public class DataFrameScope extends Scope {
 
 		checkName(name);
 
-		if(columnIndex >= 0 && columnIndex < features.size()){
-			return features.get(columnIndex);
-		}
+		if(columnIndex >= 0){
 
-		throw new IllegalArgumentException("Column index " + columnIndex + " not in range " + Arrays.asList(0, features.size()));
+			if(columnIndex < features.size()){
+				return features.get(columnIndex);
+			}
+
+			throw new IllegalArgumentException("Column index " + columnIndex + " not in range " + Arrays.asList(0, features.size()));
+		} else
+
+		{
+			if((-columnIndex) <= features.size()){
+				return features.get(features.size() - (-columnIndex));
+			}
+
+			throw new IllegalArgumentException("Column index " + columnIndex + " not in range " + Arrays.asList(-features.size(), -1));
+		}
 	}
 
 	@Override

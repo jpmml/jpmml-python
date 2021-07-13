@@ -19,6 +19,7 @@
 package org.jpmml.python;
 
 import java.util.Collections;
+import java.util.List;
 
 import org.dmg.pmml.Constant;
 import org.dmg.pmml.DataType;
@@ -26,11 +27,13 @@ import org.dmg.pmml.Expression;
 import org.dmg.pmml.FieldName;
 import org.dmg.pmml.FieldRef;
 import org.dmg.pmml.PMMLFunctions;
+import org.jpmml.converter.Feature;
 import org.jpmml.converter.PMMLUtil;
 import org.jpmml.model.ReflectionUtil;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class ExpressionTranslatorTest extends TranslatorTest {
 
@@ -274,6 +277,47 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 		string = "a if pandas.notnull(a) else b + c";
 
 		checkExpression(expected, string, new BlockScope(doubleFeatures));
+	}
+
+	@Test
+	public void translateArrayIndexingExpression(){
+		Expression expected;
+
+		List<Feature> features = booleanFeatures;
+
+		Scope scope = new DataFrameScope(features);
+
+		for(int i = 0; i < features.size(); i++){
+			Feature feature = features.get(i);
+
+			expected = feature.ref();
+
+			checkExpression(expected, "X[" + "+" + i + "]", scope);
+		}
+
+		try {
+			ExpressionTranslator.translate("X[" + features.size() + "]", scope);
+
+			fail();
+		} catch(IllegalArgumentException iae){
+			// Ignored
+		}
+
+		for(int i = 1; i <= features.size(); i++){
+			Feature feature = features.get(features.size() - i);
+
+			expected = feature.ref();
+
+			checkExpression(expected, "X[" + "-" + i +"]", scope);
+		}
+
+		try {
+			ExpressionTranslator.translate("X[" + "-" + (features.size() + 1) + "]", scope);
+
+			fail();
+		} catch(IllegalArgumentException iae){
+			// Ignored
+		}
 	}
 
 	static

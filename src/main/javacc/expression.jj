@@ -518,7 +518,7 @@ Expression PrimaryExpression():
 	(
 		featureOrFunction = DottedName()
 		(
-			LOOKAHEAD(<LBRACKET> (<INT> | <STRING>) <RBRACKET>)
+			LOOKAHEAD(ArrayIndexingExpression())
 			expression = ArrayIndexingExpression(featureOrFunction) ( expression = TrailerFunctionInvocationExpression(expression) | expression = StringSlicingExpression(expression) )*
 			|
 			expression = FunctionInvocationExpression(featureOrFunction) ( expression = TrailerFunctionInvocationExpression(expression) | expression = StringSlicingExpression(expression) )*
@@ -551,12 +551,13 @@ String DottedName():
 
 FieldRef ArrayIndexingExpression(String dottedName):
 {
+	Token sign = null;
 	Token column;
 }
 {
 	(
-		LOOKAHEAD(<LBRACKET> <INT>)
-		<LBRACKET> column = <INT> <RBRACKET>
+		LOOKAHEAD(<LBRACKET> (<PLUS> | <MINUS>)? <INT>)
+		<LBRACKET> (sign = <PLUS> | sign = <MINUS>)? column = <INT> <RBRACKET>
 		|
 		<LBRACKET> column = <STRING> <RBRACKET>
 	)
@@ -569,7 +570,7 @@ FieldRef ArrayIndexingExpression(String dottedName):
 		switch(column.kind){
 			case ExpressionTranslatorConstants.INT:
 				{
-					int colIndex = parseNonNegativeInt(column.image);
+					int colIndex = Integer.parseInt(sign != null ? (sign.image + column.image) : column.image);
 
 					feature = scope.getFeature(FieldName.create(dottedName), colIndex);
 				}

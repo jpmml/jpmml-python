@@ -350,12 +350,13 @@ Object PrimaryExpression():
 FieldName ArrayIndexingExpression():
 {
 	Token name;
+	Token sign = null;
 	Token column;
 }
 {
 	(
-		LOOKAHEAD(<NAME> <LBRACKET> <INT>)
-		name = <NAME> <LBRACKET> column = <INT> <RBRACKET>
+		LOOKAHEAD(<NAME> <LBRACKET> (<PLUS> | <MINUS>)? <INT>)
+		name = <NAME> <LBRACKET> (sign = <PLUS> | sign = <MINUS>)? column = <INT> <RBRACKET>
 		|
 		name = <NAME> <LBRACKET> column = <STRING> <RBRACKET>
 	)
@@ -368,7 +369,7 @@ FieldName ArrayIndexingExpression():
 		switch(column.kind){
 			case PredicateTranslatorConstants.INT:
 				{
-					int colIndex = Integer.parseInt(column.image);
+					int colIndex = Integer.parseInt(sign != null ? (sign.image + column.image) : column.image);
 
 					feature = scope.getFeature(FieldName.create(name.image), colIndex);
 				}
