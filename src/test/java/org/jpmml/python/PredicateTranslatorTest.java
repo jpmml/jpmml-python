@@ -46,8 +46,7 @@ public class PredicateTranslatorTest extends TranslatorTest {
 
 		Predicate expected = new CompoundPredicate(CompoundPredicate.BooleanOperator.OR, null)
 			.addPredicates(new CompoundPredicate(CompoundPredicate.BooleanOperator.AND, null)
-				.addPredicates(first)
-				.addPredicates(second)
+				.addPredicates(first, second)
 			)
 			.addPredicates(third);
 
