@@ -370,7 +370,7 @@ Expression IfElseExpression():
 	Expression right;
 }
 {
-	left = LogicalOrExpression() ( <IF> center = LogicalOrExpression() <ELSE> right = LogicalOrExpression() { left = PMMLUtil.createApply(PMMLFunctions.IF, center, left, right); } )?
+	left = LogicalOrExpression() ( <IF> center = Expression() <ELSE> right = Expression() { left = PMMLUtil.createApply(PMMLFunctions.IF, center, left, right); } )?
 
 	{
 		return left;

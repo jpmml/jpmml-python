@@ -38,6 +38,29 @@ import static org.junit.Assert.fail;
 public class ExpressionTranslatorTest extends TranslatorTest {
 
 	@Test
+	public void translateNestedIfElseExpression(){
+		Expression expected = PMMLUtil.createApply(PMMLFunctions.IF,
+			PMMLUtil.createApply(PMMLFunctions.GREATERTHAN,
+				new FieldRef(FieldName.create("a")),
+				PMMLUtil.createConstant("0", DataType.INTEGER)
+			),
+			PMMLUtil.createConstant("positive", DataType.STRING),
+			PMMLUtil.createApply(PMMLFunctions.IF,
+				PMMLUtil.createApply(PMMLFunctions.LESSTHAN,
+					new FieldRef(FieldName.create("a")),
+					PMMLUtil.createConstant("0", DataType.INTEGER)
+				),
+				PMMLUtil.createConstant("negative", DataType.STRING),
+				PMMLUtil.createConstant("zero", DataType.STRING)
+			)
+		);
+
+		String string = "\"positive\" if X[0] > 0 else \"negative\" if X[0] < 0 else \"zero\"";
+
+		checkExpression(expected, string, new DataFrameScope(doubleFeatures));
+	}
+
+	@Test
 	public void translateLogicalExpression(){
 		Expression expected = PMMLUtil.createApply(PMMLFunctions.OR,
 			PMMLUtil.createApply(PMMLFunctions.AND,
