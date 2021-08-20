@@ -568,14 +568,14 @@ FieldRef ArrayIndexingExpression(String dottedName):
 		Feature feature = null;
 
 		switch(column.kind){
-			case ExpressionTranslatorConstants.INT:
+			case INT:
 				{
 					int colIndex = Integer.parseInt(sign != null ? (sign.image + column.image) : column.image);
 
 					feature = scope.getFeature(FieldName.create(dottedName), colIndex);
 				}
 				break;
-			case ExpressionTranslatorConstants.STRING:
+			case STRING:
 				{
 					String colName = column.image.substring(1, column.image.length() - 1);
 

@@ -367,14 +367,14 @@ FieldName ArrayIndexingExpression():
 		Feature feature = null;
 
 		switch(column.kind){
-			case PredicateTranslatorConstants.INT:
+			case INT:
 				{
 					int colIndex = Integer.parseInt(sign != null ? (sign.image + column.image) : column.image);
 
 					feature = scope.getFeature(FieldName.create(name.image), colIndex);
 				}
 				break;
-			case PredicateTranslatorConstants.STRING:
+			case STRING:
 				{
 					String colName = column.image.substring(1, column.image.length() - 1);
 
