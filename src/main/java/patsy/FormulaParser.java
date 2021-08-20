@@ -30,7 +30,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.jpmml.python.ExpressionTranslatorConstants;
 import org.jpmml.python.ParseException;
 import org.jpmml.python.SimpleCharStream;
 import org.jpmml.python.StringProvider;
@@ -121,7 +120,7 @@ public class FormulaParser {
 	private boolean readNoun(PatsyToken patsyToken, Deque<PatsyTerm> nounStack, Deque<PatsyOperator> opStack, Map<Integer, PatsyOperator> unaryPatsyOperators, Map<Integer, PatsyOperator> binaryPatsyOperators) throws ParseException {
 		int kind = patsyToken.getKind();
 
-		if(kind == ExpressionTranslatorConstants.LPAREN){
+		if(kind == FormulaParserConstants.LPAREN){
 			opStack.push(PatsyOperator.OPEN_PAREN);
 
 			return true;
@@ -149,7 +148,7 @@ public class FormulaParser {
 	private boolean readOp(PatsyToken patsyToken, Deque<PatsyTerm> nounStack, Deque<PatsyOperator> opStack, Map<Integer, PatsyOperator> unaryPatsyOperators, Map<Integer, PatsyOperator> binaryPatsyOperators) throws ParseException {
 		int kind = patsyToken.getKind();
 
-		if(kind == ExpressionTranslatorConstants.RPAREN){
+		if(kind == FormulaParserConstants.RPAREN){
 
 			while(!opStack.isEmpty() && !(opStack.peek()).equals(PatsyOperator.OPEN_PAREN)){
 				runOp(nounStack, opStack);
@@ -204,17 +203,17 @@ public class FormulaParser {
 	private List<PatsyToken> tokenizeFormula(FormulaParserTokenManager tokenManager, Set<Integer> patsyOperatorTokens) throws ParseException {
 		List<PatsyToken> result = new ArrayList<>();
 
-		patsyOperatorTokens.add(ExpressionTranslatorConstants.LPAREN);
-		patsyOperatorTokens.add(ExpressionTranslatorConstants.RPAREN);
+		patsyOperatorTokens.add(FormulaParserConstants.LPAREN);
+		patsyOperatorTokens.add(FormulaParserConstants.RPAREN);
 
 		Set<Integer> pythonEndTokens = new HashSet<>(patsyOperatorTokens);
-		pythonEndTokens.remove(ExpressionTranslatorConstants.LPAREN);
+		pythonEndTokens.remove(FormulaParserConstants.LPAREN);
 
 		tokens:
 		while(true){
 			Token token = tokenManager.getNextToken();
 
-			if(token.kind == ExpressionTranslatorConstants.EOF){
+			if(token.kind == FormulaParserConstants.EOF){
 				break tokens;
 			} // End if
 
@@ -242,7 +241,7 @@ public class FormulaParser {
 		while(true){
 			Token token = tokenManager.getNextToken();
 
-			if(token.kind == ExpressionTranslatorConstants.EOF){
+			if(token.kind == FormulaParserConstants.EOF){
 				tokenManager.pushBack(token);
 
 				break tokens;
@@ -258,14 +257,14 @@ public class FormulaParser {
 			}
 
 			switch(token.kind){
-				case ExpressionTranslatorConstants.LPAREN:
-				case ExpressionTranslatorConstants.LBRACKET:
+				case FormulaParserConstants.LPAREN:
+				case FormulaParserConstants.LBRACKET:
 					{
 						bracketLevel++;
 					}
 					break;
-				case ExpressionTranslatorConstants.RPAREN:
-				case ExpressionTranslatorConstants.RBRACKET:
+				case FormulaParserConstants.RPAREN:
+				case FormulaParserConstants.RBRACKET:
 					{
 						bracketLevel--;
 

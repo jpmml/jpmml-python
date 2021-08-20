@@ -25,7 +25,7 @@ import org.jpmml.python.ExpressionTranslatorTokenManager;
 import org.jpmml.python.SimpleCharStream;
 import org.jpmml.python.Token;
 
-public class FormulaParserTokenManager extends ExpressionTranslatorTokenManager {
+public class FormulaParserTokenManager extends ExpressionTranslatorTokenManager implements FormulaParserConstants {
 
 	private final Deque<Token> tokens = new ArrayDeque<>();
 
