@@ -285,38 +285,38 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 		Map<FieldName, Object> arguments = new HashMap<>();
 		arguments.put(feature.getName(), "Hello World!");
 
-		evaluateExpression("Hello World!", "x", scope, arguments);
-		evaluateExpression("Hello World!", "x[:]", scope, arguments);
+		assertEquals("Hello World!", evaluateExpression("x", scope, arguments));
+		assertEquals("Hello World!", evaluateExpression("x[:]", scope, arguments));
 
-		evaluateExpression("Hello World!", "x[0:]", scope, arguments);
-		evaluateExpression("ello World!", "x[1:]", scope, arguments);
-		evaluateExpression("", "x[13:]", scope, arguments);
-		evaluateExpression(" World!", "x[-7:]", scope, arguments);
-		evaluateExpression("Hello World!", "x[-13:]", scope, arguments);
+		assertEquals("Hello World!", evaluateExpression("x[0:]", scope, arguments));
+		assertEquals("ello World!", evaluateExpression("x[1:]", scope, arguments));
+		assertEquals("", evaluateExpression("x[13:]", scope, arguments));
+		assertEquals(" World!", evaluateExpression("x[-7:]", scope, arguments));
+		assertEquals("Hello World!", evaluateExpression("x[-13:]", scope, arguments));
 
-		evaluateExpression("", "x[:0]", scope, arguments);
-		evaluateExpression("H", "x[:1]", scope, arguments);
-		evaluateExpression("Hello World!", "x[:13]", scope, arguments);
-		evaluateExpression("Hello", "x[:-7]", scope, arguments);
-		evaluateExpression("", "x[:-13]", scope, arguments);
+		assertEquals("", evaluateExpression("x[:0]", scope, arguments));
+		assertEquals("H", evaluateExpression("x[:1]", scope, arguments));
+		assertEquals("Hello World!", evaluateExpression("x[:13]", scope, arguments));
+		assertEquals("Hello", evaluateExpression("x[:-7]", scope, arguments));
+		assertEquals("", evaluateExpression("x[:-13]", scope, arguments));
 
-		evaluateExpression("", "x[0:0]", scope, arguments);
-		evaluateExpression("H", "x[0:1]", scope, arguments);
-		evaluateExpression("Hello World", "x[0:-1]", scope, arguments);
-		evaluateExpression("Hello", "x[0:-7]", scope, arguments);
-		evaluateExpression("", "x[0:-13]", scope, arguments);
+		assertEquals("", evaluateExpression("x[0:0]", scope, arguments));
+		assertEquals("H", evaluateExpression("x[0:1]", scope, arguments));
+		assertEquals("Hello World", evaluateExpression("x[0:-1]", scope, arguments));
+		assertEquals("Hello", evaluateExpression("x[0:-7]", scope, arguments));
+		assertEquals("", evaluateExpression("x[0:-13]", scope, arguments));
 
-		evaluateExpression("", "x[1:0]", scope, arguments);
-		evaluateExpression("", "x[1:1]", scope, arguments);
-		evaluateExpression("ello World", "x[1:-1]", scope, arguments);
-		evaluateExpression("ello", "x[1:-7]", scope, arguments);
-		evaluateExpression("", "x[1:-13]", scope, arguments);
+		assertEquals("", evaluateExpression("x[1:0]", scope, arguments));
+		assertEquals("", evaluateExpression("x[1:1]", scope, arguments));
+		assertEquals("ello World", evaluateExpression("x[1:-1]", scope, arguments));
+		assertEquals("ello", evaluateExpression("x[1:-7]", scope, arguments));
+		assertEquals("", evaluateExpression("x[1:-13]", scope, arguments));
 
-		evaluateExpression("", "x[-1:0]", scope, arguments);
-		evaluateExpression("", "x[-1:1]", scope, arguments);
-		evaluateExpression("", "x[-1:-1]", scope, arguments);
-		evaluateExpression("", "x[-1:-7]", scope, arguments);
-		evaluateExpression("", "x[-1:-13]", scope, arguments);
+		assertEquals("", evaluateExpression("x[-1:0]", scope, arguments));
+		assertEquals("", evaluateExpression("x[-1:1]", scope, arguments));
+		assertEquals("", evaluateExpression("x[-1:-1]", scope, arguments));
+		assertEquals("", evaluateExpression("x[-1:-7]", scope, arguments));
+		assertEquals("", evaluateExpression("x[-1:-13]", scope, arguments));
 	}
 
 	@Test
@@ -395,7 +395,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 	}
 
 	static
-	private void evaluateExpression(Object expectedValue, String string, Scope scope, Map<FieldName, ?> arguments){
+	private Object evaluateExpression(String string, Scope scope, Map<FieldName, ?> arguments){
 		Expression expression = ExpressionTranslator.translate(string, scope, false);
 
 		EvaluationContext context = new VirtualEvaluationContext();
@@ -403,7 +403,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 		FieldValue value = org.jpmml.evaluator.ExpressionUtil.evaluate(expression, context);
 
-		assertEquals(expectedValue, FieldValueUtil.getValue(value));
+		return FieldValueUtil.getValue(value);
 	}
 
 	static
