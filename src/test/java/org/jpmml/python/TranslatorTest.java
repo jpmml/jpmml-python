@@ -32,7 +32,7 @@ import org.jpmml.converter.PMMLEncoder;
 abstract
 class TranslatorTest {
 
-	private static final PMMLEncoder encoder = new PMMLEncoder();
+	static final PMMLEncoder encoder = new PMMLEncoder();
 
 	static final List<Feature> booleanFeatures = Arrays.asList(
 		new BooleanFeature(TranslatorTest.encoder, FieldName.create("a")),

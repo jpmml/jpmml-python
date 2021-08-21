@@ -66,6 +66,13 @@
 			<version>4.13.2</version>
 			<scope>test</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>org.jpmml</groupId>
+			<artifactId>pmml-evaluator-testing</artifactId>
+			<version>1.5.15</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 	
 	<build>

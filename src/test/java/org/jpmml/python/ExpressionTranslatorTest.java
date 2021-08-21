@@ -19,7 +19,9 @@
 package org.jpmml.python;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.dmg.pmml.Constant;
 import org.dmg.pmml.DataType;
@@ -29,9 +31,15 @@ import org.dmg.pmml.FieldRef;
 import org.dmg.pmml.PMMLFunctions;
 import org.jpmml.converter.Feature;
 import org.jpmml.converter.PMMLUtil;
+import org.jpmml.converter.StringFeature;
+import org.jpmml.evaluator.EvaluationContext;
+import org.jpmml.evaluator.FieldValue;
+import org.jpmml.evaluator.FieldValueUtil;
+import org.jpmml.evaluator.VirtualEvaluationContext;
 import org.jpmml.model.ReflectionUtil;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -269,6 +277,49 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 	}
 
 	@Test
+	public void translateStringSlicingExpression(){
+		Feature feature = new StringFeature(encoder, FieldName.create("x"), DataType.STRING);
+
+		Scope scope = new BlockScope(Collections.singletonList(feature));
+
+		Map<FieldName, Object> arguments = new HashMap<>();
+		arguments.put(feature.getName(), "Hello World!");
+
+		evaluateExpression("Hello World!", "x", scope, arguments);
+		evaluateExpression("Hello World!", "x[:]", scope, arguments);
+
+		evaluateExpression("Hello World!", "x[0:]", scope, arguments);
+		evaluateExpression("ello World!", "x[1:]", scope, arguments);
+		evaluateExpression("", "x[13:]", scope, arguments);
+		evaluateExpression(" World!", "x[-7:]", scope, arguments);
+		evaluateExpression("Hello World!", "x[-13:]", scope, arguments);
+
+		evaluateExpression("", "x[:0]", scope, arguments);
+		evaluateExpression("H", "x[:1]", scope, arguments);
+		evaluateExpression("Hello World!", "x[:13]", scope, arguments);
+		evaluateExpression("Hello", "x[:-7]", scope, arguments);
+		evaluateExpression("", "x[:-13]", scope, arguments);
+
+		evaluateExpression("", "x[0:0]", scope, arguments);
+		evaluateExpression("H", "x[0:1]", scope, arguments);
+		evaluateExpression("Hello World", "x[0:-1]", scope, arguments);
+		evaluateExpression("Hello", "x[0:-7]", scope, arguments);
+		evaluateExpression("", "x[0:-13]", scope, arguments);
+
+		evaluateExpression("", "x[1:0]", scope, arguments);
+		evaluateExpression("", "x[1:1]", scope, arguments);
+		evaluateExpression("ello World", "x[1:-1]", scope, arguments);
+		evaluateExpression("ello", "x[1:-7]", scope, arguments);
+		evaluateExpression("", "x[1:-13]", scope, arguments);
+
+		evaluateExpression("", "x[-1:0]", scope, arguments);
+		evaluateExpression("", "x[-1:1]", scope, arguments);
+		evaluateExpression("", "x[-1:-1]", scope, arguments);
+		evaluateExpression("", "x[-1:-7]", scope, arguments);
+		evaluateExpression("", "x[-1:-13]", scope, arguments);
+	}
+
+	@Test
 	public void translateUnaryExpression(){
 		Constant minusOne = PMMLUtil.createConstant("-1", DataType.INTEGER);
 		Constant plusOne = PMMLUtil.createConstant("1", DataType.INTEGER);
@@ -341,6 +392,18 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 		} catch(IllegalArgumentException iae){
 			// Ignored
 		}
+	}
+
+	static
+	private void evaluateExpression(Object expectedValue, String string, Scope scope, Map<FieldName, ?> arguments){
+		Expression expression = ExpressionTranslator.translate(string, scope, false);
+
+		EvaluationContext context = new VirtualEvaluationContext();
+		context.declareAll(arguments);
+
+		FieldValue value = org.jpmml.evaluator.ExpressionUtil.evaluate(expression, context);
+
+		assertEquals(expectedValue, FieldValueUtil.getValue(value));
 	}
 
 	static
