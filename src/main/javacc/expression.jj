@@ -297,27 +297,25 @@ public class ExpressionTranslator extends AbstractTranslator {
 	}
 
 	static
-	private String translateValue(Token value){
+	private Object translateValue(Token value){
 		String image = value.image;
 
 		switch(value.kind){
 			case FALSE:
 			case TRUE:
-				image = image.toLowerCase();
-				break;
+				return Boolean.valueOf(image.toLowerCase());
 			case INT:
 				if(image.endsWith("l") || image.endsWith("L")){
 					image = image.substring(0, image.length() - 1);
 				}
-				break;
+				return Integer.valueOf(image);
+			case FLOAT:
+				return Double.valueOf(image);
 			case STRING:
-				image = image.substring(1, image.length() - 1);
-				break;
+				return image.substring(1, image.length() - 1);
 			default:
-				break;
+				throw new IllegalArgumentException();
 		}
-
-		return image;
 	}
 
 	static
