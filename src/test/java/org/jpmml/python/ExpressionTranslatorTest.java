@@ -317,6 +317,11 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 		assertEquals("", evaluateExpression("x[-1:-1]", scope, arguments));
 		assertEquals("", evaluateExpression("x[-1:-7]", scope, arguments));
 		assertEquals("", evaluateExpression("x[-1:-13]", scope, arguments));
+
+		assertEquals(true, evaluateExpression("x.startswith('Hello')", scope, arguments));
+		assertEquals(false, evaluateExpression("x.startswith('Hello!')", scope, arguments));
+		assertEquals(true, evaluateExpression("x.endswith('World!')", scope, arguments));
+		assertEquals(false, evaluateExpression("x.endswith('World')", scope, arguments));
 	}
 
 	@Test

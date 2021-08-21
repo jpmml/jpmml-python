@@ -49,7 +49,7 @@ public class ExpressionTranslator extends AbstractTranslator {
 	static
 	public Expression translate(String string, Scope scope, boolean compact){
 		Expression expression;
-		
+
 		try {
 			ExpressionTranslator expressionTranslator = new ExpressionTranslator(string);
 			expressionTranslator.setScope(scope);
@@ -70,7 +70,7 @@ public class ExpressionTranslator extends AbstractTranslator {
 
 	static
 	private String translateRelationalOperator(Token operator){
-		
+
 		switch(operator.kind){
 			case EQUAL:
 				return PMMLFunctions.EQUAL;
@@ -102,9 +102,43 @@ public class ExpressionTranslator extends AbstractTranslator {
 
 	static
 	private Expression translateTrailerFunction(Expression expression, String function, List<Expression> arguments){
-		
+
+		if(("startswith").equals(function) || ("endswith").equals(function)){
+
+			if(arguments.size() != 1){
+				throw new IllegalArgumentException();
+			}
+
+			Expression argument = arguments.get(0);
+			if(!(argument instanceof Constant)){
+				throw new IllegalArgumentException();
+			}
+
+			Constant constant = (Constant)argument;
+			if(!(DataType.STRING).equals(constant.getDataType())){
+				throw new IllegalArgumentException();
+			}
+
+			String value = (String)constant.getValue();
+
+			switch(function){
+				case "startswith":
+					return PMMLUtil.createApply(PMMLFunctions.EQUAL,
+						translateStringSlice(expression, 0, value.length()),
+						constant
+					);
+				case "endswith":
+					return PMMLUtil.createApply(PMMLFunctions.EQUAL,
+						translateStringSlice(expression, -value.length(), null),
+						constant
+					);
+				default:
+					break;
+			}
+		} else
+
 		if(("lower").equals(function) || ("upper").equals(function)){
-			
+
 			if(arguments.size() != 0){
 				throw new IllegalArgumentException();
 			}
@@ -120,7 +154,7 @@ public class ExpressionTranslator extends AbstractTranslator {
 		} else
 
 		if(("strip").equals(function)){
-			
+
 			if(arguments.size() != 0){
 				throw new IllegalArgumentException();
 			}
@@ -148,7 +182,7 @@ public class ExpressionTranslator extends AbstractTranslator {
 		}
 
 		if(("").equals(module)){
-			
+
 			if(arguments.size() != 1){
 				throw new IllegalArgumentException();
 			}
@@ -182,6 +216,84 @@ public class ExpressionTranslator extends AbstractTranslator {
 		}
 
 		throw new IllegalArgumentException(function);
+	}
+
+	static
+	private Expression translateStringSlice(Expression expression, Integer startPos, Integer stopPos){
+
+		if(startPos == null && stopPos == null){
+			return expression;
+		}
+
+		Expression offsetExpression;
+
+		if(startPos != null && startPos >= 0){
+			offsetExpression = PMMLUtil.createConstant(startPos + 1, DataType.INTEGER);
+		} else
+
+		if(startPos != null && startPos < 0){
+			offsetExpression = PMMLUtil.createApply(PMMLFunctions.MAX,
+				PMMLUtil.createApply(PMMLFunctions.SUBTRACT, 
+					PMMLUtil.createApply(PMMLFunctions.STRINGLENGTH, expression),
+					PMMLUtil.createConstant((-startPos) - 1, DataType.INTEGER)
+				),
+				PMMLUtil.createConstant(1, DataType.INTEGER)
+			);
+		} else
+
+		{
+			offsetExpression = PMMLUtil.createConstant(1, DataType.INTEGER);
+		} // End if
+
+		Expression lengthExpression;
+
+		if(stopPos != null && stopPos >= 0){
+
+			if(startPos != null && startPos >= 0){
+				lengthExpression = PMMLUtil.createConstant(Math.max(stopPos - startPos, 0), DataType.INTEGER);
+			} else
+
+			if(startPos != null && startPos < 0){
+				lengthExpression = PMMLUtil.createConstant(0, DataType.INTEGER);
+			} else
+
+			{
+				lengthExpression = PMMLUtil.createConstant(stopPos, DataType.INTEGER);
+			}
+		} else
+
+		if(stopPos != null && stopPos < 0){
+
+			if(startPos != null && startPos >= 0){
+				lengthExpression = PMMLUtil.createApply(PMMLFunctions.MAX,
+					PMMLUtil.createApply(PMMLFunctions.SUBTRACT,
+						PMMLUtil.createApply(PMMLFunctions.STRINGLENGTH, expression),
+						PMMLUtil.createConstant(startPos + (-stopPos))
+					),
+					PMMLUtil.createConstant(0, DataType.INTEGER)
+				);
+			} else
+
+			if(startPos != null && startPos < 0){
+				lengthExpression = PMMLUtil.createConstant(Math.max(stopPos - startPos, 0), DataType.INTEGER);
+			} else
+
+			{
+				lengthExpression = PMMLUtil.createApply(PMMLFunctions.MAX,
+					PMMLUtil.createApply(PMMLFunctions.SUBTRACT,
+						PMMLUtil.createApply(PMMLFunctions.STRINGLENGTH, expression),
+						PMMLUtil.createConstant(-stopPos)
+					),
+					PMMLUtil.createConstant(0, DataType.INTEGER)
+				);
+			}
+		} else
+
+		{
+			lengthExpression = PMMLUtil.createConstant(Integer.MAX_VALUE, DataType.INTEGER);
+		}
+
+		return PMMLUtil.createApply(PMMLFunctions.SUBSTRING, expression, offsetExpression, lengthExpression);
 	}
 
 	static
@@ -452,7 +564,7 @@ Expression AdditiveExpression():
 {
 	left = MultiplicativeExpression() ((operator = <PLUS> | operator = <MINUS>) right = MultiplicativeExpression() {
 		Scope scope = ensureScope();
-		
+
 		if((operator.kind == PLUS) && (ExpressionUtil.isString(left, scope) && ExpressionUtil.isString(right, scope))){
 			left = PMMLUtil.createApply(PMMLFunctions.CONCAT, left, right);
 		} else
@@ -666,7 +778,7 @@ Expression StringSlicingExpression(Expression expression):
 }
 {
 	<LBRACKET> ((startSign = Sign())? start = <INT>)? <COLON> ((stopSign = Sign())? stop = <INT>)? <RBRACKET>
-	
+
 	{
 		Integer startPos = null;
 		if(start != null){
@@ -676,81 +788,9 @@ Expression StringSlicingExpression(Expression expression):
 		Integer stopPos = null;
 		if(stop != null){
 			stopPos = parseInt(stopSign, stop);
-		} // End if
-
-		if(startPos == null && stopPos == null){
-			return expression;
 		}
 
-		Expression offsetExpression;
-
-		if(startPos != null && startPos >= 0){
-			offsetExpression = PMMLUtil.createConstant(startPos + 1, DataType.INTEGER);
-		} else
-
-		if(startPos != null && startPos < 0){
-			offsetExpression = PMMLUtil.createApply(PMMLFunctions.MAX,
-				PMMLUtil.createApply(PMMLFunctions.SUBTRACT, 
-					PMMLUtil.createApply(PMMLFunctions.STRINGLENGTH, expression),
-					PMMLUtil.createConstant((-startPos) - 1, DataType.INTEGER)
-				),
-				PMMLUtil.createConstant(1, DataType.INTEGER)
-			);
-		} else
-
-		{
-			offsetExpression = PMMLUtil.createConstant(1, DataType.INTEGER);
-		} // End if
-
-		Expression lengthExpression;
-
-		if(stopPos != null && stopPos >= 0){
-
-			if(startPos != null && startPos >= 0){
-				lengthExpression = PMMLUtil.createConstant(Math.max(stopPos - startPos, 0), DataType.INTEGER);
-			} else
-
-			if(startPos != null && startPos < 0){
-				lengthExpression = PMMLUtil.createConstant(0, DataType.INTEGER);
-			} else
-
-			{
-				lengthExpression = PMMLUtil.createConstant(stopPos, DataType.INTEGER);
-			}
-		} else
-
-		if(stopPos != null && stopPos < 0){
-
-			if(startPos != null && startPos >= 0){
-				lengthExpression = PMMLUtil.createApply(PMMLFunctions.MAX,
-					PMMLUtil.createApply(PMMLFunctions.SUBTRACT,
-						PMMLUtil.createApply(PMMLFunctions.STRINGLENGTH, expression),
-						PMMLUtil.createConstant(startPos + (-stopPos))
-					),
-					PMMLUtil.createConstant(0, DataType.INTEGER)
-				);
-			} else
-
-			if(startPos != null && startPos < 0){
-				lengthExpression = PMMLUtil.createConstant(Math.max(stopPos - startPos, 0), DataType.INTEGER);
-			} else
-
-			{
-				lengthExpression = PMMLUtil.createApply(PMMLFunctions.MAX,
-					PMMLUtil.createApply(PMMLFunctions.SUBTRACT,
-						PMMLUtil.createApply(PMMLFunctions.STRINGLENGTH, expression),
-						PMMLUtil.createConstant(-stopPos)
-					),
-					PMMLUtil.createConstant(0, DataType.INTEGER)
-				);
-			}
-		} else
-
-		{
-			lengthExpression = PMMLUtil.createConstant(Integer.MAX_VALUE, DataType.INTEGER);
-		}
-
-		return PMMLUtil.createApply(PMMLFunctions.SUBSTRING, expression, offsetExpression, lengthExpression);
+		return translateStringSlice(expression, startPos, stopPos);
 	}
 }
 
@@ -760,9 +800,9 @@ FieldRef NameInvocationExpression(String dottedName):
 {
 	{
 		Scope scope = ensureScope();
-		
+
 		Feature feature = scope.getFeature(FieldName.create(dottedName));
-		
+
 		return feature.ref();
 	}
 }
