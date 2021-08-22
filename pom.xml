@@ -10,7 +10,7 @@
 
 	<groupId>org.jpmml</groupId>
 	<artifactId>jpmml-python</artifactId>
-	<version>1.0-SNAPSHOT</version>
+	<version>1.0.18</version>
 
 	<name>JPMML-Python</name>
 	<description>Java library for converting Python models to PMML</description>
@@ -35,7 +35,7 @@
 		<connection>scm:git:git@github.com:jpmml/jpmml-python.git</connection>
 		<developerConnection>scm:git:git@github.com:jpmml/jpmml-python.git</developerConnection>
 		<url>git://github.com/jpmml/jpmml-python.git</url>
-		<tag>HEAD</tag>
+		<tag>1.0.18</tag>
 	</scm>
 	<issueManagement>
 		<system>GitHub</system>
@@ -195,11 +195,7 @@
 						</goals>
 						<configuration>
 							<target>
-								<replace
-									file="${basedir}/target/generated-sources/javacc/org/jpmml/python/Provider.java"
-									token="@param length" 
-									value="@param len"
-								/>
+								<replace file="${basedir}/target/generated-sources/javacc/org/jpmml/python/Provider.java" token="@param length" value="@param len" />
 							</target>
 						</configuration>
 					</execution>
