@@ -49,11 +49,11 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 	public void translateIfElseExpression(){
 		Expression expected = PMMLUtil.createApply(PMMLFunctions.IF,
 			PMMLUtil.createApply(PMMLFunctions.GREATERTHAN,
-				new FieldRef(FieldName.create("a")),
+				fieldRefs.get(0),
 				PMMLUtil.createConstant(0.0d, DataType.DOUBLE)
 			),
 			PMMLUtil.createApply(PMMLFunctions.LN,
-				new FieldRef(FieldName.create("a"))
+				fieldRefs.get(0)
 			),
 			PMMLUtil.createConstant(null, null)
 		);
@@ -64,13 +64,13 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 		expected = PMMLUtil.createApply(PMMLFunctions.IF,
 			PMMLUtil.createApply(PMMLFunctions.GREATERTHAN,
-				new FieldRef(FieldName.create("a")),
+				fieldRefs.get(0),
 				PMMLUtil.createConstant(0, DataType.INTEGER)
 			),
 			PMMLUtil.createConstant("positive", DataType.STRING),
 			PMMLUtil.createApply(PMMLFunctions.IF,
 				PMMLUtil.createApply(PMMLFunctions.LESSTHAN,
-					new FieldRef(FieldName.create("a")),
+					fieldRefs.get(0),
 					PMMLUtil.createConstant(0, DataType.INTEGER)
 				),
 				PMMLUtil.createConstant("negative", DataType.STRING),
@@ -87,10 +87,10 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 	public void translateLogicalExpression(){
 		Expression expected = PMMLUtil.createApply(PMMLFunctions.OR,
 			PMMLUtil.createApply(PMMLFunctions.AND,
-				new FieldRef(FieldName.create("a")),
-				new FieldRef(FieldName.create("b"))
+				fieldRefs.get("a"),
+				fieldRefs.get("b")
 			),
-			new FieldRef(FieldName.create("c"))
+			fieldRefs.get("c")
 		);
 
 		String string = "X[\"a\"] and X[\"b\"] or X[\"c\"]";
@@ -101,7 +101,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 		checkExpression(expected, string, new BlockScope(booleanFeatures));
 
-		expected = PMMLUtil.createApply(PMMLFunctions.NOT, new FieldRef(FieldName.create("a")));
+		expected = PMMLUtil.createApply(PMMLFunctions.NOT, fieldRefs.get("a"));
 
 		string = "not X[\"a\"]";
 
@@ -114,10 +114,8 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 	@Test
 	public void translateIdentityComparisonExpression(){
-		FieldRef first = new FieldRef(FieldName.create("a"));
-
 		Expression expected = PMMLUtil.createApply(PMMLFunctions.EQUAL,
-			first,
+			fieldRefs.get(0),
 			PMMLUtil.createConstant(null, null)
 		);
 
@@ -126,7 +124,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 		checkExpression(expected, string, new DataFrameScope(doubleFeatures));
 
 		expected = PMMLUtil.createApply(PMMLFunctions.NOTEQUAL,
-			first,
+			fieldRefs.get(0),
 			PMMLUtil.createConstant(null, null)
 		);
 
@@ -134,7 +132,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 		checkExpression(expected, string, new DataFrameScope(doubleFeatures));
 
-		expected = PMMLUtil.createApply(PMMLFunctions.ISMISSING, first);
+		expected = PMMLUtil.createApply(PMMLFunctions.ISMISSING, fieldRefs.get(0));
 
 		string = "X[0] is None";
 
@@ -144,7 +142,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 		checkExpression(expected, string, new BlockScope(doubleFeatures));
 
-		expected = PMMLUtil.createApply(PMMLFunctions.ISNOTMISSING, PMMLUtil.createApply(PMMLFunctions.ADD, first, PMMLUtil.createConstant(1, DataType.INTEGER)));
+		expected = PMMLUtil.createApply(PMMLFunctions.ISNOTMISSING, PMMLUtil.createApply(PMMLFunctions.ADD, fieldRefs.get("a"), PMMLUtil.createConstant(1, DataType.INTEGER)));
 
 		string = "(X['a'] + 1) is not None";
 
@@ -157,10 +155,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 	@Test
 	public void translateComparisonExpression(){
-		FieldRef first = new FieldRef(FieldName.create("a"));
-		FieldRef second = new FieldRef(FieldName.create("b"));
-
-		Expression expected = PMMLUtil.createApply(PMMLFunctions.AND, first, second);
+		Expression expected = PMMLUtil.createApply(PMMLFunctions.AND, fieldRefs.get("a"), fieldRefs.get("b"));
 
 		String string = "X['a'] and X['b']";
 
@@ -171,8 +166,8 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 		checkExpression(expected, string, new BlockScope(booleanFeatures));
 
 		expected = PMMLUtil.createApply(PMMLFunctions.AND,
-			PMMLUtil.createApply(PMMLFunctions.EQUAL, first, PMMLUtil.createConstant(true, DataType.BOOLEAN)),
-			PMMLUtil.createApply(PMMLFunctions.EQUAL, second, PMMLUtil.createConstant(false, DataType.BOOLEAN))
+			PMMLUtil.createApply(PMMLFunctions.EQUAL, fieldRefs.get("a"), PMMLUtil.createConstant(true, DataType.BOOLEAN)),
+			PMMLUtil.createApply(PMMLFunctions.EQUAL, fieldRefs.get("b"), PMMLUtil.createConstant(false, DataType.BOOLEAN))
 		);
 
 		string = "X['a'] == True and X['b'] == False";
@@ -183,7 +178,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 		checkExpression(expected, string, new BlockScope(booleanFeatures));
 
-		expected = PMMLUtil.createApply(PMMLFunctions.ISIN, first, PMMLUtil.createConstant(0.0d, DataType.DOUBLE), PMMLUtil.createConstant(1.0d, DataType.DOUBLE));
+		expected = PMMLUtil.createApply(PMMLFunctions.ISIN, fieldRefs.get(0), PMMLUtil.createConstant(0.0d, DataType.DOUBLE), PMMLUtil.createConstant(1.0d, DataType.DOUBLE));
 
 		string = "X[0] in [0.0, 1.0]";
 
@@ -193,7 +188,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 		checkExpression(expected, string, new BlockScope(doubleFeatures));
 
-		expected = PMMLUtil.createApply(PMMLFunctions.ISNOTIN, PMMLUtil.createApply(PMMLFunctions.ADD, first, PMMLUtil.createConstant(1.0d, DataType.DOUBLE)), second);
+		expected = PMMLUtil.createApply(PMMLFunctions.ISNOTIN, PMMLUtil.createApply(PMMLFunctions.ADD, fieldRefs.get(0), PMMLUtil.createConstant(1.0d, DataType.DOUBLE)), fieldRefs.get(1));
 
 		string = "(X[0] + 1.0) not in [X[1]]";
 
@@ -203,7 +198,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 		checkExpression(expected, string, new BlockScope(doubleFeatures));
 
-		expected = PMMLUtil.createApply(PMMLFunctions.GREATERTHAN, first, second);
+		expected = PMMLUtil.createApply(PMMLFunctions.GREATERTHAN, fieldRefs.get("a"), fieldRefs.get("b"));
 
 		string = "X[\"a\"] > X[\"b\"]";
 
@@ -213,7 +208,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 		checkExpression(expected, string, new BlockScope(doubleFeatures));
 
-		expected = PMMLUtil.createApply(PMMLFunctions.NOT, PMMLUtil.createApply(PMMLFunctions.LESSTHAN, first, PMMLUtil.createConstant(0.0d, DataType.DOUBLE)));
+		expected = PMMLUtil.createApply(PMMLFunctions.NOT, PMMLUtil.createApply(PMMLFunctions.LESSTHAN, fieldRefs.get("a"), PMMLUtil.createConstant(0.0d, DataType.DOUBLE)));
 
 		string = "not X[\"a\"] < 0.0";
 
@@ -230,12 +225,12 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 			PMMLUtil.createApply(PMMLFunctions.DIVIDE,
 				PMMLUtil.createApply(PMMLFunctions.SUBTRACT,
 					PMMLUtil.createApply(PMMLFunctions.ADD,
-						new FieldRef(FieldName.create("a")),
-						new FieldRef(FieldName.create("b"))
+						fieldRefs.get("a"),
+						fieldRefs.get("b")
 					),
 					PMMLUtil.createConstant(1.0d, DataType.DOUBLE)
 				),
-				new FieldRef(FieldName.create("c"))
+				fieldRefs.get("c")
 			),
 			PMMLUtil.createConstant(-2, DataType.INTEGER)
 		);
@@ -256,7 +251,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 	@Test
 	public void translateStringConcatenationExpression(){
 		Constant prefix = PMMLUtil.createConstant("19", DataType.STRING);
-		FieldRef content = new FieldRef(FieldName.create("a"));
+		FieldRef content = fieldRefs.get(0);
 		Constant suffix = PMMLUtil.createConstant("-01-01", DataType.STRING);
 
 		Expression expected = PMMLUtil.createApply(PMMLFunctions.CONCAT, PMMLUtil.createApply(PMMLFunctions.CONCAT, prefix, content), suffix);
@@ -285,9 +280,9 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 	@Test
 	public void translateStringIfElseExpression(){
 		Expression expected = PMMLUtil.createApply(PMMLFunctions.IF,
-			PMMLUtil.createApply(PMMLFunctions.EQUAL, PMMLUtil.createApply(PMMLFunctions.TRIMBLANKS, PMMLUtil.createApply(PMMLFunctions.SUBSTRING, new FieldRef(FieldName.create("b")), PMMLUtil.createConstant(1, DataType.INTEGER), PMMLUtil.createConstant(1, DataType.INTEGER))), PMMLUtil.createConstant("low", DataType.STRING)),
-			PMMLUtil.createApply(PMMLFunctions.LOWERCASE, new FieldRef(FieldName.create("a"))),
-			PMMLUtil.createApply(PMMLFunctions.UPPERCASE, new FieldRef(FieldName.create("a")))
+			PMMLUtil.createApply(PMMLFunctions.EQUAL, PMMLUtil.createApply(PMMLFunctions.TRIMBLANKS, PMMLUtil.createApply(PMMLFunctions.SUBSTRING, fieldRefs.get(1), PMMLUtil.createConstant(1, DataType.INTEGER), PMMLUtil.createConstant(1, DataType.INTEGER))), PMMLUtil.createConstant("low", DataType.STRING)),
+			PMMLUtil.createApply(PMMLFunctions.LOWERCASE, fieldRefs.get(0)),
+			PMMLUtil.createApply(PMMLFunctions.UPPERCASE, fieldRefs.get(0))
 		);
 
 		String string = "X[0].lower() if (X[1][0:1].strip()) == \'low\' else X[0].upper()";
@@ -299,7 +294,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 		checkExpression(expected, string, new BlockScope(stringFeatures));
 
 		expected = PMMLUtil.createApply(PMMLFunctions.IF,
-			PMMLUtil.createApply(PMMLFunctions.GREATERTHAN, PMMLUtil.createApply(PMMLFunctions.STRINGLENGTH, new FieldRef(FieldName.create("a"))), PMMLUtil.createConstant(0, DataType.INTEGER)),
+			PMMLUtil.createApply(PMMLFunctions.GREATERTHAN, PMMLUtil.createApply(PMMLFunctions.STRINGLENGTH, fieldRefs.get(0)), PMMLUtil.createConstant(0, DataType.INTEGER)),
 			PMMLUtil.createConstant(true, DataType.BOOLEAN),
 			PMMLUtil.createConstant(false, DataType.BOOLEAN)
 		);
@@ -377,9 +372,9 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 	@Test
 	public void translateFunctionInvocationExpression(){
 		Expression expected = PMMLUtil.createApply(PMMLFunctions.IF,
-			PMMLUtil.createApply(PMMLFunctions.ISNOTMISSING, new FieldRef(FieldName.create("a"))),
-			new FieldRef(FieldName.create("a")),
-			PMMLUtil.createApply(PMMLFunctions.ADD, new FieldRef(FieldName.create("b")), new FieldRef(FieldName.create("c")))
+			PMMLUtil.createApply(PMMLFunctions.ISNOTMISSING, fieldRefs.get("a")),
+			fieldRefs.get("a"),
+			PMMLUtil.createApply(PMMLFunctions.ADD, fieldRefs.get("b"), fieldRefs.get("c"))
 		);
 
 		String string = "X[\"a\"] if pandas.notnull(X[\"a\"]) else X[\"b\"] + X[\"c\"]";

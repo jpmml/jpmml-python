@@ -19,10 +19,13 @@
 package org.jpmml.python;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.dmg.pmml.DataType;
 import org.dmg.pmml.FieldName;
+import org.dmg.pmml.FieldRef;
 import org.jpmml.converter.BooleanFeature;
 import org.jpmml.converter.ContinuousFeature;
 import org.jpmml.converter.Feature;
@@ -33,6 +36,19 @@ abstract
 class TranslatorTest {
 
 	static final PMMLEncoder encoder = new PMMLEncoder();
+
+	static final Map<Object, FieldRef> fieldRefs = new HashMap<>();
+
+	static {
+		fieldRefs.put(0, new FieldRef(FieldName.create("a")));
+		fieldRefs.put("a", new FieldRef(FieldName.create("a")));
+
+		fieldRefs.put(1, new FieldRef(FieldName.create("b")));
+		fieldRefs.put("b", new FieldRef(FieldName.create("b")));
+
+		fieldRefs.put(2, new FieldRef(FieldName.create("c")));
+		fieldRefs.put("c", new FieldRef(FieldName.create("c")));
+	}
 
 	static final List<Feature> booleanFeatures = Arrays.asList(
 		new BooleanFeature(TranslatorTest.encoder, FieldName.create("a")),
