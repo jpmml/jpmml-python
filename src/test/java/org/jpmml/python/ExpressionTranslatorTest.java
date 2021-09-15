@@ -46,8 +46,23 @@ import static org.junit.Assert.fail;
 public class ExpressionTranslatorTest extends TranslatorTest {
 
 	@Test
-	public void translateNestedIfElseExpression(){
+	public void translateIfElseExpression(){
 		Expression expected = PMMLUtil.createApply(PMMLFunctions.IF,
+			PMMLUtil.createApply(PMMLFunctions.GREATERTHAN,
+				new FieldRef(FieldName.create("a")),
+				PMMLUtil.createConstant(0.0d, DataType.DOUBLE)
+			),
+			PMMLUtil.createApply(PMMLFunctions.LN,
+				new FieldRef(FieldName.create("a"))
+			),
+			PMMLUtil.createConstant(null, null)
+		);
+
+		String string = "numpy.log(X[0]) if X[0] > 0.0 else None";
+
+		checkExpression(expected, string, new DataFrameScope(doubleFeatures));
+
+		expected = PMMLUtil.createApply(PMMLFunctions.IF,
 			PMMLUtil.createApply(PMMLFunctions.GREATERTHAN,
 				new FieldRef(FieldName.create("a")),
 				PMMLUtil.createConstant(0, DataType.INTEGER)
@@ -63,7 +78,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 			)
 		);
 
-		String string = "\"positive\" if X[0] > 0 else \"negative\" if X[0] < 0 else \"zero\"";
+		string = "\"positive\" if X[0] > 0 else \"negative\" if X[0] < 0 else \"zero\"";
 
 		checkExpression(expected, string, new DataFrameScope(doubleFeatures));
 	}
@@ -101,9 +116,27 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 	public void translateIdentityComparisonExpression(){
 		FieldRef first = new FieldRef(FieldName.create("a"));
 
-		Expression expected = PMMLUtil.createApply(PMMLFunctions.ISMISSING, first);
+		Expression expected = PMMLUtil.createApply(PMMLFunctions.EQUAL,
+			first,
+			PMMLUtil.createConstant(null, null)
+		);
 
-		String string = "X[0] is None";
+		String string = "X[0] == None";
+
+		checkExpression(expected, string, new DataFrameScope(doubleFeatures));
+
+		expected = PMMLUtil.createApply(PMMLFunctions.NOTEQUAL,
+			first,
+			PMMLUtil.createConstant(null, null)
+		);
+
+		string = "X[0] != None";
+
+		checkExpression(expected, string, new DataFrameScope(doubleFeatures));
+
+		expected = PMMLUtil.createApply(PMMLFunctions.ISMISSING, first);
+
+		string = "X[0] is None";
 
 		checkExpression(expected, string, new DataFrameScope(doubleFeatures));
 

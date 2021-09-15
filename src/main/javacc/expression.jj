@@ -301,6 +301,8 @@ public class ExpressionTranslator extends AbstractTranslator {
 		String image = value.image;
 
 		switch(value.kind){
+			case NONE:
+				return null;
 			case FALSE:
 			case TRUE:
 				return Boolean.valueOf(image.toLowerCase());
@@ -404,9 +406,12 @@ TOKEN:
 
 TOKEN:
 {
-	< FALSE: "False" >
-	|
 	< NONE: "None" >
+}
+
+TOKEN:
+{
+	< FALSE: "False" >
 	|
 	< TRUE: "True" >
 }
@@ -821,9 +826,12 @@ Constant LiteralExpression():
 {
 	Token value;
 	DataType dataType;
+	Boolean missing = null;
 }
 {
 	(
+		value = <NONE> { dataType = null; missing = Boolean.TRUE; }
+		|
 		value = <FALSE> { dataType = DataType.BOOLEAN; }
 		|
 		value = <TRUE> { dataType = DataType.BOOLEAN; }
@@ -838,7 +846,8 @@ Constant LiteralExpression():
 	{
 		Constant constant = new Constant()
 			.setValue(translateValue(value))
-			.setDataType(dataType);
+			.setDataType(dataType)
+			.setMissing(missing);
 
 		return constant;
 	}
