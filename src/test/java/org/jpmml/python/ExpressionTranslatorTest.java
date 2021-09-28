@@ -55,7 +55,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 			PMMLUtil.createApply(PMMLFunctions.LN,
 				fieldRefs.get(0)
 			),
-			PMMLUtil.createConstant(null, null)
+			PMMLUtil.createMissingConstant()
 		);
 
 		String string = "numpy.log(X[0]) if X[0] > 0.0 else None";
@@ -116,21 +116,29 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 	public void translateIdentityComparisonExpression(){
 		Expression expected = PMMLUtil.createApply(PMMLFunctions.EQUAL,
 			fieldRefs.get(0),
-			PMMLUtil.createConstant(null, null)
+			PMMLUtil.createMissingConstant()
 		);
 
 		String string = "X[0] == None";
 
 		checkExpression(expected, string, new DataFrameScope(doubleFeatures));
 
+		expected = PMMLUtil.createApply(PMMLFunctions.ISMISSING, fieldRefs.get(0));
+
+		checkExpressionCompact(expected, string, new DataFrameScope(doubleFeatures));
+
 		expected = PMMLUtil.createApply(PMMLFunctions.NOTEQUAL,
 			fieldRefs.get(0),
-			PMMLUtil.createConstant(null, null)
+			PMMLUtil.createMissingConstant()
 		);
 
 		string = "X[0] != None";
 
 		checkExpression(expected, string, new DataFrameScope(doubleFeatures));
+
+		expected = PMMLUtil.createApply(PMMLFunctions.ISNOTMISSING, fieldRefs.get(0));
+
+		checkExpressionCompact(expected, string, new DataFrameScope(doubleFeatures));
 
 		expected = PMMLUtil.createApply(PMMLFunctions.ISMISSING, fieldRefs.get(0));
 
