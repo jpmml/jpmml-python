@@ -92,6 +92,12 @@ public class FunctionUtil {
 				return PMMLUtil.createApply(PMMLFunctions.HYPOT, getOnlyElement(expressions));
 			case "log":
 				return PMMLUtil.createApply(PMMLFunctions.LN, getOnlyElement(expressions));
+			case "logical_and":
+				return PMMLUtil.createApply(PMMLFunctions.AND, getElement(expressions, 2, 0), getElement(expressions, 2, 1));
+			case "logical_not":
+				return PMMLUtil.createApply(PMMLFunctions.NOT, getOnlyElement(expressions));
+			case "logical_or":
+				return PMMLUtil.createApply(PMMLFunctions.OR, getElement(expressions, 2, 0), getElement(expressions, 2, 1));
 			case "log1p":
 				return PMMLUtil.createApply(PMMLFunctions.LN1P, getOnlyElement(expressions));
 			case "log10":

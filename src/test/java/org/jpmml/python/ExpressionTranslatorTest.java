@@ -93,7 +93,11 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 			fieldRefs.get("c")
 		);
 
-		String string = "X[\"a\"] and X[\"b\"] or X[\"c\"]";
+		String string = "numpy.logical_or(numpy.logical_and(a, b), c)";
+
+		checkExpression(expected, string, new BlockScope(booleanFeatures));
+
+		string = "X[\"a\"] and X[\"b\"] or X[\"c\"]";
 
 		checkExpression(expected, string, new DataFrameScope(booleanFeatures));
 
@@ -102,6 +106,10 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 		checkExpression(expected, string, new BlockScope(booleanFeatures));
 
 		expected = PMMLUtil.createApply(PMMLFunctions.NOT, fieldRefs.get("a"));
+
+		string = "numpy.logical_not(a)";
+
+		checkExpression(expected, string, new BlockScope(booleanFeatures));
 
 		string = "not X[\"a\"]";
 
