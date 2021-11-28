@@ -75,6 +75,7 @@ public class DumpTest extends PickleUtilTest {
 
 		unpickleNumpyArrays("python-3.7_numpy-1.19.5");
 		unpickleNumpyArrays("python-3.7_numpy-1.20.0");
+		unpickleNumpyArrays("python-3.7_numpy-1.21.4");
 
 		unpicklePandasSeries("python-3.7_pandas-1.0.5");
 		unpicklePandasSeries("python-3.7_pandas-1.1.3");
@@ -91,6 +92,7 @@ public class DumpTest extends PickleUtilTest {
 		unpickle("python-3.9_pickle-p5.pkl");
 
 		unpickleNumpyArrays("python-3.9_numpy-1.20.2");
+		unpickleNumpyArrays("python-3.9_numpy-1.21.4");
 
 		unpicklePandasSeries("python-3.9_pandas-1.2.3");
 	}
