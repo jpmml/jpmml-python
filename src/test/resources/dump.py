@@ -1,7 +1,7 @@
 from common import _pickle, _platform_module
 
 from sklearn.datasets import load_iris
-from sklearn.externals import joblib as sklearn_joblib
+#from sklearn.externals import joblib as sklearn_joblib
 from sklearn.linear_model import LogisticRegressionCV
 
 import joblib
@@ -14,7 +14,7 @@ iris = load_iris()
 iris_classifier = LogisticRegressionCV()
 iris_classifier.fit(iris.data, iris.target)
 
-sklearn_joblib.dump(iris_classifier, "dump/" + _platform_module("sklearn-joblib", sklearn_joblib.__version__) + ".pkl.z", compress = True)
+#sklearn_joblib.dump(iris_classifier, "dump/" + _platform_module("sklearn-joblib", sklearn_joblib.__version__) + ".pkl.z", compress = True)
 joblib.dump(iris_classifier, "dump/" + _platform_module("joblib", joblib.__version__) + ".pkl.z", compress = True)
 
 for protocol in range(2, pickle.HIGHEST_PROTOCOL + 1):
