@@ -19,12 +19,17 @@
 package org.jpmml.python;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.IntFunction;
 
+import com.google.common.collect.Iterables;
 import numpy.DType;
 import numpy.core.NDArray;
 import org.junit.Test;
+import pandas.core.BlockManager;
+import pandas.core.DataFrame;
 import pandas.core.Index;
 import pandas.core.Series;
 import pandas.core.SingleBlockManager;
@@ -80,6 +85,11 @@ public class DumpTest extends PickleUtilTest {
 		unpicklePandasSeries("python-3.7_pandas-1.0.5");
 		unpicklePandasSeries("python-3.7_pandas-1.1.3");
 		unpicklePandasSeries("python-3.7_pandas-1.2.3");
+		unpicklePandasSeries("python-3.7_pandas-1.3.1");
+
+		unpicklePandasDataFrame("python-3.7_pandas-1.1.3");
+		unpicklePandasDataFrame("python-3.7_pandas-1.2.3");
+		unpicklePandasDataFrame("python-3.7_pandas-1.3.1");
 	}
 
 	@Test
@@ -95,6 +105,11 @@ public class DumpTest extends PickleUtilTest {
 		unpickleNumpyArrays("python-3.9_numpy-1.21.4");
 
 		unpicklePandasSeries("python-3.9_pandas-1.2.3");
+		unpicklePandasSeries("python-3.9_pandas-1.3.1");
+
+		unpicklePandasDataFrame("python-3.9_pandas-1.1.3");
+		unpicklePandasDataFrame("python-3.9_pandas-1.2.3");
+		unpicklePandasDataFrame("python-3.9_pandas-1.3.1");
 	}
 
 	private void unpickleNumpyArrays(String prefix) throws IOException {
@@ -183,6 +198,62 @@ public class DumpTest extends PickleUtilTest {
 
 			assertEquals(expectedValue.longValue(), value.longValue());
 		}
+	}
+
+	private void unpicklePandasDataFrame(String prefix) throws IOException {
+		DataFrame dataFrame = (DataFrame)unpickle(prefix + "_df.pkl");
+
+		BlockManager data = dataFrame.getData();
+
+		List<Index> axes = data.getAxesArray();
+
+		assertEquals(2, axes.size());
+
+		Index columnAxis = axes.get(0);
+		Index rowAxis = axes.get(1);
+
+		assertEquals(Arrays.asList("bool", "int", "float", "str"), columnAxis.getDataData());
+		assertEquals(Arrays.asList(0, 1, 2), rowAxis.getDataData());
+
+		final
+		List<Object> columnIndex = new ArrayList<>();
+
+		try {
+			List<Index> blockItems = data.getBlockItems();
+
+			for(int i = 0; i < blockItems.size(); i++){
+				Index blockItem = blockItems.get(i);
+
+				columnIndex.add(Iterables.getOnlyElement(blockItem.getDataData()));
+			}
+		} catch(IllegalStateException ise){
+			// Ignored
+		}
+
+		List<HasArray> blocks = data.getBlockValues();
+
+		assertEquals(4, blocks.size());
+
+		IntFunction<List<?>> blockValuesFunction = new IntFunction<List<?>>(){
+
+			private List<?> columns = columnAxis.getDataData();
+
+
+			@Override
+			public List<?> apply(int index){
+
+				if(!columnIndex.isEmpty()){
+					index = this.columns.indexOf(columnIndex.get(index));
+				}
+
+				return (blocks.get(index)).getArrayContent();
+			}
+		};
+
+		assertEquals(Arrays.asList(false, false, true), blockValuesFunction.apply(0));
+		assertEquals(Arrays.asList(0L, 1L, 2L), blockValuesFunction.apply(1));
+		assertEquals(Arrays.asList(0d, 1d, 2d), blockValuesFunction.apply(2));
+		assertEquals(Arrays.asList("zero", "one", "two"), blockValuesFunction.apply(3));
 	}
 
 	static

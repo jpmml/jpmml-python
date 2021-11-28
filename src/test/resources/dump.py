@@ -26,6 +26,9 @@ def _pickle_numpy_array(values, dtype):
 def _pickle_pandas_series(values, dtype):
 	_pickle(values, "dump/" + _platform_module("pandas", pandas.__version__) + "_" + dtype.__name__ + ".pkl")
 
+def _pickle_pandas_dataframe(df):
+	_pickle(df, "dump/" + _platform_module("pandas", pandas.__version__) + "_df.pkl")
+
 values = numpy.asarray([0, 1], dtype = numpy.int8)
 _pickle_numpy_array(values, bool)
 
@@ -61,3 +64,11 @@ _pickle_pandas_series(series, int)
 values = numpy.asarray([x for x in range(0, 4294967295, 64 * 32767)], dtype = numpy.uint32)
 _pickle_numpy_array(values, numpy.uint32)
 _pickle_numpy_array(values, numpy.uint64)
+
+df = pandas.DataFrame(data = {
+	"bool" : [False, False, True],
+	"int" : [0, 1, 2],
+	"float" : [0.0, 1.0, 2.0],
+	"str" : ["zero", "one", "two"]
+})
+_pickle_pandas_dataframe(df)

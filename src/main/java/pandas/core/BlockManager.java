@@ -18,7 +18,9 @@
  */
 package pandas.core;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.jpmml.python.CustomPythonObject;
 import org.jpmml.python.HasArray;
@@ -30,11 +32,23 @@ public class BlockManager extends CustomPythonObject {
 	}
 
 	public List<Index> getAxesArray(){
-		return getList("axes_array", Index.class);
+
+		if(containsKey("axes_array")){
+			return getList("axes_array", Index.class);
+		}
+
+		// Pandas 1.3+
+		return getList("axes", Index.class);
 	}
 
 	public List<Index> getBlockItems(){
-		return getList("block_items", Index.class);
+
+		if(containsKey("block_items")){
+			return getList("block_items", Index.class);
+		}
+
+		// Pandas 1.3+
+		throw new IllegalStateException();
 	}
 
 	public BlockManager setBlockItems(List<Index> blockItems){
@@ -44,13 +58,35 @@ public class BlockManager extends CustomPythonObject {
 	}
 
 	public List<HasArray> getBlockValues(){
-		return getList("block_values", HasArray.class);
+
+		if(containsKey("block_values")){
+			return getList("block_values", HasArray.class);
+		}
+
+		// Pandas 1.3+
+		Object[] blocks = getTuple("blocks");
+
+		return Arrays.stream(blocks)
+			.map(block -> (HasArray)((Block)block).get("values"))
+			.collect(Collectors.toList());
 	}
 
 	public BlockManager setBlockValues(List<HasArray> blockValues){
 		put("block_values", blockValues);
 
 		return this;
+	}
+
+	@Override
+	public void __init__(Object[] args){
+
+		if(args.length == 0){
+			super.__init__(args);
+		} else
+
+		{
+			super.__setstate__(createAttributeMap(INIT_ATTRIBUTES, args));
+		}
 	}
 
 	@Override
@@ -67,6 +103,12 @@ public class BlockManager extends CustomPythonObject {
 		super.__setstate__(createAttributeMap(SETSTATE_ATTRIBUTES, args));
 	}
 
+	private static final String[] INIT_ATTRIBUTES = {
+		"blocks",
+		"axes"
+	};
+
+	// XXX
 	private static final String[] SETSTATE_ATTRIBUTES = {
 		"axes_array",
 		"block_values",
