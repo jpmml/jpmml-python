@@ -86,10 +86,12 @@ public class DumpTest extends PickleUtilTest {
 		unpicklePandasSeries("python-3.7_pandas-1.1.3");
 		unpicklePandasSeries("python-3.7_pandas-1.2.3");
 		unpicklePandasSeries("python-3.7_pandas-1.3.1");
+		unpicklePandasSeries("python-3.7_pandas-1.3.4");
 
 		unpicklePandasDataFrame("python-3.7_pandas-1.1.3");
 		unpicklePandasDataFrame("python-3.7_pandas-1.2.3");
 		unpicklePandasDataFrame("python-3.7_pandas-1.3.1");
+		unpicklePandasDataFrame("python-3.7_pandas-1.3.4");
 	}
 
 	@Test
@@ -106,10 +108,12 @@ public class DumpTest extends PickleUtilTest {
 
 		unpicklePandasSeries("python-3.9_pandas-1.2.3");
 		unpicklePandasSeries("python-3.9_pandas-1.3.1");
+		unpicklePandasSeries("python-3.9_pandas-1.3.4");
 
 		unpicklePandasDataFrame("python-3.9_pandas-1.1.3");
 		unpicklePandasDataFrame("python-3.9_pandas-1.2.3");
 		unpicklePandasDataFrame("python-3.9_pandas-1.3.1");
+		unpicklePandasDataFrame("python-3.9_pandas-1.3.4");
 	}
 
 	private void unpickleNumpyArrays(String prefix) throws IOException {
