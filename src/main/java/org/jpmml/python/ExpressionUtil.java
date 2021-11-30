@@ -66,15 +66,30 @@ public class ExpressionUtil {
 
 			String function = apply.getFunction();
 			switch(function){
-				case PMMLFunctions.CONCAT:
-				case PMMLFunctions.FORMATDATETIME:
-				case PMMLFunctions.FORMATNUMBER:
-				case PMMLFunctions.LOWERCASE:
-				case PMMLFunctions.REPLACE:
-				case PMMLFunctions.SUBSTRING:
-				case PMMLFunctions.TRIMBLANKS:
-				case PMMLFunctions.UPPERCASE:
-					return DataType.STRING;
+				case PMMLFunctions.CEIL:
+				case PMMLFunctions.FLOOR:
+				case PMMLFunctions.ROUND:
+					return DataType.INTEGER;
+				case PMMLFunctions.ISMISSING:
+				case PMMLFunctions.ISNOTMISSING:
+				case PMMLFunctions.ISVALID:
+				case PMMLFunctions.ISNOTVALID:
+					return DataType.BOOLEAN;
+				case PMMLFunctions.EQUAL:
+				case PMMLFunctions.NOTEQUAL:
+				case PMMLFunctions.LESSTHAN:
+				case PMMLFunctions.LESSOREQUAL:
+				case PMMLFunctions.GREATERTHAN:
+				case PMMLFunctions.GREATEROREQUAL:
+					return DataType.BOOLEAN;
+				case PMMLFunctions.AND:
+				case PMMLFunctions.OR:
+					return DataType.BOOLEAN;
+				case PMMLFunctions.NOT:
+					return DataType.BOOLEAN;
+				case PMMLFunctions.ISIN:
+				case PMMLFunctions.ISNOTIN:
+					return DataType.BOOLEAN;
 				case PMMLFunctions.IF:
 					{
 						List<Expression> expressions = apply.getExpressions();
@@ -96,6 +111,25 @@ public class ExpressionUtil {
 						}
 					}
 					return null;
+				case PMMLFunctions.CONCAT:
+				case PMMLFunctions.LOWERCASE:
+				case PMMLFunctions.SUBSTRING:
+				case PMMLFunctions.TRIMBLANKS:
+				case PMMLFunctions.UPPERCASE:
+					return DataType.STRING;
+				case PMMLFunctions.STRINGLENGTH:
+					return DataType.INTEGER;
+				case PMMLFunctions.REPLACE:
+					return DataType.STRING;
+				case PMMLFunctions.MATCHES:
+					return DataType.BOOLEAN;
+				case PMMLFunctions.FORMATDATETIME:
+				case PMMLFunctions.FORMATNUMBER:
+					return DataType.STRING;
+				case PMMLFunctions.DATEDAYSSINCEYEAR:
+				case PMMLFunctions.DATESECONDSSINCEMIDNIGHT:
+				case PMMLFunctions.DATESECONDSSINCEYEAR:
+					return DataType.INTEGER;
 				default:
 					return null;
 			}

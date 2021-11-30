@@ -60,7 +60,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 		String string = "numpy.log(X[0]) if X[0] > 0.0 else None";
 
-		checkExpression(expected, string, new DataFrameScope(doubleFeatures));
+		checkExpression(expected, string, null, new DataFrameScope(doubleFeatures));
 
 		expected = PMMLUtil.createApply(PMMLFunctions.IF,
 			PMMLUtil.createApply(PMMLFunctions.GREATERTHAN,
@@ -80,7 +80,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 		string = "\"positive\" if X[0] > 0 else \"negative\" if X[0] < 0 else \"zero\"";
 
-		checkExpression(expected, string, new DataFrameScope(doubleFeatures));
+		checkExpression(expected, string, DataType.STRING, new DataFrameScope(doubleFeatures));
 	}
 
 	@Test
@@ -95,7 +95,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 		String string = "numpy.logical_or(numpy.logical_and(a, b), c)";
 
-		checkExpression(expected, string, new BlockScope(booleanFeatures));
+		checkExpression(expected, string, DataType.BOOLEAN, new BlockScope(booleanFeatures));
 
 		string = "X[\"a\"] and X[\"b\"] or X[\"c\"]";
 
@@ -109,7 +109,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 		string = "numpy.logical_not(a)";
 
-		checkExpression(expected, string, new BlockScope(booleanFeatures));
+		checkExpression(expected, string, DataType.BOOLEAN, new BlockScope(booleanFeatures));
 
 		string = "not X[\"a\"]";
 
@@ -129,11 +129,11 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 		String string = "X[0] == None";
 
-		checkExpression(expected, string, new DataFrameScope(doubleFeatures));
+		checkExpression(expected, string, DataType.BOOLEAN, new DataFrameScope(doubleFeatures));
 
 		expected = PMMLUtil.createApply(PMMLFunctions.ISMISSING, fieldRefs.get(0));
 
-		checkExpressionCompact(expected, string, new DataFrameScope(doubleFeatures));
+		checkExpressionCompact(expected, string, DataType.BOOLEAN, new DataFrameScope(doubleFeatures));
 
 		expected = PMMLUtil.createApply(PMMLFunctions.NOTEQUAL,
 			fieldRefs.get(0),
@@ -142,17 +142,17 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 		string = "X[0] != None";
 
-		checkExpression(expected, string, new DataFrameScope(doubleFeatures));
+		checkExpression(expected, string, DataType.BOOLEAN, new DataFrameScope(doubleFeatures));
 
 		expected = PMMLUtil.createApply(PMMLFunctions.ISNOTMISSING, fieldRefs.get(0));
 
-		checkExpressionCompact(expected, string, new DataFrameScope(doubleFeatures));
+		checkExpressionCompact(expected, string, DataType.BOOLEAN, new DataFrameScope(doubleFeatures));
 
 		expected = PMMLUtil.createApply(PMMLFunctions.ISMISSING, fieldRefs.get(0));
 
 		string = "X[0] is None";
 
-		checkExpression(expected, string, new DataFrameScope(doubleFeatures));
+		checkExpression(expected, string, DataType.BOOLEAN, new DataFrameScope(doubleFeatures));
 
 		string = "a is None";
 
@@ -162,7 +162,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 		string = "(X['a'] + 1) is not None";
 
-		checkExpression(expected, string, new DataFrameScope(doubleFeatures));
+		checkExpression(expected, string, DataType.BOOLEAN, new DataFrameScope(doubleFeatures));
 
 		string = "(a + 1) is not None";
 
@@ -175,7 +175,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 		String string = "X['a'] and X['b']";
 
-		checkExpression(expected, string, new DataFrameScope(booleanFeatures));
+		checkExpression(expected, string, DataType.BOOLEAN, new DataFrameScope(booleanFeatures));
 
 		string = "a and b";
 
@@ -188,7 +188,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 		string = "X['a'] == True and X['b'] == False";
 
-		checkExpression(expected, string, new DataFrameScope(booleanFeatures));
+		checkExpression(expected, string, DataType.BOOLEAN, new DataFrameScope(booleanFeatures));
 
 		string = "a == True and b == False";
 
@@ -198,7 +198,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 		string = "X[0] in [0.0, 1.0]";
 
-		checkExpression(expected, string, new DataFrameScope(doubleFeatures));
+		checkExpression(expected, string, DataType.BOOLEAN, new DataFrameScope(doubleFeatures));
 
 		string = "a in [0.0, 1.0]";
 
@@ -208,7 +208,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 		string = "(X[0] + 1.0) not in [X[1]]";
 
-		checkExpression(expected, string, new DataFrameScope(doubleFeatures));
+		checkExpression(expected, string, DataType.BOOLEAN, new DataFrameScope(doubleFeatures));
 
 		string = "(a + 1.0) not in [b]";
 
@@ -218,7 +218,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 		string = "X[\"a\"] > X[\"b\"]";
 
-		checkExpression(expected, string, new DataFrameScope(doubleFeatures));
+		checkExpression(expected, string, DataType.BOOLEAN, new DataFrameScope(doubleFeatures));
 
 		string = "a > b";
 
@@ -228,7 +228,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 		string = "not X[\"a\"] < 0.0";
 
-		checkExpression(expected, string, new DataFrameScope(doubleFeatures));
+		checkExpression(expected, string, DataType.BOOLEAN, new DataFrameScope(doubleFeatures));
 
 		string = "not a < 0.0";
 
@@ -253,7 +253,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 		String string = "(X[0] + X[1] - 1.0) / X[2] * -2";
 
-		checkExpression(expected, string, new DataFrameScope(doubleFeatures));
+		checkExpression(expected, string, null, new DataFrameScope(doubleFeatures));
 
 		string = "(X[\"a\"] + X[\"b\"] - 1.0) / X['c'] * -2";
 
@@ -277,8 +277,8 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 		Scope scope = new DataFrameScope(stringFeatures);
 
-		checkExpression(expected, string, scope);
-		checkExpressionCompact(expectedCompact, string, scope);
+		checkExpression(expected, string, DataType.STRING, scope);
+		checkExpressionCompact(expectedCompact, string, DataType.STRING, scope);
 
 		string = "\"19\" + X[\'a\'] + \"-01-01\"";
 
@@ -303,7 +303,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 		String string = "X[0].lower() if (X[1][0:1].strip()) == \'low\' else X[0].upper()";
 
-		checkExpression(expected, string, new DataFrameScope(stringFeatures));
+		checkExpression(expected, string, DataType.STRING, new DataFrameScope(stringFeatures));
 
 		string = "a.lower() if (b[0:1].strip()) == \'low\' else a.upper()";
 
@@ -317,7 +317,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 		string = "True if len(X[0][:]) > 0 else False";
 
-		checkExpression(expected, string, new DataFrameScope(stringFeatures));
+		checkExpression(expected, string, DataType.BOOLEAN, new DataFrameScope(stringFeatures));
 	}
 
 	@Test
@@ -375,10 +375,10 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 		Scope scope = new BlockScope(Collections.emptyList());
 
-		checkExpression(minusOne, "-1", scope);
+		checkExpression(minusOne, "-1", DataType.INTEGER, scope);
 
-		checkExpression(plusOne, "1", scope);
-		checkExpression(plusOne, "+1", scope);
+		checkExpression(plusOne, "1", DataType.INTEGER, scope);
+		checkExpression(plusOne, "+1", DataType.INTEGER, scope);
 
 		checkExpression(minusOne, "-+1", scope);
 		checkExpression(plusOne, "--1", scope);
@@ -395,7 +395,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 		String string = "X[\"a\"] if pandas.notnull(X[\"a\"]) else X[\"b\"] + X[\"c\"]";
 
-		checkExpression(expected, string, new DataFrameScope(doubleFeatures));
+		checkExpression(expected, string, null, new DataFrameScope(doubleFeatures));
 
 		string = "a if pandas.notnull(a) else b + c";
 
@@ -415,7 +415,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 			expected = feature.ref();
 
-			checkExpression(expected, "X[" + "+" + i + "]", scope);
+			checkExpression(expected, "X[" + "+" + i + "]", DataType.BOOLEAN, scope);
 		}
 
 		try {
@@ -431,7 +431,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 			expected = feature.ref();
 
-			checkExpression(expected, "X[" + "-" + i +"]", scope);
+			checkExpression(expected, "X[" + "-" + i +"]", DataType.BOOLEAN, scope);
 		}
 
 		try {
@@ -456,16 +456,38 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 	}
 
 	static
-	private void checkExpression(Expression expected, String string, Scope scope){
+	private Expression checkExpression(Expression expected, String string, Scope scope){
 		Expression actual = ExpressionTranslator.translate(string, scope, false);
 
 		assertTrue(ReflectionUtil.equals(expected, actual));
+
+		return actual;
 	}
 
 	static
-	private void checkExpressionCompact(Expression expected, String string, Scope scope){
+	private Expression checkExpression(Expression expected, String string, DataType dataType, Scope scope){
+		Expression actual = checkExpression(expected, string, scope);
+
+		assertEquals(dataType, ExpressionUtil.getDataType(actual, scope));
+
+		return actual;
+	}
+
+	static
+	private Expression checkExpressionCompact(Expression expected, String string, Scope scope){
 		Expression actual = ExpressionTranslator.translate(string, scope, true);
 
 		assertTrue(ReflectionUtil.equals(expected, actual));
+
+		return actual;
+	}
+
+	static
+	private Expression checkExpressionCompact(Expression expected, String string, DataType dataType, Scope scope){
+		Expression actual = checkExpressionCompact(expected, string, scope);
+
+		assertTrue(ReflectionUtil.equals(expected, actual));
+
+		return actual;
 	}
 }
