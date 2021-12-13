@@ -18,21 +18,20 @@
  */
 package org.jpmml.python;
 
-import org.dmg.pmml.FieldName;
 import org.jpmml.converter.Feature;
 
 abstract
 public class Scope {
 
 	abstract
-	public Feature getFeature(FieldName name);
+	public Feature getFeature(String name);
 
 	abstract
-	public Feature getFeature(FieldName name, int columnIndex);
+	public Feature getFeature(String name, int columnIndex);
 
 	abstract
-	public Feature getFeature(FieldName name, FieldName columnName);
+	public Feature getFeature(String name, String columnName);
 
 	abstract
-	public Feature resolveFeature(FieldName name);
+	public Feature resolveFeature(String name);
 }

@@ -26,7 +26,6 @@ import java.util.Map;
 import org.dmg.pmml.Constant;
 import org.dmg.pmml.DataType;
 import org.dmg.pmml.Expression;
-import org.dmg.pmml.FieldName;
 import org.dmg.pmml.FieldRef;
 import org.dmg.pmml.PMMLFunctions;
 import org.jpmml.converter.Feature;
@@ -322,11 +321,11 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 	@Test
 	public void translateStringSlicingExpression(){
-		Feature feature = new StringFeature(encoder, FieldName.create("x"), DataType.STRING);
+		Feature feature = new StringFeature(encoder, "x", DataType.STRING);
 
 		Scope scope = new BlockScope(Collections.singletonList(feature));
 
-		Map<FieldName, Object> arguments = new HashMap<>();
+		Map<String, Object> arguments = new HashMap<>();
 		arguments.put(feature.getName(), "Hello World!");
 
 		assertEquals("Hello World!", evaluateExpression("x", scope, arguments));
@@ -444,7 +443,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 	}
 
 	static
-	private Object evaluateExpression(String string, Scope scope, Map<FieldName, ?> arguments){
+	private Object evaluateExpression(String string, Scope scope, Map<String, ?> arguments){
 		Expression expression = ExpressionTranslator.translate(string, scope, false);
 
 		EvaluationContext context = new VirtualEvaluationContext();

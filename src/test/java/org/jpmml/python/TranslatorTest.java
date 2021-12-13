@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.dmg.pmml.DataType;
-import org.dmg.pmml.FieldName;
 import org.dmg.pmml.FieldRef;
 import org.jpmml.converter.BooleanFeature;
 import org.jpmml.converter.ContinuousFeature;
@@ -40,31 +39,31 @@ class TranslatorTest {
 	static final Map<Object, FieldRef> fieldRefs = new HashMap<>();
 
 	static {
-		fieldRefs.put(0, new FieldRef(FieldName.create("a")));
-		fieldRefs.put("a", new FieldRef(FieldName.create("a")));
+		fieldRefs.put(0, new FieldRef("a"));
+		fieldRefs.put("a", new FieldRef("a"));
 
-		fieldRefs.put(1, new FieldRef(FieldName.create("b")));
-		fieldRefs.put("b", new FieldRef(FieldName.create("b")));
+		fieldRefs.put(1, new FieldRef("b"));
+		fieldRefs.put("b", new FieldRef("b"));
 
-		fieldRefs.put(2, new FieldRef(FieldName.create("c")));
-		fieldRefs.put("c", new FieldRef(FieldName.create("c")));
+		fieldRefs.put(2, new FieldRef("c"));
+		fieldRefs.put("c", new FieldRef("c"));
 	}
 
 	static final List<Feature> booleanFeatures = Arrays.asList(
-		new BooleanFeature(TranslatorTest.encoder, FieldName.create("a")),
-		new BooleanFeature(TranslatorTest.encoder, FieldName.create("b")),
-		new BooleanFeature(TranslatorTest.encoder, FieldName.create("c"))
+		new BooleanFeature(TranslatorTest.encoder, "a"),
+		new BooleanFeature(TranslatorTest.encoder, "b"),
+		new BooleanFeature(TranslatorTest.encoder, "c")
 	);
 
 	static final List<Feature> doubleFeatures = Arrays.asList(
-		new ContinuousFeature(TranslatorTest.encoder, FieldName.create("a"), DataType.DOUBLE),
-		new ContinuousFeature(TranslatorTest.encoder, FieldName.create("b"), DataType.DOUBLE),
-		new ContinuousFeature(TranslatorTest.encoder, FieldName.create("c"), DataType.DOUBLE)
+		new ContinuousFeature(TranslatorTest.encoder, "a", DataType.DOUBLE),
+		new ContinuousFeature(TranslatorTest.encoder, "b", DataType.DOUBLE),
+		new ContinuousFeature(TranslatorTest.encoder, "c", DataType.DOUBLE)
 	);
 
 	static final List<Feature> stringFeatures = Arrays.asList(
-		new ObjectFeature(TranslatorTest.encoder, FieldName.create("a"), DataType.STRING),
-		new ObjectFeature(TranslatorTest.encoder, FieldName.create("b"), DataType.STRING),
-		new ObjectFeature(TranslatorTest.encoder, FieldName.create("c"), DataType.STRING)
+		new ObjectFeature(TranslatorTest.encoder, "a", DataType.STRING),
+		new ObjectFeature(TranslatorTest.encoder, "b", DataType.STRING),
+		new ObjectFeature(TranslatorTest.encoder, "c", DataType.STRING)
 	);
 }

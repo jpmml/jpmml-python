@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import org.dmg.pmml.FieldName;
 import org.jpmml.converter.Feature;
 
 public class BlockScope extends Scope {
@@ -35,7 +34,7 @@ public class BlockScope extends Scope {
 	}
 
 	@Override
-	public Feature getFeature(FieldName name){
+	public Feature getFeature(String name){
 		List<? extends Feature> features = getVariables();
 
 		for(Feature feature : features){
@@ -46,28 +45,28 @@ public class BlockScope extends Scope {
 		}
 
 		List<String> variableNames = features.stream()
-			.map(feature -> "\'" + (feature.getName()).getValue() + "\'")
+			.map(feature -> "\'" + feature.getName() + "\'")
 			.collect(Collectors.toList());
 
-		throw new IllegalArgumentException("Name \'" + name.getValue() + "\' is not in " + variableNames);
+		throw new IllegalArgumentException("Name \'" + name + "\' is not in " + variableNames);
 	}
 
 	@Override
-	public Feature getFeature(FieldName name, int columnIndex){
+	public Feature getFeature(String name, int columnIndex){
 		getFeature(name);
 
-		throw new IllegalArgumentException("Name \'" + name.getValue() + "\' is not subscriptable");
+		throw new IllegalArgumentException("Name \'" + name + "\' is not subscriptable");
 	}
 
 	@Override
-	public Feature getFeature(FieldName name, FieldName columnName){
+	public Feature getFeature(String name, String columnName){
 		getFeature(name);
 
-		throw new IllegalArgumentException("Name \'" + name.getValue() + "\' is not subscriptable");
+		throw new IllegalArgumentException("Name \'" + name + "\' is not subscriptable");
 	}
 
 	@Override
-	public Feature resolveFeature(FieldName name){
+	public Feature resolveFeature(String name){
 		List<? extends Feature> features = getVariables();
 
 		for(Feature feature : features){

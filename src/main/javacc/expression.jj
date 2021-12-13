@@ -32,7 +32,6 @@ import numpy.core.FunctionUtil;
 import org.dmg.pmml.Constant;
 import org.dmg.pmml.DataType;
 import org.dmg.pmml.Expression;
-import org.dmg.pmml.FieldName;
 import org.dmg.pmml.FieldRef;
 import org.dmg.pmml.PMMLFunctions;
 import org.jpmml.converter.Feature;
@@ -682,14 +681,14 @@ FieldRef ArrayIndexingExpression(String dottedName):
 				{
 					int colIndex = parseInt(sign, column);
 
-					feature = scope.getFeature(FieldName.create(dottedName), colIndex);
+					feature = scope.getFeature(dottedName, colIndex);
 				}
 				break;
 			case STRING:
 				{
 					String colName = column.image.substring(1, column.image.length() - 1);
 
-					feature = scope.getFeature(FieldName.create(dottedName), FieldName.create(colName));
+					feature = scope.getFeature(dottedName, colName);
 				}
 				break;
 			default:
@@ -731,7 +730,7 @@ Expression FunctionInvocationExpression(String dottedName):
 			String featureName = dottedName.substring(0, dot);
 			String functionName = dottedName.substring(dot + 1);
 
-			Feature feature = scope.resolveFeature(FieldName.create(featureName));
+			Feature feature = scope.resolveFeature(featureName);
 			if(feature != null){
 				return translateTrailerFunction(feature.ref(), functionName, arguments);
 			}
@@ -804,7 +803,7 @@ FieldRef NameInvocationExpression(String dottedName):
 	{
 		Scope scope = ensureScope();
 
-		Feature feature = scope.getFeature(FieldName.create(dottedName));
+		Feature feature = scope.getFeature(dottedName);
 
 		return feature.ref();
 	}

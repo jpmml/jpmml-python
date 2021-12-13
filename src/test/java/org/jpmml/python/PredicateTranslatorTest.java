@@ -24,7 +24,6 @@ import java.util.List;
 import org.dmg.pmml.Array;
 import org.dmg.pmml.ComplexArray;
 import org.dmg.pmml.CompoundPredicate;
-import org.dmg.pmml.FieldName;
 import org.dmg.pmml.Predicate;
 import org.dmg.pmml.SimplePredicate;
 import org.dmg.pmml.SimpleSetPredicate;
@@ -40,9 +39,9 @@ public class PredicateTranslatorTest extends TranslatorTest {
 	public void translateLogicalPredicate(){
 		String string = "X[0] > 0.0 and X[1] > 0 or X[2] > 0";
 
-		Predicate first = new SimplePredicate(FieldName.create("a"), SimplePredicate.Operator.GREATER_THAN, "0.0");
-		Predicate second = new SimplePredicate(FieldName.create("b"), SimplePredicate.Operator.GREATER_THAN, "0");
-		Predicate third = new SimplePredicate(FieldName.create("c"), SimplePredicate.Operator.GREATER_THAN, "0");
+		Predicate first = new SimplePredicate("a", SimplePredicate.Operator.GREATER_THAN, "0.0");
+		Predicate second = new SimplePredicate("b", SimplePredicate.Operator.GREATER_THAN, "0");
+		Predicate third = new SimplePredicate("c", SimplePredicate.Operator.GREATER_THAN, "0");
 
 		Predicate expected = new CompoundPredicate(CompoundPredicate.BooleanOperator.OR, null)
 			.addPredicates(new CompoundPredicate(CompoundPredicate.BooleanOperator.AND, null)
@@ -65,7 +64,7 @@ public class PredicateTranslatorTest extends TranslatorTest {
 
 	@Test
 	public void translateComparisonPredicate(){
-		Predicate expected = new SimplePredicate(FieldName.create("a"), SimplePredicate.Operator.GREATER_THAN, "0.0");
+		Predicate expected = new SimplePredicate("a", SimplePredicate.Operator.GREATER_THAN, "0.0");
 
 		checkPredicate(expected, "X['a'] > 0.0", new DataFrameScope(doubleFeatures));
 
@@ -77,22 +76,22 @@ public class PredicateTranslatorTest extends TranslatorTest {
 			// Ignored
 		}
 
-		expected = new SimplePredicate(FieldName.create("a"), SimplePredicate.Operator.IS_MISSING, null);
+		expected = new SimplePredicate("a", SimplePredicate.Operator.IS_MISSING, null);
 		checkPredicate(expected, "X[0] is None", new DataFrameScope(doubleFeatures));
 
-		expected = new SimplePredicate(FieldName.create("a"), SimplePredicate.Operator.IS_NOT_MISSING, null);
+		expected = new SimplePredicate("a", SimplePredicate.Operator.IS_NOT_MISSING, null);
 		checkPredicate(expected, "X[-3] is not None", new DataFrameScope(doubleFeatures));
 
-		expected = new SimplePredicate(FieldName.create("a"), SimplePredicate.Operator.EQUAL, "one");
+		expected = new SimplePredicate("a", SimplePredicate.Operator.EQUAL, "one");
 		checkPredicate(expected, "X[0] == \"one\"", new DataFrameScope(stringFeatures));
 
-		expected = createSimpleSetPredicate(FieldName.create("a"), SimpleSetPredicate.BooleanOperator.IS_IN, Arrays.asList("1", "2", "3"));
+		expected = createSimpleSetPredicate("a", SimpleSetPredicate.BooleanOperator.IS_IN, Arrays.asList("1", "2", "3"));
 		checkPredicate(expected, "X[0] in [1, 2, 3]", new DataFrameScope(doubleFeatures));
 
-		expected = createSimpleSetPredicate(FieldName.create("a"), SimpleSetPredicate.BooleanOperator.IS_IN, Arrays.asList("one", "two", "three"));
+		expected = createSimpleSetPredicate("a", SimpleSetPredicate.BooleanOperator.IS_IN, Arrays.asList("one", "two", "three"));
 		checkPredicate(expected, "X[0] in ['one', 'two', 'three']", new DataFrameScope(stringFeatures));
 
-		expected = createSimpleSetPredicate(FieldName.create("a"), SimpleSetPredicate.BooleanOperator.IS_NOT_IN, Arrays.asList("-1.5", "-1", "-0.5", "0"));
+		expected = createSimpleSetPredicate("a", SimpleSetPredicate.BooleanOperator.IS_NOT_IN, Arrays.asList("-1.5", "-1", "-0.5", "0"));
 		checkPredicate(expected, "X['a'] not in [-1.5, -1, -0.5, 0]", new DataFrameScope(doubleFeatures));
 	}
 
@@ -104,11 +103,11 @@ public class PredicateTranslatorTest extends TranslatorTest {
 	}
 
 	static
-	private SimpleSetPredicate createSimpleSetPredicate(FieldName field, SimpleSetPredicate.BooleanOperator booleanOperator, List<String> values){
+	private SimpleSetPredicate createSimpleSetPredicate(String fieldName, SimpleSetPredicate.BooleanOperator booleanOperator, List<String> values){
 		Array array = new ComplexArray()
 			.setType(Array.Type.STRING)
 			.setValue(values);
 
-		return new SimpleSetPredicate(field, booleanOperator, array);
+		return new SimpleSetPredicate(fieldName, booleanOperator, array);
 	}
 }

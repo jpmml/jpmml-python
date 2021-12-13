@@ -23,36 +23,35 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import org.dmg.pmml.FieldName;
 import org.jpmml.converter.Feature;
 
 public class DataFrameScope extends Scope {
 
-	private FieldName name = null;
+	private String name = null;
 
 	private List<? extends Feature> columns = null;
 
 
 	public DataFrameScope(List<? extends Feature> features){
-		this(FieldName.create("X"), features);
+		this("X", features);
 	}
 
-	public DataFrameScope(FieldName name, List<? extends Feature> columns){
+	public DataFrameScope(String name, List<? extends Feature> columns){
 		setName(name);
 		setColumns(columns);
 	}
 
 	@Override
-	public Feature getFeature(FieldName name){
-		FieldName dataFrameName = getName();
+	public Feature getFeature(String name){
+		String dataFrameName = getName();
 
 		checkName(name);
 
-		throw new IllegalArgumentException("Name \'" + dataFrameName.getValue() + "\' refers to a row vector. Use an array indexing expression " + dataFrameName.getValue() + "[<column index>] or " + dataFrameName.getValue() + "[<column name>] to refer to a specific row vector element");
+		throw new IllegalArgumentException("Name \'" + dataFrameName + "\' refers to a row vector. Use an array indexing expression " + dataFrameName + "[<column index>] or " + dataFrameName + "[<column name>] to refer to a specific row vector element");
 	}
 
 	@Override
-	public Feature getFeature(FieldName name, int columnIndex){
+	public Feature getFeature(String name, int columnIndex){
 		List<? extends Feature> features = getColumns();
 
 		checkName(name);
@@ -76,7 +75,7 @@ public class DataFrameScope extends Scope {
 	}
 
 	@Override
-	public Feature getFeature(FieldName name, FieldName columnName){
+	public Feature getFeature(String name, String columnName){
 		List<? extends Feature> features = getColumns();
 
 		checkName(name);
@@ -89,14 +88,14 @@ public class DataFrameScope extends Scope {
 		}
 
 		List<String> columnNames = features.stream()
-			.map(feature -> "\'" + (feature.getName()).getValue() + "\'")
+			.map(feature -> "\'" + feature.getName() + "\'")
 			.collect(Collectors.toList());
 
-		throw new IllegalArgumentException("Column name \'" + columnName.getValue() + "\' is not in " + columnNames);
+		throw new IllegalArgumentException("Column name \'" + columnName + "\' is not in " + columnNames);
 	}
 
 	@Override
-	public Feature resolveFeature(FieldName name){
+	public Feature resolveFeature(String name){
 		List<? extends Feature> features = getColumns();
 
 		for(Feature feature : features){
@@ -109,19 +108,19 @@ public class DataFrameScope extends Scope {
 		return null;
 	}
 
-	private void checkName(FieldName name){
-		FieldName dataFrameName = getName();
+	private void checkName(String name){
+		String dataFrameName = getName();
 
 		if(!(dataFrameName).equals(name)){
-			throw new IllegalArgumentException("Name \'" + name.getValue() + "\' is not defined");
+			throw new IllegalArgumentException("Name \'" + name + "\' is not defined");
 		}
 	}
 
-	public FieldName getName(){
+	public String getName(){
 		return this.name;
 	}
 
-	private void setName(FieldName name){
+	private void setName(String name){
 		this.name = Objects.requireNonNull(name);
 	}
 

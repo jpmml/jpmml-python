@@ -38,7 +38,7 @@ public class ExpressionUtil {
 	public boolean isString(Expression expression, Scope scope){
 		DataType dataType = getDataType(expression, scope);
 
-		return (DataType.STRING).equals(dataType);
+		return (dataType == DataType.STRING);
 	}
 
 	static

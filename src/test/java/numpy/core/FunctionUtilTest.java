@@ -21,7 +21,6 @@ package numpy.core;
 import java.util.Collections;
 
 import org.dmg.pmml.Expression;
-import org.dmg.pmml.FieldName;
 import org.dmg.pmml.FieldRef;
 import org.jpmml.evaluator.EvaluationContext;
 import org.jpmml.evaluator.FieldValue;
@@ -57,7 +56,7 @@ public class FunctionUtilTest {
 
 	static
 	private Object evaluateExpression(String function, Object argument){
-		FieldRef fieldRef = new FieldRef(FieldName.create("x"));
+		FieldRef fieldRef = new FieldRef("x");
 
 		Expression expression = FunctionUtil.encodeNumpyFunction(function, Collections.singletonList(fieldRef));
 

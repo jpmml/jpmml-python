@@ -31,7 +31,6 @@ import java.util.List;
 import org.dmg.pmml.Array;
 import org.dmg.pmml.CompoundPredicate;
 import org.dmg.pmml.False;
-import org.dmg.pmml.FieldName;
 import org.dmg.pmml.Predicate;
 import org.dmg.pmml.SimplePredicate;
 import org.dmg.pmml.SimpleSetPredicate;
@@ -274,18 +273,18 @@ Predicate ComparisonExpression():
 {
 	(
 		LOOKAHEAD(PrimaryExpression() <IS> <NONE>)
-		left = PrimaryExpression() <IS> <NONE> { left = new SimplePredicate((FieldName)left, SimplePredicate.Operator.IS_MISSING, null); }
+		left = PrimaryExpression() <IS> <NONE> { left = new SimplePredicate(((Feature)left).getName(), SimplePredicate.Operator.IS_MISSING, null); }
 		|
 		LOOKAHEAD(PrimaryExpression() <IS> <NOT> <NONE>)
-		left = PrimaryExpression() <IS> <NOT> <NONE> { left = new SimplePredicate((FieldName)left, SimplePredicate.Operator.IS_NOT_MISSING, null); }
+		left = PrimaryExpression() <IS> <NOT> <NONE> { left = new SimplePredicate(((Feature)left).getName(), SimplePredicate.Operator.IS_NOT_MISSING, null); }
 		|
 		LOOKAHEAD(PrimaryExpression() <IN>)
-		left = PrimaryExpression() <IN> right = ListMakerExpression() { left = new SimpleSetPredicate((FieldName)left, SimpleSetPredicate.BooleanOperator.IS_IN, (Array)right); }
+		left = PrimaryExpression() <IN> right = ListMakerExpression() { left = new SimpleSetPredicate(((Feature)left).getName(), SimpleSetPredicate.BooleanOperator.IS_IN, (Array)right); }
 		|
 		LOOKAHEAD(PrimaryExpression() <NOT> <IN>)
-		left = PrimaryExpression() <NOT> <IN> right = ListMakerExpression() { left = new SimpleSetPredicate((FieldName)left, SimpleSetPredicate.BooleanOperator.IS_NOT_IN, (Array)right); }
+		left = PrimaryExpression() <NOT> <IN> right = ListMakerExpression() { left = new SimpleSetPredicate(((Feature)left).getName(), SimpleSetPredicate.BooleanOperator.IS_NOT_IN, (Array)right); }
 		|
-		left = PrimaryExpression() ((operator = <EQUAL> | operator = <NOT_EQUAL> | operator = <LESS_THAN> | operator = <LESS_OR_EQUAL> | operator = <GREATER_THAN> | operator = <GREATER_OR_EQUAL>) right = UnaryExpression() { left = new SimplePredicate((FieldName)left, translateRelationalOperator(operator), (String)right); } )?
+		left = PrimaryExpression() ((operator = <EQUAL> | operator = <NOT_EQUAL> | operator = <LESS_THAN> | operator = <LESS_OR_EQUAL> | operator = <GREATER_THAN> | operator = <GREATER_OR_EQUAL>) right = UnaryExpression() { left = new SimplePredicate(((Feature)left).getName(), translateRelationalOperator(operator), (String)right); } )?
 	)
 
 	{
@@ -347,7 +346,7 @@ Object PrimaryExpression():
 	}
 }
 
-FieldName ArrayIndexingExpression():
+Feature ArrayIndexingExpression():
 {
 	Token name;
 	Token sign = null;
@@ -371,25 +370,25 @@ FieldName ArrayIndexingExpression():
 				{
 					int colIndex = Integer.parseInt(sign != null ? (sign.image + column.image) : column.image);
 
-					feature = scope.getFeature(FieldName.create(name.image), colIndex);
+					feature = scope.getFeature(name.image, colIndex);
 				}
 				break;
 			case STRING:
 				{
 					String colName = column.image.substring(1, column.image.length() - 1);
 
-					feature = scope.getFeature(FieldName.create(name.image), FieldName.create(colName));
+					feature = scope.getFeature(name.image, colName);
 				}
 				break;
 			default:
 				break;
 		}
 
-		return feature.getName();
+		return feature;
 	}
 }
 
-FieldName NameInvocationExpression():
+Feature NameInvocationExpression():
 {
 	Token name;
 }
@@ -399,9 +398,9 @@ FieldName NameInvocationExpression():
 	{
 		Scope scope = ensureScope();
 
-		Feature feature = scope.getFeature(FieldName.create(name.image));
+		Feature feature = scope.getFeature(name.image);
 
-		return feature.getName();
+		return feature;
 	}
 }
 

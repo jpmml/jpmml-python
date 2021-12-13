@@ -22,7 +22,6 @@ import org.dmg.pmml.Apply;
 import org.dmg.pmml.Constant;
 import org.dmg.pmml.DataType;
 import org.dmg.pmml.Expression;
-import org.dmg.pmml.FieldName;
 import org.dmg.pmml.FieldRef;
 import org.dmg.pmml.PMMLFunctions;
 import org.jpmml.converter.PMMLUtil;
@@ -45,7 +44,7 @@ public class ExpressionUtilTest {
 		assertTrue(ExpressionUtil.isString(createFieldRef("a"), scope));
 		assertTrue(ExpressionUtil.isString(createFieldRef("b"), scope));
 
-		Expression expression = PMMLUtil.createApply(PMMLFunctions.CONCAT, PMMLUtil.createConstant("Hello World!", null), new FieldRef(FieldName.create("x")));
+		Expression expression = PMMLUtil.createApply(PMMLFunctions.CONCAT, PMMLUtil.createConstant("Hello World!", null), new FieldRef("x"));
 
 		assertTrue(ExpressionUtil.isString(expression, scope));
 
@@ -61,8 +60,8 @@ public class ExpressionUtilTest {
 	}
 
 	static
-	private FieldRef createFieldRef(String name){
-		return new FieldRef(FieldName.create(name));
+	private FieldRef createFieldRef(String fieldName){
+		return new FieldRef(fieldName);
 	}
 
 	static
