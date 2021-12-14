@@ -13,7 +13,7 @@
 	<packaging>jar</packaging>
 
 	<name>JPMML Python converter batch testing harness</name>
-	<description>JPMML Python to class model batch testing harness</description>
+	<description>JPMML Python to class model converter batch testing harness</description>
 
 	<licenses>
 		<license>
