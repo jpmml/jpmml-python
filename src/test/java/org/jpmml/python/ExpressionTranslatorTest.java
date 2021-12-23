@@ -386,6 +386,16 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 	}
 
 	@Test
+	public void translateConstantExpression(){
+		Expression expected = PMMLUtil.createMissingConstant();
+
+		String[] strings = {"numpy.nan", "numpy.NaN", "numpy.NAN"};
+		for(String string : strings){
+			checkExpression(expected, string, new DataFrameScope(doubleFeatures));
+		}
+	}
+
+	@Test
 	public void translateFunctionInvocationExpression(){
 		Expression expected = PMMLUtil.createApply(PMMLFunctions.IF,
 			PMMLUtil.createApply(PMMLFunctions.ISNOTMISSING, fieldRefs.get("a")),

@@ -101,6 +101,22 @@ public class ExpressionTranslator extends AbstractTranslator {
 	}
 
 	static
+	private Constant translateConstant(String module, Token value){
+		
+		if(("numpy").equals(module) || ("np").equals(module)){
+			
+			switch(value.kind){
+				case NAN:
+					return PMMLUtil.createMissingConstant();
+				default:
+					throw new IllegalArgumentException();
+			}
+		}
+		
+		throw new IllegalArgumentException(module);
+	}
+
+	static
 	private Expression translateTrailerFunction(Expression expression, String function, List<Expression> arguments){
 
 		if(("startswith").equals(function) || ("endswith").equals(function)){
@@ -418,6 +434,17 @@ TOKEN:
 
 TOKEN:
 {
+	< NAN:
+		"nan"
+		|
+		"NaN"
+		|
+		"NAN"
+	>
+}
+
+TOKEN:
+{
 	< INT:
 		"0"
 		|
@@ -633,6 +660,8 @@ Expression PrimaryExpression():
 			|
 			expression = FunctionInvocationExpression(featureOrFunction) ( expression = TrailerFunctionInvocationExpression(expression) | expression = StringSlicingExpression(expression) )*
 			|
+			expression = ConstantExpression(featureOrFunction)
+			|
 			expression = NameInvocationExpression(featureOrFunction) ( expression = StringSlicingExpression(expression) ( expression = TrailerFunctionInvocationExpression(expression) | expression = StringSlicingExpression(expression) )* )?
 		)
 		|
@@ -652,7 +681,7 @@ String DottedName():
 	StringBuilder sb = new StringBuilder();
 }
 {
-	name = <NAME> { sb.append(name.image); } ( <DOT> name = <NAME> { sb.append('.').append(name.image); })*
+	name = <NAME> { sb.append(name.image); } ( LOOKAHEAD(<DOT> <NAME>) <DOT> name = <NAME> { sb.append('.').append(name.image); })*
 
 	{
 		return sb.toString();
@@ -794,6 +823,18 @@ Expression StringSlicingExpression(Expression expression):
 		}
 
 		return translateStringSlice(expression, startPos, stopPos);
+	}
+}
+
+Constant ConstantExpression(String dottedName):
+{
+	Token value;
+}
+{
+	<DOT> value = <NAN>
+	
+	{
+		return translateConstant(dottedName, value);
 	}
 }
 
