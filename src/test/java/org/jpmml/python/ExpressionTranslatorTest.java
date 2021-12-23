@@ -81,6 +81,21 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 		string = "\"positive\" if X[0] > 0 else \"negative\" if X[0] < 0 else \"zero\"";
 
 		checkExpression(expected, string, DataType.STRING, new DataFrameScope(doubleFeatures));
+
+		expected = PMMLUtil.createApply(PMMLFunctions.IF,
+			PMMLUtil.createApply(PMMLFunctions.ISMISSING,
+				fieldRefs.get(0)
+			),
+			PMMLUtil.createMissingConstant(),
+			PMMLUtil.createApply(PMMLFunctions.DIVIDE,
+				fieldRefs.get(0),
+				fieldRefs.get(1)
+			)
+		);
+
+		string = "numpy.nan if numpy.isnan(X[0]) else X[0]/X[1]";
+
+		checkExpression(expected, string, null, new DataFrameScope(doubleFeatures));
 	}
 
 	@Test

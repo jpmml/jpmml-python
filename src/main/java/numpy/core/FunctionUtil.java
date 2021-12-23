@@ -90,6 +90,8 @@ public class FunctionUtil {
 				return PMMLUtil.createApply(PMMLFunctions.MIN, getElement(expressions, 2, 0), getElement(expressions, 2, 1));
 			case "hypot":
 				return PMMLUtil.createApply(PMMLFunctions.HYPOT, getOnlyElement(expressions));
+			case "isnan":
+				return PMMLUtil.createApply(PMMLFunctions.ISMISSING, getOnlyElement(expressions));
 			case "log":
 				return PMMLUtil.createApply(PMMLFunctions.LN, getOnlyElement(expressions));
 			case "logical_and":
