@@ -47,7 +47,6 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.13.2</version>
 		</dependency>
 	</dependencies>
 
@@ -59,9 +58,10 @@
 				<version>3.2.0</version>
 				<configuration>
 					<archive>
-						<manifest>
-							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-						</manifest>
+						<manifestEntries>
+							<Implementation-Title>JPMML-Python library</Implementation-Title>
+							<Implementation-Version>${project.version}</Implementation-Version>
+						</manifestEntries>
 					</archive>
 					<excludes>
 						<exclude>*.py</exclude>
