@@ -102,7 +102,7 @@ public class FormulaParser {
 
 		while(!opStack.isEmpty()){
 
-			if((opStack.peek()).equals(PatsyOperator.OPEN_PAREN)){
+			if(opStack.peek() == PatsyOperator.OPEN_PAREN){
 				throw new ParseException();
 			}
 
@@ -150,7 +150,7 @@ public class FormulaParser {
 
 		if(kind == FormulaParserConstants.RPAREN){
 
-			while(!opStack.isEmpty() && !(opStack.peek()).equals(PatsyOperator.OPEN_PAREN)){
+			while(!opStack.isEmpty() && (opStack.peek() != PatsyOperator.OPEN_PAREN)){
 				runOp(nounStack, opStack);
 			}
 
@@ -158,7 +158,7 @@ public class FormulaParser {
 				throw new ParseException();
 			} // End if
 
-			if(!(opStack.peek()).equals(PatsyOperator.OPEN_PAREN)){
+			if(opStack.peek() != PatsyOperator.OPEN_PAREN){
 				throw new ParseException();
 			}
 

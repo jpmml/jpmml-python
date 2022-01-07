@@ -53,7 +53,7 @@ public class ExpressionUtil {
 		if(expression instanceof FieldRef){
 			FieldRef fieldRef = (FieldRef)expression;
 
-			Feature feature = scope.resolveFeature(fieldRef.getField());
+			Feature feature = scope.resolveFeature(fieldRef.requireField());
 			if(feature == null){
 				return null;
 			}
@@ -64,7 +64,7 @@ public class ExpressionUtil {
 		if(expression instanceof Apply){
 			Apply apply = (Apply)expression;
 
-			String function = apply.getFunction();
+			String function = apply.requireFunction();
 			switch(function){
 				case PMMLFunctions.CEIL:
 				case PMMLFunctions.FLOOR:

@@ -39,10 +39,10 @@ public class ExpressionUtilTest {
 		assertFalse(ExpressionUtil.isString(createConstant("Hello World!", null), scope));
 		assertTrue(ExpressionUtil.isString(createConstant("Hello World!", DataType.STRING), scope));
 
-		assertFalse(ExpressionUtil.isString(createFieldRef("x"), scope));
+		assertFalse(ExpressionUtil.isString(new FieldRef("x"), scope));
 
-		assertTrue(ExpressionUtil.isString(createFieldRef("a"), scope));
-		assertTrue(ExpressionUtil.isString(createFieldRef("b"), scope));
+		assertTrue(ExpressionUtil.isString(new FieldRef("a"), scope));
+		assertTrue(ExpressionUtil.isString(new FieldRef("b"), scope));
 
 		Expression expression = PMMLUtil.createApply(PMMLFunctions.CONCAT, PMMLUtil.createConstant("Hello World!", null), new FieldRef("x"));
 
@@ -60,19 +60,14 @@ public class ExpressionUtilTest {
 	}
 
 	static
-	private FieldRef createFieldRef(String fieldName){
-		return new FieldRef(fieldName);
-	}
-
-	static
 	private Apply createIfApply(String trueName, String falseName){
 		Apply apply = PMMLUtil.createApply(PMMLFunctions.IF,
 			createConstant(Boolean.TRUE, null),
-			createFieldRef(trueName)
+			new FieldRef(trueName)
 		);
 
 		if(falseName != null){
-			apply.addExpressions(createFieldRef(falseName));
+			apply.addExpressions(new FieldRef(falseName));
 		}
 
 		return apply;

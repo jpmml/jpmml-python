@@ -61,7 +61,7 @@ public class FunctionUtilTest {
 		Expression expression = FunctionUtil.encodeNumpyFunction(function, Collections.singletonList(fieldRef));
 
 		EvaluationContext context = new VirtualEvaluationContext();
-		context.declare(fieldRef.getField(), FieldValueUtil.create(argument));
+		context.declare(fieldRef.requireField(), FieldValueUtil.create(argument));
 
 		FieldValue value = org.jpmml.evaluator.ExpressionUtil.evaluate(expression, context);
 
