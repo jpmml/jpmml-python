@@ -336,7 +336,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 	@Test
 	public void translateStringSlicingExpression(){
-		Feature feature = new StringFeature(encoder, "x", DataType.STRING);
+		Feature feature = new StringFeature(encoder, "x");
 
 		Scope scope = new BlockScope(Collections.singletonList(feature));
 

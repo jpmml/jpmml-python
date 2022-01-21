@@ -130,7 +130,7 @@ public class ExpressionTranslator extends AbstractTranslator {
 			}
 
 			Constant constant = (Constant)argument;
-			if(!(DataType.STRING).equals(constant.getDataType())){
+			if(constant.getDataType() != DataType.STRING){
 				throw new IllegalArgumentException();
 			}
 
