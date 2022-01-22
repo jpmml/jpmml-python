@@ -49,6 +49,7 @@ public class FunctionTest extends PickleUtilTest {
 	@Test
 	public void python39() throws IOException {
 		unpickleNumpyFunctions("python-3.9_numpy-1.20.2");
+		unpickleNumpyFunctions("python-3.9_numpy-1.22.1");
 	}
 
 	static
