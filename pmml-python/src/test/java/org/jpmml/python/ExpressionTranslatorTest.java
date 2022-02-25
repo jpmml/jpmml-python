@@ -31,6 +31,7 @@ import org.dmg.pmml.PMMLFunctions;
 import org.jpmml.converter.Feature;
 import org.jpmml.converter.PMMLUtil;
 import org.jpmml.converter.StringFeature;
+import org.jpmml.converter.TypeUtil;
 import org.jpmml.evaluator.EvaluationContext;
 import org.jpmml.evaluator.FieldValue;
 import org.jpmml.evaluator.FieldValueUtil;
@@ -492,7 +493,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 	private Expression checkExpression(Expression expected, String string, DataType dataType, Scope scope){
 		Expression actual = checkExpression(expected, string, scope);
 
-		assertEquals(dataType, ExpressionUtil.getDataType(actual, scope));
+		assertEquals(dataType, TypeUtil.getDataType(actual, scope));
 
 		return actual;
 	}

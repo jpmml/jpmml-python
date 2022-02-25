@@ -36,6 +36,7 @@ import org.dmg.pmml.FieldRef;
 import org.dmg.pmml.PMMLFunctions;
 import org.jpmml.converter.Feature;
 import org.jpmml.converter.PMMLUtil;
+import org.jpmml.converter.TypeUtil;
 import org.jpmml.converter.visitors.ExpressionCompactor;
 
 public class ExpressionTranslator extends AbstractTranslator {
@@ -594,7 +595,7 @@ Expression AdditiveExpression():
 	left = MultiplicativeExpression() ((operator = <PLUS> | operator = <MINUS>) right = MultiplicativeExpression() {
 		Scope scope = ensureScope();
 
-		if((operator.kind == PLUS) && (ExpressionUtil.isString(left, scope) && ExpressionUtil.isString(right, scope))){
+		if((operator.kind == PLUS) && (TypeUtil.isString(left, scope) && TypeUtil.isString(right, scope))){
 			left = PMMLUtil.createApply(PMMLFunctions.CONCAT, left, right);
 		} else
 

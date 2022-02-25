@@ -19,6 +19,7 @@
 package org.jpmml.python;
 
 import org.jpmml.converter.Feature;
+import org.jpmml.converter.FeatureResolver;
 
 abstract
 public class Scope implements FeatureResolver {
