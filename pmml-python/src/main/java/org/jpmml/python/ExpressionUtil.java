@@ -35,14 +35,14 @@ public class ExpressionUtil {
 	}
 
 	static
-	public boolean isString(Expression expression, Scope scope){
-		DataType dataType = getDataType(expression, scope);
+	public boolean isString(Expression expression, FeatureResolver featureResolver){
+		DataType dataType = getDataType(expression, featureResolver);
 
 		return (dataType == DataType.STRING);
 	}
 
 	static
-	public DataType getDataType(Expression expression, Scope scope){
+	public DataType getDataType(Expression expression, FeatureResolver featureResolver){
 
 		if(expression instanceof Constant){
 			Constant constant = (Constant)expression;
@@ -53,7 +53,7 @@ public class ExpressionUtil {
 		if(expression instanceof FieldRef){
 			FieldRef fieldRef = (FieldRef)expression;
 
-			Feature feature = scope.resolveFeature(fieldRef.requireField());
+			Feature feature = (featureResolver != null ? featureResolver.resolveFeature(fieldRef.requireField()) : null);
 			if(feature == null){
 				return null;
 			}
@@ -95,10 +95,10 @@ public class ExpressionUtil {
 						List<Expression> expressions = apply.getExpressions();
 
 						if(expressions.size() > 1){
-							DataType trueDataType = getDataType(expressions.get(1), scope);
+							DataType trueDataType = getDataType(expressions.get(1), featureResolver);
 
 							if(expressions.size() > 2){
-								DataType falseDataType = getDataType(expressions.get(2), scope);
+								DataType falseDataType = getDataType(expressions.get(2), featureResolver);
 
 								if(Objects.equals(trueDataType, falseDataType)){
 									return trueDataType;

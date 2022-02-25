@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Villu Ruusmann
+ * Copyright (c) 2022 Villu Ruusmann
  *
  * This file is part of JPMML-Python
  *
@@ -20,15 +20,7 @@ package org.jpmml.python;
 
 import org.jpmml.converter.Feature;
 
-abstract
-public class Scope implements FeatureResolver {
+public interface FeatureResolver {
 
-	abstract
-	public Feature getFeature(String name);
-
-	abstract
-	public Feature getFeature(String name, int columnIndex);
-
-	abstract
-	public Feature getFeature(String name, String columnName);
+	Feature resolveFeature(String name);
 }
