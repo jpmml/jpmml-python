@@ -13,7 +13,7 @@
 	<packaging>jar</packaging>
 
 	<name>JPMML Python converter</name>
-	<description>JPMML Python to class model converter</description>
+	<description>JPMML Python to PMML converter</description>
 
 	<licenses>
 		<license>
