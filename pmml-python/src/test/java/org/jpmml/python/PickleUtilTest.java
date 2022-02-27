@@ -56,6 +56,8 @@ public class PickleUtilTest {
 	}
 
 	static {
-		PickleUtil.init("python2pmml.properties");
+		ClassLoader clazzLoader = PickleUtilTest.class.getClassLoader();
+
+		PickleUtil.init(clazzLoader, "python2pmml.properties");
 	}
 }

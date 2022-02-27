@@ -106,14 +106,7 @@ public class PickleUtil {
 	}
 
 	static
-	public void init(String name){
-		Thread thread = Thread.currentThread();
-
-		ClassLoader classLoader = thread.getContextClassLoader();
-		if(classLoader == null){
-			classLoader = ClassLoader.getSystemClassLoader();
-		}
-
+	public void init(ClassLoader classLoader, String name){
 		Enumeration<URL> urls;
 
 		try {

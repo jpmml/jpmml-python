@@ -24,6 +24,8 @@ abstract
 public class PythonEncoder extends ModelEncoder {
 
 	static {
-		PickleUtil.init("python2pmml.properties");
+		ClassLoader clazzLoader = PythonEncoder.class.getClassLoader();
+
+		PickleUtil.init(clazzLoader, "python2pmml.properties");
 	}
 }
