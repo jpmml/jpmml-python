@@ -62,6 +62,10 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 		checkExpression(expected, string, null, new DataFrameScope(doubleFeatures));
 
+		string = "numpy.where(X[0] > 0.0, numpy.log(X[0]), None)";
+
+		checkExpression(expected, string, null, new DataFrameScope(doubleFeatures));
+
 		expected = PMMLUtil.createApply(PMMLFunctions.IF,
 			PMMLUtil.createApply(PMMLFunctions.GREATERTHAN,
 				fieldRefs.get(0),
@@ -82,6 +86,10 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 		checkExpression(expected, string, DataType.STRING, new DataFrameScope(doubleFeatures));
 
+		string = "numpy.where(X[0] > 0, \"positive\", numpy.where(X[0] < 0, \"negative\", \"zero\"))";
+
+		checkExpression(expected, string, DataType.STRING, new DataFrameScope(doubleFeatures));
+
 		expected = PMMLUtil.createApply(PMMLFunctions.IF,
 			PMMLUtil.createApply(PMMLFunctions.ISMISSING,
 				fieldRefs.get(0)
@@ -93,7 +101,11 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 			)
 		);
 
-		string = "numpy.nan if numpy.isnan(X[0]) else X[0]/X[1]";
+		string = "numpy.nan if numpy.isnan(X[0]) else X[0] / X[1]";
+
+		checkExpression(expected, string, null, new DataFrameScope(doubleFeatures));
+
+		string = "numpy.where(numpy.isnan(X[0]), numpy.nan, X[0] / X[1])";
 
 		checkExpression(expected, string, null, new DataFrameScope(doubleFeatures));
 	}

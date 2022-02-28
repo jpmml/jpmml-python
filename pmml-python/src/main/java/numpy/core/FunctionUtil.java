@@ -135,6 +135,8 @@ public class FunctionUtil {
 				return PMMLUtil.createApply(PMMLFunctions.TAN, getOnlyElement(expressions));
 			case "tanh":
 				return PMMLUtil.createApply(PMMLFunctions.TANH, getOnlyElement(expressions));
+			case "where":
+				return PMMLUtil.createApply(PMMLFunctions.IF, getElement(expressions, 3, 0), getElement(expressions, 3, 1), getElement(expressions, 3, 2));
 			default:
 				throw new IllegalArgumentException(name);
 		}
