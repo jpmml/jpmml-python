@@ -692,39 +692,30 @@ FieldRef ArrayIndexingExpression(String dottedName):
 {
 	Token sign = null;
 	Token column;
+
+	Feature feature;
 }
 {
 	(
 		LOOKAHEAD(<LBRACKET> (Sign())? <INT>)
-		<LBRACKET> (sign = Sign())? column = <INT> <RBRACKET>
+		<LBRACKET> (sign = Sign())? column = <INT> <RBRACKET> {
+			Scope scope = ensureScope();
+			
+			int colIndex = parseInt(sign, column);
+			
+			feature = scope.getFeature(dottedName, colIndex);
+		}
 		|
-		<LBRACKET> column = <STRING> <RBRACKET>
+		<LBRACKET> column = <STRING> <RBRACKET> {
+			Scope scope = ensureScope();
+			
+			String colName = column.image.substring(1, column.image.length() - 1);
+			
+			feature = scope.getFeature(dottedName, colName);
+		}
 	)
 
 	{
-		Scope scope = ensureScope();
-
-		Feature feature = null;
-
-		switch(column.kind){
-			case INT:
-				{
-					int colIndex = parseInt(sign, column);
-
-					feature = scope.getFeature(dottedName, colIndex);
-				}
-				break;
-			case STRING:
-				{
-					String colName = column.image.substring(1, column.image.length() - 1);
-
-					feature = scope.getFeature(dottedName, colName);
-				}
-				break;
-			default:
-				break;
-		}
-
 		return feature.ref();
 	}
 }

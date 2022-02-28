@@ -351,39 +351,30 @@ Feature ArrayIndexingExpression():
 	Token name;
 	Token sign = null;
 	Token column;
+
+	Feature feature;
 }
 {
 	(
 		LOOKAHEAD(<NAME> <LBRACKET> (<PLUS> | <MINUS>)? <INT>)
-		name = <NAME> <LBRACKET> (sign = <PLUS> | sign = <MINUS>)? column = <INT> <RBRACKET>
+		name = <NAME> <LBRACKET> (sign = <PLUS> | sign = <MINUS>)? column = <INT> <RBRACKET> {
+			Scope scope = ensureScope();
+
+			int colIndex = Integer.parseInt(sign != null ? (sign.image + column.image) : column.image);
+
+			feature = scope.getFeature(name.image, colIndex);
+		}
 		|
-		name = <NAME> <LBRACKET> column = <STRING> <RBRACKET>
+		name = <NAME> <LBRACKET> column = <STRING> <RBRACKET> {
+			Scope scope = ensureScope();
+
+			String colName = column.image.substring(1, column.image.length() - 1);
+
+			feature = scope.getFeature(name.image, colName);
+		}
 	)
 
 	{
-		Scope scope = ensureScope();
-
-		Feature feature = null;
-
-		switch(column.kind){
-			case INT:
-				{
-					int colIndex = Integer.parseInt(sign != null ? (sign.image + column.image) : column.image);
-
-					feature = scope.getFeature(name.image, colIndex);
-				}
-				break;
-			case STRING:
-				{
-					String colName = column.image.substring(1, column.image.length() - 1);
-
-					feature = scope.getFeature(name.image, colName);
-				}
-				break;
-			default:
-				break;
-		}
-
 		return feature;
 	}
 }
