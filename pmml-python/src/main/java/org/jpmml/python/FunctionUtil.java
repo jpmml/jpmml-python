@@ -48,6 +48,9 @@ public class FunctionUtil {
 				case "pd":
 					parts[0] = "pandas";
 					break;
+				case "sp":
+					parts[0] = "scipy";
+					break;
 				default:
 					return module;
 			}
@@ -76,6 +79,10 @@ public class FunctionUtil {
 
 		if((module).equals("pandas") || (module).startsWith("pandas.")){
 			return encodePandasFunction(module, name, expressions);
+		} else
+
+		if((module).equals("scipy") || (module).startsWith("scipy.")){
+			return encodeScipyFunction(module, name, expressions);
 		} else
 
 		{
@@ -197,6 +204,34 @@ public class FunctionUtil {
 				return PMMLUtil.createApply(PMMLFunctions.ISMISSING, getOnlyElement(expressions));
 			case "notnull":
 				return PMMLUtil.createApply(PMMLFunctions.ISNOTMISSING, getOnlyElement(expressions));
+			default:
+				throw new IllegalArgumentException(name);
+		}
+	}
+
+	static
+	public Expression encodeScipyFunction(String module, String name, List<Expression> expressions){
+
+		if(!("scipy.special").equals(module)){
+			throw new IllegalArgumentException(module);
+		}
+
+		switch(name){
+			case "expit":
+				return PMMLUtil.createApply(PMMLFunctions.DIVIDE,
+					PMMLUtil.createConstant(1),
+					PMMLUtil.createApply(PMMLFunctions.ADD,
+						PMMLUtil.createConstant(1),
+						PMMLUtil.createApply(PMMLFunctions.EXP, PMMLUtil.createApply(PMMLFunctions.MULTIPLY, PMMLUtil.createConstant(-1), getOnlyElement(expressions)))
+					)
+				);
+			case "logit":
+				return PMMLUtil.createApply(PMMLFunctions.LN,
+					PMMLUtil.createApply(PMMLFunctions.DIVIDE,
+						getOnlyElement(expressions),
+						PMMLUtil.createApply(PMMLFunctions.SUBTRACT, PMMLUtil.createConstant(1), getOnlyElement(expressions))
+					)
+				);
 			default:
 				throw new IllegalArgumentException(name);
 		}

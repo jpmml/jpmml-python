@@ -74,6 +74,21 @@ public class FunctionUtilTest {
 		assertEquals(+1, evaluateExpression("numpy", "sign", +3d));
 	}
 
+	@Test
+	public void evaluateScipyFunction(){
+		assertEquals(0.18242552d, (Double)evaluateExpression("scipy.special", "expit", -1.5d), 1e-8);
+		assertEquals(0.5d, (Double)evaluateExpression("scipy.special", "expit", 0d), 1e-8);
+		assertEquals(0.81757448d, (Double)evaluateExpression("scipy.special", "expit", 1.5d), 1e-8);
+
+		assertEquals(Double.NaN, evaluateExpression("scipy.special", "logit", -5d));
+		assertEquals(Double.NEGATIVE_INFINITY, evaluateExpression("scipy.special", "logit", 0d));
+		assertEquals(-1.5d, (Double)evaluateExpression("scipy.special", "logit", 0.18242552d), 3e-8);
+		assertEquals(0d, (Double)evaluateExpression("scipy.special", "logit", 0.5d), 1e-8);
+		assertEquals(1.5d, (Double)evaluateExpression("scipy.special", "logit", 0.81757448d), 3e-8);
+		assertEquals(Double.POSITIVE_INFINITY, evaluateExpression("scipy.special", "logit", 1d));
+		assertEquals(Double.NaN, evaluateExpression("scipy.special", "logit", 5d));
+	}
+
 	static
 	private Object evaluateExpression(String module, String name, Object argument){
 		FieldRef fieldRef = new FieldRef("x");
