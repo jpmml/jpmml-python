@@ -18,7 +18,9 @@
  */
 package org.jpmml.python;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.dmg.pmml.Expression;
 import org.dmg.pmml.PMMLFunctions;
@@ -27,6 +29,32 @@ import org.jpmml.converter.PMMLUtil;
 public class FunctionUtil {
 
 	private FunctionUtil(){
+	}
+
+	static
+	public String canonicalizeModule(String module){
+
+		if(("").equals(module)){
+			return "builtins";
+		} else
+
+		{
+			String[] parts = module.split("\\.");
+
+			switch(parts[0]){
+				case "np":
+					parts[0] = "numpy";
+					break;
+				case "pd":
+					parts[0] = "pandas";
+					break;
+				default:
+					return module;
+			}
+
+			return Arrays.stream(parts)
+				.collect(Collectors.joining("."));
+		}
 	}
 
 	static
@@ -39,15 +67,15 @@ public class FunctionUtil {
 
 		// XXX
 		if((module).equals("builtins")){
-			return encodePythonFunction(name, expressions);
+			return encodePythonFunction(module, name, expressions);
 		} else
 
 		if((module).equals("numpy") || (module).startsWith("numpy.")){
-			return encodeNumpyFunction(name, expressions);
+			return encodeNumpyFunction(module, name, expressions);
 		} else
 
 		if((module).equals("pandas") || (module).startsWith("pandas.")){
-			return encodePandasFunction(name, expressions);
+			return encodePandasFunction(module, name, expressions);
 		} else
 
 		{
@@ -56,7 +84,7 @@ public class FunctionUtil {
 	}
 
 	static
-	public Expression encodePythonFunction(String name, List<Expression> expressions){
+	public Expression encodePythonFunction(String module, String name, List<Expression> expressions){
 
 		switch(name){
 			case "len":
@@ -67,7 +95,7 @@ public class FunctionUtil {
 	}
 
 	static
-	public Expression encodeNumpyFunction(String name, List<Expression> expressions){
+	public Expression encodeNumpyFunction(String module, String name, List<Expression> expressions){
 
 		switch(name){
 			case "absolute":
@@ -162,7 +190,7 @@ public class FunctionUtil {
 	}
 
 	static
-	public Expression encodePandasFunction(String name, List<Expression> expressions){
+	public Expression encodePandasFunction(String module, String name, List<Expression> expressions){
 
 		switch(name){
 			case "isnull":

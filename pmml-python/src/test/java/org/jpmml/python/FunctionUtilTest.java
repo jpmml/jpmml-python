@@ -33,32 +33,52 @@ import static org.junit.Assert.assertEquals;
 public class FunctionUtilTest {
 
 	@Test
+	public void canonicalizeModule(){
+		assertEquals("builtins", FunctionUtil.canonicalizeModule(""));
+		assertEquals("builtins", FunctionUtil.canonicalizeModule("builtins"));
+
+		assertEquals("prefix.suffix", FunctionUtil.canonicalizeModule("prefix.suffix"));
+
+		assertEquals("numpy", FunctionUtil.canonicalizeModule("np"));
+		assertEquals("numpy.suffix", FunctionUtil.canonicalizeModule("np.suffix"));
+		assertEquals("numpy.suffix", FunctionUtil.canonicalizeModule("numpy.suffix"));
+
+		assertEquals("prefix.np.suffix", FunctionUtil.canonicalizeModule("prefix.np.suffix"));
+
+		assertEquals("pandas", FunctionUtil.canonicalizeModule("pd"));
+		assertEquals("pandas.suffix", FunctionUtil.canonicalizeModule("pd.suffix"));
+		assertEquals("pandas.suffix", FunctionUtil.canonicalizeModule("pandas.suffix"));
+
+		assertEquals("prefix.pd.suffix", FunctionUtil.canonicalizeModule("prefix.pd.suffix"));
+	}
+
+	@Test
 	public void evaluateNumpyFunction(){
-		assertEquals(3d, evaluateExpression("absolute", -3d));
+		assertEquals(3d, evaluateExpression("numpy", "absolute", -3d));
 
-		assertEquals(-2, evaluateExpression("ceil", -2.75d));
-		assertEquals(3, evaluateExpression("ceil", 2.75d));
+		assertEquals(-2, evaluateExpression("numpy", "ceil", -2.75d));
+		assertEquals(3, evaluateExpression("numpy", "ceil", 2.75d));
 
-		assertEquals(-3, evaluateExpression("floor", -2.75d));
-		assertEquals(2, evaluateExpression("floor", 2.75d));
+		assertEquals(-3, evaluateExpression("numpy", "floor", -2.75d));
+		assertEquals(2, evaluateExpression("numpy", "floor", 2.75d));
 
-		assertEquals(-3, evaluateExpression("negative", 3));
-		assertEquals(-3f, evaluateExpression("negative", 3f));
-		assertEquals(-3d, evaluateExpression("negative", 3d));
+		assertEquals(-3, evaluateExpression("numpy", "negative", 3));
+		assertEquals(-3f, evaluateExpression("numpy", "negative", 3f));
+		assertEquals(-3d, evaluateExpression("numpy", "negative", 3d));
 
-		assertEquals(1f / 3f, (Float)evaluateExpression("reciprocal", 3f), 1e-5);
-		assertEquals(1d / 3d, (Double)evaluateExpression("reciprocal", 3d), 1e-8);
+		assertEquals(1f / 3f, (Float)evaluateExpression("numpy", "reciprocal", 3f), 1e-5);
+		assertEquals(1d / 3d, (Double)evaluateExpression("numpy", "reciprocal", 3d), 1e-8);
 
-		assertEquals(-1, evaluateExpression("sign", -3d));
-		assertEquals(0, evaluateExpression("sign", 0d));
-		assertEquals(+1, evaluateExpression("sign", +3d));
+		assertEquals(-1, evaluateExpression("numpy", "sign", -3d));
+		assertEquals(0, evaluateExpression("numpy", "sign", 0d));
+		assertEquals(+1, evaluateExpression("numpy", "sign", +3d));
 	}
 
 	static
-	private Object evaluateExpression(String function, Object argument){
+	private Object evaluateExpression(String module, String name, Object argument){
 		FieldRef fieldRef = new FieldRef("x");
 
-		Expression expression = FunctionUtil.encodeNumpyFunction(function, Collections.singletonList(fieldRef));
+		Expression expression = FunctionUtil.encodeFunction(module, name, Collections.singletonList(fieldRef));
 
 		EvaluationContext context = new VirtualEvaluationContext();
 		context.declare(fieldRef.requireField(), FieldValueUtil.create(argument));

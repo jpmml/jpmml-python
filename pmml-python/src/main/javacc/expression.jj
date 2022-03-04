@@ -101,8 +101,9 @@ public class ExpressionTranslator extends AbstractTranslator {
 
 	static
 	private Constant translateConstant(String module, Token value){
-		
-		if(("numpy").equals(module) || ("np").equals(module)){
+		module = FunctionUtil.canonicalizeModule(module);
+
+		if(("numpy").equals(module)){
 			
 			switch(value.kind){
 				case NAN:
@@ -111,7 +112,7 @@ public class ExpressionTranslator extends AbstractTranslator {
 					throw new IllegalArgumentException();
 			}
 		}
-		
+
 		throw new IllegalArgumentException(module);
 	}
 
@@ -196,19 +197,9 @@ public class ExpressionTranslator extends AbstractTranslator {
 			name = function;
 		}
 
-		if(("").equals(module)){
-			return FunctionUtil.encodeFunction("builtins", name, arguments);
-		} else
+		module = FunctionUtil.canonicalizeModule(module);
 
-		if(("numpy").equals(module) || ("np").equals(module)){
-			return FunctionUtil.encodeFunction("numpy", name, arguments);
-		} else
-
-		if(("pandas").equals(module) || ("pd").equals(module)){
-			return FunctionUtil.encodeFunction("pandas", name, arguments);
-		}
-
-		throw new IllegalArgumentException(function);
+		return FunctionUtil.encodeFunction(module, name, arguments);
 	}
 
 	static
