@@ -28,7 +28,6 @@ package org.jpmml.python;
 import java.util.ArrayList;
 import java.util.List;
 
-import numpy.core.FunctionUtil;
 import org.dmg.pmml.Constant;
 import org.dmg.pmml.DataType;
 import org.dmg.pmml.Expression;

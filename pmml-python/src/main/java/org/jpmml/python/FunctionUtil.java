@@ -16,14 +16,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with JPMML-Python.  If not, see <http://www.gnu.org/licenses/>.
  */
-package numpy.core;
+package org.jpmml.python;
 
 import java.util.List;
 
 import org.dmg.pmml.Expression;
 import org.dmg.pmml.PMMLFunctions;
 import org.jpmml.converter.PMMLUtil;
-import org.jpmml.python.Identifiable;
 
 public class FunctionUtil {
 

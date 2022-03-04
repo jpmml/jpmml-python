@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with JPMML-Python.  If not, see <http://www.gnu.org/licenses/>.
  */
-package numpy.core;
+package org.jpmml.python;
 
 import java.util.Collections;
 
