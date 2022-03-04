@@ -37,12 +37,32 @@ public class FunctionUtil {
 	static
 	public Expression encodeFunction(String module, String name, List<Expression> expressions){
 
+		// XXX
+		if((module).equals("builtins")){
+			return encodePythonFunction(name, expressions);
+		} else
+
 		if((module).equals("numpy") || (module).startsWith("numpy.")){
 			return encodeNumpyFunction(name, expressions);
 		} else
 
+		if((module).equals("pandas") || (module).startsWith("pandas.")){
+			return encodePandasFunction(name, expressions);
+		} else
+
 		{
 			throw new IllegalArgumentException(module);
+		}
+	}
+
+	static
+	public Expression encodePythonFunction(String name, List<Expression> expressions){
+
+		switch(name){
+			case "len":
+				return PMMLUtil.createApply(PMMLFunctions.STRINGLENGTH, getOnlyElement(expressions));
+			default:
+				throw new IllegalArgumentException(name);
 		}
 	}
 
@@ -136,6 +156,19 @@ public class FunctionUtil {
 				return PMMLUtil.createApply(PMMLFunctions.TANH, getOnlyElement(expressions));
 			case "where":
 				return PMMLUtil.createApply(PMMLFunctions.IF, getElement(expressions, 3, 0), getElement(expressions, 3, 1), getElement(expressions, 3, 2));
+			default:
+				throw new IllegalArgumentException(name);
+		}
+	}
+
+	static
+	public Expression encodePandasFunction(String name, List<Expression> expressions){
+
+		switch(name){
+			case "isnull":
+				return PMMLUtil.createApply(PMMLFunctions.ISMISSING, getOnlyElement(expressions));
+			case "notnull":
+				return PMMLUtil.createApply(PMMLFunctions.ISNOTMISSING, getOnlyElement(expressions));
 			default:
 				throw new IllegalArgumentException(name);
 		}
