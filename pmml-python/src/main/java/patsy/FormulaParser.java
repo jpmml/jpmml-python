@@ -80,7 +80,7 @@ public class FormulaParser {
 					binaryPatsyOperators.put(kind, patsyOperator);
 					break;
 				default:
-					throw new IllegalArgumentException();
+					throw new ParseException();
 			}
 		}
 
@@ -224,7 +224,12 @@ public class FormulaParser {
 			{
 				tokenManager.pushBack(token);
 
-				result.add(new PatsyToken(readPythonExpr(tokenManager, pythonEndTokens)));
+				List<Token> tokens = readPythonExpr(tokenManager, pythonEndTokens);
+				if(tokens.isEmpty()){
+					throw new ParseException();
+				}
+
+				result.add(new PatsyToken(tokens));
 			}
 		}
 

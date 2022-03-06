@@ -68,7 +68,7 @@ public class ExpressionTranslator extends AbstractTranslator {
 	}
 
 	static
-	private String translateRelationalOperator(Token operator){
+	private String translateRelationalOperator(Token operator) throws ParseException {
 
 		switch(operator.kind){
 			case EQUAL:
@@ -84,7 +84,7 @@ public class ExpressionTranslator extends AbstractTranslator {
 			case GREATER_OR_EQUAL:
 				return PMMLFunctions.GREATEROREQUAL;
 			default:
-				throw new IllegalArgumentException(operator.image);
+				throw new ParseException();
 		}
 	}
 
@@ -103,27 +103,24 @@ public class ExpressionTranslator extends AbstractTranslator {
 	private Constant translateConstant(String module, Token value){
 		module = FunctionUtil.canonicalizeModule(module);
 
-		if(("numpy").equals(module)){
+		if((module).equals("numpy")){
 			
 			switch(value.kind){
 				case NAN:
 					return PMMLUtil.createMissingConstant();
 				default:
-					throw new IllegalArgumentException();
+					break;
 			}
 		}
 
-		throw new IllegalArgumentException(module);
+		throw new IllegalArgumentException("Constant \'" + (module + "." + value.image) + "\' is not supported");
 	}
 
 	static
 	private Expression translateTrailerFunction(Expression expression, String function, List<Expression> arguments){
 
 		if(("startswith").equals(function) || ("endswith").equals(function)){
-
-			if(arguments.size() != 1){
-				throw new IllegalArgumentException();
-			}
+			ClassDictUtil.checkSize(1, arguments);
 
 			Expression argument = arguments.get(0);
 			if(!(argument instanceof Constant)){
@@ -154,10 +151,7 @@ public class ExpressionTranslator extends AbstractTranslator {
 		} else
 
 		if(("lower").equals(function) || ("upper").equals(function)){
-
-			if(arguments.size() != 0){
-				throw new IllegalArgumentException();
-			}
+			ClassDictUtil.checkSize(0, arguments);
 
 			switch(function){
 				case "lower":
@@ -170,15 +164,17 @@ public class ExpressionTranslator extends AbstractTranslator {
 		} else
 
 		if(("strip").equals(function)){
+			ClassDictUtil.checkSize(0, arguments);
 
-			if(arguments.size() != 0){
-				throw new IllegalArgumentException();
+			switch(function){
+				case "strip":
+					return PMMLUtil.createApply(PMMLFunctions.TRIMBLANKS, expression);
+				default:
+					break;
 			}
-
-			return PMMLUtil.createApply(PMMLFunctions.TRIMBLANKS, expression);
 		}
 
-		throw new IllegalArgumentException(function);
+		throw new IllegalArgumentException("Function \'" + function + "\' is not supported");
 	}
 
 	static
@@ -281,7 +277,7 @@ public class ExpressionTranslator extends AbstractTranslator {
 	}
 
 	static
-	private Object translateValue(Token value){
+	private Object translateValue(Token value) throws ParseException {
 		String image = value.image;
 
 		switch(value.kind){
@@ -300,7 +296,7 @@ public class ExpressionTranslator extends AbstractTranslator {
 			case STRING:
 				return image.substring(1, image.length() - 1);
 			default:
-				throw new IllegalArgumentException();
+				throw new ParseException();
 		}
 	}
 

@@ -57,7 +57,7 @@ public class PredicateTranslator extends AbstractTranslator {
 	}
 
 	static
-	private SimplePredicate.Operator translateRelationalOperator(Token operator){
+	private SimplePredicate.Operator translateRelationalOperator(Token operator) throws ParseException {
 		
 		switch(operator.kind){
 			case EQUAL:
@@ -73,7 +73,7 @@ public class PredicateTranslator extends AbstractTranslator {
 			case GREATER_OR_EQUAL:
 				return SimplePredicate.Operator.GREATER_OR_EQUAL;
 			default:
-				throw new IllegalArgumentException(operator.image);
+				throw new ParseException();
 		}
 	}
 

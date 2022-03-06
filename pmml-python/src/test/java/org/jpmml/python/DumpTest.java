@@ -231,7 +231,7 @@ public class DumpTest extends PickleUtilTest {
 
 				columnIndex.add(Iterables.getOnlyElement(blockItem.getDataData()));
 			}
-		} catch(IllegalStateException ise){
+		} catch(UnsupportedOperationException uoe){
 			// Ignored
 		}
 

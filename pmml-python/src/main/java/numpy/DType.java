@@ -90,7 +90,7 @@ public class DType extends CustomPythonObject {
 				case "numpy.float64":
 					return DataType.DOUBLE;
 				default:
-					throw new IllegalArgumentException(className);
+					throw new IllegalArgumentException("Python data type \'" + className + "\' is not supported");
 			}
 		}
 	}
@@ -155,11 +155,11 @@ public class DType extends CustomPythonObject {
 	static
 	private String formatDescr(String obj, String order){
 
-		if(obj == null){
-			throw new IllegalArgumentException();
+		if(obj != null){
+			return (order != null ? (order + obj) : obj);
 		}
 
-		return (order != null ? (order + obj) : obj);
+		throw new IllegalArgumentException();
 	}
 
 	private static final Map<Set<String>, List<String>> definitions = new HashMap<>();

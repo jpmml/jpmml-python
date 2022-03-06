@@ -18,6 +18,8 @@
  */
 package org.jpmml.python;
 
+import java.util.Objects;
+
 import com.google.common.base.Function;
 
 abstract
@@ -51,11 +53,6 @@ public class CastFunction<E> implements Function<Object, E> {
 	}
 
 	private void setClazz(Class<? extends E> clazz){
-
-		if(clazz == null){
-			throw new IllegalArgumentException();
-		}
-
-		this.clazz = clazz;
+		this.clazz = Objects.requireNonNull(clazz);
 	}
 }

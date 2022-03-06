@@ -20,6 +20,7 @@ package patsy;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.jpmml.python.Token;
@@ -70,11 +71,6 @@ public class PatsyToken {
 	}
 
 	void setTokens(List<Token> tokens){
-
-		if(tokens == null || tokens.isEmpty()){
-			throw new IllegalArgumentException();
-		}
-
-		this.tokens = tokens;
+		this.tokens = Objects.requireNonNull(tokens);
 	}
 }

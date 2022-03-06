@@ -267,7 +267,7 @@ public class TypeDescriptor {
 				case 'V':
 					return VOID;
 				default:
-					throw new IllegalArgumentException();
+					throw new IllegalArgumentException(String.valueOf(c));
 			}
 		}
 	}

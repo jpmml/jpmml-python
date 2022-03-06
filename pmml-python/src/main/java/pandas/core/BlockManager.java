@@ -48,7 +48,7 @@ public class BlockManager extends CustomPythonObject {
 		}
 
 		// Pandas 1.3+
-		throw new IllegalStateException();
+		throw new UnsupportedOperationException();
 	}
 
 	public BlockManager setBlockItems(List<Index> blockItems){
