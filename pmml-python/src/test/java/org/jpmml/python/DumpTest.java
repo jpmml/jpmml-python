@@ -73,6 +73,7 @@ public class DumpTest extends PickleUtilTest {
 	@Test
 	public void python37() throws IOException {
 		unpickle("python-3.7_joblib-1.0.1.pkl.z");
+		unpickle("python-3.7_joblib-1.1.0.pkl.z");
 
 		unpickle("python-3.7_pickle-p2.pkl");
 		unpickle("python-3.7_pickle-p3.pkl");
@@ -81,6 +82,7 @@ public class DumpTest extends PickleUtilTest {
 		unpickleNumpyArrays("python-3.7_numpy-1.19.5");
 		unpickleNumpyArrays("python-3.7_numpy-1.20.0");
 		unpickleNumpyArrays("python-3.7_numpy-1.21.4");
+		unpickleNumpyArrays("python-3.7_numpy-1.21.5");
 
 		unpicklePandasSeries("python-3.7_pandas-1.0.5");
 		unpicklePandasSeries("python-3.7_pandas-1.1.3");
@@ -92,11 +94,13 @@ public class DumpTest extends PickleUtilTest {
 		unpicklePandasDataFrame("python-3.7_pandas-1.2.3");
 		unpicklePandasDataFrame("python-3.7_pandas-1.3.1");
 		unpicklePandasDataFrame("python-3.7_pandas-1.3.4");
+		unpicklePandasDataFrame("python-3.7_pandas-1.3.5");
 	}
 
 	@Test
 	public void python39() throws Exception {
 		unpickle("python-3.9_joblib-1.0.1.pkl.z");
+		unpickle("python-3.9_joblib-1.1.0.pkl.z");
 
 		unpickle("python-3.9_pickle-p2.pkl");
 		unpickle("python-3.9_pickle-p3.pkl");
@@ -106,6 +110,7 @@ public class DumpTest extends PickleUtilTest {
 		unpickleNumpyArrays("python-3.9_numpy-1.20.2");
 		unpickleNumpyArrays("python-3.9_numpy-1.21.4");
 		unpickleNumpyArrays("python-3.9_numpy-1.22.1");
+		unpickleNumpyArrays("python-3.9_numpy-1.22.3");
 
 		unpicklePandasSeries("python-3.9_pandas-1.2.3");
 		unpicklePandasSeries("python-3.9_pandas-1.3.1");
