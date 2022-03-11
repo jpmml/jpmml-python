@@ -40,6 +40,8 @@ import numpy.core.FromBufferConstructor;
 import numpy.core.NDArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pandas.NDArrayBacked;
+import pandas.NDArrayBackedConstructor;
 
 public class PickleUtil {
 
@@ -219,18 +221,22 @@ public class PickleUtil {
 					dictConstructor = new FromBufferConstructor(module, name);
 				} else
 
+				if((NDArrayBacked.class).isAssignableFrom(clazz)){
+					dictConstructor = new NDArrayBackedConstructor(module, name, clazz.asSubclass(NDArrayBacked.class));
+				} else
+
 				{
-					dictConstructor = new CustomPythonObjectConstructor(module, name, (Class<? extends CustomPythonObject>)clazz);
+					dictConstructor = new CustomPythonObjectConstructor(module, name, clazz.asSubclass(CustomPythonObject.class));
 				}
 			} else
 
 			{
 				if((NamedTuple.class).isAssignableFrom(clazz)){
-					dictConstructor = new NamedTupleConstructor(module, name, (Class<? extends NamedTuple>)clazz);
+					dictConstructor = new NamedTupleConstructor(module, name, clazz.asSubclass(NamedTuple.class));
 				} else
 
 				{
-					dictConstructor = new PythonObjectConstructor(module, name, (Class<? extends PythonObject>)clazz);
+					dictConstructor = new PythonObjectConstructor(module, name, clazz.asSubclass(PythonObject.class));
 				}
 			}
 		} else

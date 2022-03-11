@@ -29,6 +29,8 @@ import numpy.DType;
 import numpy.core.NDArray;
 import org.junit.Test;
 import pandas.core.BlockManager;
+import pandas.core.Categorical;
+import pandas.core.CategoricalDtype;
 import pandas.core.DataFrame;
 import pandas.core.Index;
 import pandas.core.Series;
@@ -90,6 +92,8 @@ public class DumpTest extends PickleUtilTest {
 		unpicklePandasSeries("python-3.7_pandas-1.3.1");
 		unpicklePandasSeries("python-3.7_pandas-1.3.4");
 
+		unpicklePandasCategorical("python-3.7_pandas-1.3.5");
+
 		unpicklePandasDataFrame("python-3.7_pandas-1.1.3");
 		unpicklePandasDataFrame("python-3.7_pandas-1.2.3");
 		unpicklePandasDataFrame("python-3.7_pandas-1.3.1");
@@ -116,6 +120,8 @@ public class DumpTest extends PickleUtilTest {
 		unpicklePandasSeries("python-3.9_pandas-1.3.1");
 		unpicklePandasSeries("python-3.9_pandas-1.3.4");
 		unpicklePandasSeries("python-3.9_pandas-1.4.1");
+
+		unpicklePandasCategorical("python-3.9_pandas-1.4.1");
 
 		unpicklePandasDataFrame("python-3.9_pandas-1.1.3");
 		unpicklePandasDataFrame("python-3.9_pandas-1.2.3");
@@ -210,6 +216,20 @@ public class DumpTest extends PickleUtilTest {
 
 			assertEquals(expectedValue.longValue(), value.longValue());
 		}
+	}
+
+	private void unpicklePandasCategorical(String prefix) throws IOException {
+		unpicklePandasCategorical(prefix + "_categorical_bool.pkl", Arrays.asList(false, true), true);
+		unpicklePandasCategorical(prefix + "_categorical_str.pkl", Arrays.asList("a", "e", "b", "d", "c"), true);
+	}
+
+	private void unpicklePandasCategorical(String name, List<?> expectedCategories, boolean expectedOrdered) throws IOException {
+		Categorical categorical = (Categorical)unpickle(name);
+
+		CategoricalDtype dtype = categorical.getDType();
+
+		assertEquals(expectedCategories, dtype.getCategories());
+		assertEquals(expectedOrdered, dtype.getOrdered());
 	}
 
 	private void unpicklePandasDataFrame(String prefix) throws IOException {
