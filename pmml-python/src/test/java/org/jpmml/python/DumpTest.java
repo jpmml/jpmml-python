@@ -38,6 +38,7 @@ import pandas.core.SingleBlockManager;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 public class DumpTest extends PickleUtilTest {
 
@@ -91,6 +92,9 @@ public class DumpTest extends PickleUtilTest {
 		unpicklePandasSeries("python-3.7_pandas-1.2.3");
 		unpicklePandasSeries("python-3.7_pandas-1.3.1");
 		unpicklePandasSeries("python-3.7_pandas-1.3.4");
+		unpicklePandasSeries("python-3.7_pandas-1.3.5");
+
+		unpicklePandasSeriesNA("python-3.7_pandas-1.3.5");
 
 		unpicklePandasCategorical("python-3.7_pandas-1.3.5");
 
@@ -120,6 +124,8 @@ public class DumpTest extends PickleUtilTest {
 		unpicklePandasSeries("python-3.9_pandas-1.3.1");
 		unpicklePandasSeries("python-3.9_pandas-1.3.4");
 		unpicklePandasSeries("python-3.9_pandas-1.4.1");
+
+		unpicklePandasSeriesNA("python-3.9_pandas-1.4.1");
 
 		unpicklePandasCategorical("python-3.9_pandas-1.4.1");
 
@@ -216,6 +222,24 @@ public class DumpTest extends PickleUtilTest {
 
 			assertEquals(expectedValue.longValue(), value.longValue());
 		}
+	}
+
+	private void unpicklePandasSeriesNA(String prefix) throws IOException {
+		unpicklePandasSeriesNA(prefix + "_bool-na.pkl", 2);
+		unpicklePandasSeriesNA(prefix + "_int8-na.pkl", 255);
+		unpicklePandasSeriesNA(prefix + "_uint8-na.pkl", 255);
+		unpicklePandasSeriesNA(prefix + "_str-na.pkl", 3);
+	}
+
+	private void unpicklePandasSeriesNA(String name, int expectedSize) throws IOException {
+		Series series = (Series)unpickle(name);
+
+		List<?> data = getData(series);
+
+		assertEquals(expectedSize, data.size());
+
+		assertNotNull(data.get(0));
+		assertNull(data.get(1));
 	}
 
 	private void unpicklePandasCategorical(String prefix) throws IOException {
