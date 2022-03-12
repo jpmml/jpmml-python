@@ -20,6 +20,7 @@ package pandas.core;
 
 import java.util.List;
 
+import numpy.DType;
 import org.jpmml.python.PythonObject;
 
 public class CategoricalDtype extends PythonObject {
@@ -28,10 +29,20 @@ public class CategoricalDtype extends PythonObject {
 		super(module, name);
 	}
 
-	public List<?> getCategories(){
-		Index categories = get("categories", Index.class);
+	public DType getDType(){
+		Index categories = getCategories();
 
-		return categories.getDataData();
+		return categories.getDataDescr();
+	}
+
+	public List<?> getValues(){
+		Index categories = getCategories();
+
+		return categories.getDataValues();
+	}
+
+	public Index getCategories(){
+		return get("categories", Index.class);
 	}
 
 	public Boolean getOrdered(){

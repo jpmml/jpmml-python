@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.razorvine.pickle.objects.ClassDictConstructor;
+import numpy.DType;
+import numpy.core.NDArray;
 import org.jpmml.python.ClassDictConstructorUtil;
 import org.jpmml.python.CustomPythonObject;
 import org.jpmml.python.PythonObject;
@@ -32,8 +34,16 @@ public class Index extends CustomPythonObject {
 		super(module, name);
 	}
 
-	public List<?> getDataData(){
-		return getData().getData();
+	public DType getDataDescr(){
+		Data data = getData();
+
+		return data.getDescr();
+	}
+
+	public List<?> getDataValues(){
+		Data data = getData();
+
+		return data.getValues();
 	}
 
 	public String getCls(){
@@ -49,7 +59,7 @@ public class Index extends CustomPythonObject {
 			case "pandas.core.indexes.range.RangeIndex":
 				return getPythonObject("data", this.new RangeData());
 			default:
-				return getPythonObject("data", this.new Data(getPythonModule(), "data"));
+				return getPythonObject("data", this.new NDArrayData(getPythonModule(), "data"));
 		}
 	}
 
@@ -70,7 +80,12 @@ public class Index extends CustomPythonObject {
 		}
 
 		@Override
-		public List<?> getData(){
+		public DType getDescr(){
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public List<?> getValues(){
 			int start = getStart();
 			int stop = getStop();
 			int step = getStep();
@@ -97,15 +112,43 @@ public class Index extends CustomPythonObject {
 		}
 	}
 
+	public class NDArrayData extends Data {
+
+		public NDArrayData(String module, String name){
+			super(module, name);
+		}
+
+		@Override
+		public DType getDescr(){
+			NDArray data = getData();
+
+			return (DType)data.getDescr();
+		}
+
+		@Override
+		public List<?> getValues(){
+			NDArray data = getData();
+
+			return data.getArrayContent();
+		}
+
+		public NDArray getData(){
+			return get("data", NDArray.class);
+		}
+	}
+
+	abstract
 	public class Data extends PythonObject {
 
 		public Data(String module, String name){
 			super(module, name);
 		}
 
-		public List<?> getData(){
-			return getArray("data");
-		}
+		abstract
+		public DType getDescr();
+
+		abstract
+		public List<?> getValues();
 	}
 
 	private static final String[] INIT_ATTRIBUTES = {
