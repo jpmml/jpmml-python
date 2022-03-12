@@ -108,6 +108,18 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 		string = "numpy.where(numpy.isnan(X[0]), numpy.nan, X[0] / X[1])";
 
 		checkExpression(expected, string, null, new DataFrameScope(doubleFeatures));
+
+		expected = PMMLUtil.createApply(PMMLFunctions.IF,
+			PMMLUtil.createApply(PMMLFunctions.ISNOTMISSING,
+				fieldRefs.get(0)
+			),
+			fieldRefs.get(0),
+			PMMLUtil.createConstant("missing", DataType.STRING)
+		);
+
+		string = "X[0] if pandas.notna(X[0]) else 'missing'";
+
+		checkExpression(expected, string, DataType.STRING, new DataFrameScope(stringFeatures));
 	}
 
 	@Test

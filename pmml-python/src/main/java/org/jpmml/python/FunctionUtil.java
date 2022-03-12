@@ -210,8 +210,10 @@ public class FunctionUtil {
 		if((module).equals("pandas")){
 
 			switch(name){
+				case "isna":
 				case "isnull":
 					return PMMLUtil.createApply(PMMLFunctions.ISMISSING, getOnlyElement(expressions));
+				case "notna":
 				case "notnull":
 					return PMMLUtil.createApply(PMMLFunctions.ISNOTMISSING, getOnlyElement(expressions));
 				default:
