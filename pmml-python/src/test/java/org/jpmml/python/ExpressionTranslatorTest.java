@@ -416,7 +416,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 	public void translateConstantExpression(){
 		Expression expected = PMMLUtil.createMissingConstant();
 
-		String[] strings = {"numpy.nan", "numpy.NaN", "numpy.NAN"};
+		String[] strings = {"numpy.nan", "numpy.NaN", "numpy.NAN", "pandas.NA", "pandas.NaT"};
 		for(String string : strings){
 			checkExpression(expected, string, new DataFrameScope(doubleFeatures));
 		}

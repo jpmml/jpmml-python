@@ -111,6 +111,17 @@ public class ExpressionTranslator extends AbstractTranslator {
 				default:
 					break;
 			}
+		} else
+
+		if((module).equals("pandas")){
+
+			switch(value.kind){
+				case NA:
+				case NAT:
+					return PMMLUtil.createMissingConstant();
+				default:
+					break;
+			}
 		}
 
 		throw new IllegalArgumentException("Constant \'" + (module + "." + value.image) + "\' is not supported");
@@ -398,12 +409,20 @@ TOKEN:
 
 TOKEN:
 {
+	< NA:
+		"NA"
+	>
+	|
 	< NAN:
 		"nan"
 		|
 		"NaN"
 		|
 		"NAN"
+	>
+	|
+	< NAT:
+		"NaT"
 	>
 }
 
@@ -786,8 +805,15 @@ Constant ConstantExpression(String dottedName):
 	Token value;
 }
 {
-	<DOT> value = <NAN>
-	
+	<DOT>
+	(
+		value = <NA>
+		|
+		value = <NAN>
+		|
+		value = <NAT>
+	)
+
 	{
 		return translateConstant(dottedName, value);
 	}
