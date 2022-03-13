@@ -53,31 +53,6 @@ public class NDArray extends CustomPythonObject implements HasArray, HasContent<
 		super.__init__(args);
 	}
 
-	private boolean isDefault(Object[] args){
-
-		if(args.length != 3){
-			return false;
-		} // End if
-
-		if(args[0] instanceof ClassDictConstructor){
-
-			if((args[1] instanceof Object[] && Arrays.equals((Object[])args[1], new Object[]{0}))){
-
-				// Python 2(.7)
-				if((args[2] instanceof String) && ((String)args[2]).equals("b")){
-					return true;
-				} // End if
-
-				// Python 3(.4)
-				if((args[2] instanceof byte[] && Arrays.equals((byte[])args[2], new byte[]{(byte)'b'}))){
-					return true;
-				}
-			}
-		}
-
-		return false;
-	}
-
 	/**
 	 * https://github.com/numpy/numpy/blob/master/numpy/core/src/multiarray/methods.c
 	 */
@@ -155,6 +130,33 @@ public class NDArray extends CustomPythonObject implements HasArray, HasContent<
 
 		return data;
 	}
+
+	static
+	private boolean isDefault(Object[] args){
+
+		if(args.length != 3){
+			return false;
+		} // End if
+
+		if(args[0] instanceof ClassDictConstructor){
+
+			if((args[1] instanceof Object[] && Arrays.equals((Object[])args[1], new Object[]{0}))){
+
+				// Python 2(.7)
+				if((args[2] instanceof String) && ((String)args[2]).equals("b")){
+					return true;
+				} // End if
+
+				// Python 3(.4)
+				if((args[2] instanceof byte[] && Arrays.equals((byte[])args[2], new byte[]{(byte)'b'}))){
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
 
 	private static final String[] SETSTATE_ATTRIBUTES = {
 		"version",

@@ -31,6 +31,32 @@ public class BlockManager extends CustomPythonObject {
 		super(module, name);
 	}
 
+	@Override
+	public void __init__(Object[] args){
+
+		if(args.length == 0){
+			super.__init__(args);
+		} else
+
+		{
+			super.__setstate__(createAttributeMap(INIT_ATTRIBUTES, args));
+		}
+	}
+
+	@Override
+	public void __setstate__(Object[] args){
+
+		if(args.length > 3){
+			Object[] newArgs = new Object[3];
+
+			System.arraycopy(args, 0, newArgs, 0, newArgs.length);
+
+			args = newArgs;
+		}
+
+		super.__setstate__(createAttributeMap(SETSTATE_ATTRIBUTES, args));
+	}
+
 	public List<Index> getAxesArray(){
 
 		if(containsKey("axes_array")){
@@ -75,32 +101,6 @@ public class BlockManager extends CustomPythonObject {
 		put("block_values", blockValues);
 
 		return this;
-	}
-
-	@Override
-	public void __init__(Object[] args){
-
-		if(args.length == 0){
-			super.__init__(args);
-		} else
-
-		{
-			super.__setstate__(createAttributeMap(INIT_ATTRIBUTES, args));
-		}
-	}
-
-	@Override
-	public void __setstate__(Object[] args){
-
-		if(args.length > 3){
-			Object[] newArgs = new Object[3];
-
-			System.arraycopy(args, 0, newArgs, 0, newArgs.length);
-
-			args = newArgs;
-		}
-
-		super.__setstate__(createAttributeMap(SETSTATE_ATTRIBUTES, args));
 	}
 
 	private static final String[] INIT_ATTRIBUTES = {

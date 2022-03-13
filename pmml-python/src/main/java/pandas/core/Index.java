@@ -34,6 +34,16 @@ public class Index extends CustomPythonObject {
 		super(module, name);
 	}
 
+	@Override
+	public void __init__(Object[] args){
+		super.__setstate__(createAttributeMap(INIT_ATTRIBUTES, args));
+	}
+
+	@Override
+	public void __setstate__(Object[] args){
+		super.__setstate__(createAttributeMap(SETSTATE_ATTRIBUTES, args));
+	}
+
 	public DType getDataDescr(){
 		Data data = getData();
 
@@ -61,16 +71,6 @@ public class Index extends CustomPythonObject {
 			default:
 				return getPythonObject("data", this.new NDArrayData(getPythonModule(), "data"));
 		}
-	}
-
-	@Override
-	public void __init__(Object[] args){
-		super.__setstate__(createAttributeMap(INIT_ATTRIBUTES, args));
-	}
-
-	@Override
-	public void __setstate__(Object[] args){
-		super.__setstate__(createAttributeMap(SETSTATE_ATTRIBUTES, args));
 	}
 
 	public class RangeData extends Data {
