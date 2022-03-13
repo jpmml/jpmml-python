@@ -25,4 +25,6 @@ public interface HasArray {
 	List<?> getArrayContent();
 
 	int[] getArrayShape();
+
+	Object getArrayType();
 }

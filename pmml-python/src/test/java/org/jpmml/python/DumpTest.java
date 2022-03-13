@@ -161,13 +161,12 @@ public class DumpTest extends PickleUtilTest {
 
 		List<?> values = ndArray.getArrayContent();
 		int[] shape = ndArray.getArrayShape();
-
 		DType dtype = (DType)ndArray.getDescr();
-
-		assertNotNull(dtype.getDataType());
 
 		assertEquals(expectedValues, values);
 		assertArrayEquals(new int[]{expectedValues.size()}, shape);
+
+		assertNotNull(dtype.getDataType());
 	}
 
 	private void unpickleNumpyArray(String name, long min, long max, long step) throws IOException {
@@ -175,10 +174,7 @@ public class DumpTest extends PickleUtilTest {
 
 		List<?> values = ndArray.getArrayContent();
 		int[] shape = ndArray.getArrayShape();
-
-		DType dtype = (DType)ndArray.getDescr();
-
-		assertNotNull(dtype.getDataType());
+		DType dtype = (DType)ndArray.getArrayType();
 
 		for(int i = 0; i < values.size(); i++){
 			Number expectedValue = min + (i * step);
@@ -196,6 +192,8 @@ public class DumpTest extends PickleUtilTest {
 				assertEquals(expectedValue.longValue(), value.longValue());
 			}
 		}
+
+		assertNotNull(dtype.getDataType());
 	}
 
 	private void unpicklePandasSeries(String prefix) throws IOException {
@@ -209,9 +207,12 @@ public class DumpTest extends PickleUtilTest {
 
 		List<?> values = series.getArrayContent();
 		int[] shape = series.getArrayShape();
+		Object dtype = series.getArrayType();
 
 		assertEquals(expectedValues, values);
 		assertArrayEquals(new int[]{expectedValues.size()}, shape);
+
+		assertNotNull(dtype);
 	}
 
 	private void unpicklePandasSeries(String name, long min, long max, long step) throws IOException {
@@ -219,6 +220,7 @@ public class DumpTest extends PickleUtilTest {
 
 		List<?> values = series.getArrayContent();
 		int[] shape = series.getArrayShape();
+		Object dtype = series.getArrayType();
 
 		for(int i = 0; i < values.size(); i++){
 			Number expectedValue = min + (i * step);
@@ -226,6 +228,8 @@ public class DumpTest extends PickleUtilTest {
 
 			assertEquals(expectedValue.longValue(), value.longValue());
 		}
+
+		assertNotNull(dtype);
 	}
 
 	private void unpicklePandasSeriesNA(String prefix) throws IOException {
@@ -240,11 +244,14 @@ public class DumpTest extends PickleUtilTest {
 
 		List<?> values = series.getArrayContent();
 		int[] shape = series.getArrayShape();
+		Object dtype = series.getArrayType();
 
 		assertNotNull(values.get(0));
 		assertNull(values.get(1));
 
 		assertArrayEquals(new int[]{expectedSize}, shape);
+
+		assertNotNull(dtype);
 	}
 
 	private void unpicklePandasCategorical(String prefix) throws IOException {
@@ -257,10 +264,10 @@ public class DumpTest extends PickleUtilTest {
 
 		CategoricalDtype dtype = categorical.getDType();
 
-		assertNotNull(dtype.getDType());
-
 		assertEquals(expectedCategories, dtype.getValues());
 		assertEquals(expectedOrdered, dtype.getOrdered());
+
+		assertNotNull(dtype.getDType());
 	}
 
 	private void unpicklePandasDataFrame(String prefix) throws IOException {

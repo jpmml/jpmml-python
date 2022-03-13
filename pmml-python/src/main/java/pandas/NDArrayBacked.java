@@ -84,6 +84,11 @@ public class NDArrayBacked extends CustomPythonObject implements HasArray {
 		return content.getArrayShape();
 	}
 
+	@Override
+	public Object getArrayType(){
+		return getDType();
+	}
+
 	public NDArray getContent(){
 		return getNDArray();
 	}

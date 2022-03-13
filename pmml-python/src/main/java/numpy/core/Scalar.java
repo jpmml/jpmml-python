@@ -58,6 +58,11 @@ public class Scalar extends CustomPythonObject implements HasArray, HasContent<L
 		return new int[]{content.size()};
 	}
 
+	@Override
+	public DType getArrayType(){
+		return getDType();
+	}
+
 	public Object getOnlyElement(){
 		List<?> content = getContent();
 

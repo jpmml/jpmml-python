@@ -39,6 +39,11 @@ public class CSRMatrix extends PythonObject implements HasArray {
 		return CSRMatrixUtil.getShape(this);
 	}
 
+	@Override
+	public Object getArrayType(){
+		throw new UnsupportedOperationException();
+	}
+
 	public List<?> getData(){
 		return getArray("data");
 	}

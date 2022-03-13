@@ -55,6 +55,13 @@ public class NDArrayWrapper extends PythonObject implements HasArray, HasContent
 		return content.getArrayShape();
 	}
 
+	@Override
+	public Object getArrayType(){
+		NDArray content = getContent();
+
+		return content.getArrayType();
+	}
+
 	public String getFileName(){
 		return getString("filename");
 	}

@@ -97,6 +97,11 @@ public class NDArray extends CustomPythonObject implements HasArray, HasContent<
 	}
 
 	@Override
+	public Object getArrayType(){
+		return getDescr();
+	}
+
+	@Override
 	public Object getContent(){
 
 		if(this.content == null){

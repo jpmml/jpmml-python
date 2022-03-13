@@ -47,6 +47,13 @@ public class Series extends PythonObject implements HasArray {
 		return values.getArrayShape();
 	}
 
+	@Override
+	public Object getArrayType(){
+		HasArray values = getValues();
+
+		return values.getArrayType();
+	}
+
 	public HasArray getValues(){
 		SingleBlockManager blockManager = getBlockManager();
 
