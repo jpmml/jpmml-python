@@ -18,12 +18,22 @@
  */
 package org.jpmml.python;
 
+import java.util.Arrays;
+
 import net.razorvine.pickle.IObjectConstructor;
+import net.razorvine.pickle.PickleException;
 
 public class NullConstructor implements IObjectConstructor {
 
 	@Override
 	public Object construct(Object[] args){
+
+		if(args.length != 0){
+			throw new PickleException(Arrays.toString(args));
+		}
+
 		return null;
 	}
+
+	public static final NullConstructor INSTANCE = new NullConstructor();
 }

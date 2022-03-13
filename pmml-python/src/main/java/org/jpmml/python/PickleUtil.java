@@ -97,6 +97,20 @@ public class PickleUtil {
 
 							super.stack.add(array);
 						}
+					} else
+
+					if(key == Opcodes.GLOBAL || key == Opcodes.STACK_GLOBAL){
+						Object head = super.stack.peek();
+
+						if(head instanceof NullConstructor){
+							NullConstructor nullConstructor = (NullConstructor)head;
+
+							super.stack.pop();
+
+							Object _null = nullConstructor.construct(new Object[0]);
+
+							super.stack.add(_null);
+						}
 					}
 
 					return result;
@@ -179,7 +193,7 @@ public class PickleUtil {
 		String module = key.substring(0, dot);
 		String name = key.substring(dot + 1);
 
-		Unpickler.registerConstructor(module, name, new NullConstructor());
+		Unpickler.registerConstructor(module, name, NullConstructor.INSTANCE);
 	}
 
 	static

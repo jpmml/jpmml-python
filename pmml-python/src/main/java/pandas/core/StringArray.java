@@ -18,38 +18,11 @@
  */
 package pandas.core;
 
-import java.util.List;
-
-import com.google.common.base.Function;
-import com.google.common.collect.Lists;
-import org.jpmml.python.NullConstructor;
 import pandas.NDArrayBacked;
 
 public class StringArray extends NDArrayBacked {
 
 	public StringArray(String module, String name){
 		super(module, name);
-	}
-
-	@Override
-	public List<?> getArrayContent(){
-		List<?> content = super.getArrayContent();
-
-		Function<Object, Object> function = new Function<Object, Object>(){
-
-			@Override
-			public Object apply(Object object){
-
-				if(object instanceof NullConstructor){
-					NullConstructor nullConstructor = (NullConstructor)object;
-
-					return nullConstructor.construct(new Object[0]);
-				}
-
-				return object;
-			}
-		};
-
-		return Lists.transform(content, function);
 	}
 }
