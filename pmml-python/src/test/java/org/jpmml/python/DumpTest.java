@@ -34,8 +34,8 @@ import pandas.core.CategoricalDtype;
 import pandas.core.DataFrame;
 import pandas.core.Index;
 import pandas.core.Series;
-import pandas.core.SingleBlockManager;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -167,6 +167,7 @@ public class DumpTest extends PickleUtilTest {
 		assertNotNull(dtype.getDataType());
 
 		assertEquals(expectedValues, values);
+		assertArrayEquals(new int[]{expectedValues.size()}, shape);
 	}
 
 	private void unpickleNumpyArray(String name, long min, long max, long step) throws IOException {
@@ -206,19 +207,22 @@ public class DumpTest extends PickleUtilTest {
 	private void unpicklePandasSeries(String name, List<?> expectedValues) throws IOException {
 		Series series = (Series)unpickle(name);
 
-		List<?> data = getData(series);
+		List<?> values = series.getArrayContent();
+		int[] shape = series.getArrayShape();
 
-		assertEquals(expectedValues, data);
+		assertEquals(expectedValues, values);
+		assertArrayEquals(new int[]{expectedValues.size()}, shape);
 	}
 
 	private void unpicklePandasSeries(String name, long min, long max, long step) throws IOException {
 		Series series = (Series)unpickle(name);
 
-		List<?> data = getData(series);
+		List<?> values = series.getArrayContent();
+		int[] shape = series.getArrayShape();
 
-		for(int i = 0; i < data.size(); i++){
+		for(int i = 0; i < values.size(); i++){
 			Number expectedValue = min + (i * step);
-			Number value = (Number)data.get(i);
+			Number value = (Number)values.get(i);
 
 			assertEquals(expectedValue.longValue(), value.longValue());
 		}
@@ -234,12 +238,13 @@ public class DumpTest extends PickleUtilTest {
 	private void unpicklePandasSeriesNA(String name, int expectedSize) throws IOException {
 		Series series = (Series)unpickle(name);
 
-		List<?> data = getData(series);
+		List<?> values = series.getArrayContent();
+		int[] shape = series.getArrayShape();
 
-		assertEquals(expectedSize, data.size());
+		assertNotNull(values.get(0));
+		assertNull(values.get(1));
 
-		assertNotNull(data.get(0));
-		assertNull(data.get(1));
+		assertArrayEquals(new int[]{expectedSize}, shape);
 	}
 
 	private void unpicklePandasCategorical(String prefix) throws IOException {
@@ -312,16 +317,6 @@ public class DumpTest extends PickleUtilTest {
 		assertEquals(Arrays.asList(0L, 1L, 2L), blockValuesFunction.apply(1));
 		assertEquals(Arrays.asList(0d, 1d, 2d), blockValuesFunction.apply(2));
 		assertEquals(Arrays.asList("zero", "one", "two"), blockValuesFunction.apply(3));
-	}
-
-	static
-	private List<?> getData(Series series){
-		SingleBlockManager data = series.getBlockManager();
-
-		Index blockItem = data.getOnlyBlockItem();
-		HasArray blockValue = data.getOnlyBlockValue();
-
-		return blockValue.getArrayContent();
 	}
 
 	static

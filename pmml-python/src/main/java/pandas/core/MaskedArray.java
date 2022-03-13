@@ -37,25 +37,25 @@ public class MaskedArray extends PythonObject implements HasArray {
 		NDArray data = getData();
 		NDArray mask = getMask();
 
-		List<?> dataContent = data.getArrayContent();
-		List<?> maskContent = mask.getArrayContent();
+		List<?> dataValues = data.getArrayContent();
+		List<?> maskValues = mask.getArrayContent();
 
 		List<Object> result = new AbstractList<Object>(){
 
 			@Override
 			public int size(){
-				return dataContent.size();
+				return dataValues.size();
 			}
 
 			@Override
 			public Object get(int index){
-				Boolean mask = (Boolean)maskContent.get(index);
+				Boolean mask = (Boolean)maskValues.get(index);
 
 				if(mask.booleanValue()){
 					return null;
 				}
 
-				return dataContent.get(index);
+				return dataValues.get(index);
 			}
 		};
 

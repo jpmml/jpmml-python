@@ -18,9 +18,12 @@
  */
 package pandas.core;
 
+import java.util.List;
+
+import org.jpmml.python.HasArray;
 import org.jpmml.python.PythonObject;
 
-public class Series extends PythonObject {
+public class Series extends PythonObject implements HasArray {
 
 	public Series(){
 		this("pandas.core.series", "Series");
@@ -28,6 +31,26 @@ public class Series extends PythonObject {
 
 	public Series(String module, String name){
 		super(module, name);
+	}
+
+	@Override
+	public List<?> getArrayContent(){
+		HasArray values = getValues();
+
+		return values.getArrayContent();
+	}
+
+	@Override
+	public int[] getArrayShape(){
+		HasArray values = getValues();
+
+		return values.getArrayShape();
+	}
+
+	public HasArray getValues(){
+		SingleBlockManager blockManager = getBlockManager();
+
+		return blockManager.getOnlyBlockValue();
 	}
 
 	public SingleBlockManager getBlockManager(){
