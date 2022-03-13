@@ -35,6 +35,9 @@ def _pickle_pandas_categorical(values, dtype):
 def _pickle_pandas_dataframe(df):
 	_pickle(df, "dump/" + _platform_module("pandas", pandas.__version__) + "_df.pkl")
 
+def _pickle_pandas_dtypes(dtypes):
+	_pickle(dtypes, "dump/" + _platform_module("pandas", pandas.__version__) + "_dtypes.pkl")
+
 values = numpy.asarray([0, 1], dtype = numpy.int8)
 _pickle_numpy_array(values, bool)
 
@@ -98,3 +101,11 @@ df = pandas.DataFrame(data = {
 	"str" : ["zero", "one", "two"]
 })
 _pickle_pandas_dataframe(df)
+
+dtypes = [
+	pandas.BooleanDtype(),
+	pandas.Int8Dtype(), pandas.Int16Dtype(), pandas.Int32Dtype(), pandas.Int64Dtype(),
+	pandas.UInt8Dtype(), pandas.UInt16Dtype(), pandas.UInt32Dtype(), pandas.UInt64Dtype(),
+	pandas.StringDtype()
+]
+_pickle_pandas_dtypes(dtypes)

@@ -32,6 +32,7 @@ import pandas.core.BlockManager;
 import pandas.core.Categorical;
 import pandas.core.CategoricalDtype;
 import pandas.core.DataFrame;
+import pandas.core.ExtensionDtype;
 import pandas.core.Index;
 import pandas.core.Series;
 
@@ -103,6 +104,8 @@ public class DumpTest extends PickleUtilTest {
 		unpicklePandasDataFrame("python-3.7_pandas-1.3.1");
 		unpicklePandasDataFrame("python-3.7_pandas-1.3.4");
 		unpicklePandasDataFrame("python-3.7_pandas-1.3.5");
+
+		unpicklePandasDtypes("python-3.7_pandas-1.3.5");
 	}
 
 	@Test
@@ -134,6 +137,8 @@ public class DumpTest extends PickleUtilTest {
 		unpicklePandasDataFrame("python-3.9_pandas-1.3.1");
 		unpicklePandasDataFrame("python-3.9_pandas-1.3.4");
 		unpicklePandasDataFrame("python-3.9_pandas-1.4.1");
+
+		unpicklePandasDtypes("python-3.9_pandas-1.4.1");
 	}
 
 	private void unpickleNumpyArrays(String prefix) throws IOException {
@@ -324,6 +329,16 @@ public class DumpTest extends PickleUtilTest {
 		assertEquals(Arrays.asList(0L, 1L, 2L), blockValuesFunction.apply(1));
 		assertEquals(Arrays.asList(0d, 1d, 2d), blockValuesFunction.apply(2));
 		assertEquals(Arrays.asList("zero", "one", "two"), blockValuesFunction.apply(3));
+	}
+
+	private void unpicklePandasDtypes(String prefix) throws IOException {
+		List<?> dtypes = (List<?>)unpickle(prefix + "_dtypes.pkl");
+
+		for(Object dtype : dtypes){
+			ExtensionDtype extensionDtype = (ExtensionDtype)dtype;
+
+			assertNotNull(extensionDtype.getDataType());
+		}
 	}
 
 	static
