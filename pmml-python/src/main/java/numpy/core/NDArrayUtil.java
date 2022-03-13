@@ -31,13 +31,12 @@ import java.util.Map;
 import com.google.common.io.ByteStreams;
 import com.google.common.primitives.Ints;
 import com.google.common.primitives.Longs;
-import net.razorvine.pickle.Opcodes;
 import net.razorvine.pickle.Unpickler;
 import net.razorvine.serpent.Parser;
 import net.razorvine.serpent.ast.Ast;
 import numpy.DType;
 import org.jpmml.converter.ValueUtil;
-import org.jpmml.python.NullConstructor;
+import org.jpmml.python.CustomUnpickler;
 import org.jpmml.python.TupleUtil;
 
 public class NDArrayUtil {
@@ -375,29 +374,7 @@ public class NDArrayUtil {
 
 	static
 	public Object readObject(InputStream is) throws IOException {
-		Unpickler unpickler = new Unpickler(){
-
-			@Override
-			protected Object dispatch(short key) throws IOException {
-				Object result = super.dispatch(key);
-
-				if(key == Opcodes.GLOBAL || key == Opcodes.STACK_GLOBAL){
-					Object head = super.stack.peek();
-
-					if(head instanceof NullConstructor){
-						NullConstructor nullConstructor = (NullConstructor)head;
-
-						super.stack.pop();
-
-						Object _null = nullConstructor.construct(new Object[0]);
-
-						super.stack.add(_null);
-					}
-				}
-
-				return result;
-			}
-		};
+		Unpickler unpickler = new CustomUnpickler();
 
 		return unpickler.load(is);
 	}

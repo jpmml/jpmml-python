@@ -78,7 +78,7 @@ public class PickleUtil {
 		}
 
 		try(InputStream is = storage.getObject()){
-			Unpickler unpickler = new Unpickler(){
+			Unpickler unpickler = new CustomUnpickler(){
 
 				@Override
 				protected Object dispatch(short key) throws IOException {
@@ -96,20 +96,6 @@ public class PickleUtil {
 							NDArray array = arrayWrapper.toArray(is);
 
 							super.stack.add(array);
-						}
-					} else
-
-					if(key == Opcodes.GLOBAL || key == Opcodes.STACK_GLOBAL){
-						Object head = super.stack.peek();
-
-						if(head instanceof NullConstructor){
-							NullConstructor nullConstructor = (NullConstructor)head;
-
-							super.stack.pop();
-
-							Object _null = nullConstructor.construct(new Object[0]);
-
-							super.stack.add(_null);
 						}
 					}
 
