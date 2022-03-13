@@ -37,7 +37,7 @@ public class SeriesUtil {
 		SingleBlockManager blockManager = series.getBlockManager();
 
 		Index blockItem = blockManager.getOnlyBlockItem();
-		List<OutK> keys = Lists.transform((List<InK>)(blockItem.getDataValues()), keyFunction);
+		List<OutK> keys = Lists.transform((List<InK>)(blockItem.getValues()), keyFunction);
 
 		HasArray blockValue = blockManager.getOnlyBlockValue();
 		List<OutV> values = Lists.transform((List<InV>)blockValue.getArrayContent(), valueFunction);

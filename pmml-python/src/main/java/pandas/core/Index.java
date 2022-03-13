@@ -44,13 +44,13 @@ public class Index extends CustomPythonObject {
 		super.__setstate__(createAttributeMap(SETSTATE_ATTRIBUTES, args));
 	}
 
-	public DType getDataDescr(){
+	public DType getDescr(){
 		Data data = getData();
 
 		return data.getDescr();
 	}
 
-	public List<?> getDataValues(){
+	public List<?> getValues(){
 		Data data = getData();
 
 		return data.getValues();

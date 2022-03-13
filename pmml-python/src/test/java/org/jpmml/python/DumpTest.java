@@ -287,8 +287,8 @@ public class DumpTest extends PickleUtilTest {
 		Index columnAxis = axes.get(0);
 		Index rowAxis = axes.get(1);
 
-		assertEquals(Arrays.asList("bool", "int", "float", "str"), columnAxis.getDataValues());
-		assertEquals(Arrays.asList(0, 1, 2), rowAxis.getDataValues());
+		assertEquals(Arrays.asList("bool", "int", "float", "str"), columnAxis.getValues());
+		assertEquals(Arrays.asList(0, 1, 2), rowAxis.getValues());
 
 		final
 		List<Object> columnIndex = new ArrayList<>();
@@ -299,7 +299,7 @@ public class DumpTest extends PickleUtilTest {
 			for(int i = 0; i < blockItems.size(); i++){
 				Index blockItem = blockItems.get(i);
 
-				columnIndex.add(Iterables.getOnlyElement(blockItem.getDataValues()));
+				columnIndex.add(Iterables.getOnlyElement(blockItem.getValues()));
 			}
 		} catch(UnsupportedOperationException uoe){
 			// Ignored
@@ -311,7 +311,7 @@ public class DumpTest extends PickleUtilTest {
 
 		IntFunction<List<?>> blockValuesFunction = new IntFunction<List<?>>(){
 
-			private List<?> columns = columnAxis.getDataValues();
+			private List<?> columns = columnAxis.getValues();
 
 
 			@Override

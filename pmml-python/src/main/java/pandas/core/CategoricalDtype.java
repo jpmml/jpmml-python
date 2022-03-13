@@ -32,13 +32,13 @@ public class CategoricalDtype extends PythonObject {
 	public DType getDType(){
 		Index categories = getCategories();
 
-		return categories.getDataDescr();
+		return categories.getDescr();
 	}
 
 	public List<?> getValues(){
 		Index categories = getCategories();
 
-		return categories.getDataValues();
+		return categories.getValues();
 	}
 
 	public Index getCategories(){
