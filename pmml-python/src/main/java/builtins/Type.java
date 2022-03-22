@@ -41,22 +41,24 @@ public class Type extends PythonObject {
 				return DataType.STRING;
 			case "numpy.bool_":
 				return DataType.BOOLEAN;
+			case "numpy.float32":
+				return DataType.FLOAT;
+			case "numpy.float_":
+			case "numpy.float64":
+				return DataType.DOUBLE;
 			case "numpy.int_":
 			case "numpy.int8":
 			case "numpy.int16":
 			case "numpy.int32":
 			case "numpy.int64":
 				return DataType.INTEGER;
+			case "numpy.str_":
+				return DataType.STRING;
 			case "numpy.uint8":
 			case "numpy.uint16":
 			case "numpy.uint32":
 			case "numpy.uint64":
 				return DataType.INTEGER;
-			case "numpy.float32":
-				return DataType.FLOAT;
-			case "numpy.float_":
-			case "numpy.float64":
-				return DataType.DOUBLE;
 			default:
 				throw new IllegalArgumentException("Python data type \'" + className + "\' is not supported");
 

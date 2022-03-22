@@ -16,34 +16,14 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with JPMML-Python.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jpmml.python;
+package builtins;
 
-import java.io.IOException;
+import org.jpmml.python.IConstantConstructor;
+import org.jpmml.python.PythonObjectConstructor;
 
-import net.razorvine.pickle.Opcodes;
-import net.razorvine.pickle.PickleException;
-import net.razorvine.pickle.Unpickler;
+public class TypeConstructor extends PythonObjectConstructor implements IConstantConstructor {
 
-public class CustomUnpickler extends Unpickler {
-
-	@Override
-	protected Object dispatch(short key) throws PickleException, IOException {
-		Object result = super.dispatch(key);
-
-		if(key == Opcodes.GLOBAL || key == Opcodes.STACK_GLOBAL){
-			Object head = super.stack.peek();
-
-			if(head instanceof IConstantConstructor){
-				IConstantConstructor constantConstructor = (IConstantConstructor)head;
-
-				super.stack.pop();
-
-				Object value = constantConstructor.construct();
-
-				super.stack.add(value);
-			}
-		}
-
-		return result;
+	public TypeConstructor(String module, String name){
+		super(module, name, Type.class);
 	}
 }

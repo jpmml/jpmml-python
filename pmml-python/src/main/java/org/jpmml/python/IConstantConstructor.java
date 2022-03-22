@@ -18,32 +18,12 @@
  */
 package org.jpmml.python;
 
-import java.io.IOException;
+import net.razorvine.pickle.IObjectConstructor;
 
-import net.razorvine.pickle.Opcodes;
-import net.razorvine.pickle.PickleException;
-import net.razorvine.pickle.Unpickler;
+public interface IConstantConstructor extends IObjectConstructor {
 
-public class CustomUnpickler extends Unpickler {
-
-	@Override
-	protected Object dispatch(short key) throws PickleException, IOException {
-		Object result = super.dispatch(key);
-
-		if(key == Opcodes.GLOBAL || key == Opcodes.STACK_GLOBAL){
-			Object head = super.stack.peek();
-
-			if(head instanceof IConstantConstructor){
-				IConstantConstructor constantConstructor = (IConstantConstructor)head;
-
-				super.stack.pop();
-
-				Object value = constantConstructor.construct();
-
-				super.stack.add(value);
-			}
-		}
-
-		return result;
+	default
+	public Object construct(){
+		return construct(new Object[0]);
 	}
 }

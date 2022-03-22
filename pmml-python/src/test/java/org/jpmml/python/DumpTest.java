@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.IntFunction;
 
+import builtins.Type;
 import com.google.common.collect.Iterables;
 import numpy.DType;
 import numpy.core.NDArray;
@@ -83,10 +84,14 @@ public class DumpTest extends PickleUtilTest {
 		unpickle("python-3.7_pickle-p3.pkl");
 		unpickle("python-3.7_pickle-p4.pkl");
 
+		unpickleBuiltinDtypes("python-3.7");
+
 		unpickleNumpyArrays("python-3.7_numpy-1.19.5");
 		unpickleNumpyArrays("python-3.7_numpy-1.20.0");
 		unpickleNumpyArrays("python-3.7_numpy-1.21.4");
 		unpickleNumpyArrays("python-3.7_numpy-1.21.5");
+
+		unpickleNumpyDtypes("python-3.7_numpy-1.21.5");
 
 		unpicklePandasSeries("python-3.7_pandas-1.0.5");
 		unpicklePandasSeries("python-3.7_pandas-1.1.3");
@@ -118,10 +123,14 @@ public class DumpTest extends PickleUtilTest {
 		unpickle("python-3.9_pickle-p4.pkl");
 		unpickle("python-3.9_pickle-p5.pkl");
 
+		unpickleBuiltinDtypes("python-3.9");
+
 		unpickleNumpyArrays("python-3.9_numpy-1.20.2");
 		unpickleNumpyArrays("python-3.9_numpy-1.21.4");
 		unpickleNumpyArrays("python-3.9_numpy-1.22.1");
 		unpickleNumpyArrays("python-3.9_numpy-1.22.3");
+
+		unpickleNumpyDtypes("python-3.9_numpy-1.22.3");
 
 		unpicklePandasSeries("python-3.9_pandas-1.2.3");
 		unpicklePandasSeries("python-3.9_pandas-1.3.1");
@@ -139,6 +148,16 @@ public class DumpTest extends PickleUtilTest {
 		unpicklePandasDataFrame("python-3.9_pandas-1.4.1");
 
 		unpicklePandasDtypes("python-3.9_pandas-1.4.1");
+	}
+
+	private void unpickleBuiltinDtypes(String prefix) throws IOException {
+		List<?> dtypes = (List<?>)unpickle(prefix + "_dtypes.pkl");
+
+		for(Object dtype : dtypes){
+			Type type = (Type)dtype;
+
+			assertNotNull(type.getDataType());
+		}
 	}
 
 	private void unpickleNumpyArrays(String prefix) throws IOException {
@@ -199,6 +218,16 @@ public class DumpTest extends PickleUtilTest {
 		}
 
 		assertNotNull(dtype.getDataType());
+	}
+
+	private void unpickleNumpyDtypes(String prefix) throws IOException {
+		List<?> dtypes = (List<?>)unpickle(prefix + "_dtypes.pkl");
+
+		for(Object dtype : dtypes){
+			Type type = (Type)dtype;
+
+			assertNotNull(type.getDataType());
+		}
 	}
 
 	private void unpicklePandasSeries(String prefix) throws IOException {

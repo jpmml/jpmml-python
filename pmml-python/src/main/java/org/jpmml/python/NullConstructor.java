@@ -20,10 +20,9 @@ package org.jpmml.python;
 
 import java.util.Arrays;
 
-import net.razorvine.pickle.IObjectConstructor;
 import net.razorvine.pickle.PickleException;
 
-public class NullConstructor implements IObjectConstructor {
+public class NullConstructor implements IConstantConstructor {
 
 	@Override
 	public Object construct(Object[] args){
