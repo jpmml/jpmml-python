@@ -44,15 +44,11 @@ public class PickleUtilTest {
 
 	static
 	protected Object unpickle(byte[] bytes) throws IOException {
-		Storage storage;
+		InputStream is = new ByteArrayInputStream(bytes);
 
-		try {
-			storage = new CompressedInputStreamStorage(new ByteArrayInputStream(bytes));
-		} catch(IOException ioe){
-			storage = new InputStreamStorage(new ByteArrayInputStream(bytes));
+		try(Storage storage = StorageUtil.createStorage(is)){
+			return PickleUtil.unpickle(storage);
 		}
-
-		return PickleUtil.unpickle(storage);
 	}
 
 	static {

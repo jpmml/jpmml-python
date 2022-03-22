@@ -18,8 +18,6 @@
  */
 package org.jpmml.python;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -46,24 +44,6 @@ import pandas.NDArrayBackedConstructor;
 public class PickleUtil {
 
 	private PickleUtil(){
-	}
-
-	static
-	public Storage createStorage(File file){
-
-		try {
-			InputStream is = new FileInputStream(file);
-
-			try {
-				return new CompressedInputStreamStorage(is);
-			} catch(IOException ioe){
-				is.close();
-			}
-		} catch(IOException ioe){
-			// Ignored
-		}
-
-		return new FileStorage(file);
 	}
 
 	static

@@ -25,9 +25,9 @@ import java.util.function.Predicate;
 import com.google.common.base.Equivalence;
 import org.jpmml.converter.testing.ModelEncoderBatch;
 import org.jpmml.evaluator.ResultField;
-import org.jpmml.python.CompressedInputStreamStorage;
 import org.jpmml.python.PickleUtil;
 import org.jpmml.python.Storage;
+import org.jpmml.python.StorageUtil;
 
 abstract
 public class PythonEncoderBatch extends ModelEncoderBatch {
@@ -45,21 +45,10 @@ public class PythonEncoderBatch extends ModelEncoderBatch {
 	}
 
 	public Object loadPickle() throws IOException {
+		InputStream is = open(getPklPath());
 
-		try(Storage storage = openStorage(getPklPath())){
+		try(Storage storage = StorageUtil.createStorage(is)){
 			return PickleUtil.unpickle(storage);
-		}
-	}
-
-	private Storage openStorage(String path) throws IOException {
-		InputStream is = open(path);
-
-		try {
-			return new CompressedInputStreamStorage(is);
-		} catch(IOException ioe){
-			is.close();
-
-			throw ioe;
 		}
 	}
 }

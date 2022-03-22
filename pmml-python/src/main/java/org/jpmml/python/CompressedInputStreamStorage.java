@@ -30,30 +30,41 @@ import com.google.common.io.CountingInputStream;
 public class CompressedInputStreamStorage extends InputStreamStorage {
 
 	public CompressedInputStreamStorage(InputStream is) throws IOException {
-		super(init(new PushbackInputStream(is, 2)));
+		this(new PushbackInputStream(is, 2));
+	}
+
+	public CompressedInputStreamStorage(PushbackInputStream is) throws IOException {
+		super(init(is));
 	}
 
 	static
-	private InputStream init(PushbackInputStream is) throws IOException {
+	public Type detectType(PushbackInputStream is) throws IOException {
 		byte[] magic = new byte[2];
 
 		ByteStreams.readFully(is, magic);
 
 		is.unread(magic);
 
-		// Joblib 0.10.0 and newer
 		if(magic[0] == 'x'){
-			return initZlib(is);
+			return Type.ZLIB;
 		} else
 
-		// Joblib 0.9.4 and earlier
 		if(magic[0] == 'Z' && magic[1] == 'F'){
-			return initCompat(is);
-		} else
-
-		{
-			throw new IOException();
+			return Type.COMPAT;
 		}
+
+		return null;
+	}
+
+	static
+	private InputStream init(PushbackInputStream is) throws IOException {
+		Type type = detectType(is);
+
+		if(type == null){
+			throw new IOException("Input stream does not contain compressed data");
+		}
+
+		return type.init(is);
 	}
 
 	static
@@ -118,5 +129,30 @@ public class CompressedInputStreamStorage extends InputStreamStorage {
 		};
 
 		return result;
+	}
+
+	static
+	public enum Type {
+		// Joblib 0.10.0+
+		ZLIB(){
+
+			@Override
+			public InputStream init(PushbackInputStream is) throws IOException {
+				return initZlib(is);
+			}
+		},
+
+		// Joblib 0.9.4
+		COMPAT(){
+
+			@Override
+			public InputStream init(PushbackInputStream is) throws IOException {
+				return initCompat(is);
+			}
+		},
+		;
+
+		abstract
+		public InputStream init(PushbackInputStream is) throws IOException;
 	}
 }
