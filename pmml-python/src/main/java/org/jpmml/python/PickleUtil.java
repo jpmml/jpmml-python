@@ -20,6 +20,7 @@ package org.jpmml.python;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -33,8 +34,6 @@ import joblib.NDArrayWrapperConstructor;
 import joblib.NumpyArrayWrapper;
 import net.razorvine.pickle.Opcodes;
 import net.razorvine.pickle.Unpickler;
-import numpy.core.FromBuffer;
-import numpy.core.FromBufferConstructor;
 import numpy.core.NDArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -197,10 +196,6 @@ public class PickleUtil {
 
 			if((CustomPythonObject.class).isAssignableFrom(clazz)){
 
-				if((FromBuffer.class).isAssignableFrom(clazz)){
-					dictConstructor = new FromBufferConstructor(module, name);
-				} else
-
 				if((NDArrayBacked.class).isAssignableFrom(clazz)){
 					dictConstructor = new NDArrayBackedConstructor(module, name, clazz.asSubclass(NDArrayBacked.class));
 				} else
@@ -218,6 +213,19 @@ public class PickleUtil {
 				{
 					dictConstructor = new PythonObjectConstructor(module, name, clazz.asSubclass(PythonObject.class));
 				}
+			}
+		} else
+
+		if((PythonObjectConstructor.class).isAssignableFrom(clazz)){
+
+			try {
+				Constructor<?> constructor = clazz.getDeclaredConstructor(String.class, String.class);
+
+				dictConstructor = (PythonObjectConstructor)constructor.newInstance(module, name);
+			} catch(ReflectiveOperationException roe){
+				logger.warn("Failed to instantiate Java constructor", roe);
+
+				return;
 			}
 		} else
 
