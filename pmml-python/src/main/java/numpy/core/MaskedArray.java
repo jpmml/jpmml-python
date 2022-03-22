@@ -83,8 +83,8 @@ public class MaskedArray extends CustomPythonObject {
 	}
 
 	static
-	private DType make_mask_descr(DType ndtype){
+	private DType make_mask_descr(DType dtype){
 		// XXX
-		return ndtype;
+		return dtype;
 	}
 }

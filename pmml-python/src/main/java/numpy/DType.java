@@ -144,9 +144,9 @@ public class DType extends CustomPythonObject {
 		for(String key : keys){
 			Object[] value = values.get(key);
 
-			DType dType = (DType)value[0];
+			DType dtype = (DType)value[0];
 
-			result.add(new Object[]{key, dType.toDescr()});
+			result.add(new Object[]{key, dtype.toDescr()});
 		}
 
 		return result;

@@ -185,9 +185,9 @@ public class NDArrayUtil {
 	public Object parseData(InputStream is, Object descr, Object[] shape) throws IOException {
 
 		if(descr instanceof DType){
-			DType dType = (DType)descr;
+			DType dtype = (DType)descr;
 
-			descr = dType.toDescr();
+			descr = dtype.toDescr();
 		}
 
 		int length = 1;
