@@ -43,11 +43,13 @@ public class PythonObjectConstructor extends ClassDictConstructor {
 
 		try {
 			try {
-				Constructor<? extends PythonObject> namedConstructor = clazz.getConstructor(String.class, String.class);
+				Constructor<? extends PythonObject> namedConstructor = clazz.getDeclaredConstructor(String.class, String.class);
 
 				return namedConstructor.newInstance(getModule(), getName());
 			} catch(NoSuchMethodException nsme){
-				return clazz.newInstance();
+				Constructor<? extends PythonObject> constructor = clazz.getDeclaredConstructor();
+
+				return constructor.newInstance();
 			}
 		} catch(ReflectiveOperationException roe){
 			throw new RuntimeException(roe);

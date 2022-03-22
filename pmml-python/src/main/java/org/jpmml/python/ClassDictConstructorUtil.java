@@ -23,6 +23,7 @@ import java.lang.reflect.Field;
 
 import net.razorvine.pickle.objects.ClassDict;
 import net.razorvine.pickle.objects.ClassDictConstructor;
+import org.jpmml.model.ReflectionUtil;
 
 public class ClassDictConstructorUtil {
 
@@ -50,31 +51,14 @@ public class ClassDictConstructorUtil {
 
 	static
 	public String getModule(ClassDictConstructor dictConstructor){
-
-		try {
-			Field field = (ClassDictConstructor.class).getDeclaredField("module");
-			if(!field.isAccessible()){
-				field.setAccessible(true);
-			}
-
-			return (String)field.get(dictConstructor);
-		} catch(ReflectiveOperationException roe){
-			throw new RuntimeException(roe);
-		}
+		return ReflectionUtil.getFieldValue(ClassDictConstructorUtil.FIELD_MODULE, dictConstructor);
 	}
 
 	static
 	public String getName(ClassDictConstructor dictConstructor){
-
-		try {
-			Field field = (ClassDictConstructor.class).getDeclaredField("name");
-			if(!field.isAccessible()){
-				field.setAccessible(true);
-			}
-
-			return (String)field.get(dictConstructor);
-		} catch(ReflectiveOperationException roe){
-			throw new RuntimeException(roe);
-		}
+		return ReflectionUtil.getFieldValue(ClassDictConstructorUtil.FIELD_NAME, dictConstructor);
 	}
+
+	private static final Field FIELD_MODULE = ReflectionUtil.getField(ClassDictConstructor.class, "module");
+	private static final Field FIELD_NAME = ReflectionUtil.getField(ClassDictConstructor.class, "name");
 }

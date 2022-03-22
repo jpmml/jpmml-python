@@ -31,6 +31,7 @@ import numpy.core.NDArray;
 import numpy.core.NDArrayUtil;
 import numpy.core.ScalarUtil;
 import org.jpmml.converter.ValueUtil;
+import org.jpmml.model.ReflectionUtil;
 
 abstract
 public class PythonObject extends ClassDict {
@@ -67,17 +68,7 @@ public class PythonObject extends ClassDict {
 	}
 
 	public void setClassName(String className){
-
-		try {
-			Field classNameField = ClassDict.class.getDeclaredField("classname");
-			if(!classNameField.isAccessible()){
-				classNameField.setAccessible(true);
-			}
-
-			classNameField.set(this, className);
-		} catch(ReflectiveOperationException roe){
-			throw new RuntimeException(roe);
-		}
+		ReflectionUtil.setFieldValue(PythonObject.FIELD_CLASSNAME, this, className);
 
 		put("__class__", className);
 	}
@@ -211,8 +202,9 @@ public class PythonObject extends ClassDict {
 		throw new IllegalArgumentException("The value of \'" + ClassDictUtil.formatMember(this, name) + "\' attribute (" + ClassDictUtil.formatClass(object) + ") is not a supported array type");
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<Boolean> getBooleanArray(String name){
-		return (List)getArray(name, Boolean.class);
+		return (List<Boolean>)getArray(name, Boolean.class);
 	}
 
 	public List<Integer> getIntegerArray(String name){
@@ -340,8 +332,9 @@ public class PythonObject extends ClassDict {
 		return Lists.transform(values, castFunction);
 	}
 
+	@SuppressWarnings("unchecked")
 	public Map<String, ?> getDict(String name){
-		return (Map)get(name, Map.class);
+		return get(name, Map.class);
 	}
 
 	public <E extends PythonObject> E getPythonObject(String name, E object){
@@ -355,4 +348,6 @@ public class PythonObject extends ClassDict {
 
 		return object;
 	}
+
+	private static final Field FIELD_CLASSNAME = ReflectionUtil.getField(ClassDict.class, "classname");
 }
