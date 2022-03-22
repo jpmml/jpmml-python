@@ -50,49 +50,12 @@ public class DType extends CustomPythonObject {
 	}
 
 	public DataType getDataType(){
-		String className = getClassName();
+		String obj = getObj();
+		String order = getOrder();
 
-		if(("numpy.dtype").equals(className)){
-			String obj = getObj();
-			String order = getOrder();
+		TypeDescriptor typeDescriptor = new TypeDescriptor(formatDescr(obj, order));
 
-			TypeDescriptor typeDescriptor = new TypeDescriptor(formatDescr(obj, order));
-
-			return typeDescriptor.getDataType();
-		} else
-
-		{
-			switch(className){
-				case "builtins.bool":
-					return DataType.BOOLEAN;
-				case "builtins.float":
-					return DataType.DOUBLE;
-				case "builtins.int":
-					return DataType.INTEGER;
-				case "builtins.str":
-					return DataType.STRING;
-				case "numpy.bool_":
-					return DataType.BOOLEAN;
-				case "numpy.int_":
-				case "numpy.int8":
-				case "numpy.int16":
-				case "numpy.int32":
-				case "numpy.int64":
-					return DataType.INTEGER;
-				case "numpy.uint8":
-				case "numpy.uint16":
-				case "numpy.uint32":
-				case "numpy.uint64":
-					return DataType.INTEGER;
-				case "numpy.float32":
-					return DataType.FLOAT;
-				case "numpy.float_":
-				case "numpy.float64":
-					return DataType.DOUBLE;
-				default:
-					throw new IllegalArgumentException("Python data type \'" + className + "\' is not supported");
-			}
-		}
+		return typeDescriptor.getDataType();
 	}
 
 	public Object toDescr(){
