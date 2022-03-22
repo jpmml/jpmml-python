@@ -18,6 +18,7 @@
  */
 package org.jpmml.python;
 
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -58,6 +59,27 @@ public class PythonObject extends ClassDict {
 		}
 
 		return className;
+	}
+
+	@Override
+	public String getClassName(){
+		return super.getClassName();
+	}
+
+	public void setClassName(String className){
+
+		try {
+			Field classNameField = ClassDict.class.getDeclaredField("classname");
+			if(!classNameField.isAccessible()){
+				classNameField.setAccessible(true);
+			}
+
+			classNameField.set(this, className);
+		} catch(ReflectiveOperationException roe){
+			throw new RuntimeException(roe);
+		}
+
+		put("__class__", className);
 	}
 
 	public <E> E get(String name, Class<? extends E> clazz){

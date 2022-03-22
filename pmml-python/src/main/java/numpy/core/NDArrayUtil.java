@@ -76,6 +76,16 @@ public class NDArrayUtil {
 	}
 
 	static
+	public NDArray toArray(List<?> data){
+		NDArray result = new NDArray();
+		result.put("data", data);
+		result.put("fortran_order", Boolean.FALSE);
+		result.put("shape", new Object[]{data.size()});
+
+		return result;
+	}
+
+	static
 	private <E> List<E> asJavaList(NDArray array, List<E> values){
 		return asJavaList(array, values, false);
 	}
