@@ -25,9 +25,10 @@ import net.razorvine.pickle.objects.ClassDictConstructor;
 import numpy.core.NDArray;
 import org.jpmml.python.ClassDictConstructorUtil;
 import org.jpmml.python.CustomPythonObject;
+import org.jpmml.python.HasArray;
 import org.jpmml.python.PythonObject;
 
-public class Index extends CustomPythonObject {
+public class Index extends CustomPythonObject implements HasArray {
 
 	public Index(String module, String name){
 		super(module, name);
@@ -41,6 +42,23 @@ public class Index extends CustomPythonObject {
 	@Override
 	public void __setstate__(Object[] args){
 		super.__setstate__(createAttributeMap(SETSTATE_ATTRIBUTES, args));
+	}
+
+	@Override
+	public List<?> getArrayContent(){
+		return getValues();
+	}
+
+	@Override
+	public int[] getArrayShape(){
+		List<?> values = getArrayContent();
+
+		return new int[]{values.size()};
+	}
+
+	@Override
+	public Object getArrayType(){
+		return getDescr();
 	}
 
 	public Object getDescr(){
@@ -80,7 +98,7 @@ public class Index extends CustomPythonObject {
 
 		@Override
 		public Object getDescr(){
-			throw new UnsupportedOperationException();
+			return "i4";
 		}
 
 		@Override
