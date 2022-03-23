@@ -44,11 +44,13 @@ public class PythonEncoderBatch extends ModelEncoderBatch {
 		return "/pkl/" + getAlgorithm() + getDataset() + ".pkl";
 	}
 
-	public Object loadPickle() throws IOException {
+	public <E> E loadPickle(Class<? extends E> clazz) throws IOException {
 		InputStream is = open(getPklPath());
 
 		try(Storage storage = StorageUtil.createStorage(is)){
-			return PickleUtil.unpickle(storage);
+			Object object = PickleUtil.unpickle(storage);
+
+			return clazz.cast(object);
 		}
 	}
 }
