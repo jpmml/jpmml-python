@@ -21,15 +21,42 @@ package pandas.core;
 import java.util.List;
 
 import numpy.DType;
+import numpy.core.TypeDescriptor;
+import org.dmg.pmml.DataType;
+import org.jpmml.python.ClassDictUtil;
 import org.jpmml.python.PythonObject;
+import org.jpmml.python.TypeInfo;
 
-public class CategoricalDtype extends PythonObject {
+public class CategoricalDtype extends PythonObject implements TypeInfo {
 
 	public CategoricalDtype(String module, String name){
 		super(module, name);
 	}
 
-	public DType getDType(){
+	@Override
+	public DataType getDataType(){
+		Object descr = getDescr();
+
+		if(descr instanceof String){
+			String string = (String)descr;
+
+			TypeDescriptor descriptor = new TypeDescriptor(string);
+
+			return descriptor.getDataType();
+		} else
+
+		if(descr instanceof DType){
+			DType dtype = (DType)descr;
+
+			return dtype.getDataType();
+		} else
+
+		{
+			throw new IllegalArgumentException("The type descriptor object (" + ClassDictUtil.formatClass(descr) + ") is not supported");
+		}
+	}
+
+	public Object getDescr(){
 		Index categories = getCategories();
 
 		return categories.getDescr();

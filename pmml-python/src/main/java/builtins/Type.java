@@ -19,14 +19,16 @@
 package builtins;
 
 import org.dmg.pmml.DataType;
+import org.jpmml.python.TypeInfo;
 import org.jpmml.python.PythonObject;
 
-public class Type extends PythonObject {
+public class Type extends PythonObject implements TypeInfo {
 
 	public Type(String module, String name){
 		super(module, name);
 	}
 
+	@Override
 	public DataType getDataType(){
 		String className = getClassName();
 

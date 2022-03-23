@@ -29,8 +29,9 @@ import java.util.Set;
 import numpy.core.TypeDescriptor;
 import org.dmg.pmml.DataType;
 import org.jpmml.python.CustomPythonObject;
+import org.jpmml.python.TypeInfo;
 
-public class DType extends CustomPythonObject {
+public class DType extends CustomPythonObject implements TypeInfo {
 
 	public DType(String module, String name){
 		super(module, name);
@@ -49,11 +50,14 @@ public class DType extends CustomPythonObject {
 		super.__setstate__(createAttributeMap(SETSTATE_ATTRIBUTES, args));
 	}
 
+	@Override
 	public DataType getDataType(){
 		String obj = getObj();
 		String order = getOrder();
 
-		TypeDescriptor typeDescriptor = new TypeDescriptor(formatDescr(obj, order));
+		String descr = formatDescr(obj, order);
+
+		TypeDescriptor typeDescriptor = new TypeDescriptor(descr);
 
 		return typeDescriptor.getDataType();
 	}

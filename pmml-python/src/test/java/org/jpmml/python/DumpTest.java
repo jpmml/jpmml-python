@@ -301,7 +301,7 @@ public class DumpTest extends PickleUtilTest {
 		assertEquals(expectedCategories, dtype.getValues());
 		assertEquals(expectedOrdered, dtype.getOrdered());
 
-		assertNotNull(dtype.getDType());
+		assertNotNull(dtype.getDescr());
 	}
 
 	private void unpicklePandasDataFrame(String prefix) throws IOException {

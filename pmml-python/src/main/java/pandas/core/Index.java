@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.razorvine.pickle.objects.ClassDictConstructor;
-import numpy.DType;
 import numpy.core.NDArray;
 import org.jpmml.python.ClassDictConstructorUtil;
 import org.jpmml.python.CustomPythonObject;
@@ -44,7 +43,7 @@ public class Index extends CustomPythonObject {
 		super.__setstate__(createAttributeMap(SETSTATE_ATTRIBUTES, args));
 	}
 
-	public DType getDescr(){
+	public Object getDescr(){
 		Data data = getData();
 
 		return data.getDescr();
@@ -80,7 +79,7 @@ public class Index extends CustomPythonObject {
 		}
 
 		@Override
-		public DType getDescr(){
+		public Object getDescr(){
 			throw new UnsupportedOperationException();
 		}
 
@@ -119,10 +118,10 @@ public class Index extends CustomPythonObject {
 		}
 
 		@Override
-		public DType getDescr(){
+		public Object getDescr(){
 			NDArray data = getData();
 
-			return (DType)data.getDescr();
+			return data.getDescr();
 		}
 
 		@Override
@@ -145,7 +144,7 @@ public class Index extends CustomPythonObject {
 		}
 
 		abstract
-		public DType getDescr();
+		public Object getDescr();
 
 		abstract
 		public List<?> getValues();
