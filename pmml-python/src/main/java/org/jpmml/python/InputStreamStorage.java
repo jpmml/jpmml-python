@@ -21,7 +21,7 @@ package org.jpmml.python;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class InputStreamStorage implements Storage {
+public class InputStreamStorage extends Storage {
 
 	private InputStream is = null;
 

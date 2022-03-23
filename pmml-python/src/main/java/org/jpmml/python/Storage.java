@@ -22,9 +22,12 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 
-public interface Storage extends Closeable {
+abstract
+public class Storage implements Closeable {
 
-	InputStream getObject() throws IOException;
+	abstract
+	public InputStream getObject() throws IOException;
 
-	InputStream getArray(String path) throws IOException;
+	abstract
+	public InputStream getArray(String path) throws IOException;
 }
