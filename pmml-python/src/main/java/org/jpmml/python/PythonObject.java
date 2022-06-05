@@ -91,6 +91,10 @@ public class PythonObject extends ClassDict {
 			if((Identifiable.class).isAssignableFrom(clazz)){
 				value = dictConstructor.newObject();
 			}
+		} // End if
+
+		if((Boolean.class).isAssignableFrom(clazz) || (Number.class).isAssignableFrom(clazz) || (String.class).isAssignableFrom(clazz)){
+			value = ScalarUtil.decode(value);
 		}
 
 		CastFunction<E> castFunction = new CastFunction<E>(clazz){
@@ -133,11 +137,7 @@ public class PythonObject extends ClassDict {
 	}
 
 	public Number getNumber(String name){
-		Object object = get(name, Object.class);
-
-		object = ScalarUtil.decode(object);
-
-		return (Number)object;
+		return get(name, Number.class);
 	}
 
 	public Object getObject(String name){
