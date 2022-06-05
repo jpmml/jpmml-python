@@ -1,6 +1,7 @@
 from common import _pickle, _platform, _platform_module
 
 from sklearn.datasets import load_iris
+from enum import Enum
 #from sklearn.externals import joblib as sklearn_joblib
 from sklearn.linear_model import LogisticRegressionCV
 
@@ -9,6 +10,16 @@ import joblib
 import numpy
 import pandas
 import pickle
+
+class Color(Enum):
+	RED = 1
+	GREEN = 2
+	BLUE = 3
+
+class ColorCode(Enum):
+	RED = "r"
+	GREEN = "g"
+	BLUE = "b"
 
 def _format_dtype(dtype):
 	return (dtype if type(dtype) == str else dtype.__name__)
@@ -26,6 +37,9 @@ for protocol in range(2, pickle.HIGHEST_PROTOCOL + 1):
 
 def _pickle_builtin_dtypes(dtypes):
 	_pickle(dtypes, "dump/" + _platform() + "_dtypes.pkl")
+
+def _pickle_enums(enums):
+	_pickle(enums, "dump/" + _platform() + "_enums.pkl")
 
 def _pickle_numpy_array(values, dtype):
 	_pickle(values.astype(dtype), "dump/" + _platform_module("numpy", numpy.__version__) + "_" + dtype.__name__ + ".pkl")
@@ -117,6 +131,13 @@ dtypes = [
 ]
 
 _pickle_builtin_dtypes(dtypes)
+
+enums = [
+	Color.RED, Color.GREEN, Color.BLUE,
+	ColorCode.RED, ColorCode.GREEN, ColorCode.BLUE
+]
+
+_pickle_enums(enums)
 
 dtypes = [
 	numpy.bool,

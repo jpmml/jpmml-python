@@ -210,6 +210,10 @@ public class PickleUtil {
 					dictConstructor = new NamedTupleConstructor(module, name, clazz.asSubclass(NamedTuple.class));
 				} else
 
+				if((PythonEnum.class).isAssignableFrom(clazz)){
+					dictConstructor = new PythonEnumConstructor(module, name, clazz.asSubclass(PythonEnum.class));
+				} else
+
 				{
 					dictConstructor = new PythonObjectConstructor(module, name, clazz.asSubclass(PythonObject.class));
 				}

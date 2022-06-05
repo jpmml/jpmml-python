@@ -26,6 +26,7 @@ import java.util.function.IntFunction;
 
 import builtins.Type;
 import com.google.common.collect.Iterables;
+import net.razorvine.pickle.Unpickler;
 import numpy.DType;
 import numpy.core.NDArray;
 import org.junit.Test;
@@ -86,6 +87,8 @@ public class DumpTest extends PickleUtilTest {
 
 		unpickleBuiltinDtypes("python-3.7");
 
+		unpickleEnums("python-3.7");
+
 		unpickleNumpyArrays("python-3.7_numpy-1.19.5");
 		unpickleNumpyArrays("python-3.7_numpy-1.20.0");
 		unpickleNumpyArrays("python-3.7_numpy-1.21.4");
@@ -125,6 +128,8 @@ public class DumpTest extends PickleUtilTest {
 
 		unpickleBuiltinDtypes("python-3.9");
 
+		unpickleEnums("python-3.9");
+
 		unpickleNumpyArrays("python-3.9_numpy-1.20.2");
 		unpickleNumpyArrays("python-3.9_numpy-1.21.4");
 		unpickleNumpyArrays("python-3.9_numpy-1.22.1");
@@ -157,6 +162,16 @@ public class DumpTest extends PickleUtilTest {
 			Type type = (Type)dtype;
 
 			assertNotNull(type.getDataType());
+		}
+	}
+
+	private void unpickleEnums(String prefix) throws IOException {
+		List<?> enums = (List<?>)unpickle(prefix + "_enums.pkl");
+
+		for(Object _enum : enums){
+			PythonEnum pythonEnum = (PythonEnum)_enum;
+
+			assertNotNull(pythonEnum.getValue());
 		}
 	}
 
@@ -373,5 +388,10 @@ public class DumpTest extends PickleUtilTest {
 	static
 	protected Object unpickle(String name) throws IOException {
 		return unpickle("dump", name);
+	}
+
+	static {
+		Unpickler.registerConstructor("__main__", "Color", new PythonEnumConstructor("__main__", "Color"));
+		Unpickler.registerConstructor("__main__", "ColorCode", new PythonEnumConstructor("__main__", "ColorCode"));
 	}
 }
