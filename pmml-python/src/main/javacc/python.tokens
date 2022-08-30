@@ -1,0 +1,133 @@
+SPECIAL_TOKEN:
+{
+	" "
+	|
+	"\t"
+}
+
+TOKEN:
+{
+	< LPAREN: "(" >
+	|
+	< RPAREN: ")" >
+}
+
+TOKEN:
+{
+	< OR: "or" >
+	|
+	< AND: "and" >
+	|
+	< NOT: "not" >
+}
+
+TOKEN:
+{
+	< EQUAL: "==" >
+	|
+	< NOT_EQUAL: "!=" >
+	|
+	< LESS_THAN: "<" >
+	|
+	< LESS_OR_EQUAL: "<=" >
+	|
+	< GREATER_THAN: ">" >
+	|
+	< GREATER_OR_EQUAL: ">=" >
+}
+
+TOKEN:
+{
+	< PLUS: "+" >
+	|
+	< MINUS: "-" >
+	|
+	< MULTIPLY: "*" >
+	|
+	< DIVIDE: "/" >
+	|
+	< MODULO: "%" >
+	|
+	< TILDE: "~" >
+}
+
+TOKEN:
+{
+	< LBRACKET: "[" >
+	|
+	< RBRACKET: "]" >
+}
+
+TOKEN:
+{
+	< COMMA: "," >
+	|
+	< DOT: "." >
+	|
+	< COLON: ":" >
+}
+
+TOKEN:
+{
+	< FALSE: "False" >
+	|
+	< NA: "NA" >
+	|
+	< NAN:
+		"nan"
+		|
+		"NaN"
+		|
+		"NAN"
+	>
+	|
+	< NAT: "NaT" >
+	|
+	< NONE: "None" >
+	|
+	< TRUE: "True" >
+}
+
+TOKEN:
+{
+	< ELSE: "else" >
+	|
+	< IF: "if" >
+	|
+	< IN: "in" >
+	|
+	< IS: "is" >
+}
+
+TOKEN:
+{
+	< INT:
+		"0"
+		|
+		<NONZERO_DIGIT> (<DIGIT>)* ( ["l", "L"] )?
+	>
+	|
+	< FLOAT:
+		(<DIGIT>)+ "." (<DIGIT>)* (<EXPONENT>)?
+		|
+		"." (<DIGIT>)+ (<EXPONENT>)?
+		|
+		(<DIGIT>)+ <EXPONENT>
+	>
+	|
+	< NAME: <LETTER> (<LETTER> | <DIGIT>)* >
+	|
+	< STRING:
+		"\"" (~["\""])* "\""
+		|
+		"\'" (~["\'"])* "\'"
+	>
+	|
+	< #DIGIT: ["0" - "9"] >
+	|
+	< #NONZERO_DIGIT: ["1" - "9"] >
+	|
+	< #LETTER: ["a" - "z", "A" - "Z", "_"]>
+	|
+	< #EXPONENT: ["e", "E"] (["+", "-"])? (<DIGIT>)+ >
+}

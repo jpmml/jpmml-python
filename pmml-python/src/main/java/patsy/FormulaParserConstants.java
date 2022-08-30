@@ -18,25 +18,25 @@
  */
 package patsy;
 
-import org.jpmml.python.ExpressionTranslatorConstants;
+import org.jpmml.python.PythonParserConstants;
 
 public interface FormulaParserConstants {
 
-	int EOF = ExpressionTranslatorConstants.EOF;
-	int LPAREN = ExpressionTranslatorConstants.LPAREN;
-	int RPAREN = ExpressionTranslatorConstants.RPAREN;
-	int PLUS = ExpressionTranslatorConstants.PLUS;
-	int MINUS = ExpressionTranslatorConstants.MINUS;
-	int DIVIDE = ExpressionTranslatorConstants.DIVIDE;
-	int MULTIPLY = ExpressionTranslatorConstants.MULTIPLY;
-	int TILDE = ExpressionTranslatorConstants.TILDE;
-	int LBRACKET = ExpressionTranslatorConstants.LBRACKET;
-	int RBRACKET = ExpressionTranslatorConstants.RBRACKET;
-	int COLON = ExpressionTranslatorConstants.COLON;
-	int INT = ExpressionTranslatorConstants.INT;
-	int FLOAT = ExpressionTranslatorConstants.FLOAT;
-	int NAME = ExpressionTranslatorConstants.NAME;
-	int STRING = ExpressionTranslatorConstants.STRING;
+	int EOF = PythonParserConstants.EOF;
+	int LPAREN = PythonParserConstants.LPAREN;
+	int RPAREN = PythonParserConstants.RPAREN;
+	int PLUS = PythonParserConstants.PLUS;
+	int MINUS = PythonParserConstants.MINUS;
+	int DIVIDE = PythonParserConstants.DIVIDE;
+	int MULTIPLY = PythonParserConstants.MULTIPLY;
+	int TILDE = PythonParserConstants.TILDE;
+	int LBRACKET = PythonParserConstants.LBRACKET;
+	int RBRACKET = PythonParserConstants.RBRACKET;
+	int COLON = PythonParserConstants.COLON;
+	int INT = PythonParserConstants.INT;
+	int FLOAT = PythonParserConstants.FLOAT;
+	int NAME = PythonParserConstants.NAME;
+	int STRING = PythonParserConstants.STRING;
 
-	String[] tokenImage = ExpressionTranslatorConstants.tokenImage;
+	String[] tokenImage = PythonParserConstants.tokenImage;
 }

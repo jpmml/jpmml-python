@@ -20,6 +20,7 @@ options {
 	JAVA_TEMPLATE_TYPE = "modern";
 	JDK_VERSION = "1.8";
 	STATIC = false;
+	BUILD_TOKEN_MANAGER = false;
 }
 
 PARSER_BEGIN(PredicateTranslator)
@@ -111,108 +112,7 @@ public class PredicateTranslator extends AbstractTranslator {
 }
 PARSER_END(PredicateTranslator)
 
-SPECIAL_TOKEN:
-{
-	" "
-	|
-	"\t"
-}
-
-TOKEN:
-{
-	< LPAREN: "(" >
-	|
-	< RPAREN: ")" >
-}
-
-TOKEN:
-{
-	< OR: "or" >
-	|
-	< AND: "and" >
-	|
-	< NOT: "not" >
-}
-
-TOKEN:
-{
-	< IS: "is" >
-	|
-	< IN: "in" >
-	|
-	< EQUAL: "==" >
-	|
-	< NOT_EQUAL: "!=" >
-	|
-	< LESS_THAN: "<" >
-	|
-	< LESS_OR_EQUAL: "<=" >
-	|
-	< GREATER_THAN: ">" >
-	|
-	< GREATER_OR_EQUAL: ">=" >
-}
-
-TOKEN:
-{
-	< PLUS: "+" >
-	|
-	< MINUS: "-" >
-}
-
-TOKEN:
-{
-	< LBRACKET: "[" >
-	|
-	< RBRACKET: "]" >
-}
-
-TOKEN:
-{
-	< COMMA: "," >
-}
-
-TOKEN:
-{
-	< FALSE: "False" >
-	|
-	< NONE: "None" >
-	|
-	< TRUE: "True" >
-}
-
-TOKEN:
-{
-	< INT:
-		"0"
-		|
-		<NONZERO_DIGIT> (<DIGIT>)* ( ["l", "L"] )?
-	>
-	|
-	< FLOAT:
-		(<DIGIT>)+ "." (<DIGIT>)* (<EXPONENT>)?
-		|
-		"." (<DIGIT>)+ (<EXPONENT>)?
-		|
-		(<DIGIT>)+ <EXPONENT>
-	>
-	|
-	< NAME: <LETTER> (<LETTER> | <DIGIT>)* >
-	|
-	< STRING:
-		"\"" (~["\""])* "\""
-		|
-		"\'" (~["\'"])* "\'"
-	>
-	|
-	< #DIGIT: ["0" - "9"] >
-	|
-	< #NONZERO_DIGIT: ["1" - "9"] >
-	|
-	< #LETTER: ["a" - "z", "A" - "Z", "_"]>
-	|
-	< #EXPONENT: ["e", "E"] (["+", "-"])? (<DIGIT>)+ >
-}
+@python.tokens@
 
 private Predicate translatePredicateInternal():
 {

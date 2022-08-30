@@ -21,11 +21,11 @@ package patsy;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-import org.jpmml.python.ExpressionTranslatorTokenManager;
+import org.jpmml.python.PythonParserTokenManager;
 import org.jpmml.python.SimpleCharStream;
 import org.jpmml.python.Token;
 
-public class FormulaParserTokenManager extends ExpressionTranslatorTokenManager implements FormulaParserConstants {
+public class FormulaParserTokenManager extends PythonParserTokenManager implements FormulaParserConstants {
 
 	private final Deque<Token> tokens = new ArrayDeque<>();
 

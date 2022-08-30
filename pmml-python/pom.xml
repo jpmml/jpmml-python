@@ -66,6 +66,85 @@
 				</configuration>
 			</plugin>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>3.1.0</version>
+				<executions>
+					<execution>
+						<id>generate-grammar</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target>
+								<loadfile
+									property="python.tokens.content"
+									srcFile="src/main/javacc/python.tokens"
+								/>
+								<copy
+									todir="${project.build.directory}/transformed-grammar"
+								>
+									<fileset 
+										dir="src/main/javacc/"
+									>
+										<include name="*.jj"/>
+									</fileset>
+									<filterset>
+										<filter
+											token="python.tokens"
+											value="${python.tokens.content}"
+										/>
+									</filterset>
+								</copy>
+							</target>
+						</configuration>
+					</execution>
+					<execution>
+						<id>process-sources</id>
+						<phase>process-sources</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target>
+								<delete>
+									<fileset
+										dir="${basedir}/target/generated-sources/javacc/org/jpmml/python/"
+									>
+										<include
+											name="**/*TranslatorConstants.java"
+										/>
+									</fileset>
+								</delete>
+								<replaceregexp
+									match="(Expression|Predicate)TranslatorConstants"
+									replace="PythonParserConstants"
+									byline="true"
+								>
+									<fileset dir="${basedir}/target/generated-sources/javacc/org/jpmml/python/">
+										<filename
+											name="*Translator.java"
+										/>
+									</fileset>
+								</replaceregexp>
+								<replaceregexp
+									match="(Expression|Predicate)TranslatorTokenManager"
+									replace="PythonParserTokenManager"
+									byline="true"
+								>
+									<fileset dir="${basedir}/target/generated-sources/javacc/org/jpmml/python/">
+										<filename
+											name="*Translator.java"
+										/>
+									</fileset>
+								</replaceregexp>
+							</target>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>javacc-maven-plugin</artifactId>
 				<version>2.6</version>
@@ -75,6 +154,9 @@
 						<goals>
 							<goal>javacc</goal>
 						</goals>
+						<configuration>
+							<sourceDirectory>${project.build.directory}/transformed-grammar</sourceDirectory>
+						</configuration>
 					</execution>
 				</executions>
 				<dependencies>
