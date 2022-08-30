@@ -18,6 +18,7 @@
  */
 package org.jpmml.python;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -86,4 +87,6 @@ public class BlockScope extends Scope {
 	private void setVariables(List<? extends Feature> variables){
 		this.variables = Objects.requireNonNull(variables);
 	}
+
+	public static final BlockScope EMPTY = new BlockScope(Collections.emptyList());
 }

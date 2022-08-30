@@ -24,9 +24,11 @@ import java.util.List;
 import org.dmg.pmml.Array;
 import org.dmg.pmml.ComplexArray;
 import org.dmg.pmml.CompoundPredicate;
+import org.dmg.pmml.False;
 import org.dmg.pmml.Predicate;
 import org.dmg.pmml.SimplePredicate;
 import org.dmg.pmml.SimpleSetPredicate;
+import org.dmg.pmml.True;
 import org.jpmml.model.ReflectionUtil;
 import org.junit.Test;
 
@@ -72,7 +74,7 @@ public class PredicateTranslatorTest extends TranslatorTest {
 			PredicateTranslator.translate("X['a'] > X['b']", new DataFrameScope(doubleFeatures));
 
 			fail();
-		} catch(ClassCastException cce){
+		} catch(IllegalArgumentException iae){
 			// Ignored
 		}
 
@@ -93,6 +95,14 @@ public class PredicateTranslatorTest extends TranslatorTest {
 
 		expected = createSimpleSetPredicate("a", SimpleSetPredicate.BooleanOperator.IS_NOT_IN, Arrays.asList("-1.5", "-1", "-0.5", "0"));
 		checkPredicate(expected, "X['a'] not in [-1.5, -1, -0.5, 0]", new DataFrameScope(doubleFeatures));
+	}
+
+	@Test
+	public void translateLiteralPredicate(){
+		Scope scope = BlockScope.EMPTY;
+
+		checkPredicate(True.INSTANCE, "True", scope);
+		checkPredicate(False.INSTANCE, "False", scope);
 	}
 
 	static

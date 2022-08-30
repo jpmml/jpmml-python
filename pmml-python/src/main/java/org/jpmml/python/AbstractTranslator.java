@@ -46,4 +46,29 @@ public class AbstractTranslator {
 	public void setScope(Scope scope){
 		this.scope = Objects.requireNonNull(scope);
 	}
+
+	static
+	protected String translateBoolean(String image){
+		return image.toLowerCase();
+	}
+
+	static
+	protected String translateInt(String image){
+
+		if(image.endsWith("l") || image.endsWith("L")){
+			return image.substring(0, image.length() - 1);
+		}
+
+		return image;
+	}
+
+	static
+	protected String translateString(String image){
+		return image.substring(1, image.length() - 1);
+	}
+
+	static
+	protected int parseInt(Token sign, Token value){
+		return Integer.parseInt((sign != null ? sign.image : "") + translateInt(value.image));
+	}
 }

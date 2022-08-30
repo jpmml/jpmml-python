@@ -79,27 +79,39 @@ public class PredicateTranslator extends AbstractTranslator {
 	}
 
 	static
-	private Object translateValue(Token value){
+	private Object translateValue(Token value) throws ParseException {
 		String image = value.image;
 		
 		switch(value.kind){
 			case FALSE:
 				return False.INSTANCE;
-			case INT:
-				if(image.endsWith("l") || image.endsWith("L")){
-					image = image.substring(0, image.length() - 1);
-				}
-				break;
-			case STRING:
-				image = image.substring(1, image.length() - 1);
-				break;
 			case TRUE:
 				return True.INSTANCE;
+			case INT:
+				return translateInt(image);
+			case FLOAT:
+				return image;
+			case STRING:
+				return translateString(image);
 			default:
-				break;
+				throw new ParseException();
 		}
-		
-		return image;
+	}
+
+	static
+	private SimplePredicate createSimplePredicate(Object left, SimplePredicate.Operator operator, Object right){
+		Feature feature = asFeature(left);
+		String value = (right != null ? asValue(right) : null);
+
+		return new SimplePredicate(feature.getName(), operator, value);
+	}
+
+	static
+	private SimpleSetPredicate createSimpleSetPredicate(Object left, SimpleSetPredicate.BooleanOperator booleanOperator, Object right){
+		Feature feature = asFeature(left);
+		Array array = (Array)right;
+
+		return new SimpleSetPredicate(feature.getName(), booleanOperator, array);
 	}
 
 	static
@@ -108,6 +120,38 @@ public class PredicateTranslator extends AbstractTranslator {
 			.addPredicates(predicates);
 
 		return compoundPredicate;
+	}
+
+	static
+	private Feature asFeature(Object object){
+
+		if(object instanceof Feature){
+			return (Feature)object;
+		} else
+
+		{
+			throw new IllegalArgumentException("The left-hand side is not a feature reference");
+		}
+	}
+
+	static
+	private String asValue(Object object){
+
+		if(object instanceof False){
+			return "false";
+		} else
+
+		if(object instanceof True){
+			return "true";
+		} else
+
+		if(object instanceof String){
+			return (String)object;
+		} else
+
+		{
+			throw new IllegalArgumentException("The right-hand side is not a value (" + object + ")");
+		}
 	}
 }
 PARSER_END(PredicateTranslator)
@@ -173,18 +217,18 @@ Predicate ComparisonExpression():
 {
 	(
 		LOOKAHEAD(PrimaryExpression() <IS> <NONE>)
-		left = PrimaryExpression() <IS> <NONE> { left = new SimplePredicate(((Feature)left).getName(), SimplePredicate.Operator.IS_MISSING, null); }
+		left = PrimaryExpression() <IS> <NONE> { left = createSimplePredicate(left, SimplePredicate.Operator.IS_MISSING, null); }
 		|
 		LOOKAHEAD(PrimaryExpression() <IS> <NOT> <NONE>)
-		left = PrimaryExpression() <IS> <NOT> <NONE> { left = new SimplePredicate(((Feature)left).getName(), SimplePredicate.Operator.IS_NOT_MISSING, null); }
+		left = PrimaryExpression() <IS> <NOT> <NONE> { left = createSimplePredicate(left, SimplePredicate.Operator.IS_NOT_MISSING, null); }
 		|
 		LOOKAHEAD(PrimaryExpression() <IN>)
-		left = PrimaryExpression() <IN> right = ListMakerExpression() { left = new SimpleSetPredicate(((Feature)left).getName(), SimpleSetPredicate.BooleanOperator.IS_IN, (Array)right); }
+		left = PrimaryExpression() <IN> right = ListMakerExpression() { left = createSimpleSetPredicate(left, SimpleSetPredicate.BooleanOperator.IS_IN, right); }
 		|
 		LOOKAHEAD(PrimaryExpression() <NOT> <IN>)
-		left = PrimaryExpression() <NOT> <IN> right = ListMakerExpression() { left = new SimpleSetPredicate(((Feature)left).getName(), SimpleSetPredicate.BooleanOperator.IS_NOT_IN, (Array)right); }
+		left = PrimaryExpression() <NOT> <IN> right = ListMakerExpression() { left = createSimpleSetPredicate(left, SimpleSetPredicate.BooleanOperator.IS_NOT_IN, right); }
 		|
-		left = PrimaryExpression() ((operator = <EQUAL> | operator = <NOT_EQUAL> | operator = <LESS_THAN> | operator = <LESS_OR_EQUAL> | operator = <GREATER_THAN> | operator = <GREATER_OR_EQUAL>) right = UnaryExpression() { left = new SimplePredicate(((Feature)left).getName(), translateRelationalOperator(operator), (String)right); } )?
+		left = PrimaryExpression() ((operator = <EQUAL> | operator = <NOT_EQUAL> | operator = <LESS_THAN> | operator = <LESS_OR_EQUAL> | operator = <GREATER_THAN> | operator = <GREATER_OR_EQUAL>) right = UnaryExpression() { left = createSimplePredicate(left, translateRelationalOperator(operator), right); } )?
 	)
 
 	{
@@ -199,9 +243,7 @@ Object UnaryExpression():
 }
 {
 	(
-		sign = <PLUS> result = UnaryExpression()
-		|
-		sign = <MINUS> result = UnaryExpression()
+		sign = Sign() result = UnaryExpression()
 		|
 		result = PrimaryExpression()
 	)
@@ -256,11 +298,11 @@ Feature ArrayIndexingExpression():
 }
 {
 	(
-		LOOKAHEAD(<NAME> <LBRACKET> (<PLUS> | <MINUS>)? <INT>)
-		name = <NAME> <LBRACKET> (sign = <PLUS> | sign = <MINUS>)? column = <INT> <RBRACKET> {
+		LOOKAHEAD(<NAME> <LBRACKET> (Sign())? <INT>)
+		name = <NAME> <LBRACKET> (sign = Sign())? column = <INT> <RBRACKET> {
 			Scope scope = ensureScope();
 
-			int colIndex = Integer.parseInt(sign != null ? (sign.image + column.image) : column.image);
+			int colIndex = parseInt(sign, column);
 
 			feature = scope.getFeature(name.image, colIndex);
 		}
@@ -268,7 +310,7 @@ Feature ArrayIndexingExpression():
 		name = <NAME> <LBRACKET> column = <STRING> <RBRACKET> {
 			Scope scope = ensureScope();
 
-			String colName = column.image.substring(1, column.image.length() - 1);
+			String colName = translateString(column.image);
 
 			feature = scope.getFeature(name.image, colName);
 		}
@@ -336,7 +378,7 @@ Array ListMakerExpression():
 	List<String> values = new ArrayList<String>();
 }
 {
-	<LBRACKET> predicate = UnaryExpression() { values.add((String)predicate); } ( <COMMA> predicate = UnaryExpression() { values.add((String)predicate); } )* <RBRACKET>
+	<LBRACKET> predicate = UnaryExpression() { values.add(asValue(predicate)); } ( <COMMA> predicate = UnaryExpression() { values.add(asValue(predicate)); } )* <RBRACKET>
 	
 	{
 		return PMMLUtil.createStringArray(values);

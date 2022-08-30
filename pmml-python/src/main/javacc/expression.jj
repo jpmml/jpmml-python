@@ -297,24 +297,16 @@ public class ExpressionTranslator extends AbstractTranslator {
 				return null;
 			case FALSE:
 			case TRUE:
-				return Boolean.valueOf(image.toLowerCase());
+				return Boolean.valueOf(translateBoolean(image));
 			case INT:
-				if(image.endsWith("l") || image.endsWith("L")){
-					image = image.substring(0, image.length() - 1);
-				}
-				return Integer.valueOf(image);
+				return Integer.valueOf(translateInt(image));
 			case FLOAT:
 				return Double.valueOf(image);
 			case STRING:
-				return image.substring(1, image.length() - 1);
+				return translateString(image);
 			default:
 				throw new ParseException();
 		}
-	}
-
-	static
-	private int parseInt(Token sign, Token value){
-		return Integer.parseInt(sign != null ? (sign.image + value.image) : value.image);
 	}
 }
 PARSER_END(ExpressionTranslator)
@@ -475,9 +467,7 @@ Expression UnaryExpression():
 }
 {
 	(
-		sign = <PLUS> expression = UnaryExpression()
-		|
-		sign = <MINUS> expression = UnaryExpression()
+		sign = Sign() expression = UnaryExpression()
 		|
 		expression = PrimaryExpression()
 	)
@@ -554,7 +544,7 @@ FieldRef ArrayIndexingExpression(String dottedName):
 		<LBRACKET> column = <STRING> <RBRACKET> {
 			Scope scope = ensureScope();
 			
-			String colName = column.image.substring(1, column.image.length() - 1);
+			String colName = translateString(column.image);
 			
 			feature = scope.getFeature(dottedName, colName);
 		}
@@ -562,22 +552,6 @@ FieldRef ArrayIndexingExpression(String dottedName):
 
 	{
 		return feature.ref();
-	}
-}
-
-Token Sign():
-{
-	Token token;
-}
-{
-	(
-		token = <PLUS> 
-		|
-		token = <MINUS>
-	)
-
-	{
-		return token;
 	}
 }
 

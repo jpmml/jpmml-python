@@ -131,3 +131,19 @@ TOKEN:
 	|
 	< #EXPONENT: ["e", "E"] (["+", "-"])? (<DIGIT>)+ >
 }
+
+Token Sign():
+{
+	Token token;
+}
+{
+	(
+		token = <PLUS> 
+		|
+		token = <MINUS>
+	)
+
+	{
+		return token;
+	}
+}
