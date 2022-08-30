@@ -31,6 +31,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.jpmml.python.ParseException;
+import org.jpmml.python.PushbackPythonParserTokenManager;
+import org.jpmml.python.PythonParserConstants;
 import org.jpmml.python.SimpleCharStream;
 import org.jpmml.python.StringProvider;
 import org.jpmml.python.Token;
@@ -48,7 +50,7 @@ public class FormulaParser {
 	public PatsyTerm parseFormula(String string) throws ParseException {
 		SimpleCharStream simpleCharStream = new SimpleCharStream(new StringProvider(string));
 
-		FormulaParserTokenManager tokenManager = new FormulaParserTokenManager(simpleCharStream);
+		PushbackPythonParserTokenManager tokenManager = new PushbackPythonParserTokenManager(simpleCharStream);
 
 		EnumSet<PatsyOperator> privatePatsyOperators = EnumSet.of(PatsyOperator.OPEN_PAREN);
 
@@ -120,7 +122,7 @@ public class FormulaParser {
 	private boolean readNoun(PatsyToken patsyToken, Deque<PatsyTerm> nounStack, Deque<PatsyOperator> opStack, Map<Integer, PatsyOperator> unaryPatsyOperators, Map<Integer, PatsyOperator> binaryPatsyOperators) throws ParseException {
 		int kind = patsyToken.getKind();
 
-		if(kind == FormulaParserConstants.LPAREN){
+		if(kind == PythonParserConstants.LPAREN){
 			opStack.push(PatsyOperator.OPEN_PAREN);
 
 			return true;
@@ -148,7 +150,7 @@ public class FormulaParser {
 	private boolean readOp(PatsyToken patsyToken, Deque<PatsyTerm> nounStack, Deque<PatsyOperator> opStack, Map<Integer, PatsyOperator> unaryPatsyOperators, Map<Integer, PatsyOperator> binaryPatsyOperators) throws ParseException {
 		int kind = patsyToken.getKind();
 
-		if(kind == FormulaParserConstants.RPAREN){
+		if(kind == PythonParserConstants.RPAREN){
 
 			while(!opStack.isEmpty() && (opStack.peek() != PatsyOperator.OPEN_PAREN)){
 				runOp(nounStack, opStack);
@@ -200,20 +202,20 @@ public class FormulaParser {
 	}
 
 	static
-	private List<PatsyToken> tokenizeFormula(FormulaParserTokenManager tokenManager, Set<Integer> patsyOperatorTokens) throws ParseException {
+	private List<PatsyToken> tokenizeFormula(PushbackPythonParserTokenManager tokenManager, Set<Integer> patsyOperatorTokens) throws ParseException {
 		List<PatsyToken> result = new ArrayList<>();
 
-		patsyOperatorTokens.add(FormulaParserConstants.LPAREN);
-		patsyOperatorTokens.add(FormulaParserConstants.RPAREN);
+		patsyOperatorTokens.add(PythonParserConstants.LPAREN);
+		patsyOperatorTokens.add(PythonParserConstants.RPAREN);
 
 		Set<Integer> pythonEndTokens = new HashSet<>(patsyOperatorTokens);
-		pythonEndTokens.remove(FormulaParserConstants.LPAREN);
+		pythonEndTokens.remove(PythonParserConstants.LPAREN);
 
 		tokens:
 		while(true){
 			Token token = tokenManager.getNextToken();
 
-			if(token.kind == FormulaParserConstants.EOF){
+			if(token.kind == PythonParserConstants.EOF){
 				break tokens;
 			} // End if
 
@@ -237,7 +239,7 @@ public class FormulaParser {
 	}
 
 	static
-	private List<Token> readPythonExpr(FormulaParserTokenManager tokenManager, Set<Integer> pythonEndTokens) throws ParseException {
+	private List<Token> readPythonExpr(PushbackPythonParserTokenManager tokenManager, Set<Integer> pythonEndTokens) throws ParseException {
 		List<Token> result = new ArrayList<>();
 
 		int bracketLevel = 0;
@@ -246,7 +248,7 @@ public class FormulaParser {
 		while(true){
 			Token token = tokenManager.getNextToken();
 
-			if(token.kind == FormulaParserConstants.EOF){
+			if(token.kind == PythonParserConstants.EOF){
 				tokenManager.pushBack(token);
 
 				break tokens;
@@ -262,14 +264,14 @@ public class FormulaParser {
 			}
 
 			switch(token.kind){
-				case FormulaParserConstants.LPAREN:
-				case FormulaParserConstants.LBRACKET:
+				case PythonParserConstants.LPAREN:
+				case PythonParserConstants.LBRACKET:
 					{
 						bracketLevel++;
 					}
 					break;
-				case FormulaParserConstants.RPAREN:
-				case FormulaParserConstants.RBRACKET:
+				case PythonParserConstants.RPAREN:
+				case PythonParserConstants.RBRACKET:
 					{
 						bracketLevel--;
 

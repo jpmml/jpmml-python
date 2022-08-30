@@ -18,23 +18,25 @@
  */
 package patsy;
 
+import org.jpmml.python.PythonParserConstants;
+
 public enum PatsyOperator {
 
-	UNARY_TILDE(FormulaParserConstants.TILDE, 1, -100),
+	UNARY_TILDE(PythonParserConstants.TILDE, 1, -100),
 
-	UNARY_PLUS(FormulaParserConstants.PLUS, 1, 100),
-	UNARY_MINUS(FormulaParserConstants.MINUS, 1, 100),
+	UNARY_PLUS(PythonParserConstants.PLUS, 1, 100),
+	UNARY_MINUS(PythonParserConstants.MINUS, 1, 100),
 
-	BINARY_TILDE(FormulaParserConstants.TILDE, 2, -100),
+	BINARY_TILDE(PythonParserConstants.TILDE, 2, -100),
 
-	BINARY_ADD(FormulaParserConstants.PLUS, 2, 100),
-	BINARY_SUBTRACT(FormulaParserConstants.MINUS, 2, 100),
-	BINARY_DIVIDE(FormulaParserConstants.DIVIDE, 2, 200),
-	BINARY_MULTIPLY(FormulaParserConstants.MULTIPLY, 2, 200),
+	BINARY_ADD(PythonParserConstants.PLUS, 2, 100),
+	BINARY_SUBTRACT(PythonParserConstants.MINUS, 2, 100),
+	BINARY_DIVIDE(PythonParserConstants.DIVIDE, 2, 200),
+	BINARY_MULTIPLY(PythonParserConstants.MULTIPLY, 2, 200),
 
-	INTERACT(FormulaParserConstants.COLON, 2, 300),
+	INTERACT(PythonParserConstants.COLON, 2, 300),
 
-	OPEN_PAREN(FormulaParserConstants.LPAREN, -1, -9999999)
+	OPEN_PAREN(PythonParserConstants.LPAREN, -1, -9999999)
 	;
 
 	private int kind = -1;

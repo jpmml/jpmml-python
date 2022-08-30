@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import org.jpmml.python.PythonParserConstants;
 import org.jpmml.python.Token;
 
 public class PatsyToken {
@@ -43,7 +44,7 @@ public class PatsyToken {
 		List<Token> tokens = getTokens();
 
 		return tokens.stream()
-			.map(token -> token.image + " -> " + FormulaParserConstants.tokenImage[token.kind] + " (" + token.kind + ")")
+			.map(token -> token.image + " -> " + PythonParserConstants.tokenImage[token.kind] + " (" + token.kind + ")")
 			.collect(Collectors.joining(", ", "[", "]"));
 	}
 
@@ -54,9 +55,9 @@ public class PatsyToken {
 			Token token = tokens.get(0);
 
 			switch(token.kind){
-				case FormulaParserConstants.INT:
-				case FormulaParserConstants.FLOAT:
-				case FormulaParserConstants.NAME:
+				case PythonParserConstants.INT:
+				case PythonParserConstants.FLOAT:
+				case PythonParserConstants.NAME:
 					return -1;
 				default:
 					return token.kind;

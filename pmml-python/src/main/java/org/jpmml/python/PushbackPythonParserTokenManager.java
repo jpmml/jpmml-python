@@ -16,21 +16,17 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with JPMML-Python.  If not, see <http://www.gnu.org/licenses/>.
  */
-package patsy;
+package org.jpmml.python;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-import org.jpmml.python.PythonParserTokenManager;
-import org.jpmml.python.SimpleCharStream;
-import org.jpmml.python.Token;
-
-public class FormulaParserTokenManager extends PythonParserTokenManager implements FormulaParserConstants {
+public class PushbackPythonParserTokenManager extends PythonParserTokenManager {
 
 	private final Deque<Token> tokens = new ArrayDeque<>();
 
 
-	public FormulaParserTokenManager(SimpleCharStream simpleCharStream){
+	public PushbackPythonParserTokenManager(SimpleCharStream simpleCharStream){
 		super(simpleCharStream);
 	}
 
