@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.jpmml</groupId>
 		<artifactId>jpmml-python</artifactId>
-		<version>1.1-SNAPSHOT</version>
+		<version>1.1.7</version>
 	</parent>
 
 	<groupId>org.jpmml</groupId>
@@ -78,23 +78,13 @@
 						</goals>
 						<configuration>
 							<target>
-								<loadfile
-									property="python.tokens.content"
-									srcFile="src/main/javacc/python.tokens"
-								/>
-								<copy
-									todir="${project.build.directory}/transformed-grammar"
-								>
-									<fileset 
-										dir="src/main/javacc/"
-									>
-										<include name="*.jj"/>
+								<loadfile property="python.tokens.content" srcFile="src/main/javacc/python.tokens" />
+								<copy todir="${project.build.directory}/transformed-grammar">
+									<fileset dir="src/main/javacc/">
+										<include name="*.jj" />
 									</fileset>
 									<filterset>
-										<filter
-											token="python.tokens"
-											value="${python.tokens.content}"
-										/>
+										<filter token="python.tokens" value="${python.tokens.content}" />
 									</filterset>
 								</copy>
 							</target>
@@ -109,34 +99,18 @@
 						<configuration>
 							<target>
 								<delete>
-									<fileset
-										dir="${basedir}/target/generated-sources/javacc/org/jpmml/python/"
-									>
-										<include
-											name="**/*TranslatorConstants.java"
-										/>
+									<fileset dir="${basedir}/target/generated-sources/javacc/org/jpmml/python/">
+										<include name="**/*TranslatorConstants.java" />
 									</fileset>
 								</delete>
-								<replaceregexp
-									match="(Expression|Predicate)TranslatorConstants"
-									replace="PythonParserConstants"
-									byline="true"
-								>
+								<replaceregexp match="(Expression|Predicate)TranslatorConstants" replace="PythonParserConstants" byline="true">
 									<fileset dir="${basedir}/target/generated-sources/javacc/org/jpmml/python/">
-										<filename
-											name="*Translator.java"
-										/>
+										<filename name="*Translator.java" />
 									</fileset>
 								</replaceregexp>
-								<replaceregexp
-									match="(Expression|Predicate)TranslatorTokenManager"
-									replace="PythonParserTokenManager"
-									byline="true"
-								>
+								<replaceregexp match="(Expression|Predicate)TranslatorTokenManager" replace="PythonParserTokenManager" byline="true">
 									<fileset dir="${basedir}/target/generated-sources/javacc/org/jpmml/python/">
-										<filename
-											name="*Translator.java"
-										/>
+										<filename name="*Translator.java" />
 									</fileset>
 								</replaceregexp>
 							</target>
