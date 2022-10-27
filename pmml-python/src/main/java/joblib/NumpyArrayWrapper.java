@@ -36,11 +36,12 @@ public class NumpyArrayWrapper extends PythonObject {
 		DType dtype = getDType();
 		Object[] shape = getShape();
 		String order = getOrder();
+		Integer numpyArrayAlignmentBytes = getNumpyArrayAlignmentBytes();
 
 		Object descr = dtype.toDescr();
 		Boolean fortranOrder = parseOrder(order);
 
-		Object data = NDArrayUtil.parseData(is, descr, shape);
+		Object data = NDArrayUtil.parseData(is, descr, shape, numpyArrayAlignmentBytes);
 
 		NDArray array = new NDArray();
 		array.__setstate__(new Object[]{null, shape, descr, fortranOrder, data});
@@ -58,6 +59,15 @@ public class NumpyArrayWrapper extends PythonObject {
 
 	public String getOrder(){
 		return getString("order");
+	}
+
+	public Integer getNumpyArrayAlignmentBytes(){
+
+		if(!containsKey("numpy_array_alignment_bytes")){
+			return null;
+		}
+
+		return getInteger("numpy_array_alignment_bytes");
 	}
 
 	static

@@ -183,6 +183,11 @@ public class NDArrayUtil {
 
 	static
 	public Object parseData(InputStream is, Object descr, Object[] shape) throws IOException {
+		return parseData(is, descr, shape, null);
+	}
+
+	static
+	public Object parseData(InputStream is, Object descr, Object[] shape, Integer numpyArrayAlignmentBytes) throws IOException {
 
 		if(descr instanceof DType){
 			DType dtype = (DType)descr;
@@ -197,14 +202,14 @@ public class NDArrayUtil {
 		} // End if
 
 		if(descr instanceof String){
-			return parseArray(is, (String)descr, length);
+			return parseArray(is, (String)descr, length, numpyArrayAlignmentBytes);
 		}
 
 		List<Object[]> dims = (List<Object[]>)descr;
 
 		Map<String, List<?>> result = new LinkedHashMap<>();
 
-		List<Object[]> objects = parseMultiArray(is, (List)TupleUtil.extractElementList(dims, 1), length);
+		List<Object[]> objects = parseMultiArray(is, (List)TupleUtil.extractElementList(dims, 1), length, numpyArrayAlignmentBytes);
 
 		for(int i = 0; i < dims.size(); i++){
 			Object[] dim = dims.get(i);
@@ -216,10 +221,20 @@ public class NDArrayUtil {
 	}
 
 	static
-	public List<Object> parseArray(InputStream is, String descr, int length) throws IOException {
+	public List<Object> parseArray(InputStream is, String descr, int length, Integer numpyArrayAlignmentBytes) throws IOException {
 		List<Object> result = new ArrayList<>(length);
 
 		TypeDescriptor descriptor = new TypeDescriptor(descr);
+
+		if(descriptor.isObject()){
+			// Ignored
+		} else
+
+		{
+			if(numpyArrayAlignmentBytes != null){
+				skipPadding(is, numpyArrayAlignmentBytes);
+			}
+		}
 
 		while(result.size() < length){
 			Object element = descriptor.read(is);
@@ -241,7 +256,7 @@ public class NDArrayUtil {
 	}
 
 	static
-	public List<Object[]> parseMultiArray(InputStream is, List<String> descrs, int length) throws IOException {
+	public List<Object[]> parseMultiArray(InputStream is, List<String> descrs, int length, Integer numpyArrayAlignmentBytes) throws IOException {
 		List<Object[]> result = new ArrayList<>(length);
 
 		List<TypeDescriptor> descriptors = new ArrayList<>();
@@ -254,6 +269,10 @@ public class NDArrayUtil {
 			}
 
 			descriptors.add(descriptor);
+		}
+
+		if(numpyArrayAlignmentBytes != null){
+			skipPadding(is, numpyArrayAlignmentBytes);
 		}
 
 		for(int i = 0; i < length; i++){
@@ -413,6 +432,33 @@ public class NDArrayUtil {
 		}
 
 		throw new IOException();
+	}
+
+	static
+	private void skipPadding(InputStream is, int maxPaddingLength) throws IOException {
+		int paddingByte = is.read();
+		if(paddingByte == -1){
+			throw new EOFException();
+		}
+
+		int paddingLength = (int)((byte)paddingByte);
+		if(paddingLength < 0 || paddingLength > maxPaddingLength){
+			throw new IOException();
+		} // End if
+
+		if(paddingLength != 0){
+
+			for(int i = 0; i < paddingLength; i++){
+				int padding = is.read();
+				if(padding == -1){
+					throw new EOFException();
+				} // End if
+
+				if(padding != 0xFF){
+					throw new IOException();
+				}
+			}
+		}
 	}
 
 	static
