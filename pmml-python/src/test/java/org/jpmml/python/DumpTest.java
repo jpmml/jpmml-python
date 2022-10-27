@@ -155,6 +155,18 @@ public class DumpTest extends PickleUtilTest {
 		unpicklePandasDtypes("python-3.9_pandas-1.4.1");
 	}
 
+	@Test
+	public void python311() throws Exception {
+		unpickle("python-3.11_pickle-p2.pkl");
+		unpickle("python-3.11_pickle-p3.pkl");
+		unpickle("python-3.11_pickle-p4.pkl");
+		unpickle("python-3.11_pickle-p5.pkl");
+
+		unpickleBuiltinDtypes("python-3.11");
+
+		unpickleEnums("python-3.11");
+	}
+
 	private void unpickleBuiltinDtypes(String prefix) throws IOException {
 		List<?> dtypes = (List<?>)unpickle(prefix + "_dtypes.pkl");
 

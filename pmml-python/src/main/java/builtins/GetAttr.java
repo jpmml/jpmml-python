@@ -31,6 +31,14 @@ public class GetAttr extends CustomPythonObject {
 		super.__setstate__(createAttributeMap(INIT_ATTRIBUTES, args));
 	}
 
+	public Object getObj(){
+		return getObject("obj");
+	}
+
+	public String getName(){
+		return getString("name");
+	}
+
 	private static final String[] INIT_ATTRIBUTES = {
 		"obj",
 		"name"
