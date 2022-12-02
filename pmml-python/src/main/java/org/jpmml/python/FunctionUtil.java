@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.dmg.pmml.Apply;
 import org.dmg.pmml.Expression;
 import org.dmg.pmml.PMMLFunctions;
 import org.jpmml.converter.PMMLUtil;
@@ -61,12 +62,12 @@ public class FunctionUtil {
 	}
 
 	static
-	public Expression encodeFunction(Identifiable identifiable, List<Expression> expressions){
+	public Apply encodeFunction(Identifiable identifiable, List<Expression> expressions){
 		return encodeFunction(identifiable.getModule(), identifiable.getName(), expressions);
 	}
 
 	static
-	public Expression encodeFunction(String module, String name, List<Expression> expressions){
+	public Apply encodeFunction(String module, String name, List<Expression> expressions){
 
 		if((module).equals("builtins")){
 			return encodePythonFunction(module, name, expressions);
@@ -88,7 +89,7 @@ public class FunctionUtil {
 	}
 
 	static
-	public Expression encodePythonFunction(String module, String name, List<Expression> expressions){
+	public Apply encodePythonFunction(String module, String name, List<Expression> expressions){
 
 		if((module).equals("builtins")){
 
@@ -104,7 +105,7 @@ public class FunctionUtil {
 	}
 
 	static
-	public Expression encodeNumpyFunction(String module, String name, List<Expression> expressions){
+	public Apply encodeNumpyFunction(String module, String name, List<Expression> expressions){
 
 		// XXX
 		if((module).equals("numpy") || (module).startsWith("numpy.")){
@@ -205,7 +206,7 @@ public class FunctionUtil {
 	}
 
 	static
-	public Expression encodePandasFunction(String module, String name, List<Expression> expressions){
+	public Apply encodePandasFunction(String module, String name, List<Expression> expressions){
 
 		if((module).equals("pandas")){
 
@@ -225,7 +226,7 @@ public class FunctionUtil {
 	}
 
 	static
-	public Expression encodeScipyFunction(String module, String name, List<Expression> expressions){
+	public Apply encodeScipyFunction(String module, String name, List<Expression> expressions){
 
 		if((module).equals("scipy.special")){
 

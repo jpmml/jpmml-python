@@ -29,6 +29,7 @@ package org.jpmml.python;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.dmg.pmml.Apply;
 import org.dmg.pmml.Constant;
 import org.dmg.pmml.DataType;
 import org.dmg.pmml.Expression;
@@ -129,7 +130,7 @@ public class ExpressionTranslator extends AbstractTranslator {
 	}
 
 	static
-	private Expression translateTrailerFunction(Expression expression, String function, List<Expression> arguments){
+	private Apply translateTrailerFunction(Expression expression, String function, List<Expression> arguments){
 
 		if(("startswith").equals(function) || ("endswith").equals(function)){
 			ClassDictUtil.checkSize(1, arguments);
@@ -190,7 +191,7 @@ public class ExpressionTranslator extends AbstractTranslator {
 	}
 
 	static
-	private Expression translateFunction(String function, List<Expression> arguments){
+	private Apply translateFunction(String function, List<Expression> arguments){
 		String module;
 		String name;
 
@@ -555,7 +556,7 @@ FieldRef ArrayIndexingExpression(String dottedName):
 	}
 }
 
-Expression FunctionInvocationExpression(String dottedName):
+Apply FunctionInvocationExpression(String dottedName):
 {
 	List<Expression> arguments;
 }
@@ -580,7 +581,7 @@ Expression FunctionInvocationExpression(String dottedName):
 	}
 }
 
-Expression TrailerFunctionInvocationExpression(Expression expression):
+Apply TrailerFunctionInvocationExpression(Expression expression):
 {
 	Token name;
 	List<Expression> arguments;
