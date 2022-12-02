@@ -52,8 +52,12 @@ public class FromBufferConstructor extends CustomPythonObjectConstructor {
 
 		switch(format){
 			case "C":
+			case "CONTIGUOUS":
+			case "C_CONTIGUOUS":
 				return false;
+			case "F":
 			case "FORTRAN":
+			case "F_CONTIGUOUS":
 				return true;
 			default:
 				throw new IllegalArgumentException(format);
