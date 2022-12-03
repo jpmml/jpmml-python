@@ -41,15 +41,19 @@ import org.jpmml.converter.PMMLUtil;
 
 public class PredicateTranslator extends AbstractTranslator {
 
-	static
-	public Predicate translate(String string, Scope scope){
+	public PredicateTranslator(Scope scope){
+		this(new NullProvider());
+
+		setScope(scope);
+	}
+
+	public Predicate translatePredicate(String string){
+		ReInit(new StringProvider(string));
+
 		Predicate predicate;
 
 		try {
-			PredicateTranslator predicateTranslator = new PredicateTranslator(string);
-			predicateTranslator.setScope(scope);
-
-			predicate = predicateTranslator.translatePredicateInternal();
+			predicate = translatePredicateInternal();
 		} catch(ParseException pe){
 			throw new IllegalArgumentException("Python predicate \'" + string + "\' is either invalid or not supported", pe);
 		}

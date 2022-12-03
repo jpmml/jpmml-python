@@ -39,7 +39,7 @@ public class PredicateTranslatorTest extends TranslatorTest {
 
 	@Test
 	public void translateLogicalPredicate(){
-		String string = "X[0] > 0.0 and X[1] > 0 or X[2] > 0";
+		PredicateTranslator predicateTranslator = new PredicateTranslator(new DataFrameScope(doubleFeatures));
 
 		Predicate first = new SimplePredicate("a", SimplePredicate.Operator.GREATER_THAN, "0.0");
 		Predicate second = new SimplePredicate("b", SimplePredicate.Operator.GREATER_THAN, "0");
@@ -51,9 +51,9 @@ public class PredicateTranslatorTest extends TranslatorTest {
 			)
 			.addPredicates(third);
 
-		checkPredicate(expected, string, new DataFrameScope(doubleFeatures));
+		String string = "X[0] > 0.0 and X[1] > 0 or X[2] > 0";
 
-		string = "(X[\"a\"] > 0.0) and ((X[\"b\"] > 0) or (X[\"c\"] > 0))";
+		checkPredicate(expected, translatePredicate(predicateTranslator, string));
 
 		expected = new CompoundPredicate(CompoundPredicate.BooleanOperator.AND, null)
 			.addPredicates(first)
@@ -61,55 +61,70 @@ public class PredicateTranslatorTest extends TranslatorTest {
 				.addPredicates(second, third)
 			);
 
-		checkPredicate(expected, string, new DataFrameScope(doubleFeatures));
+		string = "(X[\"a\"] > 0.0) and ((X[\"b\"] > 0) or (X[\"c\"] > 0))";
+
+		checkPredicate(expected, translatePredicate(predicateTranslator, string));
 	}
 
 	@Test
 	public void translateComparisonPredicate(){
-		Predicate expected = new SimplePredicate("a", SimplePredicate.Operator.GREATER_THAN, "0.0");
-
-		checkPredicate(expected, "X['a'] > 0.0", new DataFrameScope(doubleFeatures));
+		PredicateTranslator predicateTranslator = new PredicateTranslator(new DataFrameScope(doubleFeatures));
 
 		try {
-			PredicateTranslator.translate("X['a'] > X['b']", new DataFrameScope(doubleFeatures));
+			translatePredicate(predicateTranslator, "X['a'] > X['b']");
 
 			fail();
 		} catch(IllegalArgumentException iae){
 			// Ignored
 		}
 
+		Predicate expected = new SimplePredicate("a", SimplePredicate.Operator.GREATER_THAN, "0.0");
+
+		checkPredicate(expected, translatePredicate(predicateTranslator, "X['a'] > 0.0"));
+
 		expected = new SimplePredicate("a", SimplePredicate.Operator.IS_MISSING, null);
-		checkPredicate(expected, "X[0] is None", new DataFrameScope(doubleFeatures));
+
+		checkPredicate(expected, translatePredicate(predicateTranslator, "X[0] is None"));
 
 		expected = new SimplePredicate("a", SimplePredicate.Operator.IS_NOT_MISSING, null);
-		checkPredicate(expected, "X[-3] is not None", new DataFrameScope(doubleFeatures));
 
-		expected = new SimplePredicate("a", SimplePredicate.Operator.EQUAL, "one");
-		checkPredicate(expected, "X[0] == \"one\"", new DataFrameScope(stringFeatures));
+		checkPredicate(expected, translatePredicate(predicateTranslator, "X[-3] is not None"));
 
 		expected = createSimpleSetPredicate("a", SimpleSetPredicate.BooleanOperator.IS_IN, Arrays.asList("1", "2", "3"));
-		checkPredicate(expected, "X[0] in [1, 2, 3]", new DataFrameScope(doubleFeatures));
 
-		expected = createSimpleSetPredicate("a", SimpleSetPredicate.BooleanOperator.IS_IN, Arrays.asList("one", "two", "three"));
-		checkPredicate(expected, "X[0] in ['one', 'two', 'three']", new DataFrameScope(stringFeatures));
+		checkPredicate(expected, translatePredicate(predicateTranslator, "X[0] in [1, 2, 3]"));
 
 		expected = createSimpleSetPredicate("a", SimpleSetPredicate.BooleanOperator.IS_NOT_IN, Arrays.asList("-1.5", "-1", "-0.5", "0"));
-		checkPredicate(expected, "X['a'] not in [-1.5, -1, -0.5, 0]", new DataFrameScope(doubleFeatures));
+
+		checkPredicate(expected, translatePredicate(predicateTranslator, "X['a'] not in [-1.5, -1, -0.5, 0]"));
+
+		predicateTranslator = new PredicateTranslator(new DataFrameScope(stringFeatures));
+
+		expected = new SimplePredicate("a", SimplePredicate.Operator.EQUAL, "one");
+
+		checkPredicate(expected, translatePredicate(predicateTranslator, "X[0] == \"one\""));
+
+		expected = createSimpleSetPredicate("a", SimpleSetPredicate.BooleanOperator.IS_IN, Arrays.asList("one", "two", "three"));
+
+		checkPredicate(expected, translatePredicate(predicateTranslator, "X[0] in ['one', 'two', 'three']"));
 	}
 
 	@Test
 	public void translateLiteralPredicate(){
-		Scope scope = BlockScope.EMPTY;
+		PredicateTranslator predicateTranslator = new PredicateTranslator(BlockScope.EMPTY);
 
-		checkPredicate(True.INSTANCE, "True", scope);
-		checkPredicate(False.INSTANCE, "False", scope);
+		checkPredicate(True.INSTANCE, translatePredicate(predicateTranslator, "True"));
+		checkPredicate(False.INSTANCE, translatePredicate(predicateTranslator, "False"));
 	}
 
 	static
-	private void checkPredicate(Predicate expected, String string, Scope scope){
-		Predicate actual = PredicateTranslator.translate(string, scope);
-
+	private void checkPredicate(Predicate expected, Predicate actual){
 		assertTrue(ReflectionUtil.equals(expected, actual));
+	}
+
+	static
+	private Predicate translatePredicate(PredicateTranslator predicateTranslator, String string){
+		return predicateTranslator.translatePredicate(string);
 	}
 
 	static

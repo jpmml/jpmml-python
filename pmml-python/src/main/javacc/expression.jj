@@ -42,29 +42,39 @@ import org.jpmml.converter.visitors.ExpressionCompactor;
 
 public class ExpressionTranslator extends AbstractTranslator {
 
-	static
-	public Expression translate(String string, Scope scope){
-		return translate(string, scope, true);
+	public ExpressionTranslator(Scope scope){
+		this(new NullProvider());
+
+		setScope(scope);
 	}
 
-	static
-	public Expression translate(String string, Scope scope, boolean compact){
+	public Expression translateExpression(String string){
+		return translateExpression(string, true);
+	}
+
+	public Expression translateExpression(String string, boolean compact){
+		ReInit(new StringProvider(string));
+
 		Expression expression;
 
 		try {
-			ExpressionTranslator expressionTranslator = new ExpressionTranslator(string);
-			expressionTranslator.setScope(scope);
-
-			expression = expressionTranslator.translateExpressionInternal();
+			expression = translateExpressionInternal();
 		} catch(ParseException pe){
 			throw new IllegalArgumentException("Python expression \'" + string + "\' is either invalid or not supported", pe);
 		}
 
 		if(compact){
-			ExpressionCompactor compactor = new ExpressionCompactor();
-
-			compactor.applyTo(expression);
+			expression = compact(expression);
 		}
+
+		return expression;
+	}
+
+	static
+	public Expression compact(Expression expression){
+		ExpressionCompactor expressionCompactor = new ExpressionCompactor();
+
+		expressionCompactor.applyTo(expression);
 
 		return expression;
 	}
