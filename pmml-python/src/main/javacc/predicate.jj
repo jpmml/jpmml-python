@@ -174,7 +174,7 @@ private Predicate translatePredicateInternal():
 	}
 }
 
-Predicate Predicate():
+private Predicate Predicate():
 {
 	Predicate predicate;
 }
@@ -186,7 +186,7 @@ Predicate Predicate():
 	}
 }
 
-Predicate LogicalOrExpression():
+private Predicate LogicalOrExpression():
 {
 	Predicate left;
 	Predicate right;
@@ -199,7 +199,7 @@ Predicate LogicalOrExpression():
 	}
 }
 
-Predicate LogicalAndExpression():
+private Predicate LogicalAndExpression():
 {
 	Predicate left;
 	Predicate right;
@@ -212,7 +212,7 @@ Predicate LogicalAndExpression():
 	}
 }
 
-Predicate ComparisonExpression():
+private Predicate ComparisonExpression():
 {
 	Object left;
 	Token operator = null;
@@ -240,7 +240,7 @@ Predicate ComparisonExpression():
 	}
 }
 
-Object UnaryExpression():
+private Object UnaryExpression():
 {
 	Token sign = null;
 	Object result;
@@ -271,7 +271,7 @@ Object UnaryExpression():
 	}
 }
 
-Object PrimaryExpression():
+private Object PrimaryExpression():
 {
 	Object result;
 }
@@ -292,7 +292,7 @@ Object PrimaryExpression():
 	}
 }
 
-Feature ArrayIndexingExpression():
+private Feature ArrayIndexingExpression():
 {
 	Token name;
 	Token sign = null;
@@ -325,7 +325,7 @@ Feature ArrayIndexingExpression():
 	}
 }
 
-Feature NameInvocationExpression():
+private Feature NameInvocationExpression():
 {
 	Token name;
 }
@@ -341,7 +341,7 @@ Feature NameInvocationExpression():
 	}
 }
 
-Predicate ParenthesizedExpression():
+private Predicate ParenthesizedExpression():
 {
 	Predicate predicate;
 }
@@ -353,7 +353,7 @@ Predicate ParenthesizedExpression():
 	}
 }
 
-Object LiteralExpression():
+private Object LiteralExpression():
 {
 	Token value;
 }
@@ -375,7 +375,7 @@ Object LiteralExpression():
 	}
 }
 
-Array ListMakerExpression():
+private Array ListMakerExpression():
 {
 	Object predicate;
 	

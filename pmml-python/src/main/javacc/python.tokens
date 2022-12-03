@@ -132,7 +132,7 @@ TOKEN:
 	< #EXPONENT: ["e", "E"] (["+", "-"])? (<DIGIT>)+ >
 }
 
-Token Sign():
+private Token Sign():
 {
 	Token token;
 }

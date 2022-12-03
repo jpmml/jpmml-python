@@ -336,7 +336,7 @@ private Expression translateExpressionInternal():
 	}
 }
 
-Expression Expression():
+private Expression Expression():
 {
 	Expression expression;
 }
@@ -348,7 +348,7 @@ Expression Expression():
 	}
 }
 
-Expression IfElseExpression():
+private Expression IfElseExpression():
 {
 	Expression left;
 	Expression center;
@@ -362,7 +362,7 @@ Expression IfElseExpression():
 	}
 }
 
-Expression LogicalOrExpression():
+private Expression LogicalOrExpression():
 {
 	Expression left;
 	Expression right;
@@ -375,7 +375,7 @@ Expression LogicalOrExpression():
 	}
 }
 
-Expression LogicalAndExpression():
+private Expression LogicalAndExpression():
 {
 	Expression left;
 	Expression right;
@@ -388,7 +388,7 @@ Expression LogicalAndExpression():
 	}
 }
 
-Expression NegationExpression():
+private Expression NegationExpression():
 {
 	Token operator = null;
 	Expression expression;
@@ -405,7 +405,7 @@ Expression NegationExpression():
 	}
 }
 
-Expression ComparisonExpression():
+private Expression ComparisonExpression():
 {
 	Expression left;
 	Token operator;
@@ -433,7 +433,7 @@ Expression ComparisonExpression():
 	}
 }
 
-Expression AdditiveExpression():
+private Expression AdditiveExpression():
 {
 	Expression left;
 	Token operator;
@@ -456,7 +456,7 @@ Expression AdditiveExpression():
 	}
 }
 
-Expression MultiplicativeExpression():
+private Expression MultiplicativeExpression():
 {
 	Expression left;
 	Token operator;
@@ -470,7 +470,7 @@ Expression MultiplicativeExpression():
 	}
 }
 
-Expression UnaryExpression():
+private Expression UnaryExpression():
 {
 	Token sign = null;
 	Expression expression;
@@ -491,7 +491,7 @@ Expression UnaryExpression():
 	}
 }
 
-Expression PrimaryExpression():
+private Expression PrimaryExpression():
 {
 	String featureOrFunction;
 	Expression expression;
@@ -520,7 +520,7 @@ Expression PrimaryExpression():
 	}
 }
 
-String DottedName():
+private String DottedName():
 {
 	Token name;
 	StringBuilder sb = new StringBuilder();
@@ -533,7 +533,7 @@ String DottedName():
 	}
 }
 
-FieldRef ArrayIndexingExpression(String dottedName):
+private FieldRef ArrayIndexingExpression(String dottedName):
 {
 	Token sign = null;
 	Token column;
@@ -565,7 +565,7 @@ FieldRef ArrayIndexingExpression(String dottedName):
 	}
 }
 
-Apply FunctionInvocationExpression(String dottedName):
+private Apply FunctionInvocationExpression(String dottedName):
 {
 	List<Expression> arguments;
 }
@@ -588,7 +588,7 @@ Apply FunctionInvocationExpression(String dottedName):
 	}
 }
 
-Apply TrailerFunctionInvocationExpression(Expression expression):
+private Apply TrailerFunctionInvocationExpression(Expression expression):
 {
 	Token name;
 	List<Expression> arguments;
@@ -601,7 +601,7 @@ Apply TrailerFunctionInvocationExpression(Expression expression):
 	}
 }
 
-List<Expression> Arguments():
+private List<Expression> Arguments():
 {
 	Expression expression;
 	List<Expression> expressions = new ArrayList<Expression>();
@@ -619,7 +619,7 @@ List<Expression> Arguments():
 	}
 }
 
-Expression StringSlicingExpression(Expression expression):
+private Expression StringSlicingExpression(Expression expression):
 {
 	Token startSign = null;
 	Token start = null;
@@ -644,7 +644,7 @@ Expression StringSlicingExpression(Expression expression):
 	}
 }
 
-Constant ConstantExpression(String dottedName):
+private Constant ConstantExpression(String dottedName):
 {
 	Token value;
 }
@@ -663,7 +663,7 @@ Constant ConstantExpression(String dottedName):
 	}
 }
 
-FieldRef NameInvocationExpression(String dottedName):
+private FieldRef NameInvocationExpression(String dottedName):
 {
 }
 {
@@ -676,7 +676,7 @@ FieldRef NameInvocationExpression(String dottedName):
 	}
 }
 
-Expression ParenthesizedExpression():
+private Expression ParenthesizedExpression():
 {
 	Expression expression;
 }
@@ -688,7 +688,7 @@ Expression ParenthesizedExpression():
 	}
 }
 
-Constant LiteralExpression():
+private Constant LiteralExpression():
 {
 	Token value;
 	DataType dataType;
@@ -719,7 +719,7 @@ Constant LiteralExpression():
 	}
 }
 
-Expression[] ListMakerExpression():
+private Expression[] ListMakerExpression():
 {
 	Expression expression;
 	List<Expression> expressions = new ArrayList<Expression>();
