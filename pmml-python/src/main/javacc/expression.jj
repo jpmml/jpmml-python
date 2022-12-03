@@ -441,9 +441,8 @@ Expression AdditiveExpression():
 }
 {
 	left = MultiplicativeExpression() ((operator = <PLUS> | operator = <MINUS>) right = MultiplicativeExpression() {
-		Scope scope = ensureScope();
 
-		if((operator.kind == PLUS) && (TypeUtil.isString(left, scope) && TypeUtil.isString(right, scope))){
+		if((operator.kind == PLUS) && (TypeUtil.isString(left, this) && TypeUtil.isString(right, this))){
 			left = PMMLUtil.createApply(PMMLFunctions.CONCAT, left, right);
 		} else
 
@@ -574,14 +573,12 @@ Apply FunctionInvocationExpression(String dottedName):
 	arguments = Arguments()
 
 	{
-		Scope scope = ensureScope();
-
 		int dot = dottedName.lastIndexOf('.');
 		if(dot > -1){
 			String featureName = dottedName.substring(0, dot);
 			String functionName = dottedName.substring(dot + 1);
 
-			Feature feature = scope.resolveFeature(featureName);
+			Feature feature = resolveFeature(featureName);
 			if(feature != null){
 				return translateTrailerFunction(feature.ref(), functionName, arguments);
 			}

@@ -20,13 +20,23 @@ package org.jpmml.python;
 
 import java.util.Objects;
 
+import org.jpmml.converter.Feature;
+import org.jpmml.converter.FeatureResolver;
+
 abstract
-public class AbstractTranslator {
+public class AbstractTranslator implements FeatureResolver {
 
 	private Scope scope = null;
 
 
 	public AbstractTranslator(){
+	}
+
+	@Override
+	public Feature resolveFeature(String name){
+		Scope scope = ensureScope();
+
+		return scope.resolveFeature(name);
 	}
 
 	public Scope ensureScope(){
