@@ -7,6 +7,11 @@ SPECIAL_TOKEN:
 
 TOKEN:
 {
+	< NEWLINE: "\n" >
+}
+
+TOKEN:
+{
 	< LPAREN: "(" >
 	|
 	< RPAREN: ")" >
@@ -65,6 +70,8 @@ TOKEN:
 	< DOT: "." >
 	|
 	< COLON: ":" >
+	|
+	< SEMICOLON: ";" >
 }
 
 TOKEN:
@@ -90,6 +97,10 @@ TOKEN:
 
 TOKEN:
 {
+	< DEF: "def" >
+	|
+	< ELIF: "elif" >
+	|
 	< ELSE: "else" >
 	|
 	< IF: "if" >
@@ -97,6 +108,8 @@ TOKEN:
 	< IN: "in" >
 	|
 	< IS: "is" >
+	|
+	< RETURN: "return" >
 }
 
 TOKEN:

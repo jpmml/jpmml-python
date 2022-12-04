@@ -29,11 +29,14 @@ package org.jpmml.python;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.common.collect.Iterables;
 import org.dmg.pmml.Apply;
 import org.dmg.pmml.Constant;
 import org.dmg.pmml.DataType;
+import org.dmg.pmml.DerivedField;
 import org.dmg.pmml.Expression;
 import org.dmg.pmml.FieldRef;
+import org.dmg.pmml.OpType;
 import org.dmg.pmml.PMMLFunctions;
 import org.jpmml.converter.Feature;
 import org.jpmml.converter.PMMLUtil;
@@ -46,6 +49,20 @@ public class ExpressionTranslator extends AbstractTranslator {
 		this(new NullProvider());
 
 		setScope(scope);
+	}
+
+	public DerivedField translateDef(String string){
+		ReInit(new StringProvider(string));
+
+		DerivedField derivedField;
+
+		try {
+			derivedField = translateDefInternal();
+		} catch(ParseException pe){
+			throw new IllegalArgumentException("Python def is either invalid or not supported", pe);
+		}
+
+		return derivedField;
 	}
 
 	public Expression translateExpression(String string){
@@ -68,6 +85,22 @@ public class ExpressionTranslator extends AbstractTranslator {
 		}
 
 		return expression;
+	}
+
+	private DerivedField createDerivedField(String name, Expression expression){
+		OpType opType;
+		DataType dataType = TypeUtil.getDataType(expression, this);
+		
+		if(dataType != null){
+			opType = TypeUtil.getOpType(dataType);
+		} else
+			
+		{
+			opType = OpType.CONTINUOUS;
+			dataType = DataType.DOUBLE;
+		}
+		
+		return new DerivedField(name, opType, dataType, expression);
 	}
 
 	static
@@ -319,10 +352,30 @@ public class ExpressionTranslator extends AbstractTranslator {
 				throw new ParseException();
 		}
 	}
+
+	static
+	private class Block extends ArrayList<Expression> {
+
+		private Block(List<Expression> statements){
+			super(statements);
+		}
+	}
 }
 PARSER_END(ExpressionTranslator)
 
 @python.tokens@
+
+private DerivedField translateDefInternal():
+{
+	DerivedField derivedField;
+}
+{
+	derivedField = Def() <EOF>
+
+	{
+		return derivedField;
+	}
+}
 
 private Expression translateExpressionInternal():
 {
@@ -333,6 +386,174 @@ private Expression translateExpressionInternal():
 
 	{
 		return expression;
+	}
+}
+
+private DerivedField Def():
+{
+	Token name;
+	List<Token> parameters;
+	Block block;
+}
+{
+	<DEF> name = <NAME> parameters = Parameters() <COLON> block = Block()
+
+	{
+		return createDerivedField(name.image, Iterables.getOnlyElement(block));
+	}
+}
+
+private List<Token> Parameters():
+{
+	Token name;
+	List<Token> names = new ArrayList();
+}
+{
+	(
+		LOOKAHEAD(<LPAREN> <RPAREN>)
+		<LPAREN> <RPAREN>
+		|
+		<LPAREN> name = <NAME> { names.add(name); } ( <COMMA> name = <NAME> { names.add(name); } )* <RPAREN>
+	)
+
+	{
+		return names;
+	}
+}
+
+private Block Block():
+{
+	List<Expression> statements;
+}
+{
+	(
+		<NEWLINE> Indent() statements = Statements() Dedent()
+		|
+		statements = SimpleStatements()
+	)
+	
+	{
+		return new Block(statements);
+	}
+}
+
+JAVACODE
+private void Indent(){
+}
+
+JAVACODE
+private void Dedent(){
+}
+
+private List<Expression> Statements():
+{
+	Expression statement;
+	List<Expression> statements = new ArrayList<>();
+}
+{
+	( statement = Statement() { statements.add(statement); } )+
+
+	{
+		return statements;
+	}
+}
+
+private Expression Statement():
+{
+	Expression statement;
+	List<Expression> statements;
+}
+{
+	(
+		statement = CompoundStatement() <NEWLINE>
+		|
+		statements = SimpleStatements() { statement = Iterables.getOnlyElement(statements); }
+	)
+
+	{
+		return statement;
+	}
+}
+
+private Expression CompoundStatement():
+{
+	Expression statement;
+}
+{
+	statement = IfStatement()
+
+	{
+		return statement;
+	}
+}
+
+private List<Expression> SimpleStatements():
+{
+	Expression statement;
+	List<Expression> statements = new ArrayList<>();
+}
+{
+	statement = SimpleStatement() { statements.add(statement); } ( <SEMICOLON> statement = SimpleStatement() { statements.add(statement); } )* <NEWLINE>
+
+	{
+		return statements;
+	}
+}
+
+private Expression SimpleStatement():
+{
+	Expression expression;
+}
+{
+	(
+		<RETURN> expression = Expression()
+	)
+
+	{
+		return expression;
+	}
+}
+
+private Apply IfStatement():
+{
+	Expression condition;
+	Block block;
+
+	Apply if_statement;
+	Apply elif_statement;
+
+	Apply tail;
+}
+{
+	<IF> condition = Expression() <COLON> block = Block() { if_statement = PMMLUtil.createApply(PMMLFunctions.IF, condition, Iterables.getOnlyElement(block)); tail = if_statement; } ( elif_statement = ElIfStatement() { tail.addExpressions(elif_statement); tail = elif_statement; } )* ( block = ElseBlock() { tail.addExpressions(Iterables.getOnlyElement(block)); } )?
+
+	{
+		return if_statement;
+	}
+}
+
+private Apply ElIfStatement():
+{
+	Expression condition;
+	Block block;
+}
+{
+	<ELIF> condition = Expression() <COLON> block = Block()
+
+	{
+		return PMMLUtil.createApply(PMMLFunctions.IF, condition, Iterables.getOnlyElement(block));
+	}
+}
+
+private Block ElseBlock():
+{
+	Block block;
+}
+{
+	<ELSE> <COLON> block = Block()
+
+	{
+		return block;
 	}
 }
 

@@ -25,8 +25,10 @@ import java.util.Map;
 
 import org.dmg.pmml.Constant;
 import org.dmg.pmml.DataType;
+import org.dmg.pmml.DerivedField;
 import org.dmg.pmml.Expression;
 import org.dmg.pmml.FieldRef;
+import org.dmg.pmml.OpType;
 import org.dmg.pmml.PMMLFunctions;
 import org.jpmml.converter.Feature;
 import org.jpmml.converter.PMMLUtil;
@@ -44,6 +46,50 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class ExpressionTranslatorTest extends TranslatorTest {
+
+	@Test
+	public void translateDef(){
+		ExpressionTranslator expressionTranslator = new ExpressionTranslator(new DataFrameScope(doubleFeatures));
+
+		String newline = "\n";
+
+		String string =
+			"def signum(X):" + newline +
+			"	if X[0] < 0.0: return -1" + newline +
+			"	elif X[0] > 0.0: return 1" + newline +
+			"	else: return 0" + newline +
+			newline;
+
+		DerivedField derivedField = expressionTranslator.translateDef(string);
+
+		assertEquals("signum", derivedField.getName());
+		assertEquals(OpType.CONTINUOUS, derivedField.getOpType());
+		assertEquals(DataType.INTEGER, derivedField.getDataType());
+
+		Expression expected = PMMLUtil.createApply(PMMLFunctions.IF,
+			PMMLUtil.createApply(PMMLFunctions.LESSTHAN,
+				fieldRefs.get(0),
+				PMMLUtil.createConstant(0.0, DataType.DOUBLE)
+			),
+			PMMLUtil.createConstant(-1, DataType.INTEGER),
+			PMMLUtil.createApply(PMMLFunctions.IF,
+				PMMLUtil.createApply(PMMLFunctions.GREATERTHAN,
+					fieldRefs.get(0),
+					PMMLUtil.createConstant(0.0, DataType.DOUBLE)
+				),
+				PMMLUtil.createConstant(+1, DataType.INTEGER),
+				PMMLUtil.createConstant(0, DataType.INTEGER)
+			)
+		);
+
+		checkExpression(expected, derivedField.getExpression());
+
+		string = string.replace(": return", ":" + newline + "\t\t" + "return");
+
+		derivedField = expressionTranslator.translateDef(string);
+
+		checkExpression(expected, derivedField.getExpression());
+	}
 
 	@Test
 	public void translateIfElseExpression(){
