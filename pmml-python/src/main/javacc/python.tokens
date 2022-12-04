@@ -43,6 +43,11 @@ TOKEN:
 
 TOKEN:
 {
+	< ASSIGN: "=" >
+}
+
+TOKEN:
+{
 	< PLUS: "+" >
 	|
 	< MINUS: "-" >

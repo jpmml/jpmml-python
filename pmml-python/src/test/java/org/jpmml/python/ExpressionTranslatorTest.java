@@ -18,6 +18,7 @@
  */
 package org.jpmml.python;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -30,7 +31,9 @@ import org.dmg.pmml.Expression;
 import org.dmg.pmml.FieldRef;
 import org.dmg.pmml.OpType;
 import org.dmg.pmml.PMMLFunctions;
+import org.jpmml.converter.ContinuousFeature;
 import org.jpmml.converter.Feature;
+import org.jpmml.converter.PMMLEncoder;
 import org.jpmml.converter.PMMLUtil;
 import org.jpmml.converter.StringFeature;
 import org.jpmml.converter.TypeUtil;
@@ -49,32 +52,42 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 	@Test
 	public void translateDef(){
-		ExpressionTranslator expressionTranslator = new ExpressionTranslator(new DataFrameScope(doubleFeatures));
+		PMMLEncoder encoder = new PMMLEncoder();
+
+		List<Feature> variables = Arrays.asList(
+			new ContinuousFeature(encoder, "x1", DataType.DOUBLE),
+			new ContinuousFeature(encoder, "x2", DataType.DOUBLE)
+		);
+
+		ExpressionTranslator expressionTranslator = new ExpressionTranslator(new BlockScope(variables, encoder));
 
 		String newline = "\n";
 
 		String string =
-			"def signum(X):" + newline +
-			"	if X[0] < 0.0: return -1" + newline +
-			"	elif X[0] > 0.0: return 1" + newline +
+			"def ratio_signum(x1, x2):" + newline +
+			"	ratio = (x1 / x2)" + newline +
+			"	if ratio < 0.0: return -1" + newline +
+			"	elif ratio > 0.0: return 1" + newline +
 			"	else: return 0" + newline +
 			newline;
 
 		DerivedField derivedField = expressionTranslator.translateDef(string);
 
-		assertEquals("signum", derivedField.getName());
+		assertEquals("ratio_signum", derivedField.getName());
 		assertEquals(OpType.CONTINUOUS, derivedField.getOpType());
 		assertEquals(DataType.INTEGER, derivedField.getDataType());
 
+		DerivedField ratioDerivedField = encoder.getDerivedField("ratio");
+
 		Expression expected = PMMLUtil.createApply(PMMLFunctions.IF,
 			PMMLUtil.createApply(PMMLFunctions.LESSTHAN,
-				fieldRefs.get(0),
+				new FieldRef(ratioDerivedField),
 				PMMLUtil.createConstant(0.0, DataType.DOUBLE)
 			),
 			PMMLUtil.createConstant(-1, DataType.INTEGER),
 			PMMLUtil.createApply(PMMLFunctions.IF,
 				PMMLUtil.createApply(PMMLFunctions.GREATERTHAN,
-					fieldRefs.get(0),
+					new FieldRef(ratioDerivedField),
 					PMMLUtil.createConstant(0.0, DataType.DOUBLE)
 				),
 				PMMLUtil.createConstant(+1, DataType.INTEGER),
@@ -84,7 +97,18 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 		checkExpression(expected, derivedField.getExpression());
 
-		string = string.replace(": return", ":" + newline + "\t\t" + "return");
+		encoder = new PMMLEncoder();
+
+		encoder.createDataField("x1", OpType.CONTINUOUS, DataType.DOUBLE);
+		encoder.createDataField("x2", OpType.CONTINUOUS, DataType.DOUBLE);
+
+		variables = Collections.emptyList();
+
+		expressionTranslator = new ExpressionTranslator(new BlockScope(variables, encoder));
+
+		string = string
+			.replace("ratio_signum(x1, x2)", "ratio_signum()")
+			.replace(": return", ":" + newline + "\t\t" + "return");
 
 		derivedField = expressionTranslator.translateDef(string);
 

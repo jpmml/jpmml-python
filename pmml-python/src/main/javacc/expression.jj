@@ -39,6 +39,7 @@ import org.dmg.pmml.FieldRef;
 import org.dmg.pmml.OpType;
 import org.dmg.pmml.PMMLFunctions;
 import org.jpmml.converter.Feature;
+import org.jpmml.converter.PMMLEncoder;
 import org.jpmml.converter.PMMLUtil;
 import org.jpmml.converter.TypeUtil;
 import org.jpmml.converter.visitors.ExpressionCompactor;
@@ -87,20 +88,34 @@ public class ExpressionTranslator extends AbstractTranslator {
 		return expression;
 	}
 
+	private PMMLEncoder ensureEncoder(){
+		Scope scope = ensureScope();
+
+		PMMLEncoder encoder = scope.getEncoder();
+		if(encoder == null){
+			throw new IllegalStateException();
+		}
+
+		return encoder;
+	}
+
 	private DerivedField createDerivedField(String name, Expression expression){
-		OpType opType;
+		PMMLEncoder encoder = ensureEncoder();
+
+		OpType opType = null;
 		DataType dataType = TypeUtil.getDataType(expression, this);
-		
+
 		if(dataType != null){
 			opType = TypeUtil.getOpType(dataType);
 		} else
-			
+
+		// XXX
 		{
 			opType = OpType.CONTINUOUS;
 			dataType = DataType.DOUBLE;
 		}
-		
-		return new DerivedField(name, opType, dataType, expression);
+
+		return encoder.createDerivedField(name, opType, dataType, expression);
 	}
 
 	static
@@ -354,6 +369,22 @@ public class ExpressionTranslator extends AbstractTranslator {
 	}
 
 	static
+	private Expression getOnlyStatement(List<Expression> statements){
+
+		for(int i = 0; i < statements.size(); i++){
+			Expression statement = statements.get(i);
+
+			if(statement != null){
+				statements = statements.subList(i, statements.size());
+
+				break;
+			}
+		}
+
+		return Iterables.getOnlyElement(statements);
+	}
+
+	static
 	private class Block extends ArrayList<Expression> {
 
 		private Block(List<Expression> statements){
@@ -399,7 +430,7 @@ private DerivedField Def():
 	<DEF> name = <NAME> parameters = Parameters() <COLON> block = Block()
 
 	{
-		return createDerivedField(name.image, Iterables.getOnlyElement(block));
+		return createDerivedField(name.image, getOnlyStatement(block));
 	}
 }
 
@@ -467,7 +498,7 @@ private Expression Statement():
 	(
 		statement = CompoundStatement() <NEWLINE>
 		|
-		statements = SimpleStatements() { statement = Iterables.getOnlyElement(statements); }
+		statements = SimpleStatements() { statement = getOnlyStatement(statements); }
 	)
 
 	{
@@ -494,7 +525,7 @@ private List<Expression> SimpleStatements():
 }
 {
 	statement = SimpleStatement() { statements.add(statement); } ( <SEMICOLON> statement = SimpleStatement() { statements.add(statement); } )* <NEWLINE>
-
+	
 	{
 		return statements;
 	}
@@ -506,9 +537,11 @@ private Expression SimpleStatement():
 }
 {
 	(
-		<RETURN> expression = Expression()
+		expression = Assignment()
+		|
+		expression = ReturnStatement()
 	)
-
+	
 	{
 		return expression;
 	}
@@ -525,7 +558,7 @@ private Apply IfStatement():
 	Apply tail;
 }
 {
-	<IF> condition = Expression() <COLON> block = Block() { if_statement = PMMLUtil.createApply(PMMLFunctions.IF, condition, Iterables.getOnlyElement(block)); tail = if_statement; } ( elif_statement = ElIfStatement() { tail.addExpressions(elif_statement); tail = elif_statement; } )* ( block = ElseBlock() { tail.addExpressions(Iterables.getOnlyElement(block)); } )?
+	<IF> condition = Expression() <COLON> block = Block() { if_statement = PMMLUtil.createApply(PMMLFunctions.IF, condition, getOnlyStatement(block)); tail = if_statement; } ( elif_statement = ElIfStatement() { tail.addExpressions(elif_statement); tail = elif_statement; } )* ( block = ElseBlock() { tail.addExpressions(getOnlyStatement(block)); } )?
 
 	{
 		return if_statement;
@@ -541,7 +574,7 @@ private Apply ElIfStatement():
 	<ELIF> condition = Expression() <COLON> block = Block()
 
 	{
-		return PMMLUtil.createApply(PMMLFunctions.IF, condition, Iterables.getOnlyElement(block));
+		return PMMLUtil.createApply(PMMLFunctions.IF, condition, getOnlyStatement(block));
 	}
 }
 
@@ -554,6 +587,33 @@ private Block ElseBlock():
 
 	{
 		return block;
+	}
+}
+
+private Expression Assignment():
+{
+	Token name;
+	Expression expression;
+}
+{
+	name = <NAME> <ASSIGN> expression = Expression()
+	
+	{
+		DerivedField derivedField = createDerivedField(name.image, expression);
+		
+		return null;
+	}
+}
+
+private Expression ReturnStatement():
+{
+	Expression expression;
+}
+{
+	<RETURN> expression = Expression()
+	
+	{
+		return expression;
 	}
 }
 
@@ -794,12 +854,14 @@ private Apply FunctionInvocationExpression(String dottedName):
 	arguments = Arguments()
 
 	{
+		Scope scope = ensureScope();
+
 		int dot = dottedName.lastIndexOf('.');
 		if(dot > -1){
 			String featureName = dottedName.substring(0, dot);
 			String functionName = dottedName.substring(dot + 1);
 
-			Feature feature = resolveFeature(featureName);
+			Feature feature = scope.resolveFeature(featureName);
 			if(feature != null){
 				return translateTrailerFunction(feature.ref(), functionName, arguments);
 			}
