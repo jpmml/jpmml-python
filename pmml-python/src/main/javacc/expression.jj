@@ -60,7 +60,7 @@ public class ExpressionTranslator extends AbstractTranslator {
 		try {
 			derivedField = translateDefInternal();
 		} catch(ParseException pe){
-			throw new IllegalArgumentException("Python def is either invalid or not supported", pe);
+			throw new IllegalArgumentException("Python function definition \'" + toSingleLine(string) + "\' is either invalid or not supported", pe);
 		}
 
 		return derivedField;
@@ -78,7 +78,7 @@ public class ExpressionTranslator extends AbstractTranslator {
 		try {
 			expression = translateExpressionInternal();
 		} catch(ParseException pe){
-			throw new IllegalArgumentException("Python expression \'" + string + "\' is either invalid or not supported", pe);
+			throw new IllegalArgumentException("Python expression \'" + toSingleLine(string) + "\' is either invalid or not supported", pe);
 		}
 
 		if(compact){

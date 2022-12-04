@@ -58,6 +58,13 @@ public class AbstractTranslator implements FeatureResolver {
 	}
 
 	static
+	public String toSingleLine(String string){
+		return string
+			.replaceAll("\t", "\\\\t")
+			.replaceAll("\n", "\\\\n");
+	}
+
+	static
 	protected String translateBoolean(String image){
 		return image.toLowerCase();
 	}
