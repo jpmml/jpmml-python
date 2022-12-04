@@ -24,70 +24,85 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.jpmml.converter.Feature;
+import org.jpmml.converter.PMMLEncoder;
 
 public class DataFrameScope extends Scope {
 
-	private String name = null;
+	private String variableName = null;
 
 	private List<? extends Feature> columns = null;
 
 
-	public DataFrameScope(List<? extends Feature> features){
-		this("X", features);
+	public DataFrameScope(List<? extends Feature> columns){
+		this("X", columns, null);
 	}
 
-	public DataFrameScope(String name, List<? extends Feature> columns){
-		setName(name);
+	public DataFrameScope(String variableName, List<? extends Feature> columns){
+		this(variableName, columns, null);
+	}
+
+	public DataFrameScope(String variableName, List<? extends Feature> columns, PMMLEncoder encoder){
+		super(encoder);
+
+		setVariableName(variableName);
 		setColumns(columns);
 	}
 
 	@Override
 	public Feature getFeature(String name){
-		String dataFrameName = getName();
+		String variableName = getVariableName();
 
-		checkName(name);
+		if((variableName).equals(name)){
+			throw new IllegalArgumentException("Name \'" + variableName + "\' refers to a row vector. Use an array indexing expression " + variableName + "[<column index>] or " + variableName + "[<column name>] to refer to a specific row vector element");
+		}
 
-		throw new IllegalArgumentException("Name \'" + dataFrameName + "\' refers to a row vector. Use an array indexing expression " + dataFrameName + "[<column index>] or " + dataFrameName + "[<column name>] to refer to a specific row vector element");
+		Feature feature = resolveFeature(name);
+
+		if(feature != null){
+			return feature;
+		}
+
+		throw new IllegalArgumentException("Name \'" + name + "\' is not defined");
 	}
 
 	@Override
 	public Feature getFeature(String name, int columnIndex){
-		List<? extends Feature> features = getColumns();
+		List<? extends Feature> columns = getColumns();
 
-		checkName(name);
+		checkIsDataFrame(name);
 
 		if(columnIndex >= 0){
 
-			if(columnIndex < features.size()){
-				return features.get(columnIndex);
+			if(columnIndex < columns.size()){
+				return columns.get(columnIndex);
 			}
 
-			throw new IllegalArgumentException("Column index " + columnIndex + " not in range " + Arrays.asList(0, features.size()));
+			throw new IllegalArgumentException("Column index " + columnIndex + " not in range " + Arrays.asList(0, columns.size()));
 		} else
 
 		{
-			if((-columnIndex) <= features.size()){
-				return features.get(features.size() - (-columnIndex));
+			if((-columnIndex) <= columns.size()){
+				return columns.get(columns.size() - (-columnIndex));
 			}
 
-			throw new IllegalArgumentException("Column index " + columnIndex + " not in range " + Arrays.asList(-features.size(), -1));
+			throw new IllegalArgumentException("Column index " + columnIndex + " not in range " + Arrays.asList(-columns.size(), -1));
 		}
 	}
 
 	@Override
 	public Feature getFeature(String name, String columnName){
-		List<? extends Feature> features = getColumns();
+		List<? extends Feature> columns = getColumns();
 
-		checkName(name);
+		checkIsDataFrame(name);
 
-		for(Feature feature : features){
+		for(Feature column : columns){
 
-			if((feature.getName()).equals(columnName)){
-				return feature;
+			if((column.getName()).equals(columnName)){
+				return column;
 			}
 		}
 
-		List<String> columnNames = features.stream()
+		List<String> columnNames = columns.stream()
 			.map(feature -> "\'" + feature.getName() + "\'")
 			.collect(Collectors.toList());
 
@@ -96,32 +111,32 @@ public class DataFrameScope extends Scope {
 
 	@Override
 	public Feature resolveFeature(String name){
-		List<? extends Feature> features = getColumns();
+		List<? extends Feature> columns = getColumns();
 
-		for(Feature feature : features){
+		for(Feature column : columns){
 
-			if((feature.getName()).equals(name)){
-				return feature;
+			if((column.getName()).equals(name)){
+				return column;
 			}
 		}
 
-		return null;
+		return super.resolveFeature(name);
 	}
 
-	private void checkName(String name){
-		String dataFrameName = getName();
+	private void checkIsDataFrame(String name){
+		String variableName = getVariableName();
 
-		if(!(dataFrameName).equals(name)){
+		if(!(variableName).equals(name)){
 			throw new IllegalArgumentException("Name \'" + name + "\' is not defined");
 		}
 	}
 
-	public String getName(){
-		return this.name;
+	public String getVariableName(){
+		return this.variableName;
 	}
 
-	private void setName(String name){
-		this.name = Objects.requireNonNull(name);
+	private void setVariableName(String variableName){
+		this.variableName = Objects.requireNonNull(variableName);
 	}
 
 	public List<? extends Feature> getColumns(){

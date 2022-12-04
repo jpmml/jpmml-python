@@ -18,11 +18,24 @@
  */
 package org.jpmml.python;
 
+import org.dmg.pmml.Field;
 import org.jpmml.converter.Feature;
 import org.jpmml.converter.FeatureResolver;
+import org.jpmml.converter.FeatureUtil;
+import org.jpmml.converter.PMMLEncoder;
 
 abstract
 public class Scope implements FeatureResolver {
+
+	private PMMLEncoder encoder = null;
+
+
+	public Scope(){
+	}
+
+	public Scope(PMMLEncoder encoder){
+		setEncoder(encoder);
+	}
 
 	abstract
 	public Feature getFeature(String name);
@@ -32,4 +45,27 @@ public class Scope implements FeatureResolver {
 
 	abstract
 	public Feature getFeature(String name, String columnName);
+
+	@Override
+	public Feature resolveFeature(String name){
+		PMMLEncoder encoder = getEncoder();
+
+		if(encoder != null){
+			Field<?> field = encoder.getField(name);
+
+			if(field != null){
+				return FeatureUtil.createFeature(field, encoder);
+			}
+		}
+
+		return null;
+	}
+
+	public PMMLEncoder getEncoder(){
+		return this.encoder;
+	}
+
+	private void setEncoder(PMMLEncoder encoder){
+		this.encoder = encoder;
+	}
 }

@@ -21,9 +21,9 @@ package org.jpmml.python;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import org.jpmml.converter.Feature;
+import org.jpmml.converter.PMMLEncoder;
 
 public class BlockScope extends Scope {
 
@@ -31,25 +31,24 @@ public class BlockScope extends Scope {
 
 
 	public BlockScope(List<? extends Feature> variables){
+		this(variables, null);
+	}
+
+	public BlockScope(List<? extends Feature> variables, PMMLEncoder encoder){
+		super(encoder);
+
 		setVariables(variables);
 	}
 
 	@Override
 	public Feature getFeature(String name){
-		List<? extends Feature> features = getVariables();
+		Feature feature = resolveFeature(name);
 
-		for(Feature feature : features){
-
-			if((feature.getName()).equals(name)){
-				return feature;
-			}
+		if(feature != null){
+			return feature;
 		}
 
-		List<String> variableNames = features.stream()
-			.map(feature -> "\'" + feature.getName() + "\'")
-			.collect(Collectors.toList());
-
-		throw new IllegalArgumentException("Name \'" + name + "\' is not in " + variableNames);
+		throw new IllegalArgumentException("Name \'" + name + "\' is not defined");
 	}
 
 	@Override
@@ -77,7 +76,7 @@ public class BlockScope extends Scope {
 			}
 		}
 
-		return null;
+		return super.resolveFeature(name);
 	}
 
 	public List<? extends Feature> getVariables(){
