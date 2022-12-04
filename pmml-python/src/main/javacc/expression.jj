@@ -53,7 +53,7 @@ public class ExpressionTranslator extends AbstractTranslator {
 	}
 
 	public DerivedField translateDef(String string){
-		ReInit(new StringProvider(string));
+		ReInit(new StringProvider(ensureTerminator(string)));
 
 		DerivedField derivedField;
 
@@ -64,6 +64,28 @@ public class ExpressionTranslator extends AbstractTranslator {
 		}
 
 		return derivedField;
+	}
+
+	public Expression translateStatement(String string){
+		return translateStatement(string, true);
+	}
+
+	public Expression translateStatement(String string, boolean compact){
+		ReInit(new StringProvider(ensureTerminator(string)));
+
+		Expression statement;
+
+		try {
+			statement = translateStatementInternal();
+		} catch(ParseException pe){
+			throw new IllegalArgumentException("Python statement \'" + toSingleLine(string) + "\' is either invalid or not supported", pe);
+		}
+
+		if(compact){
+			statement = compact(statement);
+		}
+
+		return statement;
 	}
 
 	public Expression translateExpression(String string){
@@ -369,6 +391,19 @@ public class ExpressionTranslator extends AbstractTranslator {
 	}
 
 	static
+	private String ensureTerminator(String string){
+
+		if(string.endsWith("\n")){
+
+			if(!string.endsWith("\n\n")){
+				string += "\n";
+			}
+		}
+
+		return string;
+	}
+
+	static
 	private Expression getOnlyStatement(List<Expression> statements){
 
 		for(int i = 0; i < statements.size(); i++){
@@ -401,10 +436,22 @@ private DerivedField translateDefInternal():
 	DerivedField derivedField;
 }
 {
-	derivedField = Def() <EOF>
+	derivedField = Def() ( <NEWLINE> )* <EOF>
 
 	{
 		return derivedField;
+	}
+}
+
+private Expression translateStatementInternal():
+{
+	Expression expression;
+}
+{
+	expression = Statement() ( <NEWLINE> )* <EOF>
+
+	{
+		return expression;
 	}
 }
 

@@ -68,8 +68,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 			"	ratio = (x1 / x2)" + newline +
 			"	if ratio < 0.0: return -1" + newline +
 			"	elif ratio > 0.0: return 1" + newline +
-			"	else: return 0" + newline +
-			newline;
+			"	else: return 0" + newline;
 
 		DerivedField derivedField = expressionTranslator.translateDef(string);
 
@@ -109,6 +108,10 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 		string = string
 			.replace("ratio_signum(x1, x2)", "ratio_signum()")
 			.replace(": return", ":" + newline + "\t\t" + "return");
+
+		// XXX
+		string += newline;
+		string += newline;
 
 		derivedField = expressionTranslator.translateDef(string);
 

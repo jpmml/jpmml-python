@@ -1,8 +1,10 @@
 SPECIAL_TOKEN:
 {
-	" "
-	|
 	"\t"
+	|
+	"\f"
+	|
+	" "
 }
 
 TOKEN:
