@@ -51,11 +51,15 @@ public class Scope implements FeatureResolver {
 		PMMLEncoder encoder = getEncoder();
 
 		if(encoder != null){
-			Field<?> field = encoder.getField(name);
+			Field<?> field;
 
-			if(field != null){
-				return FeatureUtil.createFeature(field, encoder);
+			try {
+				field = encoder.getField(name);
+			} catch(IllegalArgumentException iae){
+				return null;
 			}
+
+			return FeatureUtil.createFeature(field, encoder);
 		}
 
 		return null;
