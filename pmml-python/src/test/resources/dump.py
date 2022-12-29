@@ -140,11 +140,10 @@ enums = [
 _pickle_enums(enums)
 
 dtypes = [
-	numpy.bool,
-	numpy.int, numpy.int8, numpy.int16, numpy.int32, numpy.int64,
+	numpy.int8, numpy.int16, numpy.int32, numpy.int64,
 	numpy.uint8, numpy.uint16, numpy.uint32, numpy.uint64,
-	numpy.float, numpy.float32, numpy.float64,
-	numpy.str, numpy.str_, numpy.unicode
+	numpy.float32, numpy.float64,
+	numpy.str_
 ]
 
 _pickle_numpy_dtypes(dtypes)

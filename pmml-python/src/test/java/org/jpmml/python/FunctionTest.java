@@ -51,11 +51,13 @@ public class FunctionTest extends PickleUtilTest {
 		unpickleNumpyFunctions("python-3.9_numpy-1.20.2");
 		unpickleNumpyFunctions("python-3.9_numpy-1.22.1");
 		unpickleNumpyFunctions("python-3.9_numpy-1.23.4");
+		unpickleNumpyFunctions("python-3.9_numpy-1.24.1");
 	}
 
 	@Test
 	public void python311() throws IOException {
 		unpickleNumpyFunctions("python-3.11_numpy-1.23.4");
+		unpickleNumpyFunctions("python-3.11_numpy-1.24.1");
 	}
 
 	static
