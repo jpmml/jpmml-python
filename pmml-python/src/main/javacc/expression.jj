@@ -370,21 +370,20 @@ public class ExpressionTranslator extends AbstractTranslator {
 	}
 
 	static
-	private Object translateValue(Token value) throws ParseException {
-		String image = value.image;
+	private Object parseValue(Token value) throws ParseException {
 
 		switch(value.kind){
 			case NONE:
 				return null;
 			case FALSE:
 			case TRUE:
-				return Boolean.valueOf(translateBoolean(image));
+				return PythonParserUtil.parseBoolean(value);
 			case INT:
-				return Integer.valueOf(translateInt(image));
+				return PythonParserUtil.parseInt(value);
 			case FLOAT:
-				return Double.valueOf(image);
+				return PythonParserUtil.parseFloat(value);
 			case STRING:
-				return translateString(image);
+				return PythonParserUtil.parseString(value);
 			default:
 				throw new ParseException();
 		}
@@ -874,7 +873,7 @@ private FieldRef ArrayIndexingExpression(String dottedName):
 		<LBRACKET> (sign = Sign())? column = <INT> <RBRACKET> {
 			Scope scope = ensureScope();
 			
-			int colIndex = parseInt(sign, column);
+			int colIndex = PythonParserUtil.parseInt(sign, column);
 			
 			feature = scope.getFeature(dottedName, colIndex);
 		}
@@ -882,7 +881,7 @@ private FieldRef ArrayIndexingExpression(String dottedName):
 		<LBRACKET> column = <STRING> <RBRACKET> {
 			Scope scope = ensureScope();
 			
-			String colName = translateString(column.image);
+			String colName = PythonParserUtil.parseString(column);
 			
 			feature = scope.getFeature(dottedName, colName);
 		}
@@ -962,12 +961,12 @@ private Expression StringSlicingExpression(Expression expression):
 	{
 		Integer startPos = null;
 		if(start != null){
-			startPos = parseInt(startSign, start);
+			startPos = PythonParserUtil.parseInt(startSign, start);
 		}
 
 		Integer stopPos = null;
 		if(stop != null){
-			stopPos = parseInt(stopSign, stop);
+			stopPos = PythonParserUtil.parseInt(stopSign, stop);
 		}
 
 		return translateStringSlice(expression, startPos, stopPos);
@@ -1041,7 +1040,7 @@ private Constant LiteralExpression():
 
 	{
 		Constant constant = new Constant()
-			.setValue(translateValue(value))
+			.setValue(parseValue(value))
 			.setDataType(dataType)
 			.setMissing(missing);
 

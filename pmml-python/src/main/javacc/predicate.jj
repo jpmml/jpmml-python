@@ -92,11 +92,11 @@ public class PredicateTranslator extends AbstractTranslator {
 			case TRUE:
 				return True.INSTANCE;
 			case INT:
-				return translateInt(image);
+				return PythonParserUtil.translateInt(image);
 			case FLOAT:
 				return image;
 			case STRING:
-				return translateString(image);
+				return PythonParserUtil.translateString(image);
 			default:
 				throw new ParseException();
 		}
@@ -306,7 +306,7 @@ private Feature ArrayIndexingExpression():
 		name = <NAME> <LBRACKET> (sign = Sign())? column = <INT> <RBRACKET> {
 			Scope scope = ensureScope();
 
-			int colIndex = parseInt(sign, column);
+			int colIndex = PythonParserUtil.parseInt(sign, column);
 
 			feature = scope.getFeature(name.image, colIndex);
 		}
@@ -314,7 +314,7 @@ private Feature ArrayIndexingExpression():
 		name = <NAME> <LBRACKET> column = <STRING> <RBRACKET> {
 			Scope scope = ensureScope();
 
-			String colName = translateString(column.image);
+			String colName = PythonParserUtil.parseString(column);
 
 			feature = scope.getFeature(name.image, colName);
 		}
