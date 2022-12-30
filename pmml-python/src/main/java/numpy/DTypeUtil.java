@@ -16,45 +16,36 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with JPMML-Python.  If not, see <http://www.gnu.org/licenses/>.
  */
-package pandas.core;
+package numpy;
 
-import java.util.List;
-
-import numpy.DTypeUtil;
+import numpy.core.TypeDescriptor;
 import org.dmg.pmml.DataType;
-import org.jpmml.python.PythonObject;
-import org.jpmml.python.TypeInfo;
+import org.jpmml.python.ClassDictUtil;
 
-public class CategoricalDtype extends PythonObject implements TypeInfo {
+public class DTypeUtil {
 
-	public CategoricalDtype(String module, String name){
-		super(module, name);
+	private DTypeUtil(){
 	}
 
-	@Override
-	public DataType getDataType(){
-		Object descr = getDescr();
+	static
+	public DataType getDataType(Object descr){
 
-		return DTypeUtil.getDataType(descr);
-	}
+		if(descr instanceof String){
+			String string = (String)descr;
 
-	public Object getDescr(){
-		Index categories = getCategories();
+			TypeDescriptor typeDescriptor = new TypeDescriptor(string);
 
-		return categories.getDescr();
-	}
+			return typeDescriptor.getDataType();
+		} else
 
-	public List<?> getValues(){
-		Index categories = getCategories();
+		if(descr instanceof DType){
+			DType dtype = (DType)descr;
 
-		return categories.getValues();
-	}
+			return dtype.getDataType();
+		} else
 
-	public Index getCategories(){
-		return get("categories", Index.class);
-	}
-
-	public Boolean getOrdered(){
-		return getBoolean("ordered");
+		{
+			throw new IllegalArgumentException("The type descriptor object (" + ClassDictUtil.formatClass(descr) + ") is not supported");
+		}
 	}
 }

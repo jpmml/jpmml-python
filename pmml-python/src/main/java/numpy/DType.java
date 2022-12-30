@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import numpy.core.TypeDescriptor;
 import org.dmg.pmml.DataType;
 import org.jpmml.python.CustomPythonObject;
 import org.jpmml.python.TypeInfo;
@@ -57,9 +56,7 @@ public class DType extends CustomPythonObject implements TypeInfo {
 
 		String descr = formatDescr(obj, order);
 
-		TypeDescriptor typeDescriptor = new TypeDescriptor(descr);
-
-		return typeDescriptor.getDataType();
+		return DTypeUtil.getDataType(descr);
 	}
 
 	public Object toDescr(){
