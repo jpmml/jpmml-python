@@ -31,6 +31,7 @@ import java.util.List;
 
 import org.dmg.pmml.Array;
 import org.dmg.pmml.CompoundPredicate;
+import org.dmg.pmml.DataType;
 import org.dmg.pmml.False;
 import org.dmg.pmml.Predicate;
 import org.dmg.pmml.SimplePredicate;
@@ -38,6 +39,7 @@ import org.dmg.pmml.SimpleSetPredicate;
 import org.dmg.pmml.True;
 import org.jpmml.converter.Feature;
 import org.jpmml.converter.PMMLUtil;
+import org.jpmml.converter.TypeUtil;
 
 public class PredicateTranslator extends AbstractTranslator {
 
@@ -63,7 +65,7 @@ public class PredicateTranslator extends AbstractTranslator {
 
 	static
 	private SimplePredicate.Operator translateRelationalOperator(Token operator) throws ParseException {
-		
+
 		switch(operator.kind){
 			case EQUAL:
 				return SimplePredicate.Operator.EQUAL;
@@ -83,29 +85,42 @@ public class PredicateTranslator extends AbstractTranslator {
 	}
 
 	static
-	private Object translateValue(Token value) throws ParseException {
-		String image = value.image;
-		
+	private Object parseValue(Token value) throws ParseException {
+
 		switch(value.kind){
 			case FALSE:
-				return False.INSTANCE;
 			case TRUE:
-				return True.INSTANCE;
+				return PythonParserUtil.parseBoolean(value);
 			case INT:
-				return PythonParserUtil.translateInt(image);
+				return PythonParserUtil.parseInt(value);
 			case FLOAT:
-				return image;
+				return PythonParserUtil.parseFloat(value);
 			case STRING:
-				return PythonParserUtil.translateString(image);
+				return PythonParserUtil.parseString(value);
 			default:
 				throw new ParseException();
 		}
 	}
 
 	static
+	private Array createArray(List<?> values){
+		DataType dataType = TypeUtil.getDataType(values, DataType.STRING);
+
+		switch(dataType){
+			case INTEGER:
+				return PMMLUtil.createIntArray((List)values);
+			case FLOAT:
+			case DOUBLE:
+				return PMMLUtil.createRealArray((List)values);
+			default:
+				return PMMLUtil.createStringArray(values);
+		}
+	}
+
+	static
 	private SimplePredicate createSimplePredicate(Object left, SimplePredicate.Operator operator, Object right){
 		Feature feature = asFeature(left);
-		String value = (right != null ? asValue(right) : null);
+		Object value = (right != null ? asValue(right) : null);
 
 		return new SimplePredicate(feature.getName(), operator, value);
 	}
@@ -139,14 +154,18 @@ public class PredicateTranslator extends AbstractTranslator {
 	}
 
 	static
-	private String asValue(Object object){
+	private Object asValue(Object object){
 
-		if(object instanceof False){
-			return "false";
+		if(object instanceof Boolean){
+			return (Boolean)object;
 		} else
 
-		if(object instanceof True){
-			return "true";
+		if(object instanceof Integer){
+			return (Integer)object;
+		} else
+
+		if(object instanceof Double){
+			return (Double)object;
 		} else
 
 		if(object instanceof String){
@@ -155,6 +174,26 @@ public class PredicateTranslator extends AbstractTranslator {
 
 		{
 			throw new IllegalArgumentException("The right-hand side is not a value (" + object + ")");
+		}
+	}
+
+	static
+	private Object toNegative(Object object) throws ParseException {
+
+		if(object instanceof Boolean){
+			return ((Boolean)object).booleanValue() ? -1 : 0;
+		} else
+
+		if(object instanceof Integer){
+			return -((Integer)object).intValue();
+		} else
+
+		if(object instanceof Double){
+			return -((Double)object).doubleValue();
+		} else
+
+		{
+			throw new ParseException();
 		}
 	}
 }
@@ -236,6 +275,14 @@ private Predicate ComparisonExpression():
 	)
 
 	{
+		if((Boolean.FALSE).equals(left)){
+			return False.INSTANCE;
+		} else
+
+		if((Boolean.TRUE).equals(left)){
+			return True.INSTANCE;
+		}
+
 		return (Predicate)left;
 	}
 }
@@ -254,17 +301,7 @@ private Object UnaryExpression():
 
 	{
 		if(sign != null && sign.kind == MINUS){
-			String value = (String)result;
-
-			if(value.startsWith("-")){
-				value = value.substring(1);
-			} else
-
-			{
-				value = ("-" + value);
-			}
-
-			result = value;
+			result = toNegative(result);
 		}
 
 		return result;
@@ -371,7 +408,7 @@ private Object LiteralExpression():
 	)
 
 	{
-		return translateValue(value);
+		return parseValue(value);
 	}
 }
 
@@ -379,12 +416,12 @@ private Array ListMakerExpression():
 {
 	Object predicate;
 	
-	List<String> values = new ArrayList<String>();
+	List<Object> values = new ArrayList<Object>();
 }
 {
 	<LBRACKET> predicate = UnaryExpression() { values.add(asValue(predicate)); } ( <COMMA> predicate = UnaryExpression() { values.add(asValue(predicate)); } )* <RBRACKET>
 	
 	{
-		return PMMLUtil.createStringArray(values);
+		return createArray(values);
 	}
 }

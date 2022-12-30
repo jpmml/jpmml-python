@@ -41,9 +41,9 @@ public class PredicateTranslatorTest extends TranslatorTest {
 	public void translateLogicalPredicate(){
 		PredicateTranslator predicateTranslator = new PredicateTranslator(new DataFrameScope(doubleFeatures));
 
-		Predicate first = new SimplePredicate("a", SimplePredicate.Operator.GREATER_THAN, "0.0");
-		Predicate second = new SimplePredicate("b", SimplePredicate.Operator.GREATER_THAN, "0");
-		Predicate third = new SimplePredicate("c", SimplePredicate.Operator.GREATER_THAN, "0");
+		Predicate first = new SimplePredicate("a", SimplePredicate.Operator.GREATER_THAN, 0d);
+		Predicate second = new SimplePredicate("b", SimplePredicate.Operator.GREATER_THAN, 0);
+		Predicate third = new SimplePredicate("c", SimplePredicate.Operator.GREATER_THAN, 0);
 
 		Predicate expected = new CompoundPredicate(CompoundPredicate.BooleanOperator.OR, null)
 			.addPredicates(new CompoundPredicate(CompoundPredicate.BooleanOperator.AND, null)
@@ -78,7 +78,7 @@ public class PredicateTranslatorTest extends TranslatorTest {
 			// Ignored
 		}
 
-		Predicate expected = new SimplePredicate("a", SimplePredicate.Operator.GREATER_THAN, "0.0");
+		Predicate expected = new SimplePredicate("a", SimplePredicate.Operator.GREATER_THAN, 0d);
 
 		checkPredicate(expected, translatePredicate(predicateTranslator, "X['a'] > 0.0"));
 
@@ -90,13 +90,13 @@ public class PredicateTranslatorTest extends TranslatorTest {
 
 		checkPredicate(expected, translatePredicate(predicateTranslator, "X[-3] is not None"));
 
-		expected = createSimpleSetPredicate("a", SimpleSetPredicate.BooleanOperator.IS_IN, Arrays.asList("1", "2", "3"));
+		expected = createSimpleSetPredicate("a", SimpleSetPredicate.BooleanOperator.IS_IN, Array.Type.INT, Arrays.asList(1, 2, 3));
 
 		checkPredicate(expected, translatePredicate(predicateTranslator, "X[0] in [1, 2, 3]"));
 
-		expected = createSimpleSetPredicate("a", SimpleSetPredicate.BooleanOperator.IS_NOT_IN, Arrays.asList("-1.5", "-1", "-0.5", "0"));
+		expected = createSimpleSetPredicate("a", SimpleSetPredicate.BooleanOperator.IS_NOT_IN, Array.Type.REAL, Arrays.asList(-1.5d, -1d, -0.5d, 0d));
 
-		checkPredicate(expected, translatePredicate(predicateTranslator, "X['a'] not in [-1.5, -1, -0.5, 0]"));
+		checkPredicate(expected, translatePredicate(predicateTranslator, "X['a'] not in [-1.5, -1.0, -0.5, 0.0]"));
 
 		predicateTranslator = new PredicateTranslator(new DataFrameScope(stringFeatures));
 
@@ -104,7 +104,7 @@ public class PredicateTranslatorTest extends TranslatorTest {
 
 		checkPredicate(expected, translatePredicate(predicateTranslator, "X[0] == \"one\""));
 
-		expected = createSimpleSetPredicate("a", SimpleSetPredicate.BooleanOperator.IS_IN, Arrays.asList("one", "two", "three"));
+		expected = createSimpleSetPredicate("a", SimpleSetPredicate.BooleanOperator.IS_IN, Array.Type.STRING, Arrays.asList("one", "two", "three"));
 
 		checkPredicate(expected, translatePredicate(predicateTranslator, "X[0] in ['one', 'two', 'three']"));
 	}
@@ -128,9 +128,9 @@ public class PredicateTranslatorTest extends TranslatorTest {
 	}
 
 	static
-	private SimpleSetPredicate createSimpleSetPredicate(String fieldName, SimpleSetPredicate.BooleanOperator booleanOperator, List<String> values){
+	private SimpleSetPredicate createSimpleSetPredicate(String fieldName, SimpleSetPredicate.BooleanOperator booleanOperator, Array.Type type, List<Object> values){
 		Array array = new ComplexArray()
-			.setType(Array.Type.STRING)
+			.setType(type)
 			.setValue(values);
 
 		return new SimpleSetPredicate(fieldName, booleanOperator, array);
