@@ -18,7 +18,6 @@
  */
 package pandas.core;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import net.razorvine.pickle.objects.ClassDictConstructor;
@@ -27,6 +26,7 @@ import org.jpmml.python.ClassDictConstructorUtil;
 import org.jpmml.python.CustomPythonObject;
 import org.jpmml.python.HasArray;
 import org.jpmml.python.PythonObject;
+import org.jpmml.python.SliceUtil;
 
 public class Index extends CustomPythonObject implements HasArray {
 
@@ -107,13 +107,7 @@ public class Index extends CustomPythonObject implements HasArray {
 			int stop = getStop();
 			int step = getStep();
 
-			List<Integer> result = new ArrayList<>();
-
-			for(int i = start; i < stop; i += step){
-				result.add(i);
-			}
-
-			return result;
+			return SliceUtil.indices(start, stop, step);
 		}
 
 		public Integer getStart(){
