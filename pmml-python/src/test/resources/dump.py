@@ -1,5 +1,6 @@
 from common import _pickle, _platform, _platform_module
 
+from numpy.random import default_rng, RandomState
 from sklearn.datasets import load_iris
 from enum import Enum
 #from sklearn.externals import joblib as sklearn_joblib
@@ -46,6 +47,9 @@ def _pickle_numpy_array(values, dtype):
 
 def _pickle_numpy_dtypes(dtypes):
 	_pickle(dtypes, "dump/" + _platform_module("numpy", numpy.__version__) + "_dtypes.pkl")
+
+def _pickle_numpy_rngs(rngs):
+	_pickle(rngs, "dump/" + _platform_module("numpy", numpy.__version__) + "_rngs.pkl")
 
 def _pickle_pandas_series(values, dtype):
 	_pickle(values, "dump/" + _platform_module("pandas", pandas.__version__) + "_" + _format_dtype(dtype) + ".pkl")
@@ -155,3 +159,13 @@ dtypes = [
 	pandas.StringDtype()
 ]
 _pickle_pandas_dtypes(dtypes)
+
+def legacy_rng(seed):
+	return RandomState(seed = seed)
+
+rngs = [
+	legacy_rng(seed = 13),
+	default_rng(seed = 13)
+]
+
+_pickle_numpy_rngs(rngs)

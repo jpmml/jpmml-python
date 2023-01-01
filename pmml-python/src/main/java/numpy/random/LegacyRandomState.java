@@ -26,10 +26,20 @@ public class LegacyRandomState extends RandomState {
 
 	@Override
 	public void __init__(Object[] args){
-		super.__setstate__(createAttributeMap(INIT_ATTRIBUTES, args));
+
+		// Numpy 1.23.4
+		if(args.length == 1){
+			super.__setstate__(createAttributeMap(new String[]{INIT_ATTRIBUTES[0]}, args));
+		} else
+
+		// Numpy 1.24.1+
+		{
+			super.__setstate__(createAttributeMap(INIT_ATTRIBUTES, args));
+		}
 	}
 
 	private static final String[] INIT_ATTRIBUTES = {
-		"bit_generator_name"
+		"bit_generator_name",
+		"bit_generator_ctor"
 	};
 }

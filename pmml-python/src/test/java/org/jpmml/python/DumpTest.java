@@ -29,6 +29,8 @@ import com.google.common.collect.Iterables;
 import net.razorvine.pickle.Unpickler;
 import numpy.DType;
 import numpy.core.NDArray;
+import numpy.random.LegacyRandomState;
+import numpy.random.RandomState;
 import org.junit.Test;
 import pandas.core.BlockManager;
 import pandas.core.Categorical;
@@ -142,6 +144,9 @@ public class DumpTest extends PickleUtilTest {
 		unpickleNumpyDtypes("python-3.9_numpy-1.23.4");
 		unpickleNumpyDtypes("python-3.9_numpy-1.24.1");
 
+		unpickleNumpyRNGs("python-3.9_numpy-1.23.4");
+		unpickleNumpyRNGs("python-3.9_numpy-1.24.1");
+
 		unpicklePandasSeries("python-3.9_pandas-1.2.3");
 		unpicklePandasSeries("python-3.9_pandas-1.3.1");
 		unpicklePandasSeries("python-3.9_pandas-1.3.4");
@@ -193,6 +198,9 @@ public class DumpTest extends PickleUtilTest {
 
 		unpickleNumpyDtypes("python-3.11_numpy-1.23.4");
 		unpickleNumpyDtypes("python-3.11_numpy-1.24.1");
+
+		unpickleNumpyRNGs("python-3.11_numpy-1.23.4");
+		unpickleNumpyRNGs("python-3.11_numpy-1.24.1");
 
 		unpicklePandasSeries("python-3.11_pandas-1.5.1");
 		unpicklePandasSeries("python-3.11_pandas-1.5.2");
@@ -298,6 +306,18 @@ public class DumpTest extends PickleUtilTest {
 
 			assertNotNull(type.getDataType());
 		}
+	}
+
+	private void unpickleNumpyRNGs(String prefix) throws IOException {
+		List<?> rngs = (List<?>)unpickle(prefix + "_rngs.pkl");
+
+		assertEquals(2, rngs.size());
+
+		LegacyRandomState legacyRandomState = (LegacyRandomState)rngs.get(0);
+		RandomState randomState = (RandomState)rngs.get(1);
+
+		assertNotNull(legacyRandomState);
+		assertNotNull(randomState);
 	}
 
 	private void unpicklePandasSeries(String prefix) throws IOException {
