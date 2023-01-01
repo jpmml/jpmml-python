@@ -29,8 +29,8 @@ import com.google.common.collect.Iterables;
 import net.razorvine.pickle.Unpickler;
 import numpy.DType;
 import numpy.core.NDArray;
+import numpy.random.Generator;
 import numpy.random.LegacyRandomState;
-import numpy.random.RandomState;
 import org.junit.Test;
 import pandas.core.BlockManager;
 import pandas.core.Categorical;
@@ -314,10 +314,10 @@ public class DumpTest extends PickleUtilTest {
 		assertEquals(2, rngs.size());
 
 		LegacyRandomState legacyRandomState = (LegacyRandomState)rngs.get(0);
-		RandomState randomState = (RandomState)rngs.get(1);
+		Generator generator = (Generator)rngs.get(1);
 
 		assertNotNull(legacyRandomState);
-		assertNotNull(randomState);
+		assertNotNull(generator);
 	}
 
 	private void unpicklePandasSeries(String prefix) throws IOException {

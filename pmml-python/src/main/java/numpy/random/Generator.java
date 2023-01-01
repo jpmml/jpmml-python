@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Villu Ruusmann
+ * Copyright (c) 2023 Villu Ruusmann
  *
  * This file is part of JPMML-Python
  *
@@ -20,9 +20,11 @@ package numpy.random;
 
 import java.util.HashMap;
 
-public class LegacyRandomState extends RandomState {
+import org.jpmml.python.CustomPythonObject;
 
-	public LegacyRandomState(String module, String name){
+public class Generator extends CustomPythonObject {
+
+	public Generator(String module, String name){
 		super(module, name);
 	}
 
