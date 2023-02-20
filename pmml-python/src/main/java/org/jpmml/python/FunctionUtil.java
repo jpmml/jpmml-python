@@ -67,6 +67,27 @@ public class FunctionUtil {
 	}
 
 	static
+	public Apply encodeFunction(String function, List<Expression> expressions){
+		String module;
+		String name;
+
+		int dot = function.lastIndexOf('.');
+		if(dot > -1){
+			module = function.substring(0, dot);
+			name = function.substring(dot + 1);
+		} else
+
+		{
+			module = "";
+			name = function;
+		}
+
+		module = FunctionUtil.canonicalizeModule(module);
+
+		return encodeFunction(module, name, expressions);
+	}
+
+	static
 	public Apply encodeFunction(String module, String name, List<Expression> expressions){
 
 		if((module).equals("builtins")){

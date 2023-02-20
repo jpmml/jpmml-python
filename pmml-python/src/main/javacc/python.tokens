@@ -167,3 +167,16 @@ private Token Sign():
 		return token;
 	}
 }
+
+private String DottedName():
+{
+	Token name;
+	StringBuilder sb = new StringBuilder();
+}
+{
+	name = <NAME> { sb.append(name.image); } ( LOOKAHEAD(<DOT> <NAME>) <DOT> name = <NAME> { sb.append('.').append(name.image); })*
+
+	{
+		return sb.toString();
+	}
+}

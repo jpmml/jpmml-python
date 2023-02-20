@@ -29,10 +29,14 @@ package org.jpmml.python;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.dmg.pmml.Apply;
 import org.dmg.pmml.Array;
 import org.dmg.pmml.CompoundPredicate;
 import org.dmg.pmml.DataType;
+import org.dmg.pmml.Expression;
 import org.dmg.pmml.False;
+import org.dmg.pmml.FieldRef;
+import org.dmg.pmml.PMMLFunctions;
 import org.dmg.pmml.Predicate;
 import org.dmg.pmml.SimplePredicate;
 import org.dmg.pmml.SimpleSetPredicate;
@@ -82,6 +86,33 @@ public class PredicateTranslator extends AbstractTranslator {
 			default:
 				throw new ParseException();
 		}
+	}
+
+	static
+	private Predicate translateFunction(String function, List<Expression> arguments){
+		Apply apply = FunctionUtil.encodeFunction(function, arguments);
+
+		switch(apply.requireFunction()){
+			case PMMLFunctions.ISMISSING:
+				return new SimplePredicate(getOnlyArgument(apply), SimplePredicate.Operator.IS_MISSING, null);
+			case PMMLFunctions.ISNOTMISSING:
+				return new SimplePredicate(getOnlyArgument(apply), SimplePredicate.Operator.IS_NOT_MISSING, null);
+			default:
+				break;
+		}
+
+		throw new IllegalArgumentException("Function \'" + function + "\' is not supported");
+	}
+
+	static
+	private String getOnlyArgument(Apply apply){
+		List<Expression> expressions = apply.getExpressions();
+
+		ClassDictUtil.checkSize(1, expressions);
+
+		FieldRef fieldRef = (FieldRef)expressions.get(0);
+
+		return fieldRef.requireField();
 	}
 
 	static
@@ -139,6 +170,13 @@ public class PredicateTranslator extends AbstractTranslator {
 			.addPredicates(predicates);
 
 		return compoundPredicate;
+	}
+
+	static
+	private Expression asExpression(Object object){
+		Feature feature = asFeature(object);
+
+		return feature.ref();
 	}
 
 	static
@@ -310,14 +348,19 @@ private Object UnaryExpression():
 
 private Object PrimaryExpression():
 {
+	String featureOrFunction;
 	Object result;
 }
 {
 	(
-		LOOKAHEAD(<NAME> <LBRACKET>)
-		result = ArrayIndexingExpression()
-		|
-		result = NameInvocationExpression()
+		featureOrFunction = DottedName()
+		(
+			result = ArrayIndexingExpression(featureOrFunction)
+			|
+			result = FunctionInvocationExpression(featureOrFunction)
+			|
+			result = NameInvocationExpression(featureOrFunction)
+		)
 		|
 		result = ParenthesizedExpression()
 		|
@@ -329,9 +372,8 @@ private Object PrimaryExpression():
 	}
 }
 
-private Feature ArrayIndexingExpression():
+private Feature ArrayIndexingExpression(String dottedName):
 {
-	Token name;
 	Token sign = null;
 	Token column;
 
@@ -339,21 +381,21 @@ private Feature ArrayIndexingExpression():
 }
 {
 	(
-		LOOKAHEAD(<NAME> <LBRACKET> (Sign())? <INT>)
-		name = <NAME> <LBRACKET> (sign = Sign())? column = <INT> <RBRACKET> {
+		LOOKAHEAD(<LBRACKET> (Sign())? <INT>)
+		<LBRACKET> (sign = Sign())? column = <INT> <RBRACKET> {
 			Scope scope = ensureScope();
 
 			int colIndex = PythonParserUtil.parseInt(sign, column);
 
-			feature = scope.getFeature(name.image, colIndex);
+			feature = scope.getFeature(dottedName, colIndex);
 		}
 		|
-		name = <NAME> <LBRACKET> column = <STRING> <RBRACKET> {
+		<LBRACKET> column = <STRING> <RBRACKET> {
 			Scope scope = ensureScope();
 
 			String colName = PythonParserUtil.parseString(column);
 
-			feature = scope.getFeature(name.image, colName);
+			feature = scope.getFeature(dottedName, colName);
 		}
 	)
 
@@ -362,17 +404,43 @@ private Feature ArrayIndexingExpression():
 	}
 }
 
-private Feature NameInvocationExpression():
+private Predicate FunctionInvocationExpression(String dottedName):
 {
-	Token name;
+	List<Expression> arguments;
 }
 {
-	name = <NAME>
+	arguments = Arguments()
 
+	{
+		return translateFunction(dottedName, arguments);
+	}
+}
+
+private List<Expression> Arguments():
+{
+	Object feature;
+	List<Expression> expressions = new ArrayList<>();
+}
+{
+	(
+		LOOKAHEAD(<LPAREN> <RPAREN>)
+		<LPAREN> <RPAREN>
+		|
+		<LPAREN> feature = PrimaryExpression() { expressions.add(asExpression(feature)); } ( <COMMA> feature = PrimaryExpression() { expressions.add(asExpression(feature)); } )* <RPAREN>
+	)
+
+	{
+		return expressions;
+	}
+}
+
+private Feature NameInvocationExpression(String dottedName):
+{}
+{
 	{
 		Scope scope = ensureScope();
 
-		Feature feature = scope.getFeature(name.image);
+		Feature feature = scope.getFeature(dottedName);
 
 		return feature;
 	}

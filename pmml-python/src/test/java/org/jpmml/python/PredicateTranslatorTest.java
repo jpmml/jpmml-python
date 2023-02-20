@@ -110,6 +110,30 @@ public class PredicateTranslatorTest extends TranslatorTest {
 	}
 
 	@Test
+	public void translateFunctionInvocationPredicate(){
+		PredicateTranslator predicateTranslator = new PredicateTranslator(new DataFrameScope(doubleFeatures));
+
+		Predicate expected = new SimplePredicate("a", SimplePredicate.Operator.IS_MISSING, null);
+
+		checkPredicate(expected, translatePredicate(predicateTranslator, "math.isnan(X[0])"));
+		checkPredicate(expected, translatePredicate(predicateTranslator, "numpy.isnan(X[0])"));
+		checkPredicate(expected, translatePredicate(predicateTranslator, "pandas.isnull(X[0])"));
+
+		expected = new SimplePredicate("a", SimplePredicate.Operator.IS_NOT_MISSING, null);
+
+		checkPredicate(expected, translatePredicate(predicateTranslator, "pandas.notnull(X[0])"));
+
+		expected = new CompoundPredicate(CompoundPredicate.BooleanOperator.AND, null)
+			.addPredicates(new CompoundPredicate(CompoundPredicate.BooleanOperator.AND, null)
+				.addPredicates(new SimplePredicate("a", SimplePredicate.Operator.IS_NOT_MISSING, null))
+				.addPredicates(new SimplePredicate("b", SimplePredicate.Operator.IS_NOT_MISSING, null))
+			)
+			.addPredicates(new SimplePredicate("c", SimplePredicate.Operator.IS_NOT_MISSING, null));
+
+		checkPredicate(expected, translatePredicate(predicateTranslator, "pandas.notnull(X[0]) and pandas.notnull(X[1]) and pandas.notnull(X[2])"));
+	}
+
+	@Test
 	public void translateLiteralPredicate(){
 		PredicateTranslator predicateTranslator = new PredicateTranslator(BlockScope.EMPTY);
 

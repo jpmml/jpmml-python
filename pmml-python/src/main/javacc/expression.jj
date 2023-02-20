@@ -295,23 +295,7 @@ public class ExpressionTranslator extends AbstractTranslator {
 
 	static
 	private Apply translateFunction(String function, List<Expression> arguments){
-		String module;
-		String name;
-
-		int dot = function.lastIndexOf('.');
-		if(dot > -1){
-			module = function.substring(0, dot);
-			name = function.substring(dot + 1);
-		} else
-
-		{
-			module = "";
-			name = function;
-		}
-
-		module = FunctionUtil.canonicalizeModule(module);
-
-		return FunctionUtil.encodeFunction(module, name, arguments);
+		return FunctionUtil.encodeFunction(function, arguments);
 	}
 
 	static
@@ -867,19 +851,6 @@ private Expression PrimaryExpression():
 
 	{
 		return expression;
-	}
-}
-
-private String DottedName():
-{
-	Token name;
-	StringBuilder sb = new StringBuilder();
-}
-{
-	name = <NAME> { sb.append(name.image); } ( LOOKAHEAD(<DOT> <NAME>) <DOT> name = <NAME> { sb.append('.').append(name.image); })*
-
-	{
-		return sb.toString();
 	}
 }
 
