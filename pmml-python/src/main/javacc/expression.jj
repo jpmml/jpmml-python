@@ -185,11 +185,27 @@ public class ExpressionTranslator extends AbstractTranslator {
 	private Constant translateConstant(String module, Token value){
 		module = FunctionUtil.canonicalizeModule(module);
 
+		if((module).equals("math")){
+
+			switch(value.kind){
+				case NAN:
+					if((value.image).equals("nan")){
+						return PMMLUtil.createMissingConstant();
+					}
+					break;
+				default:
+					break;
+			}
+		} else
+
 		if((module).equals("numpy")){
 			
 			switch(value.kind){
 				case NAN:
-					return PMMLUtil.createMissingConstant();
+					if((value.image).equals("nan") || (value.image).equals("NaN") || (value.image).equals("NAN")){
+						return PMMLUtil.createMissingConstant();
+					}
+					break;
 				default:
 					break;
 			}
@@ -199,8 +215,15 @@ public class ExpressionTranslator extends AbstractTranslator {
 
 			switch(value.kind){
 				case NA:
+					if((value.image).equals("NA")){
+						return PMMLUtil.createMissingConstant();
+					}
+					break;
 				case NAT:
-					return PMMLUtil.createMissingConstant();
+					if((value.image).equals("NaT")){
+						return PMMLUtil.createMissingConstant();
+					}
+					break;
 				default:
 					break;
 			}

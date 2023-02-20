@@ -608,7 +608,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 		assertEquals(null, TypeUtil.getDataType(expected, expressionTranslator));
 
-		String[] strings = {"numpy.nan", "numpy.NaN", "numpy.NAN", "pandas.NA", "pandas.NaT"};
+		String[] strings = {"math.nan", "numpy.nan", "numpy.NaN", "numpy.NAN", "pandas.NA", "pandas.NaT"};
 		for(String string : strings){
 			checkExpression(expected, translateExpression(expressionTranslator, string));
 		}
