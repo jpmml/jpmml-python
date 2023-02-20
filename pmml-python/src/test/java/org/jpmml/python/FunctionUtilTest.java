@@ -53,6 +53,12 @@ public class FunctionUtilTest {
 	}
 
 	@Test
+	public void evaluateMathFunctions(){
+		assertEquals(-2, evaluateExpression("math", "trunc", -2.75d));
+		assertEquals(2, evaluateExpression("math", "trunc", 2.75d));
+	}
+
+	@Test
 	public void evaluateNumpyFunction(){
 		assertEquals(3d, evaluateExpression("numpy", "absolute", -3d));
 

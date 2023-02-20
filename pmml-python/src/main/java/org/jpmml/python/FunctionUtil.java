@@ -73,6 +73,10 @@ public class FunctionUtil {
 			return encodePythonFunction(module, name, expressions);
 		} else
 
+		if((module).equals("math")){
+			return encodeMathFunction(module, name, expressions);
+		} else
+
 		if((module).equals("numpy") || (module).startsWith("numpy.")){
 			return encodeNumpyFunction(module, name, expressions);
 		} else
@@ -102,6 +106,47 @@ public class FunctionUtil {
 		}
 
 		throw new IllegalArgumentException("Function \'" + formatFunction(module, name) + "\' is not supported");
+	}
+
+	static
+	public Apply encodeMathFunction(String module, String name, List<Expression> expressions){
+
+		if((module).equals("math")){
+
+			switch(name){
+				case "ceil":
+					return PMMLUtil.createApply(PMMLFunctions.CEIL, getOnlyElement(expressions));
+				case "exp":
+					return PMMLUtil.createApply(PMMLFunctions.EXP, getOnlyElement(expressions));
+				case "expm1":
+					return PMMLUtil.createApply(PMMLFunctions.EXPM1, getOnlyElement(expressions));
+				case "fabs":
+					return PMMLUtil.createApply(PMMLFunctions.ABS, getOnlyElement(expressions));
+				case "floor":
+					return PMMLUtil.createApply(PMMLFunctions.FLOOR, getOnlyElement(expressions));
+				case "isnan":
+					return PMMLUtil.createApply(PMMLFunctions.ISMISSING, getOnlyElement(expressions));
+				case "log":
+					return PMMLUtil.createApply(PMMLFunctions.LN, getOnlyElement(expressions));
+				case "logp1":
+					return PMMLUtil.createApply(PMMLFunctions.LN1P, getOnlyElement(expressions));
+				case "log10":
+					return PMMLUtil.createApply(PMMLFunctions.LOG10, getOnlyElement(expressions));
+				case "pow":
+					return PMMLUtil.createApply(PMMLFunctions.POW, getElement(expressions, 2, 0), getElement(expressions, 2, 1));
+				case "sqrt":
+					return PMMLUtil.createApply(PMMLFunctions.SQRT, getOnlyElement(expressions));
+				case "trunc":
+					return PMMLUtil.createApply(PMMLFunctions.IF, PMMLUtil.createApply(PMMLFunctions.LESSTHAN, getOnlyElement(expressions), PMMLUtil.createConstant(0)),
+						PMMLUtil.createApply(PMMLFunctions.CEIL, getOnlyElement(expressions)), // x < 0
+						PMMLUtil.createApply(PMMLFunctions.FLOOR, getOnlyElement(expressions)) // x >= 0
+					);
+				default:
+					break;
+			}
+		}
+
+		throw new IllegalArgumentException("Function \'" + formatFunction(module, name) +"\' is not supported");
 	}
 
 	static
