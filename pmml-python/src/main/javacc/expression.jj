@@ -377,26 +377,6 @@ public class ExpressionTranslator extends AbstractTranslator {
 	}
 
 	static
-	private Object parseValue(Token value) throws ParseException {
-
-		switch(value.kind){
-			case NONE:
-				return null;
-			case FALSE:
-			case TRUE:
-				return PythonParserUtil.parseBoolean(value);
-			case INT:
-				return PythonParserUtil.parseInt(value);
-			case FLOAT:
-				return PythonParserUtil.parseFloat(value);
-			case STRING:
-				return PythonParserUtil.parseString(value);
-			default:
-				throw new ParseException();
-		}
-	}
-
-	static
 	private String ensureTerminator(String string){
 
 		if(string.endsWith("\n")){
@@ -1034,7 +1014,7 @@ private Constant LiteralExpression():
 
 	{
 		Constant constant = new Constant()
-			.setValue(parseValue(value))
+			.setValue(PythonParserUtil.parseValue(value))
 			.setDataType(dataType)
 			.setMissing(missing);
 

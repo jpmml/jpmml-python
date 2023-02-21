@@ -116,24 +116,6 @@ public class PredicateTranslator extends AbstractTranslator {
 	}
 
 	static
-	private Object parseValue(Token value) throws ParseException {
-
-		switch(value.kind){
-			case FALSE:
-			case TRUE:
-				return PythonParserUtil.parseBoolean(value);
-			case INT:
-				return PythonParserUtil.parseInt(value);
-			case FLOAT:
-				return PythonParserUtil.parseFloat(value);
-			case STRING:
-				return PythonParserUtil.parseString(value);
-			default:
-				throw new ParseException();
-		}
-	}
-
-	static
 	private Array createArray(List<?> values){
 		DataType dataType = TypeUtil.getDataType(values, DataType.STRING);
 
@@ -476,7 +458,7 @@ private Object LiteralExpression():
 	)
 
 	{
-		return parseValue(value);
+		return PythonParserUtil.parseValue(value);
 	}
 }
 

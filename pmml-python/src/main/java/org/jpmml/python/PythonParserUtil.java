@@ -44,6 +44,26 @@ public class PythonParserUtil {
 	}
 
 	static
+	public Object parseValue(Token value) throws ParseException {
+
+		switch(value.kind){
+			case PythonParserConstants.NONE:
+				return null;
+			case PythonParserConstants.FALSE:
+			case PythonParserConstants.TRUE:
+				return PythonParserUtil.parseBoolean(value);
+			case PythonParserConstants.INT:
+				return PythonParserUtil.parseInt(value);
+			case PythonParserConstants.FLOAT:
+				return PythonParserUtil.parseFloat(value);
+			case PythonParserConstants.STRING:
+				return PythonParserUtil.parseString(value);
+			default:
+				throw new ParseException();
+		}
+	}
+
+	static
 	public boolean parseBoolean(Token value){
 		String image = translateBoolean(value.image);
 
