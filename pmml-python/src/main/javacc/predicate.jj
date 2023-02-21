@@ -341,18 +341,18 @@ private Object UnaryExpression():
 
 private Object PrimaryExpression():
 {
-	String featureOrFunction;
+	String dottedName;
 	Object result;
 }
 {
 	(
-		featureOrFunction = DottedName()
+		dottedName = DottedName()
 		(
-			result = ArrayIndexingExpression(featureOrFunction)
+			result = ArrayIndexingExpression(dottedName)
 			|
-			result = FunctionInvocationExpression(featureOrFunction)
+			result = FunctionInvocationExpression(dottedName)
 			|
-			result = NameInvocationExpression(featureOrFunction)
+			result = NameInvocationExpression(dottedName)
 		)
 		|
 		result = ParenthesizedExpression()
