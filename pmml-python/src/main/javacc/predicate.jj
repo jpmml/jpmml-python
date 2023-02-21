@@ -147,9 +147,20 @@ public class PredicateTranslator extends AbstractTranslator {
 	}
 
 	static
-	private CompoundPredicate createCompoundPredicate(CompoundPredicate.BooleanOperator booleanOperator, Predicate... predicates){
+	private CompoundPredicate createCompoundPredicate(Predicate left, CompoundPredicate.BooleanOperator booleanOperator, Predicate right){
+
+		if(left instanceof CompoundPredicate){
+			CompoundPredicate compoundPredicate = (CompoundPredicate)left;
+
+			if(compoundPredicate.requireBooleanOperator() == booleanOperator){
+				compoundPredicate.addPredicates(right);
+
+				return compoundPredicate;
+			}
+		}
+
 		CompoundPredicate compoundPredicate = new CompoundPredicate(booleanOperator, null)
-			.addPredicates(predicates);
+			.addPredicates(left, right);
 
 		return compoundPredicate;
 	}
@@ -251,7 +262,7 @@ private Predicate LogicalOrExpression():
 	Predicate right;
 }
 {
-	left = LogicalAndExpression() ( <OR> right = LogicalAndExpression() { left = createCompoundPredicate(CompoundPredicate.BooleanOperator.OR, left, right); } )*
+	left = LogicalAndExpression() ( <OR> right = LogicalAndExpression() { left = createCompoundPredicate(left, CompoundPredicate.BooleanOperator.OR, right); } )*
 
 	{
 		return left;
@@ -264,7 +275,7 @@ private Predicate LogicalAndExpression():
 	Predicate right;
 }
 {
-	left = ComparisonExpression() ( <AND> right = ComparisonExpression() { left = createCompoundPredicate(CompoundPredicate.BooleanOperator.AND, left, right); } )*
+	left = ComparisonExpression() ( <AND> right = ComparisonExpression() { left = createCompoundPredicate(left, CompoundPredicate.BooleanOperator.AND, right); } )*
 
 	{
 		return left;

@@ -124,10 +124,8 @@ public class PredicateTranslatorTest extends TranslatorTest {
 		checkPredicate(expected, translatePredicate(predicateTranslator, "pandas.notnull(X[0])"));
 
 		expected = new CompoundPredicate(CompoundPredicate.BooleanOperator.AND, null)
-			.addPredicates(new CompoundPredicate(CompoundPredicate.BooleanOperator.AND, null)
-				.addPredicates(new SimplePredicate("a", SimplePredicate.Operator.IS_NOT_MISSING, null))
-				.addPredicates(new SimplePredicate("b", SimplePredicate.Operator.IS_NOT_MISSING, null))
-			)
+			.addPredicates(new SimplePredicate("a", SimplePredicate.Operator.IS_NOT_MISSING, null))
+			.addPredicates(new SimplePredicate("b", SimplePredicate.Operator.IS_NOT_MISSING, null))
 			.addPredicates(new SimplePredicate("c", SimplePredicate.Operator.IS_NOT_MISSING, null));
 
 		checkPredicate(expected, translatePredicate(predicateTranslator, "pandas.notnull(X[0]) and pandas.notnull(X[1]) and pandas.notnull(X[2])"));
