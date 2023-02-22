@@ -103,6 +103,7 @@
 								<delete>
 									<fileset dir="${basedir}/target/generated-sources/javacc/org/jpmml/python/">
 										<include name="**/*TranslatorConstants.java" />
+										<include name="**/FunctionDefParserConstants.java" />
 									</fileset>
 								</delete>
 								<replaceregexp match="(Expression|Predicate)TranslatorConstants" replace="PythonParserConstants" byline="true">
@@ -110,9 +111,19 @@
 										<filename name="*Translator.java" />
 									</fileset>
 								</replaceregexp>
+								<replaceregexp match="FunctionDefParserConstants" replace="PythonParserConstants" byline="true">
+									<fileset dir="${basedir}/target/generated-sources/javacc/org/jpmml/python/">
+										<filename name="FunctionDefParser.java" />
+									</fileset>
+								</replaceregexp>
 								<replaceregexp match="(Expression|Predicate)TranslatorTokenManager" replace="PythonParserTokenManager" byline="true">
 									<fileset dir="${basedir}/target/generated-sources/javacc/org/jpmml/python/">
 										<filename name="*Translator.java" />
+									</fileset>
+								</replaceregexp>
+								<replaceregexp match="FunctionDefParserTokenManager" replace="PythonParserTokenManager" byline="true">
+									<fileset dir="${basedir}/target/generated-sources/javacc/org/jpmml/python/">
+										<filename name="FunctionDefParser.java" />
 									</fileset>
 								</replaceregexp>
 							</target>

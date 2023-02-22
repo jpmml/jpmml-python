@@ -36,10 +36,8 @@ import org.dmg.pmml.DataType;
 import org.dmg.pmml.DerivedField;
 import org.dmg.pmml.Expression;
 import org.dmg.pmml.FieldRef;
-import org.dmg.pmml.OpType;
 import org.dmg.pmml.PMMLFunctions;
 import org.jpmml.converter.Feature;
-import org.jpmml.converter.PMMLEncoder;
 import org.jpmml.converter.PMMLUtil;
 import org.jpmml.converter.TypeUtil;
 import org.jpmml.converter.visitors.ExpressionCompactor;
@@ -108,36 +106,6 @@ public class ExpressionTranslator extends AbstractTranslator {
 		}
 
 		return expression;
-	}
-
-	private PMMLEncoder ensureEncoder(){
-		Scope scope = ensureScope();
-
-		PMMLEncoder encoder = scope.getEncoder();
-		if(encoder == null){
-			throw new IllegalStateException();
-		}
-
-		return encoder;
-	}
-
-	private DerivedField createDerivedField(String name, Expression expression){
-		PMMLEncoder encoder = ensureEncoder();
-
-		OpType opType = null;
-		DataType dataType = TypeUtil.getDataType(expression, this);
-
-		if(dataType != null){
-			opType = TypeUtil.getOpType(dataType);
-		} else
-
-		// XXX
-		{
-			opType = OpType.CONTINUOUS;
-			dataType = DataType.DOUBLE;
-		}
-
-		return encoder.createDerivedField(name, opType, dataType, expression);
 	}
 
 	static
@@ -291,11 +259,6 @@ public class ExpressionTranslator extends AbstractTranslator {
 		}
 
 		throw new IllegalArgumentException("Function \'" + function + "\' is not supported");
-	}
-
-	static
-	private Apply translateFunction(String function, List<Expression> arguments){
-		return FunctionUtil.encodeFunction(function, arguments);
 	}
 
 	static
@@ -868,7 +831,7 @@ private FieldRef ArrayIndexingExpression(String dottedName):
 	}
 }
 
-private Apply FunctionInvocationExpression(String dottedName):
+private Expression FunctionInvocationExpression(String dottedName):
 {
 	List<Expression> arguments;
 }
@@ -889,7 +852,7 @@ private Apply FunctionInvocationExpression(String dottedName):
 			}
 		}
 
-		return translateFunction(dottedName, arguments);
+		return encodeFunction(dottedName, arguments);
 	}
 }
 

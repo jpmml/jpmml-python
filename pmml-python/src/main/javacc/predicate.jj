@@ -89,22 +89,6 @@ public class PredicateTranslator extends AbstractTranslator {
 	}
 
 	static
-	private Predicate translateFunction(String function, List<Expression> arguments){
-		Apply apply = FunctionUtil.encodeFunction(function, arguments);
-
-		switch(apply.requireFunction()){
-			case PMMLFunctions.ISMISSING:
-				return new SimplePredicate(getOnlyArgument(apply), SimplePredicate.Operator.IS_MISSING, null);
-			case PMMLFunctions.ISNOTMISSING:
-				return new SimplePredicate(getOnlyArgument(apply), SimplePredicate.Operator.IS_NOT_MISSING, null);
-			default:
-				break;
-		}
-
-		throw new IllegalArgumentException("Function \'" + function + "\' is not supported");
-	}
-
-	static
 	private String getOnlyArgument(Apply apply){
 		List<Expression> expressions = apply.getExpressions();
 
@@ -132,18 +116,18 @@ public class PredicateTranslator extends AbstractTranslator {
 
 	static
 	private SimplePredicate createSimplePredicate(Object left, SimplePredicate.Operator operator, Object right){
-		Feature feature = asFeature(left);
+		String name = asFieldName(left);
 		Object value = (right != null ? asValue(right) : null);
 
-		return new SimplePredicate(feature.getName(), operator, value);
+		return new SimplePredicate(name, operator, value);
 	}
 
 	static
 	private SimpleSetPredicate createSimpleSetPredicate(Object left, SimpleSetPredicate.BooleanOperator booleanOperator, Object right){
-		Feature feature = asFeature(left);
+		String name = asFieldName(left);
 		Array array = (Array)right;
 
-		return new SimpleSetPredicate(feature.getName(), booleanOperator, array);
+		return new SimpleSetPredicate(name, booleanOperator, array);
 	}
 
 	static
@@ -166,21 +150,22 @@ public class PredicateTranslator extends AbstractTranslator {
 	}
 
 	static
-	private Expression asExpression(Object object){
-		Feature feature = asFeature(object);
-
-		return feature.ref();
-	}
-
-	static
-	private Feature asFeature(Object object){
+	private String asFieldName(Object object){
 
 		if(object instanceof Feature){
-			return (Feature)object;
+			Feature feature = (Feature)object;
+
+			return feature.getName();
+		} else
+
+		if(object instanceof FieldRef){
+			FieldRef fieldRef = (FieldRef)object;
+
+			return fieldRef.requireField();
 		} else
 
 		{
-			throw new IllegalArgumentException("The left-hand side is not a feature reference");
+			throw new IllegalArgumentException("The left-hand side of the predicate (" + object + ") is not a feature reference");
 		}
 	}
 
@@ -204,7 +189,54 @@ public class PredicateTranslator extends AbstractTranslator {
 		} else
 
 		{
-			throw new IllegalArgumentException("The right-hand side is not a value (" + object + ")");
+			throw new IllegalArgumentException("The right-hand side of the predicate (" + object + ") is not a value");
+		}
+	}
+
+	static
+	private Predicate asPredicate(Object object){
+
+		if(object instanceof Predicate){
+			Predicate predicate = (Predicate)object;
+
+			return predicate;
+		} // End if
+
+		if(object instanceof Apply){
+			Apply apply = (Apply)object;
+
+			switch(apply.requireFunction()){
+				case PMMLFunctions.ISMISSING:
+					return new SimplePredicate(getOnlyArgument(apply), SimplePredicate.Operator.IS_MISSING, null);
+				case PMMLFunctions.ISNOTMISSING:
+					return new SimplePredicate(getOnlyArgument(apply), SimplePredicate.Operator.IS_NOT_MISSING, null);
+				default:
+					break;
+			}
+		} // End if
+
+		if((Boolean.FALSE).equals(object)){
+			return False.INSTANCE;
+		} else
+			
+		if((Boolean.TRUE).equals(object)){
+			return True.INSTANCE;
+		} // End if
+
+		throw new IllegalArgumentException("The expression (" + object + ") is not a predicate");
+	}
+
+	static
+	private Object asArgument(Object object){
+
+		if(object instanceof Feature){
+			Feature feature = (Feature)object;
+			
+			return feature;
+		} else
+
+		{
+			throw new IllegalArgumentException("The function argument (" + object + ") is not a feature reference");
 		}
 	}
 
@@ -304,18 +336,13 @@ private Predicate ComparisonExpression():
 		LOOKAHEAD(PrimaryExpression() <NOT> <IN>)
 		left = PrimaryExpression() <NOT> <IN> right = ListMakerExpression() { left = createSimpleSetPredicate(left, SimpleSetPredicate.BooleanOperator.IS_NOT_IN, right); }
 		|
-		left = PrimaryExpression() ((operator = <EQUAL> | operator = <NOT_EQUAL> | operator = <LESS_THAN> | operator = <LESS_OR_EQUAL> | operator = <GREATER_THAN> | operator = <GREATER_OR_EQUAL>) right = UnaryExpression() { left = createSimplePredicate(left, translateRelationalOperator(operator), right); } )?
+		LOOKAHEAD(PrimaryExpression() (<EQUAL> | <NOT_EQUAL> | <LESS_THAN> | <LESS_OR_EQUAL> | <GREATER_THAN> | <GREATER_OR_EQUAL>))
+		left = PrimaryExpression() (operator = <EQUAL> | operator = <NOT_EQUAL> | operator = <LESS_THAN> | operator = <LESS_OR_EQUAL> | operator = <GREATER_THAN> | operator = <GREATER_OR_EQUAL>) right = UnaryExpression() { left = createSimplePredicate(left, translateRelationalOperator(operator), right); }
+		|
+		left = PrimaryExpression() { left = asPredicate(left); }
 	)
 
 	{
-		if((Boolean.FALSE).equals(left)){
-			return False.INSTANCE;
-		} else
-
-		if((Boolean.TRUE).equals(left)){
-			return True.INSTANCE;
-		}
-
 		return (Predicate)left;
 	}
 }
@@ -399,37 +426,37 @@ private Feature ArrayIndexingExpression(String dottedName):
 	}
 }
 
-private Predicate FunctionInvocationExpression(String dottedName):
+private Object FunctionInvocationExpression(String dottedName):
 {
-	List<Expression> arguments;
+	List<Object> arguments;
 }
 {
 	arguments = Arguments()
 
 	{
-		return translateFunction(dottedName, arguments);
+		return encodeFunction(dottedName, arguments);
 	}
 }
 
-private List<Expression> Arguments():
+private List<Object> Arguments():
 {
-	Object feature;
-	List<Expression> expressions = new ArrayList<>();
+	Object argument;
+	List<Object> arguments = new ArrayList<>();
 }
 {
 	(
 		LOOKAHEAD(<LPAREN> <RPAREN>)
 		<LPAREN> <RPAREN>
 		|
-		<LPAREN> feature = PrimaryExpression() { expressions.add(asExpression(feature)); } ( <COMMA> feature = PrimaryExpression() { expressions.add(asExpression(feature)); } )* <RPAREN>
+		<LPAREN> argument = PrimaryExpression() { arguments.add(asArgument(argument)); } ( <COMMA> argument = PrimaryExpression() { arguments.add(asArgument(argument)); } )* <RPAREN>
 	)
 
 	{
-		return expressions;
+		return arguments;
 	}
 }
 
-private Feature NameInvocationExpression(String dottedName):
+private Object NameInvocationExpression(String dottedName):
 {}
 {
 	{

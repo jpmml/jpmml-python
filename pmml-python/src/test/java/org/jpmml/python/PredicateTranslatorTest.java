@@ -19,19 +19,27 @@
 package org.jpmml.python;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.dmg.pmml.Array;
 import org.dmg.pmml.ComplexArray;
 import org.dmg.pmml.CompoundPredicate;
+import org.dmg.pmml.DataField;
+import org.dmg.pmml.DataType;
 import org.dmg.pmml.False;
+import org.dmg.pmml.OpType;
 import org.dmg.pmml.Predicate;
 import org.dmg.pmml.SimplePredicate;
 import org.dmg.pmml.SimpleSetPredicate;
 import org.dmg.pmml.True;
+import org.jpmml.converter.ContinuousFeature;
+import org.jpmml.converter.Feature;
+import org.jpmml.converter.PMMLEncoder;
 import org.jpmml.model.ReflectionUtil;
 import org.junit.Test;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -129,6 +137,48 @@ public class PredicateTranslatorTest extends TranslatorTest {
 			.addPredicates(new SimplePredicate("c", SimplePredicate.Operator.IS_NOT_MISSING, null));
 
 		checkPredicate(expected, translatePredicate(predicateTranslator, "pandas.notnull(X[0]) and pandas.notnull(X[1]) and pandas.notnull(X[2])"));
+	}
+
+	@Test
+	public void translateUDFPredicate(){
+		PMMLEncoder encoder = new PMMLEncoder();
+
+		DataField dataField = encoder.createDataField("a", OpType.CONTINUOUS, DataType.DOUBLE);
+
+		List<Feature> features = Collections.singletonList(new ContinuousFeature(encoder, dataField));
+
+		String newline = "\n";
+
+		String signumString =
+			"def signum(x):" + newline +
+			"	if is_negative(x):" + newline +
+			"		return -1" + newline +
+			"	elif is_positive(x):" + newline +
+			"		return 1" + newline +
+			"	else:" + newline +
+			"		return 0" + newline;
+
+		String isNegativeString =
+			"def is_negative(x):" + newline +
+			"	return (x < 0)" + newline;
+
+		String isPositiveString =
+			"def is_positive(x):" + newline +
+			"	return (x > 0)" + newline;
+
+		PredicateTranslator predicateTranslator = new PredicateTranslator(new DataFrameScope("X", features, encoder));
+		predicateTranslator.addFunctionDef(signumString);
+		predicateTranslator.addFunctionDef(isNegativeString);
+		predicateTranslator.addFunctionDef(isPositiveString);
+
+		Predicate expected = new SimplePredicate("signum", SimplePredicate.Operator.NOT_EQUAL, 0);
+
+		checkPredicate(expected, translatePredicate(predicateTranslator, "signum(X[0]) != 0"));
+
+		assertNotNull(encoder.getDerivedField("signum"));
+
+		assertNotNull(encoder.getDerivedField("is_negative"));
+		assertNotNull(encoder.getDerivedField("is_positive"));
 	}
 
 	@Test
