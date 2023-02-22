@@ -417,6 +417,8 @@ PARSER_END(ExpressionTranslator)
 
 @python.tokens@
 
+@python.productions@
+
 private DerivedField translateDefInternal():
 {
 	DerivedField derivedField;

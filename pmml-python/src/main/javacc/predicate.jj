@@ -232,6 +232,8 @@ PARSER_END(PredicateTranslator)
 
 @python.tokens@
 
+@python.productions@
+
 private Predicate translatePredicateInternal():
 {
 	Predicate predicate;

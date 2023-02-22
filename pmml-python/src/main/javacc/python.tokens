@@ -151,32 +151,3 @@ TOKEN:
 	|
 	< #EXPONENT: ["e", "E"] (["+", "-"])? (<DIGIT>)+ >
 }
-
-private Token Sign():
-{
-	Token token;
-}
-{
-	(
-		token = <PLUS> 
-		|
-		token = <MINUS>
-	)
-
-	{
-		return token;
-	}
-}
-
-private String DottedName():
-{
-	Token name;
-	StringBuilder sb = new StringBuilder();
-}
-{
-	name = <NAME> { sb.append(name.image); } ( LOOKAHEAD(<DOT> <NAME>) <DOT> name = <NAME> { sb.append('.').append(name.image); } )*
-
-	{
-		return sb.toString();
-	}
-}

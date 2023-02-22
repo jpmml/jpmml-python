@@ -79,12 +79,14 @@
 						<configuration>
 							<target>
 								<loadfile property="python.tokens.content" srcFile="src/main/javacc/python.tokens" />
+								<loadfile property="python.productions.content" srcFile="src/main/javacc/python.productions" />
 								<copy todir="${project.build.directory}/transformed-grammar">
 									<fileset dir="src/main/javacc/">
 										<include name="*.jj" />
 									</fileset>
 									<filterset>
 										<filter token="python.tokens" value="${python.tokens.content}" />
+										<filter token="python.productions" value="${python.productions.content}" />
 									</filterset>
 								</copy>
 							</target>
