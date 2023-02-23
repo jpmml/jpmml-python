@@ -124,47 +124,7 @@ public class AbstractTranslator implements FeatureResolver {
 					})
 					.collect(Collectors.toList());
 
-				Map<String, Feature> argumentMap = new LinkedHashMap<>();
-
-				for(int i = 0; i < parameters.size(); i++){
-					FunctionDef.Parameter parameter = parameters.get(i);
-					Feature feature = features.get(i);
-
-					argumentMap.put(parameter.getName(), feature);
-				}
-
-				Scope scope = new Scope(encoder){
-
-					@Override
-					public Feature getFeature(String name){
-						Feature feature = resolveFeature(name);
-
-						if(feature != null){
-							return feature;
-						}
-
-						throw new IllegalArgumentException("Name \'" + name + "\' is not defined");
-					}
-
-					@Override
-					public Feature getFeature(String name, int columnIndex){
-						getFeature(name);
-
-						throw new IllegalArgumentException("Name \'" + name + "\' is not subscriptable");
-					}
-
-					@Override
-					public Feature getFeature(String name, String columnName){
-						getFeature(name);
-
-						throw new IllegalArgumentException("Name \'" + name + "\' is not subscriptable");
-					}
-
-					@Override
-					public Feature resolveFeature(String name){
-						return argumentMap.get(name);
-					}
-				};
+				Scope scope = new FunctionDefScope(functionDef, features, encoder);
 
 				ExpressionTranslator expressionTranslator = new ExpressionTranslator(scope){
 
