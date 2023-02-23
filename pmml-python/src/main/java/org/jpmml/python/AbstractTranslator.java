@@ -33,6 +33,7 @@ import org.dmg.pmml.OpType;
 import org.jpmml.converter.Feature;
 import org.jpmml.converter.FeatureResolver;
 import org.jpmml.converter.FeatureUtil;
+import org.jpmml.converter.FieldNameUtil;
 import org.jpmml.converter.PMMLEncoder;
 import org.jpmml.converter.TypeUtil;
 
@@ -103,30 +104,47 @@ public class AbstractTranslator implements FeatureResolver {
 		if(functionDef != null){
 			PMMLEncoder encoder = ensureEncoder();
 
-			DerivedField derivedField = encoder.getDerivedField(name);
+			List<FunctionDef.Parameter> parameters = functionDef.getParameters();
+			if(arguments.size() != parameters.size()){
+				String nameAndSignature = parameters.stream()
+					.map(FunctionDef.Parameter::getName)
+					.collect(Collectors.joining(", ", name + "(", ")"));
+
+				throw new IllegalArgumentException("Function \'" + nameAndSignature + "\' expects " + parameters.size() + " argument(s), got " + arguments.size() + " argument(s)");
+			}
+
+			List<Feature> features = arguments.stream()
+				.map(argument -> {
+
+					if(argument instanceof FieldRef){
+						FieldRef fieldRef = (FieldRef)argument;
+
+						Field<?> field = encoder.getField(fieldRef.requireField());
+
+						return FeatureUtil.createFeature(field, encoder);
+					}
+
+					return (Feature)argument;
+				})
+				.collect(Collectors.toList());
+
+			String fieldName = FieldNameUtil.create(name, features);
+
+			DerivedField derivedField = encoder.getDerivedField(fieldName);
 			if(derivedField == null){
-				List<FunctionDef.Parameter> parameters = functionDef.getParameters();
-
-				ClassDictUtil.checkSize(parameters, arguments);
-
-				List<Feature> features = arguments.stream()
-					.map(argument -> {
-
-						if(argument instanceof FieldRef){
-							FieldRef fieldRef = (FieldRef)argument;
-
-							Field<?> field = encoder.getField(fieldRef.requireField());
-
-							return FeatureUtil.createFeature(field, encoder);
-						}
-
-						return (Feature)argument;
-					})
-					.collect(Collectors.toList());
-
 				Scope scope = new FunctionDefScope(functionDef, features, encoder);
 
 				ExpressionTranslator expressionTranslator = new ExpressionTranslator(scope){
+
+					@Override
+					public DerivedField createDerivedField(String name, Expression expression){
+
+						if((functionDef.getName()).equals(name)){
+							name = fieldName;
+						}
+
+						return super.createDerivedField(name, expression);
+					}
 
 					@Override
 					public FunctionDef getFunctionDef(String name){
