@@ -323,23 +323,20 @@ private Predicate ComparisonExpression():
 	Object right;
 }
 {
+	left = PrimaryExpression()
 	(
-		LOOKAHEAD(PrimaryExpression() <IS> <NONE>)
-		left = PrimaryExpression() <IS> <NONE> { left = createSimplePredicate(left, SimplePredicate.Operator.IS_MISSING, null); }
+		LOOKAHEAD(<IS> <NONE>)
+		<IS> <NONE> { left = createSimplePredicate(left, SimplePredicate.Operator.IS_MISSING, null); }
 		|
-		LOOKAHEAD(PrimaryExpression() <IS> <NOT> <NONE>)
-		left = PrimaryExpression() <IS> <NOT> <NONE> { left = createSimplePredicate(left, SimplePredicate.Operator.IS_NOT_MISSING, null); }
+		<IS> <NOT> <NONE> { left = createSimplePredicate(left, SimplePredicate.Operator.IS_NOT_MISSING, null); }
 		|
-		LOOKAHEAD(PrimaryExpression() <IN>)
-		left = PrimaryExpression() <IN> right = ListMakerExpression() { left = createSimpleSetPredicate(left, SimpleSetPredicate.BooleanOperator.IS_IN, right); }
+		<IN> right = ListMakerExpression() { left = createSimpleSetPredicate(left, SimpleSetPredicate.BooleanOperator.IS_IN, right); }
 		|
-		LOOKAHEAD(PrimaryExpression() <NOT> <IN>)
-		left = PrimaryExpression() <NOT> <IN> right = ListMakerExpression() { left = createSimpleSetPredicate(left, SimpleSetPredicate.BooleanOperator.IS_NOT_IN, right); }
+		<NOT> <IN> right = ListMakerExpression() { left = createSimpleSetPredicate(left, SimpleSetPredicate.BooleanOperator.IS_NOT_IN, right); }
 		|
-		LOOKAHEAD(PrimaryExpression() (<EQUAL> | <NOT_EQUAL> | <LESS_THAN> | <LESS_OR_EQUAL> | <GREATER_THAN> | <GREATER_OR_EQUAL>))
-		left = PrimaryExpression() (operator = <EQUAL> | operator = <NOT_EQUAL> | operator = <LESS_THAN> | operator = <LESS_OR_EQUAL> | operator = <GREATER_THAN> | operator = <GREATER_OR_EQUAL>) right = UnaryExpression() { left = createSimplePredicate(left, translateRelationalOperator(operator), right); }
+		(operator = <EQUAL> | operator = <NOT_EQUAL> | operator = <LESS_THAN> | operator = <LESS_OR_EQUAL> | operator = <GREATER_THAN> | operator = <GREATER_OR_EQUAL>) right = UnaryExpression() { left = createSimplePredicate(left, translateRelationalOperator(operator), right); }
 		|
-		left = PrimaryExpression() { left = asPredicate(left); }
+		{ left = asPredicate(left); }
 	)
 
 	{
