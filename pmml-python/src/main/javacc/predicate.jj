@@ -215,6 +215,14 @@ public class PredicateTranslator extends AbstractTranslator {
 			}
 		} // End if
 
+		if(object instanceof Feature){
+			Feature feature = (Feature)object;
+
+			if(feature.getDataType() == DataType.BOOLEAN){
+				return new SimplePredicate(feature.getName(), SimplePredicate.Operator.EQUAL, Boolean.TRUE);
+			}
+		} // End if
+
 		if((Boolean.FALSE).equals(object)){
 			return False.INSTANCE;
 		} else

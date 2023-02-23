@@ -182,6 +182,20 @@ public class PredicateTranslatorTest extends TranslatorTest {
 	}
 
 	@Test
+	public void translateBooleanPredicate(){
+		PredicateTranslator predicateTranslator = new PredicateTranslator(new DataFrameScope(booleanFeatures));
+
+		Predicate expected = new SimplePredicate("a", SimplePredicate.Operator.EQUAL, true);
+
+		checkPredicate(expected, translatePredicate(predicateTranslator, "X[0]"));
+		checkPredicate(expected, translatePredicate(predicateTranslator, "X['a']"));
+
+		predicateTranslator = new PredicateTranslator(new BlockScope(booleanFeatures));
+
+		checkPredicate(expected, translatePredicate(predicateTranslator, "a"));
+	}
+
+	@Test
 	public void translateLiteralPredicate(){
 		PredicateTranslator predicateTranslator = new PredicateTranslator(BlockScope.EMPTY);
 
