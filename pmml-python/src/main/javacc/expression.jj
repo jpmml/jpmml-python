@@ -815,7 +815,7 @@ private FieldRef ArrayIndexingExpression(String dottedName):
 			feature = scope.getFeature(dottedName, colIndex);
 		}
 		|
-		<LBRACKET> column = <STRING> <RBRACKET> {
+		<LBRACKET> column = String() <RBRACKET> {
 			Scope scope = ensureScope();
 			
 			String colName = PythonParserUtil.parseString(column);
@@ -972,7 +972,7 @@ private Constant LiteralExpression():
 		|
 		value = <FLOAT> { dataType = DataType.DOUBLE; }
 		|
-		value = <STRING> { dataType = DataType.STRING; }
+		value = String() { dataType = DataType.STRING; }
 	)
 
 	{

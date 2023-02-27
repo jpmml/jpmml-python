@@ -417,7 +417,7 @@ private Feature ArrayIndexingExpression(String dottedName):
 			feature = scope.getFeature(dottedName, colIndex);
 		}
 		|
-		<LBRACKET> column = <STRING> <RBRACKET> {
+		<LBRACKET> column = String() <RBRACKET> {
 			Scope scope = ensureScope();
 
 			String colName = PythonParserUtil.parseString(column);
@@ -499,7 +499,7 @@ private Object LiteralExpression():
 		|
 		value = <FLOAT>
 		|
-		value = <STRING>
+		value = String()
 	)
 
 	{

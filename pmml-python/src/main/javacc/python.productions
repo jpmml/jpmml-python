@@ -1,3 +1,19 @@
+private Token String():
+{
+	Token token;
+}
+{
+	(
+		token = <STRING>
+		|
+		token = <MULTILINE_STRING>
+	)
+
+	{
+		return token;
+	}
+}
+
 private Token Sign():
 {
 	Token token;

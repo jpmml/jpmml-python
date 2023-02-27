@@ -576,9 +576,16 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 		assertEquals("", evaluateExpression(expressionTranslator, "x[-1:-7]", arguments));
 		assertEquals("", evaluateExpression(expressionTranslator, "x[-1:-13]", arguments));
 
+		assertEquals(true, evaluateExpression(expressionTranslator, "x.startswith(\"Hello\")", arguments));
 		assertEquals(true, evaluateExpression(expressionTranslator, "x.startswith('Hello')", arguments));
-		assertEquals(false, evaluateExpression(expressionTranslator, "x.startswith('Hello!')", arguments));
+		assertEquals(true, evaluateExpression(expressionTranslator, "x.startswith(\"\"\"Hello\"\"\")", arguments));
+
+		assertEquals(false, evaluateExpression(expressionTranslator, "x.startswith(\"Hello!\")", arguments));
+
+		assertEquals(true, evaluateExpression(expressionTranslator, "x.endswith(\"World!\")", arguments));
 		assertEquals(true, evaluateExpression(expressionTranslator, "x.endswith('World!')", arguments));
+		assertEquals(true, evaluateExpression(expressionTranslator, "x.endswith(\"\"\"World!\"\"\")", arguments));
+
 		assertEquals(false, evaluateExpression(expressionTranslator, "x.endswith('World')", arguments));
 	}
 

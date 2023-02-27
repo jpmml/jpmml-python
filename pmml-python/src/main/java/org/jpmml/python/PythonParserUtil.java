@@ -40,7 +40,22 @@ public class PythonParserUtil {
 
 	static
 	public String translateString(String image){
+
+		if((image.length() < 2) || !(image.charAt(0) == '\"' || image.charAt(0) == '\'') || (image.charAt(0) != image.charAt(image.length() - 1))){
+			throw new IllegalArgumentException(image);
+		}
+
 		return image.substring(1, image.length() - 1);
+	}
+
+	static
+	public String translateMultilineString(String image){
+
+		if(image.length() < 6 || !image.startsWith("\"\"\"") || !image.endsWith("\"\"\"")){
+			throw new IllegalArgumentException(image);
+		}
+
+		return image.substring(3, image.length() - 3);
 	}
 
 	static
@@ -58,6 +73,8 @@ public class PythonParserUtil {
 				return PythonParserUtil.parseFloat(value);
 			case PythonParserConstants.STRING:
 				return PythonParserUtil.parseString(value);
+			case PythonParserConstants.MULTILINE_STRING:
+				return PythonParserUtil.parseMultilineString(value);
 			default:
 				throw new ParseException();
 		}
@@ -94,5 +111,10 @@ public class PythonParserUtil {
 	static
 	public String parseString(Token value){
 		return translateString(value.image);
+	}
+
+	static
+	public String parseMultilineString(Token value){
+		return translateMultilineString(value.image);
 	}
 }
