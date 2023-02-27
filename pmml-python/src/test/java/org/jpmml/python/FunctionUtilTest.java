@@ -33,26 +33,6 @@ import static org.junit.Assert.assertEquals;
 public class FunctionUtilTest {
 
 	@Test
-	public void canonicalizeModule(){
-		assertEquals("builtins", FunctionUtil.canonicalizeModule(""));
-		assertEquals("builtins", FunctionUtil.canonicalizeModule("builtins"));
-
-		assertEquals("prefix.suffix", FunctionUtil.canonicalizeModule("prefix.suffix"));
-
-		assertEquals("numpy", FunctionUtil.canonicalizeModule("np"));
-		assertEquals("numpy.suffix", FunctionUtil.canonicalizeModule("np.suffix"));
-		assertEquals("numpy.suffix", FunctionUtil.canonicalizeModule("numpy.suffix"));
-
-		assertEquals("prefix.np.suffix", FunctionUtil.canonicalizeModule("prefix.np.suffix"));
-
-		assertEquals("pandas", FunctionUtil.canonicalizeModule("pd"));
-		assertEquals("pandas.suffix", FunctionUtil.canonicalizeModule("pd.suffix"));
-		assertEquals("pandas.suffix", FunctionUtil.canonicalizeModule("pandas.suffix"));
-
-		assertEquals("prefix.pd.suffix", FunctionUtil.canonicalizeModule("prefix.pd.suffix"));
-	}
-
-	@Test
 	public void evaluateMathFunctions(){
 		assertEquals(-2, evaluateExpression("math", "trunc", -2.75d));
 		assertEquals(2, evaluateExpression("math", "trunc", 2.75d));

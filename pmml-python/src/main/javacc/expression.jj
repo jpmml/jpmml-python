@@ -28,6 +28,7 @@ package org.jpmml.python;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.google.common.collect.Iterables;
 import org.dmg.pmml.Apply;
@@ -151,7 +152,6 @@ public class ExpressionTranslator extends AbstractTranslator {
 
 	static
 	private Constant translateConstant(String module, Token value){
-		module = FunctionUtil.canonicalizeModule(module);
 
 		if((module).equals("math")){
 
@@ -538,6 +538,8 @@ private Expression SimpleStatement():
 		expression = Assignment()
 		|
 		expression = ReturnStatement()
+		|
+		expression = ImportStatement()
 	)
 	
 	{
@@ -623,6 +625,31 @@ private Expression ReturnStatement():
 	}
 }
 
+private Expression ImportStatement():
+{}
+{
+	<IMPORT> DottedAsName() ( <COMMA> DottedAsName() )*
+
+	{
+		return null;
+	}
+}
+
+private void DottedAsName():
+{
+	String dottedName;
+	Token name = null;
+}
+{
+	dottedName = DottedName() ( <AS> name = <NAME> )?
+
+	{
+		Map<String, String> imports = getImports();
+
+		imports.put(name != null ? name.image : dottedName, dottedName);
+	}
+}
+	
 private Expression Expression():
 {
 	Expression expression;

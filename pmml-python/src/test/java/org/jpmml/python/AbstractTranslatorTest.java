@@ -18,11 +18,32 @@
  */
 package org.jpmml.python;
 
+import java.util.Map;
+
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
 public class AbstractTranslatorTest {
+
+	@Test
+	public void canonicalize(){
+		AbstractTranslator abstractTranslator = new AbstractTranslator(){
+		};
+
+		Map<String, String> imports = abstractTranslator.getImports();
+		imports.put("np", "numpy");
+		imports.put("pd", "pandas");
+
+		assertEquals("builtins.name", abstractTranslator.canonicalizeDottedName("name"));
+		assertEquals("builtins.name", abstractTranslator.canonicalizeDottedName("builtins.name"));
+
+		assertEquals("numpy.name", abstractTranslator.canonicalizeDottedName("np.name"));
+		assertEquals("numpy.suffix.name", abstractTranslator.canonicalizeDottedName("np.suffix.name"));
+
+		assertEquals("pandas.name", abstractTranslator.canonicalizeDottedName("pd.name"));
+		assertEquals("pandas.suffix.name", abstractTranslator.canonicalizeDottedName("pd.suffix.name"));
+	}
 
 	@Test
 	public void toSingleLine(){

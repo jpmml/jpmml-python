@@ -109,6 +109,8 @@ TOKEN:
 
 TOKEN:
 {
+	< AS : "as" >
+	|
 	< DEF: "def" >
 	|
 	< ELIF: "elif" >
@@ -116,6 +118,8 @@ TOKEN:
 	< ELSE: "else" >
 	|
 	< IF: "if" >
+	|
+	< IMPORT: "import" >
 	|
 	< IN: "in" >
 	|

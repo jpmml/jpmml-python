@@ -44,6 +44,8 @@ public class AbstractTranslator implements FeatureResolver {
 
 	private Map<String, FunctionDef> functionDefs = new LinkedHashMap<>();
 
+	private Map<String, String> imports = new LinkedHashMap<>();
+
 
 	public AbstractTranslator(){
 	}
@@ -98,9 +100,36 @@ public class AbstractTranslator implements FeatureResolver {
 		functionDefs.put(functionDef.getName(), functionDef);
 	}
 
-	public Expression encodeFunction(String name, List<?> arguments){
-		FunctionDef functionDef = getFunctionDef(name);
+	public String canonicalizeDottedName(String dottedName){
+		Map<String, String> imports = getImports();
 
+		int dot = dottedName.indexOf('.');
+		if(dot > -1){
+			String prefix = dottedName.substring(0, dot);
+			prefix = imports.getOrDefault(prefix, prefix);
+
+			String suffix = dottedName.substring(dot + 1);
+
+			return prefix + "." + suffix;
+		} else
+
+		{
+			return "builtins." + dottedName;
+		}
+	}
+
+	public Expression encodeFunction(String dottedName, List<?> arguments){
+		dottedName = canonicalizeDottedName(dottedName);
+
+		int dot = dottedName.lastIndexOf('.');
+		if(dot < 0){
+			throw new IllegalArgumentException();
+		}
+
+		String module = dottedName.substring(0, dot);
+		String name = dottedName.substring(dot + 1);
+
+		FunctionDef functionDef = getFunctionDef(name);
 		if(functionDef != null){
 			PMMLEncoder encoder = ensureEncoder();
 
@@ -171,7 +200,7 @@ public class AbstractTranslator implements FeatureResolver {
 			})
 			.collect(Collectors.toList());
 
-		return FunctionUtil.encodeFunction(name, expressions);
+		return FunctionUtil.encodeFunction(module, name, expressions);
 	}
 
 	protected DerivedField createDerivedField(String name, Expression expression){
@@ -203,6 +232,10 @@ public class AbstractTranslator implements FeatureResolver {
 
 	public Map<String, FunctionDef> getFunctionDefs(){
 		return this.functionDefs;
+	}
+
+	public Map<String, String> getImports(){
+		return this.imports;
 	}
 
 	static

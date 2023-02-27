@@ -18,9 +18,7 @@
  */
 package org.jpmml.python;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.dmg.pmml.Apply;
 import org.dmg.pmml.Expression;
@@ -33,58 +31,8 @@ public class FunctionUtil {
 	}
 
 	static
-	public String canonicalizeModule(String module){
-
-		if(("").equals(module)){
-			return "builtins";
-		} else
-
-		{
-			String[] parts = module.split("\\.");
-
-			switch(parts[0]){
-				case "np":
-					parts[0] = "numpy";
-					break;
-				case "pd":
-					parts[0] = "pandas";
-					break;
-				case "sp":
-					parts[0] = "scipy";
-					break;
-				default:
-					return module;
-			}
-
-			return Arrays.stream(parts)
-				.collect(Collectors.joining("."));
-		}
-	}
-
-	static
 	public Apply encodeFunction(Identifiable identifiable, List<Expression> expressions){
 		return encodeFunction(identifiable.getModule(), identifiable.getName(), expressions);
-	}
-
-	static
-	public Apply encodeFunction(String function, List<Expression> expressions){
-		String module;
-		String name;
-
-		int dot = function.lastIndexOf('.');
-		if(dot > -1){
-			module = function.substring(0, dot);
-			name = function.substring(dot + 1);
-		} else
-
-		{
-			module = "";
-			name = function;
-		}
-
-		module = FunctionUtil.canonicalizeModule(module);
-
-		return encodeFunction(module, name, expressions);
 	}
 
 	static
