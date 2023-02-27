@@ -594,11 +594,19 @@ private Expression Assignment():
 	Expression expression;
 }
 {
-	name = <NAME> <ASSIGN> expression = Expression()
+	(
+		LOOKAHEAD(<NAME> <ASSIGN>)
+		name = <NAME> <ASSIGN>
+		|
+		{ name = null; }
+	)
+	expression = Expression()
 	
 	{
-		DerivedField derivedField = createDerivedField(name.image, expression);
-		
+		if(name != null){
+			DerivedField derivedField = createDerivedField(name.image, expression);
+		}
+
 		return null;
 	}
 }

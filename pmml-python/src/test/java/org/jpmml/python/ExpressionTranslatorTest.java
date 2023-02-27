@@ -65,7 +65,11 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 		String string =
 			"def ratio_signum(x1, x2):" + newline +
-			"	# Calculate ratio" + newline +
+			"	\"\"\"Calculate ratio" + newline +
+			"	" + newline +
+			"	:param float x1: dividend" + newline +
+			"	:param float x2: divisor" + newline +
+			"	\"\"\"" + newline +
 			"	ratio = (x1 / x2)" + newline +
 			"	# Determine the signum of ratio" + newline +
 			"	if ratio < 0.0: return -1" + newline +
