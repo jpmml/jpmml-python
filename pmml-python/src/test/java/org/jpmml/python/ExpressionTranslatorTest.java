@@ -653,14 +653,14 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 		expected = PMMLUtil.createConstant(Math.E, DataType.DOUBLE);
 
-		strings = new String[]{"numpy.e"};
+		strings = new String[]{"math.e", "numpy.e"};
 		for(String string : strings){
 			checkExpression(expected, translateExpression(expressionTranslator, string));
 		}
 
 		expected = PMMLUtil.createConstant(Math.PI, DataType.DOUBLE);
 
-		strings = new String[]{"numpy.pi"};
+		strings = new String[]{"math.pi", "numpy.pi"};
 		for(String string : strings){
 			checkExpression(expected, translateExpression(expressionTranslator, string));
 		}
