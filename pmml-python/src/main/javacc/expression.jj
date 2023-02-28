@@ -27,6 +27,7 @@ PARSER_BEGIN(ExpressionTranslator)
 package org.jpmml.python;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -44,6 +45,9 @@ import org.jpmml.converter.TypeUtil;
 import org.jpmml.converter.visitors.ExpressionCompactor;
 
 public class ExpressionTranslator extends AbstractTranslator {
+
+	private Map<String, FieldRef> variableMap = new LinkedHashMap<>();
+
 
 	public ExpressionTranslator(Scope scope){
 		this(new NullProvider());
@@ -410,9 +414,15 @@ private DerivedField Def():
 	Block block;
 }
 {
+	{
+		this.variableMap.clear();
+	}
+
 	<DEF> name = <NAME> parameters = Parameters() <COLON> block = Block()
 
 	{
+		this.variableMap.clear();
+
 		return createDerivedField(name.image, getOnlyStatement(block));
 	}
 }
@@ -591,6 +601,15 @@ private Expression Assignment():
 	
 	{
 		if(name != null){
+
+			if(expression instanceof FieldRef){
+				FieldRef fieldRef = (FieldRef)expression;
+
+				this.variableMap.put(name.image, fieldRef);
+
+				return null;
+			}
+
 			DerivedField derivedField = createDerivedField(name.image, expression);
 		}
 
@@ -936,6 +955,11 @@ private Expression NameInvocationExpression(String dottedName):
 		int dot = dottedName.indexOf('.');
 		if(dot > -1){
 			return encodeConstant(dottedName);
+		}
+
+		FieldRef fieldRef = this.variableMap.get(dottedName);
+		if(fieldRef != null){
+			return fieldRef;
 		}
 
 		Scope scope = ensureScope();

@@ -149,29 +149,32 @@ public class PredicateTranslatorTest extends TranslatorTest {
 			createContinuousDoubleFeature(encoder, "c")
 		);
 
+		PredicateTranslator predicateTranslator = new PredicateTranslator(new DataFrameScope("X", features, encoder));
+
 		String newline = "\n";
 
-		String signumString =
+		String signumDef =
 			"def signum(x):" + newline +
-			"	if is_negative(x):" + newline +
+			"	is_negative = is_negative(x)" + newline +
+			"	if is_negative:" + newline +
 			"		return -1" + newline +
 			"	elif is_positive(x):" + newline +
 			"		return 1" + newline +
 			"	else:" + newline +
 			"		return 0" + newline;
 
-		String isNegativeString =
+		predicateTranslator.addFunctionDef(signumDef);
+
+		String isNegativeDef =
 			"def is_negative(x):" + newline +
 			"	return (x < 0)" + newline;
 
-		String isPositiveString =
+		String isPositiveDef =
 			"def is_positive(x):" + newline +
 			"	return (x > 0)" + newline;
 
-		PredicateTranslator predicateTranslator = new PredicateTranslator(new DataFrameScope("X", features, encoder));
-		predicateTranslator.addFunctionDef(signumString);
-		predicateTranslator.addFunctionDef(isNegativeString);
-		predicateTranslator.addFunctionDef(isPositiveString);
+		predicateTranslator.addFunctionDef(isNegativeDef);
+		predicateTranslator.addFunctionDef(isPositiveDef);
 
 		Predicate expected = new SimplePredicate("signum(a)", SimplePredicate.Operator.NOT_EQUAL, 0);
 
