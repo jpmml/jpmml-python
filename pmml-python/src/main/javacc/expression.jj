@@ -172,9 +172,9 @@ public class ExpressionTranslator extends AbstractTranslator {
 	}
 
 	static
-	private Apply translateTrailerFunction(Expression expression, String function, List<Expression> arguments){
+	private Apply translateTrailerFunction(Expression expression, String name, List<Expression> arguments){
 
-		if(("startswith").equals(function) || ("endswith").equals(function)){
+		if(("startswith").equals(name) || ("endswith").equals(name)){
 			ClassDictUtil.checkSize(1, arguments);
 
 			Expression argument = arguments.get(0);
@@ -189,7 +189,7 @@ public class ExpressionTranslator extends AbstractTranslator {
 
 			String value = (String)constant.getValue();
 
-			switch(function){
+			switch(name){
 				case "startswith":
 					return PMMLUtil.createApply(PMMLFunctions.EQUAL,
 						translateStringSlice(expression, 0, value.length()),
@@ -205,10 +205,10 @@ public class ExpressionTranslator extends AbstractTranslator {
 			}
 		} else
 
-		if(("lower").equals(function) || ("upper").equals(function)){
+		if(("lower").equals(name) || ("upper").equals(name)){
 			ClassDictUtil.checkSize(0, arguments);
 
-			switch(function){
+			switch(name){
 				case "lower":
 					return PMMLUtil.createApply(PMMLFunctions.LOWERCASE, expression);
 				case "upper":
@@ -218,10 +218,10 @@ public class ExpressionTranslator extends AbstractTranslator {
 			}
 		} else
 
-		if(("strip").equals(function)){
+		if(("strip").equals(name)){
 			ClassDictUtil.checkSize(0, arguments);
 
-			switch(function){
+			switch(name){
 				case "strip":
 					return PMMLUtil.createApply(PMMLFunctions.TRIMBLANKS, expression);
 				default:
@@ -229,7 +229,7 @@ public class ExpressionTranslator extends AbstractTranslator {
 			}
 		}
 
-		throw new IllegalArgumentException("Function \'" + function + "\' is not supported");
+		throw new IllegalArgumentException("Function \'" + name + "\' is not supported");
 	}
 
 	static
