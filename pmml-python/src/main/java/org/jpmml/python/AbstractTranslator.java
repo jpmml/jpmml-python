@@ -44,7 +44,7 @@ public class AbstractTranslator implements FeatureResolver {
 
 	private Map<String, FunctionDef> functionDefs = new LinkedHashMap<>();
 
-	private Map<String, String> imports = new LinkedHashMap<>();
+	private Map<String, String> moduleImports = new LinkedHashMap<>();
 
 
 	public AbstractTranslator(){
@@ -101,39 +101,44 @@ public class AbstractTranslator implements FeatureResolver {
 	}
 
 	public String canonicalizeDottedName(String dottedName){
-		Map<String, String> imports = getImports();
-
-		String prefix;
-		String suffix;
+		Map<String, String> imports = getModuleImports();
 
 		int dot = dottedName.indexOf('.');
 		if(dot > -1){
-			prefix = dottedName.substring(0, dot);
+			String prefix = dottedName.substring(0, dot);
 			prefix = imports.getOrDefault(prefix, prefix);
 
-			suffix = dottedName.substring(dot + 1);
+			String suffix = dottedName.substring(dot + 1);
+
+			return prefix + "." + suffix;
 		} else
 
 		{
-			prefix = "builtins";
-			suffix = dottedName;
+			return dottedName;
 		}
-
-		return prefix + "." + suffix;
 	}
 
 	public Expression encodeFunction(String dottedName, List<?> arguments){
-		dottedName = canonicalizeDottedName(dottedName);
+		String module;
+		String name;
+
+		FunctionDef functionDef;
 
 		int dot = dottedName.lastIndexOf('.');
-		if(dot < 0){
-			throw new IllegalArgumentException();
-		}
+		if(dot > -1){
+			module = dottedName.substring(0, dot);
+			name = dottedName.substring(dot + 1);
 
-		String module = dottedName.substring(0, dot);
-		String name = dottedName.substring(dot + 1);
+			functionDef = null;
+		} else
 
-		FunctionDef functionDef = getFunctionDef(name);
+		{
+			module = "builtins";
+			name = dottedName;
+
+			functionDef = getFunctionDef(name);
+		} // End if
+
 		if(functionDef != null){
 			PMMLEncoder encoder = ensureEncoder();
 
@@ -238,8 +243,8 @@ public class AbstractTranslator implements FeatureResolver {
 		return this.functionDefs;
 	}
 
-	public Map<String, String> getImports(){
-		return this.imports;
+	public Map<String, String> getModuleImports(){
+		return this.moduleImports;
 	}
 
 	static

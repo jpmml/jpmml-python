@@ -380,7 +380,7 @@ private Object PrimaryExpression():
 }
 {
 	(
-		dottedName = DottedName()
+		dottedName = CanonicalizedDottedName()
 		(
 			result = ArrayIndexingExpression(dottedName)
 			|

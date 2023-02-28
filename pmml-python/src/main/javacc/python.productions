@@ -42,3 +42,15 @@ private String DottedName():
 		return sb.toString();
 	}
 }
+
+private String CanonicalizedDottedName():
+{
+	String dottedName;
+}
+{
+	dottedName = DottedName()
+
+	{
+		return canonicalizeDottedName(dottedName);
+	}
+}

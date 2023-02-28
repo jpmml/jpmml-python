@@ -31,11 +31,12 @@ public class AbstractTranslatorTest {
 		AbstractTranslator abstractTranslator = new AbstractTranslator(){
 		};
 
-		Map<String, String> imports = abstractTranslator.getImports();
+		Map<String, String> imports = abstractTranslator.getModuleImports();
 		imports.put("np", "numpy");
 		imports.put("pd", "pandas");
 
-		assertEquals("builtins.name", abstractTranslator.canonicalizeDottedName("name"));
+		assertEquals("name", abstractTranslator.canonicalizeDottedName("name"));
+
 		assertEquals("builtins.name", abstractTranslator.canonicalizeDottedName("builtins.name"));
 
 		assertEquals("math.name", abstractTranslator.canonicalizeDottedName("math.name"));

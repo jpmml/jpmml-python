@@ -110,7 +110,6 @@ public class ExpressionTranslator extends AbstractTranslator {
 	}
 
 	public Constant encodeConstant(String dottedName){
-		dottedName = canonicalizeDottedName(dottedName);
 
 		switch(dottedName){
 			// Math
@@ -615,9 +614,9 @@ private void DottedAsName():
 	dottedName = DottedName() ( <AS> name = <NAME> )?
 
 	{
-		Map<String, String> imports = getImports();
+		Map<String, String> moduleImports = getModuleImports();
 
-		imports.put(name != null ? name.image : dottedName, dottedName);
+		moduleImports.put(name != null ? name.image : dottedName, dottedName);
 	}
 }
 	
@@ -781,7 +780,7 @@ private Expression PrimaryExpression():
 }
 {
 	(
-		dottedName = DottedName()
+		dottedName = CanonicalizedDottedName()
 		(
 			LOOKAHEAD(ArrayIndexingExpression())
 			expression = ArrayIndexingExpression(dottedName) ( expression = TrailerFunctionInvocationExpression(expression) | expression = StringSlicingExpression(expression) )*

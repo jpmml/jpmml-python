@@ -70,11 +70,12 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 			"	:param float x1: dividend" + newline +
 			"	:param float x2: divisor" + newline +
 			"	\"\"\"" + newline +
+			"	import numpy as np, pandas as pd" + newline +
 			"	# Calculate ratio" + newline +
 			"	ratio = (x1 / x2)" + newline +
 			"	# Determine the signum of ratio" + newline +
-			"	if ratio < 0.0: return -1" + newline +
-			"	elif ratio > 0.0: return 1" + newline +
+			"	if ratio < 0.0: return np.ceil(-1.5)" + newline +
+			"	elif ratio > 0.0: return np.floor(1.5)" + newline +
 			"	else: return 0" + newline;
 
 		DerivedField derivedField = expressionTranslator.translateDef(string);
@@ -90,13 +91,13 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 				new FieldRef(ratioDerivedField),
 				PMMLUtil.createConstant(0.0, DataType.DOUBLE)
 			),
-			PMMLUtil.createConstant(-1, DataType.INTEGER),
+			PMMLUtil.createApply(PMMLFunctions.CEIL, PMMLUtil.createConstant(-1.5, DataType.DOUBLE)),
 			PMMLUtil.createApply(PMMLFunctions.IF,
 				PMMLUtil.createApply(PMMLFunctions.GREATERTHAN,
 					new FieldRef(ratioDerivedField),
 					PMMLUtil.createConstant(0.0, DataType.DOUBLE)
 				),
-				PMMLUtil.createConstant(+1, DataType.INTEGER),
+				PMMLUtil.createApply(PMMLFunctions.FLOOR, PMMLUtil.createConstant(1.5, DataType.DOUBLE)),
 				PMMLUtil.createConstant(0, DataType.INTEGER)
 			)
 		);
