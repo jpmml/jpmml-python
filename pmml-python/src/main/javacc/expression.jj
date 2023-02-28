@@ -109,6 +109,27 @@ public class ExpressionTranslator extends AbstractTranslator {
 		return expression;
 	}
 
+	public Constant encodeConstant(String dottedName){
+		dottedName = canonicalizeDottedName(dottedName);
+
+		switch(dottedName){
+			// Math
+			case "math.nan":
+			// Numpy
+			case "numpy.nan":
+			case "numpy.NaN":
+			case "numpy.NAN":
+			// Pandas
+			case "pandas.NA":
+			case "pandas.NaT":
+				return PMMLUtil.createMissingConstant();
+			default:
+				break;
+		}
+
+		throw new IllegalArgumentException("Constant \'" + dottedName + "\' is not supported");
+	}
+
 	static
 	public Expression compact(Expression expression){
 		ExpressionCompactor expressionCompactor = new ExpressionCompactor();
@@ -148,56 +169,6 @@ public class ExpressionTranslator extends AbstractTranslator {
 			default:
 				return operator.image;
 		}
-	}
-
-	static
-	private Constant translateConstant(String module, Token value){
-
-		if((module).equals("math")){
-
-			switch(value.kind){
-				case NAN:
-					if((value.image).equals("nan")){
-						return PMMLUtil.createMissingConstant();
-					}
-					break;
-				default:
-					break;
-			}
-		} else
-
-		if((module).equals("numpy")){
-			
-			switch(value.kind){
-				case NAN:
-					if((value.image).equals("nan") || (value.image).equals("NaN") || (value.image).equals("NAN")){
-						return PMMLUtil.createMissingConstant();
-					}
-					break;
-				default:
-					break;
-			}
-		} else
-
-		if((module).equals("pandas")){
-
-			switch(value.kind){
-				case NA:
-					if((value.image).equals("NA")){
-						return PMMLUtil.createMissingConstant();
-					}
-					break;
-				case NAT:
-					if((value.image).equals("NaT")){
-						return PMMLUtil.createMissingConstant();
-					}
-					break;
-				default:
-					break;
-			}
-		}
-
-		throw new IllegalArgumentException("Constant \'" + (module + "." + value.image) + "\' is not supported");
 	}
 
 	static
@@ -817,8 +788,6 @@ private Expression PrimaryExpression():
 			|
 			expression = FunctionInvocationExpression(dottedName) ( expression = TrailerFunctionInvocationExpression(expression) | expression = StringSlicingExpression(expression) )*
 			|
-			expression = ConstantExpression(dottedName)
-			|
 			expression = NameInvocationExpression(dottedName) ( expression = StringSlicingExpression(expression) ( expression = TrailerFunctionInvocationExpression(expression) | expression = StringSlicingExpression(expression) )* )?
 		)
 		|
@@ -945,30 +914,16 @@ private Expression StringSlicingExpression(Expression expression):
 	}
 }
 
-private Constant ConstantExpression(String dottedName):
-{
-	Token value;
-}
-{
-	<DOT>
-	(
-		value = <NA>
-		|
-		value = <NAN>
-		|
-		value = <NAT>
-	)
-
-	{
-		return translateConstant(dottedName, value);
-	}
-}
-
-private FieldRef NameInvocationExpression(String dottedName):
+private Expression NameInvocationExpression(String dottedName):
 {
 }
 {
 	{
+		int dot = dottedName.indexOf('.');
+		if(dot > -1){
+			return encodeConstant(dottedName);
+		}
+
 		Scope scope = ensureScope();
 
 		Feature feature = scope.getFeature(dottedName);

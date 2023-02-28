@@ -38,11 +38,15 @@ public class AbstractTranslatorTest {
 		assertEquals("builtins.name", abstractTranslator.canonicalizeDottedName("name"));
 		assertEquals("builtins.name", abstractTranslator.canonicalizeDottedName("builtins.name"));
 
+		assertEquals("math.name", abstractTranslator.canonicalizeDottedName("math.name"));
+
 		assertEquals("numpy.name", abstractTranslator.canonicalizeDottedName("np.name"));
-		assertEquals("numpy.suffix.name", abstractTranslator.canonicalizeDottedName("np.suffix.name"));
+		assertEquals("numpy.name", abstractTranslator.canonicalizeDottedName("numpy.name"));
+		assertEquals("numpy.ext.name", abstractTranslator.canonicalizeDottedName("np.ext.name"));
 
 		assertEquals("pandas.name", abstractTranslator.canonicalizeDottedName("pd.name"));
-		assertEquals("pandas.suffix.name", abstractTranslator.canonicalizeDottedName("pd.suffix.name"));
+		assertEquals("pandas.name", abstractTranslator.canonicalizeDottedName("pandas.name"));
+		assertEquals("pandas.ext.name", abstractTranslator.canonicalizeDottedName("pd.ext.name"));
 	}
 
 	@Test

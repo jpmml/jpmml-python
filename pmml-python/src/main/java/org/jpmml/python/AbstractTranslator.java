@@ -103,19 +103,23 @@ public class AbstractTranslator implements FeatureResolver {
 	public String canonicalizeDottedName(String dottedName){
 		Map<String, String> imports = getImports();
 
+		String prefix;
+		String suffix;
+
 		int dot = dottedName.indexOf('.');
 		if(dot > -1){
-			String prefix = dottedName.substring(0, dot);
+			prefix = dottedName.substring(0, dot);
 			prefix = imports.getOrDefault(prefix, prefix);
 
-			String suffix = dottedName.substring(dot + 1);
-
-			return prefix + "." + suffix;
+			suffix = dottedName.substring(dot + 1);
 		} else
 
 		{
-			return "builtins." + dottedName;
+			prefix = "builtins";
+			suffix = dottedName;
 		}
+
+		return prefix + "." + suffix;
 	}
 
 	public Expression encodeFunction(String dottedName, List<?> arguments){

@@ -90,18 +90,6 @@ TOKEN:
 {
 	< FALSE: "False" >
 	|
-	< NA: "NA" >
-	|
-	< NAN:
-		"nan"
-		|
-		"NaN"
-		|
-		"NAN"
-	>
-	|
-	< NAT: "NaT" >
-	|
 	< NONE: "None" >
 	|
 	< TRUE: "True" >
