@@ -216,6 +216,43 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 	}
 
 	@Test
+	public void translateStringIfElseExpression(){
+		ExpressionTranslator expressionTranslator = new ExpressionTranslator(new DataFrameScope(stringFeatures));
+
+		Expression expected = PMMLUtil.createApply(PMMLFunctions.IF,
+			PMMLUtil.createApply(PMMLFunctions.EQUAL, PMMLUtil.createApply(PMMLFunctions.TRIMBLANKS, PMMLUtil.createApply(PMMLFunctions.SUBSTRING, fieldRefs.get(1), PMMLUtil.createConstant(1, DataType.INTEGER), PMMLUtil.createConstant(1, DataType.INTEGER))), PMMLUtil.createConstant("low", DataType.STRING)),
+			PMMLUtil.createApply(PMMLFunctions.LOWERCASE, fieldRefs.get(0)),
+			PMMLUtil.createApply(PMMLFunctions.UPPERCASE, fieldRefs.get(0))
+		);
+
+		assertEquals(DataType.STRING, TypeUtil.getDataType(expected, expressionTranslator));
+
+		String string = "X[0].lower() if (X[1][0:1].strip()) == \'low\' else X[0].upper()";
+
+		checkExpression(expected, translateExpression(expressionTranslator, string));
+
+		expressionTranslator = new ExpressionTranslator(new BlockScope(stringFeatures));
+
+		string = "a.lower() if (b[0:1].strip()) == \'low\' else a.upper()";
+
+		checkExpression(expected, translateExpression(expressionTranslator, string));
+
+		expressionTranslator = new ExpressionTranslator(new DataFrameScope(stringFeatures));
+
+		expected = PMMLUtil.createApply(PMMLFunctions.IF,
+			PMMLUtil.createApply(PMMLFunctions.GREATERTHAN, PMMLUtil.createApply(PMMLFunctions.STRINGLENGTH, fieldRefs.get(0)), PMMLUtil.createConstant(0, DataType.INTEGER)),
+			PMMLUtil.createConstant(true, DataType.BOOLEAN),
+			PMMLUtil.createConstant(false, DataType.BOOLEAN)
+		);
+
+		assertEquals(DataType.BOOLEAN, TypeUtil.getDataType(expected, expressionTranslator));
+
+		string = "True if len(X[0][:]) > 0 else False";
+
+		checkExpression(expected, translateExpression(expressionTranslator, string));
+	}
+
+	@Test
 	public void translateLogicalExpression(){
 		ExpressionTranslator expressionTranslator = new ExpressionTranslator(new DataFrameScope(booleanFeatures));
 
@@ -263,75 +300,6 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 		checkExpression(expected, translateExpression(expressionTranslator, string));
 
-	}
-
-	@Test
-	public void translateIdentityComparisonExpression(){
-		ExpressionTranslator expressionTranslator = new ExpressionTranslator(new DataFrameScope(doubleFeatures));
-
-		Expression expected = PMMLUtil.createApply(PMMLFunctions.EQUAL,
-			fieldRefs.get(0),
-			PMMLUtil.createMissingConstant()
-		);
-
-		assertEquals(DataType.BOOLEAN, TypeUtil.getDataType(expected, expressionTranslator));
-
-		String string = "X[0] == None";
-
-		checkExpression(expected, translateExpression(expressionTranslator, string));
-
-		expected = PMMLUtil.createApply(PMMLFunctions.ISMISSING, fieldRefs.get(0));
-
-		assertEquals(DataType.BOOLEAN, TypeUtil.getDataType(expected, expressionTranslator));
-
-		checkExpression(expected, translateExpression(expressionTranslator, string, true));
-
-		expected = PMMLUtil.createApply(PMMLFunctions.NOTEQUAL,
-			fieldRefs.get(0),
-			PMMLUtil.createMissingConstant()
-		);
-
-		assertEquals(DataType.BOOLEAN, TypeUtil.getDataType(expected, expressionTranslator));
-
-		string = "X[0] != None";
-
-		checkExpression(expected, translateExpression(expressionTranslator, string));
-
-		expected = PMMLUtil.createApply(PMMLFunctions.ISNOTMISSING, fieldRefs.get(0));
-
-		assertEquals(DataType.BOOLEAN, TypeUtil.getDataType(expected, expressionTranslator));
-
-		checkExpression(expected, translateExpression(expressionTranslator, string, true));
-
-		expected = PMMLUtil.createApply(PMMLFunctions.ISMISSING, fieldRefs.get(0));
-
-		assertEquals(DataType.BOOLEAN, TypeUtil.getDataType(expected, expressionTranslator));
-
-		string = "X[0] is None";
-
-		checkExpression(expected, translateExpression(expressionTranslator, string));
-
-		expressionTranslator = new ExpressionTranslator(new BlockScope(doubleFeatures));
-
-		string = "a is None";
-
-		checkExpression(expected, translateExpression(expressionTranslator, string));
-
-		expressionTranslator = new ExpressionTranslator(new DataFrameScope(doubleFeatures));
-
-		expected = PMMLUtil.createApply(PMMLFunctions.ISNOTMISSING, PMMLUtil.createApply(PMMLFunctions.ADD, fieldRefs.get("a"), PMMLUtil.createConstant(1, DataType.INTEGER)));
-
-		assertEquals(DataType.BOOLEAN, TypeUtil.getDataType(expected, expressionTranslator));
-
-		string = "(X['a'] + 1) is not None";
-
-		checkExpression(expected, translateExpression(expressionTranslator, string));
-
-		expressionTranslator = new ExpressionTranslator(new BlockScope(doubleFeatures));
-
-		string = "(a + 1) is not None";
-
-		checkExpression(expected, translateExpression(expressionTranslator, string));
 	}
 
 	@Test
@@ -437,6 +405,75 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 	}
 
 	@Test
+	public void translateIdentityComparisonExpression(){
+		ExpressionTranslator expressionTranslator = new ExpressionTranslator(new DataFrameScope(doubleFeatures));
+
+		Expression expected = PMMLUtil.createApply(PMMLFunctions.EQUAL,
+			fieldRefs.get(0),
+			PMMLUtil.createMissingConstant()
+		);
+
+		assertEquals(DataType.BOOLEAN, TypeUtil.getDataType(expected, expressionTranslator));
+
+		String string = "X[0] == None";
+
+		checkExpression(expected, translateExpression(expressionTranslator, string));
+
+		expected = PMMLUtil.createApply(PMMLFunctions.ISMISSING, fieldRefs.get(0));
+
+		assertEquals(DataType.BOOLEAN, TypeUtil.getDataType(expected, expressionTranslator));
+
+		checkExpression(expected, translateExpression(expressionTranslator, string, true));
+
+		expected = PMMLUtil.createApply(PMMLFunctions.NOTEQUAL,
+			fieldRefs.get(0),
+			PMMLUtil.createMissingConstant()
+		);
+
+		assertEquals(DataType.BOOLEAN, TypeUtil.getDataType(expected, expressionTranslator));
+
+		string = "X[0] != None";
+
+		checkExpression(expected, translateExpression(expressionTranslator, string));
+
+		expected = PMMLUtil.createApply(PMMLFunctions.ISNOTMISSING, fieldRefs.get(0));
+
+		assertEquals(DataType.BOOLEAN, TypeUtil.getDataType(expected, expressionTranslator));
+
+		checkExpression(expected, translateExpression(expressionTranslator, string, true));
+
+		expected = PMMLUtil.createApply(PMMLFunctions.ISMISSING, fieldRefs.get(0));
+
+		assertEquals(DataType.BOOLEAN, TypeUtil.getDataType(expected, expressionTranslator));
+
+		string = "X[0] is None";
+
+		checkExpression(expected, translateExpression(expressionTranslator, string));
+
+		expressionTranslator = new ExpressionTranslator(new BlockScope(doubleFeatures));
+
+		string = "a is None";
+
+		checkExpression(expected, translateExpression(expressionTranslator, string));
+
+		expressionTranslator = new ExpressionTranslator(new DataFrameScope(doubleFeatures));
+
+		expected = PMMLUtil.createApply(PMMLFunctions.ISNOTMISSING, PMMLUtil.createApply(PMMLFunctions.ADD, fieldRefs.get("a"), PMMLUtil.createConstant(1, DataType.INTEGER)));
+
+		assertEquals(DataType.BOOLEAN, TypeUtil.getDataType(expected, expressionTranslator));
+
+		string = "(X['a'] + 1) is not None";
+
+		checkExpression(expected, translateExpression(expressionTranslator, string));
+
+		expressionTranslator = new ExpressionTranslator(new BlockScope(doubleFeatures));
+
+		string = "(a + 1) is not None";
+
+		checkExpression(expected, translateExpression(expressionTranslator, string));
+	}
+
+	@Test
 	public void translateArithmeticExpression(){
 		ExpressionTranslator expressionTranslator = new ExpressionTranslator(new DataFrameScope(doubleFeatures));
 
@@ -504,40 +541,58 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 	}
 
 	@Test
-	public void translateStringIfElseExpression(){
-		ExpressionTranslator expressionTranslator = new ExpressionTranslator(new DataFrameScope(stringFeatures));
+	public void translateUnaryExpression(){
+		ExpressionTranslator expressionTranslator = new ExpressionTranslator(BlockScope.EMPTY);
 
-		Expression expected = PMMLUtil.createApply(PMMLFunctions.IF,
-			PMMLUtil.createApply(PMMLFunctions.EQUAL, PMMLUtil.createApply(PMMLFunctions.TRIMBLANKS, PMMLUtil.createApply(PMMLFunctions.SUBSTRING, fieldRefs.get(1), PMMLUtil.createConstant(1, DataType.INTEGER), PMMLUtil.createConstant(1, DataType.INTEGER))), PMMLUtil.createConstant("low", DataType.STRING)),
-			PMMLUtil.createApply(PMMLFunctions.LOWERCASE, fieldRefs.get(0)),
-			PMMLUtil.createApply(PMMLFunctions.UPPERCASE, fieldRefs.get(0))
-		);
+		Constant minusOne = PMMLUtil.createConstant(-1, DataType.INTEGER);
+		Constant plusOne = PMMLUtil.createConstant(1, DataType.INTEGER);
 
-		assertEquals(DataType.STRING, TypeUtil.getDataType(expected, expressionTranslator));
+		assertEquals(DataType.INTEGER, TypeUtil.getDataType(minusOne, expressionTranslator));
+		assertEquals(DataType.INTEGER, TypeUtil.getDataType(plusOne, expressionTranslator));
 
-		String string = "X[0].lower() if (X[1][0:1].strip()) == \'low\' else X[0].upper()";
+		checkExpression(minusOne, translateExpression(expressionTranslator, "-1"));
 
-		checkExpression(expected, translateExpression(expressionTranslator, string));
+		checkExpression(plusOne, translateExpression(expressionTranslator, "1"));
+		checkExpression(plusOne, translateExpression(expressionTranslator, "+1"));
 
-		expressionTranslator = new ExpressionTranslator(new BlockScope(stringFeatures));
+		checkExpression(minusOne, translateExpression(expressionTranslator, "-+1"));
+		checkExpression(plusOne, translateExpression(expressionTranslator, "--1"));
+		checkExpression(minusOne, translateExpression(expressionTranslator, "---1"));
+	}
 
-		string = "a.lower() if (b[0:1].strip()) == \'low\' else a.upper()";
+	@Test
+	public void translateArrayIndexingExpression(){
+		List<Feature> features = booleanFeatures;
 
-		checkExpression(expected, translateExpression(expressionTranslator, string));
+		ExpressionTranslator expressionTranslator = new ExpressionTranslator(new DataFrameScope(features));
 
-		expressionTranslator = new ExpressionTranslator(new DataFrameScope(stringFeatures));
+		for(int i = 0; i < features.size(); i++){
+			Feature feature = features.get(i);
 
-		expected = PMMLUtil.createApply(PMMLFunctions.IF,
-			PMMLUtil.createApply(PMMLFunctions.GREATERTHAN, PMMLUtil.createApply(PMMLFunctions.STRINGLENGTH, fieldRefs.get(0)), PMMLUtil.createConstant(0, DataType.INTEGER)),
-			PMMLUtil.createConstant(true, DataType.BOOLEAN),
-			PMMLUtil.createConstant(false, DataType.BOOLEAN)
-		);
+			checkExpression(feature.ref(), translateExpression(expressionTranslator, "X[" + "+" + i + "]"));
+		}
 
-		assertEquals(DataType.BOOLEAN, TypeUtil.getDataType(expected, expressionTranslator));
+		try {
+			translateExpression(expressionTranslator, "X[" + features.size() + "]");
 
-		string = "True if len(X[0][:]) > 0 else False";
+			fail();
+		} catch(IllegalArgumentException iae){
+			// Ignored
+		}
 
-		checkExpression(expected, translateExpression(expressionTranslator, string));
+		for(int i = 1; i <= features.size(); i++){
+			Feature feature = features.get(features.size() - i);
+
+			checkExpression(feature.ref(), translateExpression(expressionTranslator, "X[" + "-" + i +"]"));
+		}
+
+		try {
+			translateExpression(expressionTranslator, "X[" + "-" + (features.size() + 1) + "]");
+
+			fail();
+		} catch(IllegalArgumentException iae){
+			// Ignored
+		}
 	}
 
 	@Test
@@ -581,38 +636,6 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 		assertEquals("", evaluateExpression(expressionTranslator, "x[-1:-1]", arguments));
 		assertEquals("", evaluateExpression(expressionTranslator, "x[-1:-7]", arguments));
 		assertEquals("", evaluateExpression(expressionTranslator, "x[-1:-13]", arguments));
-
-		assertEquals(true, evaluateExpression(expressionTranslator, "x.startswith(\"Hello\")", arguments));
-		assertEquals(true, evaluateExpression(expressionTranslator, "x.startswith('Hello')", arguments));
-		assertEquals(true, evaluateExpression(expressionTranslator, "x.startswith(\"\"\"Hello\"\"\")", arguments));
-
-		assertEquals(false, evaluateExpression(expressionTranslator, "x.startswith(\"Hello!\")", arguments));
-
-		assertEquals(true, evaluateExpression(expressionTranslator, "x.endswith(\"World!\")", arguments));
-		assertEquals(true, evaluateExpression(expressionTranslator, "x.endswith('World!')", arguments));
-		assertEquals(true, evaluateExpression(expressionTranslator, "x.endswith(\"\"\"World!\"\"\")", arguments));
-
-		assertEquals(false, evaluateExpression(expressionTranslator, "x.endswith('World')", arguments));
-	}
-
-	@Test
-	public void translateUnaryExpression(){
-		ExpressionTranslator expressionTranslator = new ExpressionTranslator(BlockScope.EMPTY);
-
-		Constant minusOne = PMMLUtil.createConstant(-1, DataType.INTEGER);
-		Constant plusOne = PMMLUtil.createConstant(1, DataType.INTEGER);
-
-		assertEquals(DataType.INTEGER, TypeUtil.getDataType(minusOne, expressionTranslator));
-		assertEquals(DataType.INTEGER, TypeUtil.getDataType(plusOne, expressionTranslator));
-
-		checkExpression(minusOne, translateExpression(expressionTranslator, "-1"));
-
-		checkExpression(plusOne, translateExpression(expressionTranslator, "1"));
-		checkExpression(plusOne, translateExpression(expressionTranslator, "+1"));
-
-		checkExpression(minusOne, translateExpression(expressionTranslator, "-+1"));
-		checkExpression(plusOne, translateExpression(expressionTranslator, "--1"));
-		checkExpression(minusOne, translateExpression(expressionTranslator, "---1"));
 	}
 
 	@Test
@@ -653,38 +676,25 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 	}
 
 	@Test
-	public void translateArrayIndexingExpression(){
-		List<Feature> features = booleanFeatures;
+	public void translateStringTrailerFunctionExpression(){
+		Feature feature = new StringFeature(encoder, "x");
 
-		ExpressionTranslator expressionTranslator = new ExpressionTranslator(new DataFrameScope(features));
+		ExpressionTranslator expressionTranslator = new ExpressionTranslator(new BlockScope(Collections.singletonList(feature)));
 
-		for(int i = 0; i < features.size(); i++){
-			Feature feature = features.get(i);
+		Map<String, Object> arguments = new HashMap<>();
+		arguments.put(feature.getName(), "Hello World!");
 
-			checkExpression(feature.ref(), translateExpression(expressionTranslator, "X[" + "+" + i + "]"));
-		}
+		assertEquals(true, evaluateExpression(expressionTranslator, "x.startswith(\"Hello\")", arguments));
+		assertEquals(true, evaluateExpression(expressionTranslator, "x.startswith('Hello')", arguments));
+		assertEquals(true, evaluateExpression(expressionTranslator, "x.startswith(\"\"\"Hello\"\"\")", arguments));
 
-		try {
-			translateExpression(expressionTranslator, "X[" + features.size() + "]");
+		assertEquals(false, evaluateExpression(expressionTranslator, "x.startswith(\"Hello!\")", arguments));
 
-			fail();
-		} catch(IllegalArgumentException iae){
-			// Ignored
-		}
+		assertEquals(true, evaluateExpression(expressionTranslator, "x.endswith(\"World!\")", arguments));
+		assertEquals(true, evaluateExpression(expressionTranslator, "x.endswith('World!')", arguments));
+		assertEquals(true, evaluateExpression(expressionTranslator, "x.endswith(\"\"\"World!\"\"\")", arguments));
 
-		for(int i = 1; i <= features.size(); i++){
-			Feature feature = features.get(features.size() - i);
-
-			checkExpression(feature.ref(), translateExpression(expressionTranslator, "X[" + "-" + i +"]"));
-		}
-
-		try {
-			translateExpression(expressionTranslator, "X[" + "-" + (features.size() + 1) + "]");
-
-			fail();
-		} catch(IllegalArgumentException iae){
-			// Ignored
-		}
+		assertEquals(false, evaluateExpression(expressionTranslator, "x.endswith('World')", arguments));
 	}
 
 	static
