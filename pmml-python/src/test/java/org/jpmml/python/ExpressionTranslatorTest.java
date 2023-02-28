@@ -650,6 +650,20 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 		for(String string : strings){
 			checkExpression(expected, translateExpression(expressionTranslator, string));
 		}
+
+		expected = PMMLUtil.createConstant(Math.E, DataType.DOUBLE);
+
+		strings = new String[]{"numpy.e"};
+		for(String string : strings){
+			checkExpression(expected, translateExpression(expressionTranslator, string));
+		}
+
+		expected = PMMLUtil.createConstant(Math.PI, DataType.DOUBLE);
+
+		strings = new String[]{"numpy.pi"};
+		for(String string : strings){
+			checkExpression(expected, translateExpression(expressionTranslator, string));
+		}
 	}
 
 	@Test

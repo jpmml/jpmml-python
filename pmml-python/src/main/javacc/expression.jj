@@ -112,6 +112,19 @@ public class ExpressionTranslator extends AbstractTranslator {
 	public Constant encodeConstant(String dottedName){
 
 		switch(dottedName){
+			case "numpy.e":
+				return PMMLUtil.createConstant(Math.E, DataType.DOUBLE);
+			case "numpy.NZERO":
+				return PMMLUtil.createConstant(-0.0d, DataType.DOUBLE);
+			case "numpy.pi":
+				return PMMLUtil.createConstant(Math.PI, DataType.DOUBLE);
+			case "numpy.PZERO":
+				return PMMLUtil.createConstant(0.0, DataType.DOUBLE);
+			default:
+				break;
+		}
+
+		switch(dottedName){
 			// Math
 			case "math.nan":
 			// Numpy
