@@ -11,7 +11,7 @@ SPECIAL_TOKEN:
 
 SPECIAL_TOKEN:
 {
-	< COMMENT: "#" (~["\n"])* "\n" >
+	< COMMENT: "#" (~["\n"])* >
 }
 
 TOKEN:

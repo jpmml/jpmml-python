@@ -469,7 +469,7 @@ private Block Block():
 }
 {
 	(
-		<NEWLINE> Indent() statements = Statements() Dedent()
+		(<NEWLINE>)+ Indent() statements = Statements() Dedent()
 		|
 		statements = SimpleStatements()
 	)
@@ -505,7 +505,11 @@ private List<Expression> Statements():
 	List<Expression> statements = new ArrayList<>();
 }
 {
-	( statement = Statement() { statements.add(statement); } )+
+	(
+		<NEWLINE>
+		|
+		statement = Statement() { statements.add(statement); } 
+	)+
 
 	{
 		return statements;

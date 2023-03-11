@@ -152,16 +152,22 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 		String string =
 			"def quadrant(x, y):" + newline +
+			"	# Right side" + newline +
 			"	if x >= 0:" + newline +
+			"		# Upper half" + newline +
 			"		if y >= 0:" + newline +
-			"			return 'I'" + newline +
+			"			return 'I' # Upper right" + newline +
+			"		# Lower half" + newline +
 			"		else:" + newline +
-			"			return 'IV'" + newline +
+			"			return 'IV' # Lower right" + newline +
+			"	# Left side" + newline +
 			"	else:" + newline +
+			"		# Upper half" + newline +
 			"		if y >= 0:" + newline +
-			"			return 'II'" + newline +
+			"			return 'II' # Upper left" + newline +
+			"		# Lower half" + newline +
 			"		else:" + newline +
-			"			return 'III'" + newline;
+			"			return 'III' # Lower left" + newline;
 
 		DerivedField derivedField = expressionTranslator.translateDef(string);
 
