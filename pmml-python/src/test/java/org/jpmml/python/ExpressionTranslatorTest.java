@@ -72,11 +72,22 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 			"	\"\"\"" + newline +
 			"	import numpy as np, pandas as pd" + newline +
 			"	# Calculate ratio" + newline +
-			"	ratio = (x1 / x2)" + newline +
+			// Four spaces instead of a tab
+			"    ratio = (x1 / x2)" + newline +
 			"	# Determine the signum of ratio" + newline +
 			"	if ratio < 0.0: return np.ceil(-1.5)" + newline +
 			"	elif ratio > 0.0: return np.floor(1.5)" + newline +
 			"	else: return 0" + newline;
+
+		try {
+			expressionTranslator.translateDef(string);
+
+			fail();
+		} catch(IllegalArgumentException iae){
+			// Ignored
+		}
+
+		string = string.replace("    ", "\t");
 
 		DerivedField derivedField = expressionTranslator.translateDef(string);
 

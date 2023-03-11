@@ -24,6 +24,39 @@ public class PythonParserUtil {
 	}
 
 	static
+	public String getWhitespace(Token token){
+		StringBuilder sb = new StringBuilder();
+
+		Token specialToken = token.specialToken;
+		if(!isWhitespace(specialToken)){
+			specialToken = null;
+		}
+
+		while(specialToken != null){
+			Token prevSpecialToken = specialToken.specialToken;
+
+			if(!isWhitespace(prevSpecialToken)){
+				break;
+			}
+
+			specialToken = prevSpecialToken;
+		} // End while
+
+		while(specialToken != null){
+			sb.append(specialToken.image);
+
+			specialToken = specialToken.next;
+		}
+
+		return sb.toString();
+	}
+
+	static
+	private boolean isWhitespace(Token token){
+		return (token != null) && (token.kind == PythonParserConstants.WHITESPACE);
+	}
+
+	static
 	public String translateBoolean(String image){
 		return image.toLowerCase();
 	}

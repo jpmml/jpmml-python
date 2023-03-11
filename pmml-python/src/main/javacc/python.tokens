@@ -1,10 +1,12 @@
 SPECIAL_TOKEN:
 {
-	"\t"
-	|
-	"\f"
-	|
-	" "
+	< WHITESPACE:
+		"\t"
+		|
+		"\f"
+		|
+		" "
+	>
 }
 
 SPECIAL_TOKEN:
