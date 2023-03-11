@@ -525,7 +525,7 @@ private Expression Statement():
 	}
 
 	(
-		statement = CompoundStatement() <NEWLINE>
+		statement = CompoundStatement()
 		|
 		statements = SimpleStatements() { statement = getOnlyStatement(statements); }
 	)

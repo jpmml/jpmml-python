@@ -51,7 +51,7 @@ import static org.junit.Assert.fail;
 public class ExpressionTranslatorTest extends TranslatorTest {
 
 	@Test
-	public void translateDef(){
+	public void translateRatioSignumDef(){
 		PMMLEncoder encoder = new PMMLEncoder();
 
 		List<Feature> variables = Arrays.asList(
@@ -133,6 +133,57 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 		string += newline;
 
 		derivedField = expressionTranslator.translateDef(string);
+
+		checkExpression(expected, derivedField.getExpression());
+	}
+
+	@Test
+	public void translateQuadrantDef(){
+		PMMLEncoder encoder = new PMMLEncoder();
+
+		List<Feature> variables = Arrays.asList(
+			new ContinuousFeature(encoder, "x", DataType.DOUBLE),
+			new ContinuousFeature(encoder, "y", DataType.DOUBLE)
+		);
+
+		ExpressionTranslator expressionTranslator = new ExpressionTranslator(new BlockScope(variables, encoder));
+
+		String newline = "\n";
+
+		String string =
+			"def quadrant(x, y):" + newline +
+			"	if x >= 0:" + newline +
+			"		if y >= 0:" + newline +
+			"			return 'I'" + newline +
+			"		else:" + newline +
+			"			return 'IV'" + newline +
+			"	else:" + newline +
+			"		if y >= 0:" + newline +
+			"			return 'II'" + newline +
+			"		else:" + newline +
+			"			return 'III'" + newline;
+
+		DerivedField derivedField = expressionTranslator.translateDef(string);
+
+		assertEquals("quadrant", derivedField.getName());
+		assertEquals(OpType.CATEGORICAL, derivedField.getOpType());
+		assertEquals(DataType.STRING, derivedField.getDataType());
+
+		Constant zero = PMMLUtil.createConstant(0, DataType.INTEGER);
+
+		Expression expected = PMMLUtil.createApply(PMMLFunctions.IF,
+			PMMLUtil.createApply(PMMLFunctions.GREATEROREQUAL, new FieldRef("x"), zero),
+			PMMLUtil.createApply(PMMLFunctions.IF,
+				PMMLUtil.createApply(PMMLFunctions.GREATEROREQUAL, new FieldRef("y"), zero),
+				PMMLUtil.createConstant("I", DataType.STRING),
+				PMMLUtil.createConstant("IV", DataType.STRING)
+			),
+			PMMLUtil.createApply(PMMLFunctions.IF,
+				PMMLUtil.createApply(PMMLFunctions.GREATEROREQUAL, new FieldRef("y"), zero),
+				PMMLUtil.createConstant("II", DataType.STRING),
+				PMMLUtil.createConstant("III", DataType.STRING)
+			)
+		);
 
 		checkExpression(expected, derivedField.getExpression());
 	}
