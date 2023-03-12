@@ -91,9 +91,9 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 		DerivedField derivedField = expressionTranslator.translateDef(string);
 
-		assertEquals("ratio_signum", derivedField.getName());
-		assertEquals(OpType.CONTINUOUS, derivedField.getOpType());
-		assertEquals(DataType.INTEGER, derivedField.getDataType());
+		assertEquals("ratio_signum", derivedField.requireName());
+		assertEquals(OpType.CONTINUOUS, derivedField.requireOpType());
+		assertEquals(DataType.INTEGER, derivedField.requireDataType());
 
 		DerivedField ratioDerivedField = encoder.getDerivedField("ratio");
 
@@ -171,9 +171,9 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 		DerivedField derivedField = expressionTranslator.translateDef(string);
 
-		assertEquals("quadrant", derivedField.getName());
-		assertEquals(OpType.CATEGORICAL, derivedField.getOpType());
-		assertEquals(DataType.STRING, derivedField.getDataType());
+		assertEquals("quadrant", derivedField.requireName());
+		assertEquals(OpType.CATEGORICAL, derivedField.requireOpType());
+		assertEquals(DataType.STRING, derivedField.requireDataType());
 
 		Constant zero = PMMLUtil.createConstant(0, DataType.INTEGER);
 
