@@ -44,7 +44,7 @@ public class ClassDictUtil {
 			} // End if
 
 			if(prevCollection != null && collection.size() != prevCollection.size()){
-				throw new IllegalArgumentException("Expected the same number of elements, got different numbers of elements");
+				throw new IllegalArgumentException("Expected the same number of elements, got a different numbers of elements");
 			}
 
 			prevCollection = collection;
@@ -73,7 +73,7 @@ public class ClassDictUtil {
 		for(int[] shape : shapes){
 
 			if(prevShape != null && prevShape[axis] != shape[axis]){
-				throw new IllegalArgumentException("Expected the same number of elements, got different number of elements");
+				throw new IllegalArgumentException("Expected the same number of elements, got a different number of elements");
 			}
 
 			prevShape = shape;
