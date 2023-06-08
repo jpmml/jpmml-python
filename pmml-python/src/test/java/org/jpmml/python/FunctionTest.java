@@ -20,6 +20,7 @@ package org.jpmml.python;
 
 import java.io.IOException;
 
+import net.razorvine.pickle.objects.ClassDict;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -48,6 +49,8 @@ public class FunctionTest extends PickleUtilTest {
 
 	@Test
 	public void python39() throws IOException {
+		unpickleMathFunctions("python-3.9_math");
+
 		unpickleNumpyFunctions("python-3.9_numpy-1.20.2");
 		unpickleNumpyFunctions("python-3.9_numpy-1.22.1");
 		unpickleNumpyFunctions("python-3.9_numpy-1.23.4");
@@ -56,8 +59,23 @@ public class FunctionTest extends PickleUtilTest {
 
 	@Test
 	public void python311() throws IOException {
+		unpickleMathFunctions("python-3.11_math");
+
 		unpickleNumpyFunctions("python-3.11_numpy-1.23.4");
 		unpickleNumpyFunctions("python-3.11_numpy-1.24.1");
+	}
+
+	static
+	private void unpickleMathFunctions(String prefix) throws IOException {
+		String[] names = {"acos", "asin", "atan", "atan2", "ceil", "cos", "cosh", "degrees", "exp", "expm1", "fabs", "floor", "hypot", "isnan", "log", "log1p", "log10", "pow", "radians", "sin", "sinh", "sqrt", "tan", "tanh", "trunc"};
+
+		for(String name : names){
+			Object object = unpickle("func", prefix + "_" + name + ".pkl");
+
+			Identifiable identifiable = (Identifiable)toClassDict(object);
+
+			assertEquals(name, identifiable.getName());
+		}
 	}
 
 	static
@@ -67,15 +85,21 @@ public class FunctionTest extends PickleUtilTest {
 		for(String name : names){
 			Object object = unpickle("ufunc", prefix + "_" + name + ".pkl");
 
-			if(object instanceof PythonObjectConstructor){
-				PythonObjectConstructor dictConstructor = (PythonObjectConstructor)object;
-
-				object = dictConstructor.newObject();
-			}
-
-			Identifiable identifiable = (Identifiable)object;
+			Identifiable identifiable = (Identifiable)toClassDict(object);
 
 			assertEquals(name, identifiable.getName());
 		}
+	}
+
+	static
+	private ClassDict toClassDict(Object object){
+
+		if(object instanceof PythonObjectConstructor){
+			PythonObjectConstructor dictConstructor = (PythonObjectConstructor)object;
+
+			object = dictConstructor.newObject();
+		}
+
+		return (ClassDict)object;
 	}
 }

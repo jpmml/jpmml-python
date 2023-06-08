@@ -83,8 +83,22 @@ public class FunctionUtil {
 		if((module).equals("math")){
 
 			switch(name){
+				case "acos":
+					return PMMLUtil.createApply(PMMLFunctions.ACOS, getOnlyElement(expressions));
+				case "asin":
+					return PMMLUtil.createApply(PMMLFunctions.ASIN, getOnlyElement(expressions));
+				case "atan":
+					return PMMLUtil.createApply(PMMLFunctions.ATAN, getOnlyElement(expressions));
+				case "atan2":
+					return PMMLUtil.createApply(PMMLFunctions.ATAN2, getElement(expressions, 2, 0), getElement(expressions, 2, 1));
 				case "ceil":
 					return PMMLUtil.createApply(PMMLFunctions.CEIL, getOnlyElement(expressions));
+				case "cos":
+					return PMMLUtil.createApply(PMMLFunctions.COS, getOnlyElement(expressions));
+				case "cosh":
+					return PMMLUtil.createApply(PMMLFunctions.COSH, getOnlyElement(expressions));
+				case "degrees":
+					return PMMLUtil.createApply(PMMLFunctions.MULTIPLY, getOnlyElement(expressions), PMMLUtil.createConstant(180d / Math.PI));
 				case "exp":
 					return PMMLUtil.createApply(PMMLFunctions.EXP, getOnlyElement(expressions));
 				case "expm1":
@@ -93,6 +107,8 @@ public class FunctionUtil {
 					return PMMLUtil.createApply(PMMLFunctions.ABS, getOnlyElement(expressions));
 				case "floor":
 					return PMMLUtil.createApply(PMMLFunctions.FLOOR, getOnlyElement(expressions));
+				case "hypot":
+					return PMMLUtil.createApply(PMMLFunctions.HYPOT, getOnlyElement(expressions));
 				case "isnan":
 					return PMMLUtil.createApply(PMMLFunctions.ISMISSING, getOnlyElement(expressions));
 				case "log":
@@ -103,8 +119,18 @@ public class FunctionUtil {
 					return PMMLUtil.createApply(PMMLFunctions.LOG10, getOnlyElement(expressions));
 				case "pow":
 					return PMMLUtil.createApply(PMMLFunctions.POW, getElement(expressions, 2, 0), getElement(expressions, 2, 1));
+				case "radians":
+					return PMMLUtil.createApply(PMMLFunctions.MULTIPLY, getOnlyElement(expressions), PMMLUtil.createConstant(Math.PI / 180d));
+				case "sin":
+					return PMMLUtil.createApply(PMMLFunctions.SIN, getOnlyElement(expressions));
+				case "sinh":
+					return PMMLUtil.createApply(PMMLFunctions.SINH, getOnlyElement(expressions));
 				case "sqrt":
 					return PMMLUtil.createApply(PMMLFunctions.SQRT, getOnlyElement(expressions));
+				case "tan":
+					return PMMLUtil.createApply(PMMLFunctions.TAN, getOnlyElement(expressions));
+				case "tanh":
+					return PMMLUtil.createApply(PMMLFunctions.TANH, getOnlyElement(expressions));
 				case "trunc":
 					return PMMLUtil.createApply(PMMLFunctions.IF, PMMLUtil.createApply(PMMLFunctions.LESSTHAN, getOnlyElement(expressions), PMMLUtil.createConstant(0)),
 						PMMLUtil.createApply(PMMLFunctions.CEIL, getOnlyElement(expressions)), // x < 0
