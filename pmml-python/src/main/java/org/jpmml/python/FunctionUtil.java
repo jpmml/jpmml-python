@@ -68,7 +68,7 @@ public class FunctionUtil {
 
 			switch(name){
 				case "len":
-					return PMMLUtil.createApply(PMMLFunctions.STRINGLENGTH, getOnlyElement(expressions));
+					return encodeUnaryFunction(PMMLFunctions.STRINGLENGTH, expressions);
 				default:
 					break;
 			}
@@ -84,58 +84,55 @@ public class FunctionUtil {
 
 			switch(name){
 				case "acos":
-					return PMMLUtil.createApply(PMMLFunctions.ACOS, getOnlyElement(expressions));
+					return encodeUnaryFunction(PMMLFunctions.ACOS, expressions);
 				case "asin":
-					return PMMLUtil.createApply(PMMLFunctions.ASIN, getOnlyElement(expressions));
+					return encodeUnaryFunction(PMMLFunctions.ASIN, expressions);
 				case "atan":
-					return PMMLUtil.createApply(PMMLFunctions.ATAN, getOnlyElement(expressions));
+					return encodeUnaryFunction(PMMLFunctions.ATAN, expressions);
 				case "atan2":
-					return PMMLUtil.createApply(PMMLFunctions.ATAN2, getElement(expressions, 2, 0), getElement(expressions, 2, 1));
+					return encodeBinaryFunction(PMMLFunctions.ATAN2, expressions);
 				case "ceil":
-					return PMMLUtil.createApply(PMMLFunctions.CEIL, getOnlyElement(expressions));
+					return encodeUnaryFunction(PMMLFunctions.CEIL, expressions);
 				case "cos":
-					return PMMLUtil.createApply(PMMLFunctions.COS, getOnlyElement(expressions));
+					return encodeUnaryFunction(PMMLFunctions.COS, expressions);
 				case "cosh":
-					return PMMLUtil.createApply(PMMLFunctions.COSH, getOnlyElement(expressions));
+					return encodeUnaryFunction(PMMLFunctions.COSH, expressions);
 				case "degrees":
-					return PMMLUtil.createApply(PMMLFunctions.MULTIPLY, getOnlyElement(expressions), PMMLUtil.createConstant(180d / Math.PI));
+					return rad2deg(expressions);
 				case "exp":
-					return PMMLUtil.createApply(PMMLFunctions.EXP, getOnlyElement(expressions));
+					return encodeUnaryFunction(PMMLFunctions.EXP, expressions);
 				case "expm1":
-					return PMMLUtil.createApply(PMMLFunctions.EXPM1, getOnlyElement(expressions));
+					return encodeUnaryFunction(PMMLFunctions.EXPM1, expressions);
 				case "fabs":
-					return PMMLUtil.createApply(PMMLFunctions.ABS, getOnlyElement(expressions));
+					return encodeUnaryFunction(PMMLFunctions.ABS, expressions);
 				case "floor":
-					return PMMLUtil.createApply(PMMLFunctions.FLOOR, getOnlyElement(expressions));
+					return encodeUnaryFunction(PMMLFunctions.FLOOR, expressions);
 				case "hypot":
-					return PMMLUtil.createApply(PMMLFunctions.HYPOT, getOnlyElement(expressions));
+					return encodeUnaryFunction(PMMLFunctions.HYPOT, expressions);
 				case "isnan":
-					return PMMLUtil.createApply(PMMLFunctions.ISMISSING, getOnlyElement(expressions));
+					return encodeUnaryFunction(PMMLFunctions.ISMISSING, expressions);
 				case "log":
-					return PMMLUtil.createApply(PMMLFunctions.LN, getOnlyElement(expressions));
+					return encodeUnaryFunction(PMMLFunctions.LN, expressions);
 				case "logp1":
-					return PMMLUtil.createApply(PMMLFunctions.LN1P, getOnlyElement(expressions));
+					return encodeUnaryFunction(PMMLFunctions.LN1P, expressions);
 				case "log10":
-					return PMMLUtil.createApply(PMMLFunctions.LOG10, getOnlyElement(expressions));
+					return encodeUnaryFunction(PMMLFunctions.LOG10, expressions);
 				case "pow":
-					return PMMLUtil.createApply(PMMLFunctions.POW, getElement(expressions, 2, 0), getElement(expressions, 2, 1));
+					return encodeBinaryFunction(PMMLFunctions.POW, expressions);
 				case "radians":
-					return PMMLUtil.createApply(PMMLFunctions.MULTIPLY, getOnlyElement(expressions), PMMLUtil.createConstant(Math.PI / 180d));
+					return deg2rad(expressions);
 				case "sin":
-					return PMMLUtil.createApply(PMMLFunctions.SIN, getOnlyElement(expressions));
+					return encodeUnaryFunction(PMMLFunctions.SIN, expressions);
 				case "sinh":
-					return PMMLUtil.createApply(PMMLFunctions.SINH, getOnlyElement(expressions));
+					return encodeUnaryFunction(PMMLFunctions.SINH, expressions);
 				case "sqrt":
-					return PMMLUtil.createApply(PMMLFunctions.SQRT, getOnlyElement(expressions));
+					return encodeUnaryFunction(PMMLFunctions.SQRT, expressions);
 				case "tan":
-					return PMMLUtil.createApply(PMMLFunctions.TAN, getOnlyElement(expressions));
+					return encodeUnaryFunction(PMMLFunctions.TAN, expressions);
 				case "tanh":
-					return PMMLUtil.createApply(PMMLFunctions.TANH, getOnlyElement(expressions));
+					return encodeUnaryFunction(PMMLFunctions.TANH, expressions);
 				case "trunc":
-					return PMMLUtil.createApply(PMMLFunctions.IF, PMMLUtil.createApply(PMMLFunctions.LESSTHAN, getOnlyElement(expressions), PMMLUtil.createConstant(0)),
-						PMMLUtil.createApply(PMMLFunctions.CEIL, getOnlyElement(expressions)), // x < 0
-						PMMLUtil.createApply(PMMLFunctions.FLOOR, getOnlyElement(expressions)) // x >= 0
-					);
+					return trunc(expressions);
 				default:
 					break;
 			}
@@ -152,91 +149,79 @@ public class FunctionUtil {
 
 			switch(name){
 				case "absolute":
-					return PMMLUtil.createApply(PMMLFunctions.ABS, getOnlyElement(expressions));
+					return encodeUnaryFunction(PMMLFunctions.ABS, expressions);
 				case "arccos":
-					return PMMLUtil.createApply(PMMLFunctions.ACOS, getOnlyElement(expressions));
+					return encodeUnaryFunction(PMMLFunctions.ACOS, expressions);
 				case "arcsin":
-					return PMMLUtil.createApply(PMMLFunctions.ASIN, getOnlyElement(expressions));
+					return encodeUnaryFunction(PMMLFunctions.ASIN, expressions);
 				case "arctan":
-					return PMMLUtil.createApply(PMMLFunctions.ATAN, getOnlyElement(expressions));
+					return encodeUnaryFunction(PMMLFunctions.ATAN, expressions);
 				case "arctan2":
-					return PMMLUtil.createApply(PMMLFunctions.ATAN2, getElement(expressions, 2, 0), getElement(expressions, 2, 1));
+					return encodeBinaryFunction(PMMLFunctions.ATAN2, expressions);
 				case "ceil":
-					return PMMLUtil.createApply(PMMLFunctions.CEIL, getOnlyElement(expressions));
+					return encodeUnaryFunction(PMMLFunctions.CEIL, expressions);
 				case "clip":
-					return PMMLUtil.createApply(PMMLFunctions.MIN,
-						PMMLUtil.createApply(PMMLFunctions.MAX,
-							getElement(expressions, 3, 0),
-							getElement(expressions, 3, 1)
-						),
-						getElement(expressions, 3, 2)
-					);
+					return clip(expressions);
 				case "cos":
-					return PMMLUtil.createApply(PMMLFunctions.COS, getOnlyElement(expressions));
+					return encodeUnaryFunction(PMMLFunctions.COS, expressions);
 				case "cosh":
-					return PMMLUtil.createApply(PMMLFunctions.COSH, getOnlyElement(expressions));
+					return encodeUnaryFunction(PMMLFunctions.COSH, expressions);
 				case "degrees":
 				case "rad2deg":
-					return PMMLUtil.createApply(PMMLFunctions.MULTIPLY, getOnlyElement(expressions), PMMLUtil.createConstant(180d / Math.PI));
+					return rad2deg(expressions);
 				case "exp":
-					return PMMLUtil.createApply(PMMLFunctions.EXP, getOnlyElement(expressions));
+					return encodeUnaryFunction(PMMLFunctions.EXP, expressions);
 				case "expm1":
-					return PMMLUtil.createApply(PMMLFunctions.EXPM1, getOnlyElement(expressions));
+					return encodeUnaryFunction(PMMLFunctions.EXPM1, expressions);
 				case "floor":
-					return PMMLUtil.createApply(PMMLFunctions.FLOOR, getOnlyElement(expressions));
+					return encodeUnaryFunction(PMMLFunctions.FLOOR, expressions);
 				case "fmax":
-					return PMMLUtil.createApply(PMMLFunctions.MAX, getElement(expressions, 2, 0), getElement(expressions, 2, 1));
+					return encodeBinaryFunction(PMMLFunctions.MAX, expressions);
 				case "fmin":
-					return PMMLUtil.createApply(PMMLFunctions.MIN, getElement(expressions, 2, 0), getElement(expressions, 2, 1));
+					return encodeBinaryFunction(PMMLFunctions.MIN, expressions);
 				case "hypot":
-					return PMMLUtil.createApply(PMMLFunctions.HYPOT, getOnlyElement(expressions));
+					return encodeUnaryFunction(PMMLFunctions.HYPOT, expressions);
 				case "isnan":
-					return PMMLUtil.createApply(PMMLFunctions.ISMISSING, getOnlyElement(expressions));
+					return encodeUnaryFunction(PMMLFunctions.ISMISSING, expressions);
 				case "log":
-					return PMMLUtil.createApply(PMMLFunctions.LN, getOnlyElement(expressions));
+					return encodeUnaryFunction(PMMLFunctions.LN, expressions);
 				case "logical_and":
-					return PMMLUtil.createApply(PMMLFunctions.AND, getElement(expressions, 2, 0), getElement(expressions, 2, 1));
+					return encodeBinaryFunction(PMMLFunctions.AND, expressions);
 				case "logical_not":
-					return PMMLUtil.createApply(PMMLFunctions.NOT, getOnlyElement(expressions));
+					return encodeUnaryFunction(PMMLFunctions.NOT, expressions);
 				case "logical_or":
-					return PMMLUtil.createApply(PMMLFunctions.OR, getElement(expressions, 2, 0), getElement(expressions, 2, 1));
+					return encodeBinaryFunction(PMMLFunctions.OR, expressions);
 				case "log1p":
-					return PMMLUtil.createApply(PMMLFunctions.LN1P, getOnlyElement(expressions));
+					return encodeUnaryFunction(PMMLFunctions.LN1P, expressions);
 				case "log10":
-					return PMMLUtil.createApply(PMMLFunctions.LOG10, getOnlyElement(expressions));
+					return encodeUnaryFunction(PMMLFunctions.LOG10, expressions);
 				case "negative":
-					return PMMLUtil.createApply(PMMLFunctions.MULTIPLY, PMMLUtil.createConstant(-1), getOnlyElement(expressions));
+					return negative(expressions);
 				case "power":
-					return PMMLUtil.createApply(PMMLFunctions.POW, getElement(expressions, 2, 0), getElement(expressions, 2, 1));
+					return encodeBinaryFunction(PMMLFunctions.POW, expressions);
 				case "radians":
 				case "deg2rad":
-					return PMMLUtil.createApply(PMMLFunctions.MULTIPLY, getOnlyElement(expressions), PMMLUtil.createConstant(Math.PI / 180d));
+					return deg2rad(expressions);
 				case "reciprocal":
-					return PMMLUtil.createApply(PMMLFunctions.DIVIDE, PMMLUtil.createConstant(1), getOnlyElement(expressions));
+					return reciprocal(expressions);
 				case "rint":
-					return PMMLUtil.createApply(PMMLFunctions.RINT, getOnlyElement(expressions));
+					return encodeUnaryFunction(PMMLFunctions.RINT, expressions);
 				case "sign":
-					return PMMLUtil.createApply(PMMLFunctions.IF, PMMLUtil.createApply(PMMLFunctions.LESSTHAN, getOnlyElement(expressions), PMMLUtil.createConstant(0)),
-						PMMLUtil.createConstant(-1), // x < 0
-						PMMLUtil.createApply(PMMLFunctions.IF, PMMLUtil.createApply(PMMLFunctions.GREATERTHAN, getOnlyElement(expressions), PMMLUtil.createConstant(0)),
-							PMMLUtil.createConstant(+1), // x > 0
-							PMMLUtil.createConstant(0) // x == 0
-						)
-					);
+					return sign(expressions);
 				case "sin":
-					return PMMLUtil.createApply(PMMLFunctions.SIN, getOnlyElement(expressions));
+					return encodeUnaryFunction(PMMLFunctions.SIN, expressions);
 				case "sinh":
-					return PMMLUtil.createApply(PMMLFunctions.SINH, getOnlyElement(expressions));
+					return encodeUnaryFunction(PMMLFunctions.SINH, expressions);
 				case "sqrt":
-					return PMMLUtil.createApply(PMMLFunctions.SQRT, getOnlyElement(expressions));
+					return encodeUnaryFunction(PMMLFunctions.SQRT, expressions);
 				case "square":
-					return PMMLUtil.createApply(PMMLFunctions.POW, getOnlyElement(expressions), PMMLUtil.createConstant(2));
+					return square(expressions);
 				case "tan":
-					return PMMLUtil.createApply(PMMLFunctions.TAN, getOnlyElement(expressions));
+					return encodeUnaryFunction(PMMLFunctions.TAN, expressions);
 				case "tanh":
-					return PMMLUtil.createApply(PMMLFunctions.TANH, getOnlyElement(expressions));
+					return encodeUnaryFunction(PMMLFunctions.TANH, expressions);
 				case "where":
-					return PMMLUtil.createApply(PMMLFunctions.IF, getElement(expressions, 3, 0), getElement(expressions, 3, 1), getElement(expressions, 3, 2));
+					return where(expressions);
 				default:
 					break;
 			}
@@ -253,10 +238,10 @@ public class FunctionUtil {
 			switch(name){
 				case "isna":
 				case "isnull":
-					return PMMLUtil.createApply(PMMLFunctions.ISMISSING, getOnlyElement(expressions));
+					return encodeUnaryFunction(PMMLFunctions.ISMISSING, expressions);
 				case "notna":
 				case "notnull":
-					return PMMLUtil.createApply(PMMLFunctions.ISNOTMISSING, getOnlyElement(expressions));
+					return encodeUnaryFunction(PMMLFunctions.ISNOTMISSING, expressions);
 				default:
 					break;
 			}
@@ -272,26 +257,115 @@ public class FunctionUtil {
 
 			switch(name){
 				case "expit":
-					return PMMLUtil.createApply(PMMLFunctions.DIVIDE,
-						PMMLUtil.createConstant(1),
-						PMMLUtil.createApply(PMMLFunctions.ADD,
-							PMMLUtil.createConstant(1),
-							PMMLUtil.createApply(PMMLFunctions.EXP, PMMLUtil.createApply(PMMLFunctions.MULTIPLY, PMMLUtil.createConstant(-1), getOnlyElement(expressions)))
-						)
-					);
+					return expit(expressions);
 				case "logit":
-					return PMMLUtil.createApply(PMMLFunctions.LN,
-						PMMLUtil.createApply(PMMLFunctions.DIVIDE,
-							getOnlyElement(expressions),
-							PMMLUtil.createApply(PMMLFunctions.SUBTRACT, PMMLUtil.createConstant(1), getOnlyElement(expressions))
-						)
-					);
+					return logit(expressions);
 				default:
 					break;
 			}
 		}
 
 		throw new IllegalArgumentException("Function \'" + formatFunction(module, name) + "\' is not supported");
+	}
+
+	static
+	public Apply encodeUnaryFunction(String function, List<Expression> expressions){
+		return PMMLUtil.createApply(function, getElement(expressions, 1, 0));
+	}
+
+	static
+	public Apply encodeBinaryFunction(String function, List<Expression> expressions){
+		return PMMLUtil.createApply(function, getElement(expressions, 2, 0), getElement(expressions, 2, 1));
+	}
+
+	static
+	private Apply clip(List<Expression> expressions){
+		return PMMLUtil.createApply(PMMLFunctions.MIN,
+			PMMLUtil.createApply(PMMLFunctions.MAX,
+				getElement(expressions, 3, 0),
+				getElement(expressions, 3, 1)
+			),
+			getElement(expressions, 3, 2)
+		);
+	}
+
+	static
+	private Apply deg2rad(List<Expression> expressions){
+		return PMMLUtil.createApply(PMMLFunctions.MULTIPLY, getOnlyElement(expressions), PMMLUtil.createConstant(Math.PI / 180d));
+	}
+
+	static
+	private Apply expit(List<Expression> expressions){
+		return PMMLUtil.createApply(PMMLFunctions.DIVIDE,
+			PMMLUtil.createConstant(1),
+			PMMLUtil.createApply(PMMLFunctions.ADD,
+				PMMLUtil.createConstant(1),
+				PMMLUtil.createApply(PMMLFunctions.EXP, PMMLUtil.createApply(PMMLFunctions.MULTIPLY, PMMLUtil.createConstant(-1), getOnlyElement(expressions)))
+			)
+		);
+	}
+
+	static
+	private Apply logit(List<Expression> expressions){
+		Expression expression = getOnlyElement(expressions);
+
+		return PMMLUtil.createApply(PMMLFunctions.LN,
+			PMMLUtil.createApply(PMMLFunctions.DIVIDE,
+				expression,
+				PMMLUtil.createApply(PMMLFunctions.SUBTRACT, PMMLUtil.createConstant(1), expression)
+			)
+		);
+	}
+
+	static
+	private Apply negative(List<Expression> expressions){
+		return PMMLUtil.createApply(PMMLFunctions.MULTIPLY, PMMLUtil.createConstant(-1), getOnlyElement(expressions));
+	}
+
+	static
+	private Apply rad2deg(List<Expression> expressions){
+		return PMMLUtil.createApply(PMMLFunctions.MULTIPLY, getOnlyElement(expressions), PMMLUtil.createConstant(180d / Math.PI));
+	}
+
+	static
+	private Apply reciprocal(List<Expression> expressions){
+		return PMMLUtil.createApply(PMMLFunctions.DIVIDE, PMMLUtil.createConstant(1), getOnlyElement(expressions));
+	}
+
+	static
+	private Apply sign(List<Expression> expressions){
+		Expression expression = getOnlyElement(expressions);
+
+		return PMMLUtil.createApply(PMMLFunctions.IF, PMMLUtil.createApply(PMMLFunctions.LESSTHAN, expression, PMMLUtil.createConstant(0)),
+			PMMLUtil.createConstant(-1), // x < 0
+			PMMLUtil.createApply(PMMLFunctions.IF, PMMLUtil.createApply(PMMLFunctions.GREATERTHAN, expression, PMMLUtil.createConstant(0)),
+				PMMLUtil.createConstant(+1), // x > 0
+				PMMLUtil.createConstant(0) // x == 0
+			)
+		);
+	}
+
+	static
+	private Apply square(List<Expression> expressions){
+		return PMMLUtil.createApply(PMMLFunctions.POW, getOnlyElement(expressions), PMMLUtil.createConstant(2));
+	}
+
+	static
+	private Apply trunc(List<Expression> expressions){
+		Expression expression = getOnlyElement(expressions);
+
+		return PMMLUtil.createApply(PMMLFunctions.IF, PMMLUtil.createApply(PMMLFunctions.LESSTHAN, expression, PMMLUtil.createConstant(0)),
+			PMMLUtil.createApply(PMMLFunctions.CEIL, expression), // x < 0
+			PMMLUtil.createApply(PMMLFunctions.FLOOR, expression) // x >= 0
+		);
+	}
+
+	static
+	private Apply where(List<Expression> expressions){
+		return PMMLUtil.createApply(PMMLFunctions.IF, getElement(expressions, 3, 0),
+			getElement(expressions, 3, 1),
+			getElement(expressions, 3, 2)
+		);
 	}
 
 	static
