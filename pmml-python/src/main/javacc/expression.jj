@@ -130,6 +130,8 @@ public class ExpressionTranslator extends AbstractTranslator {
 				return PMMLUtil.createConstant(Math.PI, DataType.DOUBLE);
 			case "numpy.PZERO":
 				return PMMLUtil.createConstant(0.0, DataType.DOUBLE);
+			case "math.tau":
+				return PMMLUtil.createConstant(2 * Math.PI, DataType.DOUBLE);
 			default:
 				break;
 		}

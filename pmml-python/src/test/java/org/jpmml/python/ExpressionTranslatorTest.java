@@ -732,6 +732,10 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 		for(String string : strings){
 			checkExpression(expected, translateExpression(expressionTranslator, string));
 		}
+
+		expected = PMMLUtil.createConstant(2 * Math.PI, DataType.DOUBLE);
+
+		checkExpression(expected, translateExpression(expressionTranslator, "math.tau"));
 	}
 
 	@Test
