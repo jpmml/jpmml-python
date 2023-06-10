@@ -19,6 +19,10 @@
 package org.jpmml.python;
 
 import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.dmg.pmml.Expression;
 import org.dmg.pmml.FieldRef;
@@ -33,9 +37,29 @@ import static org.junit.Assert.assertEquals;
 public class FunctionUtilTest {
 
 	@Test
-	public void evaluateMathFunctions(){
+	public void evaluateMathFunction(){
 		assertEquals(-2, evaluateExpression("math", "trunc", -2.75d));
 		assertEquals(2, evaluateExpression("math", "trunc", 2.75d));
+	}
+
+	@Test
+	public void evaluatePCREFunction(){
+		Map<String, String> arguments = new LinkedHashMap<>();
+		arguments.put("pattern", "ar?y");
+
+		assertEquals(true, evaluateExpression("pcre", "search", withString(arguments, "January")));
+		assertEquals(true, evaluateExpression("pcre", "search", withString(arguments, "February")));
+		assertEquals(false, evaluateExpression("pcre", "search", withString(arguments, "March")));
+
+		assertEquals(false, evaluateExpression("re", "search", withString(arguments, "April")));
+		assertEquals(true, evaluateExpression("re", "search", withString(arguments, "May")));
+		assertEquals(false, evaluateExpression("re", "search", withString(arguments, "June")));
+
+		arguments = new LinkedHashMap<>();
+		arguments.put("pattern", "B+");
+		arguments.put("repl", "c");
+
+		assertEquals("c", evaluateExpression("pcre", "sub", withString(arguments, "BBBB")));
 	}
 
 	@Test
@@ -76,13 +100,27 @@ public class FunctionUtilTest {
 	}
 
 	static
-	private Object evaluateExpression(String module, String name, Object argument){
-		FieldRef fieldRef = new FieldRef("x");
+	private Map<String, String> withString(Map<String, String> arguments, String string){
+		arguments.put("string", string);
 
-		Expression expression = FunctionUtil.encodeFunction(module, name, Collections.singletonList(fieldRef));
+		return arguments;
+	}
+
+	static
+	private Object evaluateExpression(String module, String name, Number argument){
+		return evaluateExpression(module, name, Collections.singletonMap("x", argument));
+	}
+
+	static
+	private Object evaluateExpression(String module, String name, Map<String, ?> arguments){
+		List<Expression> fieldRefs = (arguments.keySet()).stream()
+			.map(FieldRef::new)
+			.collect(Collectors.toList());
+
+		Expression expression = FunctionUtil.encodeFunction(module, name, fieldRefs);
 
 		EvaluationContext context = new VirtualEvaluationContext();
-		context.declare(fieldRef.requireField(), FieldValueUtil.create(argument));
+		context.declareAll(arguments);
 
 		FieldValue value = org.jpmml.evaluator.ExpressionUtil.evaluate(expression, context);
 

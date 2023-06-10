@@ -46,6 +46,10 @@ public class FunctionUtil {
 			return encodeMathFunction(module, name, expressions);
 		} else
 
+		if((module).equals("pcre") || (module).equals("re")){
+			return encodePCREFunction(module, name, expressions);
+		} else
+
 		if((module).equals("numpy") || (module).startsWith("numpy.")){
 			return encodeNumpyFunction(module, name, expressions);
 		} else
@@ -133,6 +137,24 @@ public class FunctionUtil {
 					return encodeUnaryFunction(PMMLFunctions.TANH, expressions);
 				case "trunc":
 					return trunc(expressions);
+				default:
+					break;
+			}
+		}
+
+		throw new IllegalArgumentException("Function \'" + formatFunction(module, name) +"\' is not supported");
+	}
+
+	static
+	public Apply encodePCREFunction(String module, String name, List<Expression> expressions){
+
+		if((module).equals("pcre") || (module).equals("re")){
+
+			switch(name){
+				case "search":
+					return search(expressions);
+				case "sub":
+					return sub(expressions);
 				default:
 					break;
 			}
@@ -333,6 +355,14 @@ public class FunctionUtil {
 	}
 
 	static
+	private Apply search(List<Expression> expressions){
+		return PMMLUtil.createApply(PMMLFunctions.MATCHES,
+			getElement(expressions, 2, 1),
+			getElement(expressions, 2, 0)
+		);
+	}
+
+	static
 	private Apply sign(List<Expression> expressions){
 		Expression expression = getOnlyElement(expressions);
 
@@ -348,6 +378,15 @@ public class FunctionUtil {
 	static
 	private Apply square(List<Expression> expressions){
 		return PMMLUtil.createApply(PMMLFunctions.POW, getOnlyElement(expressions), PMMLUtil.createConstant(2));
+	}
+
+	static
+	private Apply sub(List<Expression> expressions){
+		return PMMLUtil.createApply(PMMLFunctions.REPLACE,
+			getElement(expressions, 3, 2),
+			getElement(expressions, 3, 0),
+			getElement(expressions, 3, 1)
+		);
 	}
 
 	static
