@@ -409,12 +409,8 @@ public class DumpTest extends PickleUtilTest {
 
 		BlockManager data = dataFrame.getData();
 
-		List<Index> axes = data.getAxesArray();
-
-		assertEquals(2, axes.size());
-
-		Index columnAxis = axes.get(0);
-		Index rowAxis = axes.get(1);
+		Index columnAxis = data.getColumnAxis();
+		Index rowAxis = data.getRowAxis();
 
 		assertEquals(Arrays.asList("bool", "int", "float", "str"), columnAxis.getValues());
 		assertEquals(Arrays.asList(0, 1, 2), rowAxis.getValues());

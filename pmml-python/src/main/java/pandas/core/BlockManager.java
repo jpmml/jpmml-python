@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.jpmml.python.ClassDictUtil;
 import org.jpmml.python.CustomPythonObject;
 import org.jpmml.python.HasArray;
 
@@ -55,6 +56,22 @@ public class BlockManager extends CustomPythonObject {
 		}
 
 		super.__setstate__(createAttributeMap(SETSTATE_ATTRIBUTES, args));
+	}
+
+	public Index getColumnAxis(){
+		List<Index> axesArray = getAxesArray();
+
+		ClassDictUtil.checkSize(2, axesArray);
+
+		return axesArray.get(0);
+	}
+
+	public Index getRowAxis(){
+		List<Index> axesArray = getAxesArray();
+
+		ClassDictUtil.checkSize(2, axesArray);
+
+		return axesArray.get(1);
 	}
 
 	public List<Index> getAxesArray(){
