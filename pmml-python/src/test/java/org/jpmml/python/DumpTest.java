@@ -144,6 +144,8 @@ public class DumpTest extends PickleUtilTest {
 		unpickleNumpyDtypes("python-3.9_numpy-1.23.4");
 		unpickleNumpyDtypes("python-3.9_numpy-1.24.1");
 
+		unpickleNumpyDatetimeDtypes("python-3.9_numpy-1.24.1");
+
 		unpickleNumpyRNGs("python-3.9_numpy-1.23.4");
 		unpickleNumpyRNGs("python-3.9_numpy-1.24.1");
 
@@ -203,6 +205,8 @@ public class DumpTest extends PickleUtilTest {
 
 		unpickleNumpyDtypes("python-3.11_numpy-1.23.4");
 		unpickleNumpyDtypes("python-3.11_numpy-1.24.1");
+
+		unpickleNumpyDatetimeDtypes("python-3.11_numpy-1.24.1");
 
 		unpickleNumpyRNGs("python-3.11_numpy-1.23.4");
 		unpickleNumpyRNGs("python-3.11_numpy-1.24.1");
@@ -313,6 +317,16 @@ public class DumpTest extends PickleUtilTest {
 
 		for(Object dtype : dtypes){
 			Type type = (Type)dtype;
+
+			assertNotNull(type.getDataType());
+		}
+	}
+
+	private void unpickleNumpyDatetimeDtypes(String prefix) throws IOException {
+		List<?> dtypes = (List<?>)unpickle(prefix + "_datetime_dtypes.pkl");
+
+		for(Object dtype : dtypes){
+			DType type = (DType)dtype;
 
 			assertNotNull(type.getDataType());
 		}

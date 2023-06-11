@@ -48,6 +48,9 @@ def _pickle_numpy_array(values, dtype):
 def _pickle_numpy_dtypes(dtypes):
 	_pickle(dtypes, "dump/" + _platform_module("numpy", numpy.__version__) + "_dtypes.pkl")
 
+def _pickle_numpy_datetime_dtypes(datetime_dtypes):
+	_pickle(datetime_dtypes, "dump/" + _platform_module("numpy", numpy.__version__) + "_datetime_dtypes.pkl")
+
 def _pickle_numpy_rngs(rngs):
 	_pickle(rngs, "dump/" + _platform_module("numpy", numpy.__version__) + "_rngs.pkl")
 
@@ -151,6 +154,16 @@ dtypes = [
 ]
 
 _pickle_numpy_dtypes(dtypes)
+
+datetime_dtypes = []
+
+now = numpy.datetime64("now")
+
+datetime_units = ["s", "m", "h", "D", "M", "Y"]
+for datetime_unit in datetime_units:
+	datetime_dtypes.append(now.astype("datetime64[{}]".format(datetime_unit)).dtype)
+
+_pickle_numpy_datetime_dtypes(datetime_dtypes)
 
 dtypes = [
 	pandas.BooleanDtype(),

@@ -87,6 +87,13 @@ public class TypeDescriptor {
 					default:
 						throw new IllegalArgumentException(descr);
 				}
+			case DATETIME:
+				switch(size){
+					case 8:
+						return DataType.DATE_TIME;
+					default:
+						throw new IllegalArgumentException(descr);
+				}
 			case OBJECT:
 				return DataType.STRING;
 			case STRING:
@@ -237,6 +244,8 @@ public class TypeDescriptor {
 		UNSIGNED_INTEGER,
 		FLOAT,
 		COMPLEX_FLOAT,
+		TIMEDELTA,
+		DATETIME,
 		OBJECT,
 		STRING,
 		UNICODE,
@@ -257,6 +266,10 @@ public class TypeDescriptor {
 					return FLOAT;
 				case 'c':
 					return COMPLEX_FLOAT;
+				case 'm':
+					return TIMEDELTA;
+				case 'M':
+					return DATETIME;
 				case 'O':
 					return OBJECT;
 				case 'S':

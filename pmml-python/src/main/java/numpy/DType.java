@@ -46,6 +46,14 @@ public class DType extends CustomPythonObject implements TypeInfo {
 	 */
 	@Override
 	public void __setstate__(Object[] args){
+
+		// XXX
+		if(args.length == (SETSTATE_ATTRIBUTES.length + 1)){
+			Object[] datetime_data = (Object[])args[SETSTATE_ATTRIBUTES.length];
+
+			args = extractArgs(args, 0, SETSTATE_ATTRIBUTES.length);
+		}
+
 		super.__setstate__(createAttributeMap(SETSTATE_ATTRIBUTES, args));
 	}
 
