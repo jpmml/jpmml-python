@@ -33,6 +33,36 @@ public class SeriesUtil {
 	}
 
 	static
+	public Series createSeries(Index index, List<?> values){
+		HasArray hasArray = new HasArray(){
+
+			@Override
+			public List<?> getArrayContent(){
+				return values;
+			}
+
+			@Override
+			public int[] getArrayShape(){
+				return new int[]{values.size()};
+			}
+
+			@Override
+			public Object getArrayType(){
+				throw new UnsupportedOperationException();
+			}
+		};
+
+		SingleBlockManager singleBlockManager = new SingleBlockManager()
+			.setOnlyBlockItem(index)
+			.setOnlyBlockValue(hasArray);
+
+		Series result = new Series();
+		result.setBlockManager(singleBlockManager);
+
+		return result;
+	}
+
+	static
 	public <InK, OutK, InV, OutV> Map<OutK, OutV> toMap(Series series, Function<InK, OutK> keyFunction, Function<InV, OutV> valueFunction){
 		SingleBlockManager blockManager = series.getBlockManager();
 
