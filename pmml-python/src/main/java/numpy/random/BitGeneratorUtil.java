@@ -29,7 +29,7 @@ public class BitGeneratorUtil {
 	}
 
 	static
-	public BitGenerator create(Object[] args){
+	public BitGenerator createBitGenerator(Object[] args){
 
 		// Numpy 1.23.4
 		if(args.length == 1){

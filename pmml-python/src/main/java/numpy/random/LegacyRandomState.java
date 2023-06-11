@@ -28,7 +28,7 @@ public class LegacyRandomState extends RandomState {
 
 	@Override
 	public void __init__(Object[] args){
-		Object bitGenerator = BitGeneratorUtil.create(args);
+		Object bitGenerator = BitGeneratorUtil.createBitGenerator(args);
 
 		HashMap<String, Object> attributes = new HashMap<>();
 		attributes.put("bit_generator", bitGenerator);
