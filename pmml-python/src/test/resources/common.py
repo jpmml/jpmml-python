@@ -1,3 +1,4 @@
+import dill
 import pickle
 import platform
 
@@ -10,6 +11,11 @@ def _module(name, version):
 
 def _platform_module(name, version):
 	return (_platform() + "_" + _module(name, version))
+
+def _dill(obj, path):
+	con = open(path, "wb")
+	dill.dump(obj, con)
+	con.close()
 
 def _pickle(obj, path, protocol = pickle.HIGHEST_PROTOCOL):
 	con = open(path, "wb")

@@ -1,4 +1,4 @@
-from common import _pickle, _platform, _platform_module
+from common import _dill, _pickle, _platform, _platform_module
 
 from numpy.random import default_rng, RandomState
 from sklearn.datasets import load_iris
@@ -7,6 +7,7 @@ from enum import Enum
 from sklearn.linear_model import LogisticRegressionCV
 
 import builtins
+import dill
 import joblib
 import numpy
 import pandas
@@ -29,6 +30,8 @@ iris = load_iris()
 
 iris_classifier = LogisticRegressionCV()
 iris_classifier.fit(iris.data, iris.target)
+
+_dill(iris_classifier, "dump/" + _platform_module("dill", dill.__version__) + ".pkl")
 
 #sklearn_joblib.dump(iris_classifier, "dump/" + _platform_module("sklearn-joblib", sklearn_joblib.__version__) + ".pkl.z", compress = True)
 joblib.dump(iris_classifier, "dump/" + _platform_module("joblib", joblib.__version__) + ".pkl.z", compress = True)
