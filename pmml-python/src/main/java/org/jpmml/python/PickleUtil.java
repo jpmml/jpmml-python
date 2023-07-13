@@ -34,6 +34,7 @@ import joblib.NDArrayWrapperConstructor;
 import joblib.NumpyArrayWrapper;
 import net.razorvine.pickle.Opcodes;
 import net.razorvine.pickle.Unpickler;
+import net.razorvine.pickle.objects.ClassDictConstructor;
 import numpy.core.NDArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -190,7 +191,7 @@ public class PickleUtil {
 			return;
 		}
 
-		PythonObjectConstructor dictConstructor;
+		ClassDictConstructor dictConstructor;
 
 		if((PythonObject.class).isAssignableFrom(clazz)){
 
@@ -220,12 +221,12 @@ public class PickleUtil {
 			}
 		} else
 
-		if((PythonObjectConstructor.class).isAssignableFrom(clazz)){
+		if((ClassDictConstructor.class).isAssignableFrom(clazz)){
 
 			try {
 				Constructor<?> constructor = clazz.getDeclaredConstructor(String.class, String.class);
 
-				dictConstructor = (PythonObjectConstructor)constructor.newInstance(module, name);
+				dictConstructor = (ClassDictConstructor)constructor.newInstance(module, name);
 			} catch(ReflectiveOperationException roe){
 				logger.warn("Failed to instantiate Java constructor", roe);
 
@@ -239,7 +240,7 @@ public class PickleUtil {
 			return;
 		}
 
-		Unpickler.registerConstructor(dictConstructor.getModule(), dictConstructor.getName(), dictConstructor);
+		Unpickler.registerConstructor(module, name, dictConstructor);
 	}
 
 	static
