@@ -21,9 +21,9 @@ package org.jpmml.python;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import org.jpmml.converter.Feature;
+import org.jpmml.converter.FeatureUtil;
 import org.jpmml.converter.PMMLEncoder;
 
 public class DataFrameScope extends Scope {
@@ -95,29 +95,21 @@ public class DataFrameScope extends Scope {
 
 		checkIsDataFrame(name);
 
-		for(Feature column : columns){
-
-			if((column.getName()).equals(columnName)){
-				return column;
-			}
+		Feature feature = FeatureUtil.findFeature(columns, columnName);
+		if(feature != null){
+			return feature;
 		}
 
-		List<String> columnNames = columns.stream()
-			.map(feature -> "\'" + feature.getName() + "\'")
-			.collect(Collectors.toList());
-
-		throw new IllegalArgumentException("Column name \'" + columnName + "\' is not in " + columnNames);
+		throw new IllegalArgumentException("Column name \'" + columnName + "\' is not in " + FeatureUtil.formatNames(columns, '\''));
 	}
 
 	@Override
 	public Feature resolveFeature(String name){
 		List<? extends Feature> columns = getColumns();
 
-		for(Feature column : columns){
-
-			if((column.getName()).equals(name)){
-				return column;
-			}
+		Feature feature = FeatureUtil.findFeature(columns, name);
+		if(feature != null){
+			return feature;
 		}
 
 		return super.resolveFeature(name);

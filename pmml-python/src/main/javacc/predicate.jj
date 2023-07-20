@@ -44,6 +44,7 @@ import org.dmg.pmml.True;
 import org.jpmml.converter.Feature;
 import org.jpmml.converter.PMMLUtil;
 import org.jpmml.converter.TypeUtil;
+import org.jpmml.converter.ValueUtil;
 
 public class PredicateTranslator extends AbstractTranslator {
 
@@ -103,15 +104,7 @@ public class PredicateTranslator extends AbstractTranslator {
 	private Array createArray(List<?> values){
 		DataType dataType = TypeUtil.getDataType(values, DataType.STRING);
 
-		switch(dataType){
-			case INTEGER:
-				return PMMLUtil.createIntArray((List)values);
-			case FLOAT:
-			case DOUBLE:
-				return PMMLUtil.createRealArray((List)values);
-			default:
-				return PMMLUtil.createStringArray(values);
-		}
+		return PMMLUtil.createArray(dataType, values);
 	}
 
 	static
@@ -247,26 +240,6 @@ public class PredicateTranslator extends AbstractTranslator {
 			throw new IllegalArgumentException("The function argument (" + object + ") is not a feature reference");
 		}
 	}
-
-	static
-	private Object toNegative(Object object) throws ParseException {
-
-		if(object instanceof Boolean){
-			return ((Boolean)object).booleanValue() ? -1 : 0;
-		} else
-
-		if(object instanceof Integer){
-			return -((Integer)object).intValue();
-		} else
-
-		if(object instanceof Double){
-			return -((Double)object).doubleValue();
-		} else
-
-		{
-			throw new ParseException();
-		}
-	}
 }
 PARSER_END(PredicateTranslator)
 
@@ -366,7 +339,7 @@ private Object UnaryExpression():
 
 	{
 		if(sign != null && sign.kind == MINUS){
-			result = toNegative(result);
+			result = ValueUtil.toNegative(asValue(result));
 		}
 
 		return result;

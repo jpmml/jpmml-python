@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Objects;
 
 import org.jpmml.converter.Feature;
+import org.jpmml.converter.FeatureUtil;
 import org.jpmml.converter.PMMLEncoder;
 
 public class BlockScope extends Scope {
@@ -67,13 +68,11 @@ public class BlockScope extends Scope {
 
 	@Override
 	public Feature resolveFeature(String name){
-		List<? extends Feature> features = getVariables();
+		List<? extends Feature> variables = getVariables();
 
-		for(Feature feature : features){
-
-			if((feature.getName()).equals(name)){
-				return feature;
-			}
+		Feature feature = FeatureUtil.findFeature(variables, name);
+		if(feature != null){
+			return feature;
 		}
 
 		return super.resolveFeature(name);
