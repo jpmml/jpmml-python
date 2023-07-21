@@ -18,6 +18,7 @@
  */
 package numpy.core;
 
+import org.jpmml.python.ClassDictUtil;
 import org.jpmml.python.CustomPythonObject;
 import org.jpmml.python.Identifiable;
 
@@ -29,7 +30,7 @@ public class UFunc extends CustomPythonObject implements Identifiable {
 
 	@Override
 	public void __init__(Object[] args){
-		super.__setstate__(createAttributeMap(INIT_ATTRIBUTES, args));
+		super.__setstate__(ClassDictUtil.createAttributeMap(INIT_ATTRIBUTES, args));
 	}
 
 	@Override

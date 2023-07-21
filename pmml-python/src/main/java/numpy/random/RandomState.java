@@ -18,6 +18,7 @@
  */
 package numpy.random;
 
+import org.jpmml.python.ClassDictUtil;
 import org.jpmml.python.CustomPythonObject;
 
 public class RandomState extends CustomPythonObject {
@@ -28,7 +29,7 @@ public class RandomState extends CustomPythonObject {
 
 	@Override
 	public void __setstate__(Object[] args){
-		super.__setstate__(createAttributeMap(SETSTATE_ATTRIBUTES, args));
+		super.__setstate__(ClassDictUtil.createAttributeMap(SETSTATE_ATTRIBUTES, args));
 	}
 
 	private static final String[] SETSTATE_ATTRIBUTES = {

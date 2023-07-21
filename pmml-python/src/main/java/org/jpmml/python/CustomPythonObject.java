@@ -73,29 +73,4 @@ public class CustomPythonObject extends PythonObject {
 
 		super.__setstate__(state);
 	}
-
-	static
-	public HashMap<String, Object> createAttributeMap(String[] attributes, Object[] args){
-
-		if(attributes.length != args.length){
-			throw new PickleException("Expected " + attributes.length + " attribute(s), got " + args.length + " attribute(s)");
-		}
-
-		HashMap<String, Object> result = new LinkedHashMap<>();
-
-		for(int i = 0; i < attributes.length; i++){
-			result.put(attributes[i], args[i]);
-		}
-
-		return result;
-	}
-
-	static
-	public Object[] extractArgs(Object[] args, int begin, int end){
-		Object[] result = new Object[end - begin];
-
-		System.arraycopy(args, begin, result, 0, result.length);
-
-		return result;
-	}
 }

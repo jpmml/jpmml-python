@@ -26,7 +26,7 @@ import java.util.List;
 import net.razorvine.pickle.PickleException;
 import net.razorvine.pickle.objects.ClassDict;
 import net.razorvine.pickle.objects.ClassDictConstructor;
-import org.jpmml.python.CustomPythonObject;
+import org.jpmml.python.ClassDictUtil;
 
 public class CreateCodeConstructor extends ClassDictConstructor {
 
@@ -38,7 +38,7 @@ public class CreateCodeConstructor extends ClassDictConstructor {
 	public Object construct(Object[] args){
 
 		if(!(args[0] instanceof Integer)){
-			args = CustomPythonObject.extractArgs(args, 1, args.length);
+			args = ClassDictUtil.extractArgs(args, 1, args.length);
 		}
 
 		ClassDict dict = new ClassDict("types", "CodeType");
@@ -54,7 +54,7 @@ public class CreateCodeConstructor extends ClassDictConstructor {
 			String[] names = CreateCodeConstructor.STATE_ATTRIBUTES[i];
 
 			if(names.length == args.length){
-				return CustomPythonObject.createAttributeMap(names, args);
+				return ClassDictUtil.createAttributeMap(names, args);
 			}
 		}
 

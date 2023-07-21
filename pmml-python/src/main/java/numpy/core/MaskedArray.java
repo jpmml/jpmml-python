@@ -21,6 +21,7 @@ package numpy.core;
 import java.util.HashMap;
 
 import numpy.DType;
+import org.jpmml.python.ClassDictUtil;
 import org.jpmml.python.CustomPythonObject;
 
 public class MaskedArray extends CustomPythonObject {
@@ -33,7 +34,7 @@ public class MaskedArray extends CustomPythonObject {
 	public void __init__(Object[] args){
 
 		if(args.length == 4){
-			HashMap<String, Object> values = createAttributeMap(
+			HashMap<String, Object> values = ClassDictUtil.createAttributeMap(
 				new String[]{"data", "mask"},
 				new Object[]{new NDArray(), new NDArray()}
 			);

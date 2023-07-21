@@ -21,6 +21,7 @@ package pandas.core;
 import java.util.List;
 
 import builtins.Slice;
+import org.jpmml.python.ClassDictUtil;
 import org.jpmml.python.CustomPythonObject;
 
 public class Block extends CustomPythonObject {
@@ -36,7 +37,7 @@ public class Block extends CustomPythonObject {
 			args = new Object[]{args[0], args[1], null};
 		}
 
-		super.__setstate__(createAttributeMap(INIT_ATTRIBUTES, args));
+		super.__setstate__(ClassDictUtil.createAttributeMap(INIT_ATTRIBUTES, args));
 	}
 
 	public Slice getSlice(){

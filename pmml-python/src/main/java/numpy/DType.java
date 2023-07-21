@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.dmg.pmml.DataType;
+import org.jpmml.python.ClassDictUtil;
 import org.jpmml.python.CustomPythonObject;
 import org.jpmml.python.TypeInfo;
 
@@ -38,7 +39,7 @@ public class DType extends CustomPythonObject implements TypeInfo {
 
 	@Override
 	public void __init__(Object[] args){
-		super.__setstate__(createAttributeMap(INIT_ATTRIBUTES, args));
+		super.__setstate__(ClassDictUtil.createAttributeMap(INIT_ATTRIBUTES, args));
 	}
 
 	/**
@@ -51,10 +52,10 @@ public class DType extends CustomPythonObject implements TypeInfo {
 		if(args.length == (SETSTATE_ATTRIBUTES.length + 1)){
 			Object[] datetime_data = (Object[])args[SETSTATE_ATTRIBUTES.length];
 
-			args = extractArgs(args, 0, SETSTATE_ATTRIBUTES.length);
+			args = ClassDictUtil.extractArgs(args, 0, SETSTATE_ATTRIBUTES.length);
 		}
 
-		super.__setstate__(createAttributeMap(SETSTATE_ATTRIBUTES, args));
+		super.__setstate__(ClassDictUtil.createAttributeMap(SETSTATE_ATTRIBUTES, args));
 	}
 
 	@Override

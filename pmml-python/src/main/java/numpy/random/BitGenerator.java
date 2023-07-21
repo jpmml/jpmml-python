@@ -18,6 +18,7 @@
  */
 package numpy.random;
 
+import org.jpmml.python.ClassDictUtil;
 import org.jpmml.python.CustomPythonObject;
 
 public class BitGenerator extends CustomPythonObject {
@@ -28,7 +29,7 @@ public class BitGenerator extends CustomPythonObject {
 
 	@Override
 	public void __init__(Object[] args){
-		super.__setstate__(createAttributeMap(INIT_ATTRIBUTES, args));
+		super.__setstate__(ClassDictUtil.createAttributeMap(INIT_ATTRIBUTES, args));
 	}
 
 	private static final String[] INIT_ATTRIBUTES = {

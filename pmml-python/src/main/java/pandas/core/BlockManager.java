@@ -40,7 +40,7 @@ public class BlockManager extends CustomPythonObject {
 		} else
 
 		{
-			super.__setstate__(createAttributeMap(INIT_ATTRIBUTES, args));
+			super.__setstate__(ClassDictUtil.createAttributeMap(INIT_ATTRIBUTES, args));
 		}
 	}
 
@@ -48,10 +48,10 @@ public class BlockManager extends CustomPythonObject {
 	public void __setstate__(Object[] args){
 
 		if(args.length > 3){
-			args = extractArgs(args, 0, 3);
+			args = ClassDictUtil.extractArgs(args, 0, 3);
 		}
 
-		super.__setstate__(createAttributeMap(SETSTATE_ATTRIBUTES, args));
+		super.__setstate__(ClassDictUtil.createAttributeMap(SETSTATE_ATTRIBUTES, args));
 	}
 
 	public Index getColumnAxis(){

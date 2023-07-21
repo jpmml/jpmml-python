@@ -22,7 +22,7 @@ import java.util.Arrays;
 
 import net.razorvine.pickle.PickleException;
 import net.razorvine.pickle.objects.ClassDictConstructor;
-import org.jpmml.python.CustomPythonObject;
+import org.jpmml.python.ClassDictUtil;
 
 public class CreateTypeConstructor extends ClassDictConstructor {
 
@@ -39,7 +39,7 @@ public class CreateTypeConstructor extends ClassDictConstructor {
 
 		ClassDictConstructor dictConstructor = (ClassDictConstructor)args[0];
 
-		args = CustomPythonObject.extractArgs(args, 1, args.length);
+		args = ClassDictUtil.extractArgs(args, 1, args.length);
 
 		return dictConstructor.construct(args);
 	}

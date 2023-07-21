@@ -23,6 +23,7 @@ import java.util.List;
 import net.razorvine.pickle.objects.ClassDictConstructor;
 import numpy.core.NDArray;
 import org.jpmml.python.ClassDictConstructorUtil;
+import org.jpmml.python.ClassDictUtil;
 import org.jpmml.python.CustomPythonObject;
 import org.jpmml.python.HasArray;
 import org.jpmml.python.PythonObject;
@@ -36,12 +37,12 @@ public class Index extends CustomPythonObject implements HasArray {
 
 	@Override
 	public void __init__(Object[] args){
-		super.__setstate__(createAttributeMap(INIT_ATTRIBUTES, args));
+		super.__setstate__(ClassDictUtil.createAttributeMap(INIT_ATTRIBUTES, args));
 	}
 
 	@Override
 	public void __setstate__(Object[] args){
-		super.__setstate__(createAttributeMap(SETSTATE_ATTRIBUTES, args));
+		super.__setstate__(ClassDictUtil.createAttributeMap(SETSTATE_ATTRIBUTES, args));
 	}
 
 	@Override
