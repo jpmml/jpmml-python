@@ -91,7 +91,7 @@ public class CustomPythonObject extends PythonObject {
 	}
 
 	static
-	protected Object[] extractArgs(Object[] args, int begin, int end){
+	public Object[] extractArgs(Object[] args, int begin, int end){
 		Object[] result = new Object[end - begin];
 
 		System.arraycopy(args, begin, result, 0, result.length);

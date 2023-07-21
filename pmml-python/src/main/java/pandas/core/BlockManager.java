@@ -48,11 +48,7 @@ public class BlockManager extends CustomPythonObject {
 	public void __setstate__(Object[] args){
 
 		if(args.length > 3){
-			Object[] newArgs = new Object[3];
-
-			System.arraycopy(args, 0, newArgs, 0, newArgs.length);
-
-			args = newArgs;
+			args = extractArgs(args, 0, 3);
 		}
 
 		super.__setstate__(createAttributeMap(SETSTATE_ATTRIBUTES, args));

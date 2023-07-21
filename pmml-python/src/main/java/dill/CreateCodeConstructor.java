@@ -38,7 +38,7 @@ public class CreateCodeConstructor extends ClassDictConstructor {
 	public Object construct(Object[] args){
 
 		if(!(args[0] instanceof Integer)){
-			args = DillUtil.dropFirst(args);
+			args = CustomPythonObject.extractArgs(args, 1, args.length);
 		}
 
 		ClassDict dict = new ClassDict("types", "CodeType");
