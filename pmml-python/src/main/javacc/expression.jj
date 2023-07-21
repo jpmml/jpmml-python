@@ -837,7 +837,7 @@ private Expression UnaryExpression():
 	(
 		sign = Sign() expression = UnaryExpression()
 		|
-		expression = PrimaryExpression()
+		expression = PowerExpression()
 	)
 
 	{
@@ -846,6 +846,19 @@ private Expression UnaryExpression():
 		}
 
 		return expression;
+	}
+}
+
+private Expression PowerExpression():
+{
+	Expression left;
+	Expression right;
+}
+{
+	left = PrimaryExpression() ( <POWER> right = UnaryExpression() { left = PMMLUtil.createApply(PMMLFunctions.POW, left, right); } )?
+
+	{
+		return left;
 	}
 }
 

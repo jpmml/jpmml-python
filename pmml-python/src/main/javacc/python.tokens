@@ -68,6 +68,8 @@ TOKEN:
 	< MODULO: "%" >
 	|
 	< TILDE: "~" >
+	|
+	< POWER: "**" >
 }
 
 TOKEN:

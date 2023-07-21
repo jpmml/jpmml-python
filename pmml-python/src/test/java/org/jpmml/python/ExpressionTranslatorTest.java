@@ -629,6 +629,18 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 	}
 
 	@Test
+	public void translatePowerExpression(){
+		ExpressionTranslator expressionTranslator = new ExpressionTranslator(BlockScope.EMPTY);
+
+		Map<String, ?> arguments = Collections.emptyMap();
+
+		assertEquals(2, evaluateExpression(expressionTranslator, "2 ** 1 ** 3", arguments));
+		assertEquals(8, evaluateExpression(expressionTranslator, "(2 ** 1) ** 3", arguments));
+
+		assertEquals(0.5d, evaluateExpression(expressionTranslator, "2.0 ** -1", arguments));
+	}
+
+	@Test
 	public void translateArrayIndexingExpression(){
 		List<Feature> features = booleanFeatures;
 
