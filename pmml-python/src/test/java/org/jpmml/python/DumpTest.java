@@ -142,15 +142,19 @@ public class DumpTest extends PickleUtilTest {
 		unpickleNumpyArrays("python-3.9_numpy-1.22.3");
 		unpickleNumpyArrays("python-3.9_numpy-1.23.4");
 		unpickleNumpyArrays("python-3.9_numpy-1.24.1");
+		unpickleNumpyArrays("python-3.9_numpy-1.26.2");
 
 		unpickleNumpyDtypes("python-3.9_numpy-1.22.3");
 		unpickleNumpyDtypes("python-3.9_numpy-1.23.4");
 		unpickleNumpyDtypes("python-3.9_numpy-1.24.1");
+		unpickleNumpyDtypes("python-3.9_numpy-1.26.2");
 
 		unpickleNumpyDatetimeDtypes("python-3.9_numpy-1.24.1");
+		unpickleNumpyDatetimeDtypes("python-3.9_numpy-1.26.2");
 
 		unpickleNumpyRNGs("python-3.9_numpy-1.23.4");
 		unpickleNumpyRNGs("python-3.9_numpy-1.24.1");
+		unpickleNumpyRNGs("python-3.9_numpy-1.26.2");
 
 		unpicklePandasSeries("python-3.9_pandas-1.2.3");
 		unpicklePandasSeries("python-3.9_pandas-1.3.1");
@@ -208,14 +212,18 @@ public class DumpTest extends PickleUtilTest {
 
 		unpickleNumpyArrays("python-3.11_numpy-1.23.4");
 		unpickleNumpyArrays("python-3.11_numpy-1.24.1");
+		unpickleNumpyArrays("python-3.11_numpy-1.26.2");
 
 		unpickleNumpyDtypes("python-3.11_numpy-1.23.4");
 		unpickleNumpyDtypes("python-3.11_numpy-1.24.1");
+		unpickleNumpyDtypes("python-3.11_numpy-1.26.2");
 
 		unpickleNumpyDatetimeDtypes("python-3.11_numpy-1.24.1");
+		unpickleNumpyDatetimeDtypes("python-3.11_numpy-1.26.2");
 
 		unpickleNumpyRNGs("python-3.11_numpy-1.23.4");
 		unpickleNumpyRNGs("python-3.11_numpy-1.24.1");
+		unpickleNumpyRNGs("python-3.11_numpy-1.26.2");
 
 		unpicklePandasSeries("python-3.11_pandas-1.5.1");
 		unpicklePandasSeries("python-3.11_pandas-1.5.2");
