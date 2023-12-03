@@ -374,6 +374,8 @@ private Object PrimaryExpression():
 
 private Feature ArrayIndexingExpression(String dottedName):
 {
+	Scope scope = ensureScope();
+
 	Token sign = null;
 	Token column;
 
@@ -383,16 +385,12 @@ private Feature ArrayIndexingExpression(String dottedName):
 	(
 		LOOKAHEAD(<LBRACKET> (Sign())? <INT>)
 		<LBRACKET> (sign = Sign())? column = <INT> <RBRACKET> {
-			Scope scope = ensureScope();
-
 			int colIndex = PythonParserUtil.parseInt(sign, column);
 
 			feature = scope.getFeature(dottedName, colIndex);
 		}
 		|
 		<LBRACKET> column = String() <RBRACKET> {
-			Scope scope = ensureScope();
-
 			String colName = PythonParserUtil.parseString(column);
 
 			feature = scope.getFeature(dottedName, colName);
@@ -435,11 +433,11 @@ private List<Object> Arguments():
 }
 
 private Object NameInvocationExpression(String dottedName):
-{}
+{
+	Scope scope = ensureScope();
+}
 {
 	{
-		Scope scope = ensureScope();
-
 		Feature feature = scope.getFeature(dottedName);
 
 		return feature;
