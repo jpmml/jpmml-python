@@ -646,10 +646,23 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 		ExpressionTranslator expressionTranslator = new ExpressionTranslator(new DataFrameScope(features));
 
+		try {
+			translateExpression(expressionTranslator, "X[[0]]");
+
+			fail();
+		} catch(IllegalArgumentException iae){
+			// Ignored
+		}
+
 		for(int i = 0; i < features.size(); i++){
 			Feature feature = features.get(i);
 
-			checkExpression(feature.ref(), translateExpression(expressionTranslator, "X[" + "+" + i + "]"));
+			FieldRef fieldRef = feature.ref();
+
+			checkExpression(fieldRef, translateExpression(expressionTranslator, "X[" + "+" + i + "]"));
+
+			checkExpression(fieldRef, translateExpression(expressionTranslator, "X[:, " + "+" + i + "]"));
+			checkExpression(fieldRef, translateExpression(expressionTranslator, "X[:, [" + "+" + i + "]]"));
 		}
 
 		try {
@@ -663,7 +676,12 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 		for(int i = 1; i <= features.size(); i++){
 			Feature feature = features.get(features.size() - i);
 
-			checkExpression(feature.ref(), translateExpression(expressionTranslator, "X[" + "-" + i +"]"));
+			FieldRef fieldRef = feature.ref();
+
+			checkExpression(fieldRef, translateExpression(expressionTranslator, "X[" + "-" + i +"]"));
+
+			checkExpression(fieldRef, translateExpression(expressionTranslator, "X[:, " + "-" + i + "]"));
+			checkExpression(fieldRef, translateExpression(expressionTranslator, "X[:, [" + "-" + i + "]]"));
 		}
 
 		try {

@@ -43,6 +43,22 @@ private int ColumnIndex():
 	}
 }
 
+private int ArrayColumnIndex():
+{
+	int columnIndex;
+}
+{
+	(
+		<COLON> <COMMA> (<LBRACKET> columnIndex = ColumnIndex() <RBRACKET> | columnIndex = ColumnIndex())
+		|
+		columnIndex = ColumnIndex()
+	)
+
+	{
+		return columnIndex;
+	}
+}
+
 private String ColumnName():
 {
 	Token column;

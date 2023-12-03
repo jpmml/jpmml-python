@@ -900,8 +900,8 @@ private FieldRef ArrayIndexingExpression(String dottedName):
 }
 {
 	(
-		LOOKAHEAD(<LBRACKET> ColumnIndex())
-		<LBRACKET> colIndex = ColumnIndex() <RBRACKET> {
+		LOOKAHEAD(<LBRACKET> ArrayColumnIndex())
+		<LBRACKET> colIndex = ArrayColumnIndex() <RBRACKET> {
 			feature = scope.getFeature(dottedName, colIndex);
 		}
 		|

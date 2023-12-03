@@ -63,6 +63,10 @@ public class PredicateTranslatorTest extends TranslatorTest {
 
 		checkPredicate(expected, translatePredicate(predicateTranslator, string));
 
+		string = "X[:, 0] > 0.0 and X[:, [1]] > 0 or X[:, [2]] > 0";
+
+		checkPredicate(expected, translatePredicate(predicateTranslator, string));
+
 		expected = new CompoundPredicate(CompoundPredicate.BooleanOperator.AND, null)
 			.addPredicates(first)
 			.addPredicates(new CompoundPredicate(CompoundPredicate.BooleanOperator.OR, null)
@@ -127,9 +131,13 @@ public class PredicateTranslatorTest extends TranslatorTest {
 		checkPredicate(expected, translatePredicate(predicateTranslator, "numpy.isnan(X[0])"));
 		checkPredicate(expected, translatePredicate(predicateTranslator, "pandas.isnull(X[0])"));
 
+		checkPredicate(expected, translatePredicate(predicateTranslator, "pandas.isnull(X[:, 0])"));
+
 		expected = new SimplePredicate("a", SimplePredicate.Operator.IS_NOT_MISSING, null);
 
 		checkPredicate(expected, translatePredicate(predicateTranslator, "pandas.notnull(X[0])"));
+
+		checkPredicate(expected, translatePredicate(predicateTranslator, "pandas.notnull(X[:, 0])"));
 
 		expected = new CompoundPredicate(CompoundPredicate.BooleanOperator.AND, null)
 			.addPredicates(new SimplePredicate("a", SimplePredicate.Operator.IS_NOT_MISSING, null))
@@ -215,6 +223,9 @@ public class PredicateTranslatorTest extends TranslatorTest {
 		Predicate expected = new SimplePredicate("a", SimplePredicate.Operator.EQUAL, true);
 
 		checkPredicate(expected, translatePredicate(predicateTranslator, "X[0]"));
+
+		checkPredicate(expected, translatePredicate(predicateTranslator, "X[:, 0]"));
+
 		checkPredicate(expected, translatePredicate(predicateTranslator, "X['a']"));
 
 		predicateTranslator = new PredicateTranslator(new BlockScope(booleanFeatures));
