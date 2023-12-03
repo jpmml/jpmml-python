@@ -376,23 +376,19 @@ private Feature ArrayIndexingExpression(String dottedName):
 {
 	Scope scope = ensureScope();
 
-	Token sign = null;
-	Token column;
+	int colIndex;
+	String colName;
 
 	Feature feature;
 }
 {
 	(
-		LOOKAHEAD(<LBRACKET> (Sign())? <INT>)
-		<LBRACKET> (sign = Sign())? column = <INT> <RBRACKET> {
-			int colIndex = PythonParserUtil.parseInt(sign, column);
-
+		LOOKAHEAD(<LBRACKET> ColumnIndex())
+		<LBRACKET> colIndex = ColumnIndex() <RBRACKET> {
 			feature = scope.getFeature(dottedName, colIndex);
 		}
 		|
-		<LBRACKET> column = String() <RBRACKET> {
-			String colName = PythonParserUtil.parseString(column);
-
+		<LBRACKET> colName = ColumnName() <RBRACKET> {
 			feature = scope.getFeature(dottedName, colName);
 		}
 	)

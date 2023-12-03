@@ -893,23 +893,19 @@ private FieldRef ArrayIndexingExpression(String dottedName):
 {
 	Scope scope = ensureScope();
 
-	Token sign = null;
-	Token column;
+	int colIndex;
+	String colName;
 
 	Feature feature;
 }
 {
 	(
-		LOOKAHEAD(<LBRACKET> (Sign())? <INT>)
-		<LBRACKET> (sign = Sign())? column = <INT> <RBRACKET> {
-			int colIndex = PythonParserUtil.parseInt(sign, column);
-			
+		LOOKAHEAD(<LBRACKET> ColumnIndex())
+		<LBRACKET> colIndex = ColumnIndex() <RBRACKET> {
 			feature = scope.getFeature(dottedName, colIndex);
 		}
 		|
-		<LBRACKET> column = String() <RBRACKET> {
-			String colName = PythonParserUtil.parseString(column);
-			
+		<LBRACKET> colName = ColumnName() <RBRACKET> {
 			feature = scope.getFeature(dottedName, colName);
 		}
 	)
@@ -977,25 +973,13 @@ private List<Expression> Arguments():
 
 private Expression StringSlicingExpression(Expression expression):
 {
-	Token startSign = null;
-	Token start = null;
-	Token stopSign = null;
-	Token stop = null;
+	Integer startPos = null;
+	Integer stopPos = null;
 }
 {
-	<LBRACKET> ((startSign = Sign())? start = <INT>)? <COLON> ((stopSign = Sign())? stop = <INT>)? <RBRACKET>
+	<LBRACKET> (startPos = ColumnIndex())? <COLON> (stopPos = ColumnIndex())? <RBRACKET>
 
 	{
-		Integer startPos = null;
-		if(start != null){
-			startPos = PythonParserUtil.parseInt(startSign, start);
-		}
-
-		Integer stopPos = null;
-		if(stop != null){
-			stopPos = PythonParserUtil.parseInt(stopSign, stop);
-		}
-
 		return translateStringSlice(expression, startPos, stopPos);
 	}
 }

@@ -30,6 +30,31 @@ private Token Sign():
 	}
 }
 
+private int ColumnIndex():
+{
+	Token sign = null;
+	Token column;
+}
+{
+	(sign = Sign())? column = <INT>
+
+	{
+		return PythonParserUtil.parseInt(sign, column);
+	}
+}
+
+private String ColumnName():
+{
+	Token column;
+}
+{
+	column = String()
+
+	{
+		return PythonParserUtil.parseString(column);
+	}
+}
+
 private String DottedName():
 {
 	Token name;
