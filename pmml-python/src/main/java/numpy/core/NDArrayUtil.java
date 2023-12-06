@@ -188,9 +188,12 @@ public class NDArrayUtil {
 
 	static
 	public Object parseData(InputStream is, Object descr, Object[] shape, Integer numpyArrayAlignmentBytes) throws IOException {
+		Integer wSize = null;
 
 		if(descr instanceof DType){
 			DType dtype = (DType)descr;
+
+			wSize = dtype.getWSize();
 
 			descr = dtype.toDescr();
 		}
@@ -209,7 +212,7 @@ public class NDArrayUtil {
 
 		Map<String, List<?>> result = new LinkedHashMap<>();
 
-		List<Object[]> objects = parseMultiArray(is, (List)TupleUtil.extractElementList(dims, 1), length, numpyArrayAlignmentBytes);
+		List<Object[]> objects = parseMultiArray(is, (List)TupleUtil.extractElementList(dims, 1), length, wSize, numpyArrayAlignmentBytes);
 
 		for(int i = 0; i < dims.size(); i++){
 			Object[] dim = dims.get(i);
@@ -256,10 +259,12 @@ public class NDArrayUtil {
 	}
 
 	static
-	public List<Object[]> parseMultiArray(InputStream is, List<String> descrs, int length, Integer numpyArrayAlignmentBytes) throws IOException {
+	public List<Object[]> parseMultiArray(InputStream is, List<String> descrs, int length, Integer wSize, Integer numpyArrayAlignmentBytes) throws IOException {
 		List<Object[]> result = new ArrayList<>(length);
 
 		List<TypeDescriptor> descriptors = new ArrayList<>();
+
+		int size = 0;
 
 		for(String descr : descrs){
 			TypeDescriptor descriptor = new TypeDescriptor(descr);
@@ -269,7 +274,19 @@ public class NDArrayUtil {
 			}
 
 			descriptors.add(descriptor);
+
+			size += descriptor.getSize();
 		}
+
+		Integer skipBytes = null;
+
+		if(wSize != null){
+			skipBytes = (wSize - size);
+
+			if(skipBytes < 0){
+				throw new IllegalArgumentException();
+			}
+		} // End if
 
 		if(numpyArrayAlignmentBytes != null){
 			skipPadding(is, numpyArrayAlignmentBytes);
@@ -282,6 +299,14 @@ public class NDArrayUtil {
 				TypeDescriptor descriptor = descriptors.get(j);
 
 				element[j] = descriptor.read(is);
+			}
+
+			if(skipBytes != null && skipBytes > 0){
+				int skippedBytes = 0;
+
+				while(skippedBytes < skipBytes){
+					skippedBytes += is.skip(skipBytes - skippedBytes);
+				}
 			}
 
 			result.add(element);

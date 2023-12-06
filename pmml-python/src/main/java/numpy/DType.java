@@ -100,6 +100,10 @@ public class DType extends CustomPythonObject implements TypeInfo {
 		return (String)get("order");
 	}
 
+	public Integer getWSize(){
+		return (Integer)get("w_size");
+	}
+
 	static
 	public void addDefinition(List<String> definition){
 		DType.definitions.put(new HashSet<>(definition), definition);
