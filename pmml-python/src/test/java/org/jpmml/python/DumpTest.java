@@ -126,6 +126,7 @@ public class DumpTest extends PickleUtilTest {
 		unpickle("python-3.9_joblib-1.1.0.pkl.z");
 		unpickle("python-3.9_joblib-1.2.0.pkl.z");
 		unpickle("python-3.9_joblib-1.3.1.pkl.z");
+		unpickle("python-3.9_joblib-1.3.2.pkl.z");
 
 		unpickle("python-3.9_pickle-p2.pkl");
 		unpickle("python-3.9_pickle-p3.pkl");
@@ -205,6 +206,7 @@ public class DumpTest extends PickleUtilTest {
 
 		unpickle("python-3.11_joblib-1.2.0.pkl.z");
 		unpickle("python-3.11_joblib-1.3.1.pkl.z");
+		unpickle("python-3.11_joblib-1.3.2.pkl.z");
 
 		unpickle("python-3.11_pickle-p2.pkl");
 		unpickle("python-3.11_pickle-p3.pkl");
