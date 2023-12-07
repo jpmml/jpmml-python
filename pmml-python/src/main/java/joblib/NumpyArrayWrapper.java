@@ -38,13 +38,12 @@ public class NumpyArrayWrapper extends PythonObject {
 		String order = getOrder();
 		Integer numpyArrayAlignmentBytes = getNumpyArrayAlignmentBytes();
 
-		Object descr = dtype.toDescr();
 		Boolean fortranOrder = parseOrder(order);
 
-		Object data = NDArrayUtil.parseData(is, descr, shape, numpyArrayAlignmentBytes);
+		Object data = NDArrayUtil.parseData(is, dtype, shape, numpyArrayAlignmentBytes);
 
 		NDArray array = new NDArray();
-		array.__setstate__(new Object[]{null, shape, descr, fortranOrder, data});
+		array.__setstate__(new Object[]{null, shape, dtype, fortranOrder, data});
 
 		return array;
 	}
