@@ -23,7 +23,7 @@ import java.util.List;
 import org.dmg.pmml.Apply;
 import org.dmg.pmml.Expression;
 import org.dmg.pmml.PMMLFunctions;
-import org.jpmml.converter.PMMLUtil;
+import org.jpmml.converter.ExpressionUtil;
 
 public class FunctionUtil {
 
@@ -292,18 +292,18 @@ public class FunctionUtil {
 
 	static
 	public Apply encodeUnaryFunction(String function, List<Expression> expressions){
-		return PMMLUtil.createApply(function, getElement(expressions, 1, 0));
+		return ExpressionUtil.createApply(function, getElement(expressions, 1, 0));
 	}
 
 	static
 	public Apply encodeBinaryFunction(String function, List<Expression> expressions){
-		return PMMLUtil.createApply(function, getElement(expressions, 2, 0), getElement(expressions, 2, 1));
+		return ExpressionUtil.createApply(function, getElement(expressions, 2, 0), getElement(expressions, 2, 1));
 	}
 
 	static
 	private Apply clip(List<Expression> expressions){
-		return PMMLUtil.createApply(PMMLFunctions.MIN,
-			PMMLUtil.createApply(PMMLFunctions.MAX,
+		return ExpressionUtil.createApply(PMMLFunctions.MIN,
+			ExpressionUtil.createApply(PMMLFunctions.MAX,
 				getElement(expressions, 3, 0),
 				getElement(expressions, 3, 1)
 			),
@@ -313,16 +313,16 @@ public class FunctionUtil {
 
 	static
 	private Apply deg2rad(List<Expression> expressions){
-		return PMMLUtil.createApply(PMMLFunctions.MULTIPLY, getOnlyElement(expressions), PMMLUtil.createConstant(Math.PI / 180d));
+		return ExpressionUtil.createApply(PMMLFunctions.MULTIPLY, getOnlyElement(expressions), ExpressionUtil.createConstant(Math.PI / 180d));
 	}
 
 	static
 	private Apply expit(List<Expression> expressions){
-		return PMMLUtil.createApply(PMMLFunctions.DIVIDE,
-			PMMLUtil.createConstant(1),
-			PMMLUtil.createApply(PMMLFunctions.ADD,
-				PMMLUtil.createConstant(1),
-				PMMLUtil.createApply(PMMLFunctions.EXP, PMMLUtil.createApply(PMMLFunctions.MULTIPLY, PMMLUtil.createConstant(-1), getOnlyElement(expressions)))
+		return ExpressionUtil.createApply(PMMLFunctions.DIVIDE,
+			ExpressionUtil.createConstant(1),
+			ExpressionUtil.createApply(PMMLFunctions.ADD,
+				ExpressionUtil.createConstant(1),
+				ExpressionUtil.createApply(PMMLFunctions.EXP, ExpressionUtil.createApply(PMMLFunctions.MULTIPLY, ExpressionUtil.createConstant(-1), getOnlyElement(expressions)))
 			)
 		);
 	}
@@ -331,32 +331,32 @@ public class FunctionUtil {
 	private Apply logit(List<Expression> expressions){
 		Expression expression = getOnlyElement(expressions);
 
-		return PMMLUtil.createApply(PMMLFunctions.LN,
-			PMMLUtil.createApply(PMMLFunctions.DIVIDE,
+		return ExpressionUtil.createApply(PMMLFunctions.LN,
+			ExpressionUtil.createApply(PMMLFunctions.DIVIDE,
 				expression,
-				PMMLUtil.createApply(PMMLFunctions.SUBTRACT, PMMLUtil.createConstant(1), expression)
+				ExpressionUtil.createApply(PMMLFunctions.SUBTRACT, ExpressionUtil.createConstant(1), expression)
 			)
 		);
 	}
 
 	static
 	private Apply negative(List<Expression> expressions){
-		return PMMLUtil.createApply(PMMLFunctions.MULTIPLY, PMMLUtil.createConstant(-1), getOnlyElement(expressions));
+		return ExpressionUtil.createApply(PMMLFunctions.MULTIPLY, ExpressionUtil.createConstant(-1), getOnlyElement(expressions));
 	}
 
 	static
 	private Apply rad2deg(List<Expression> expressions){
-		return PMMLUtil.createApply(PMMLFunctions.MULTIPLY, getOnlyElement(expressions), PMMLUtil.createConstant(180d / Math.PI));
+		return ExpressionUtil.createApply(PMMLFunctions.MULTIPLY, getOnlyElement(expressions), ExpressionUtil.createConstant(180d / Math.PI));
 	}
 
 	static
 	private Apply reciprocal(List<Expression> expressions){
-		return PMMLUtil.createApply(PMMLFunctions.DIVIDE, PMMLUtil.createConstant(1), getOnlyElement(expressions));
+		return ExpressionUtil.createApply(PMMLFunctions.DIVIDE, ExpressionUtil.createConstant(1), getOnlyElement(expressions));
 	}
 
 	static
 	private Apply search(List<Expression> expressions){
-		return PMMLUtil.createApply(PMMLFunctions.MATCHES,
+		return ExpressionUtil.createApply(PMMLFunctions.MATCHES,
 			getElement(expressions, 2, 1),
 			getElement(expressions, 2, 0)
 		);
@@ -366,23 +366,23 @@ public class FunctionUtil {
 	private Apply sign(List<Expression> expressions){
 		Expression expression = getOnlyElement(expressions);
 
-		return PMMLUtil.createApply(PMMLFunctions.IF, PMMLUtil.createApply(PMMLFunctions.LESSTHAN, expression, PMMLUtil.createConstant(0)),
-			PMMLUtil.createConstant(-1), // x < 0
-			PMMLUtil.createApply(PMMLFunctions.IF, PMMLUtil.createApply(PMMLFunctions.GREATERTHAN, expression, PMMLUtil.createConstant(0)),
-				PMMLUtil.createConstant(+1), // x > 0
-				PMMLUtil.createConstant(0) // x == 0
+		return ExpressionUtil.createApply(PMMLFunctions.IF, ExpressionUtil.createApply(PMMLFunctions.LESSTHAN, expression, ExpressionUtil.createConstant(0)),
+			ExpressionUtil.createConstant(-1), // x < 0
+			ExpressionUtil.createApply(PMMLFunctions.IF, ExpressionUtil.createApply(PMMLFunctions.GREATERTHAN, expression, ExpressionUtil.createConstant(0)),
+				ExpressionUtil.createConstant(+1), // x > 0
+				ExpressionUtil.createConstant(0) // x == 0
 			)
 		);
 	}
 
 	static
 	private Apply square(List<Expression> expressions){
-		return PMMLUtil.createApply(PMMLFunctions.POW, getOnlyElement(expressions), PMMLUtil.createConstant(2));
+		return ExpressionUtil.createApply(PMMLFunctions.POW, getOnlyElement(expressions), ExpressionUtil.createConstant(2));
 	}
 
 	static
 	private Apply sub(List<Expression> expressions){
-		return PMMLUtil.createApply(PMMLFunctions.REPLACE,
+		return ExpressionUtil.createApply(PMMLFunctions.REPLACE,
 			getElement(expressions, 3, 2),
 			getElement(expressions, 3, 0),
 			getElement(expressions, 3, 1)
@@ -393,15 +393,15 @@ public class FunctionUtil {
 	private Apply trunc(List<Expression> expressions){
 		Expression expression = getOnlyElement(expressions);
 
-		return PMMLUtil.createApply(PMMLFunctions.IF, PMMLUtil.createApply(PMMLFunctions.LESSTHAN, expression, PMMLUtil.createConstant(0)),
-			PMMLUtil.createApply(PMMLFunctions.CEIL, expression), // x < 0
-			PMMLUtil.createApply(PMMLFunctions.FLOOR, expression) // x >= 0
+		return ExpressionUtil.createApply(PMMLFunctions.IF, ExpressionUtil.createApply(PMMLFunctions.LESSTHAN, expression, ExpressionUtil.createConstant(0)),
+			ExpressionUtil.createApply(PMMLFunctions.CEIL, expression), // x < 0
+			ExpressionUtil.createApply(PMMLFunctions.FLOOR, expression) // x >= 0
 		);
 	}
 
 	static
 	private Apply where(List<Expression> expressions){
-		return PMMLUtil.createApply(PMMLFunctions.IF, getElement(expressions, 3, 0),
+		return ExpressionUtil.createApply(PMMLFunctions.IF, getElement(expressions, 3, 0),
 			getElement(expressions, 3, 1),
 			getElement(expressions, 3, 2)
 		);

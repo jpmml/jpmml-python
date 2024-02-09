@@ -30,6 +30,7 @@ import org.dmg.pmml.Expression;
 import org.dmg.pmml.Field;
 import org.dmg.pmml.FieldRef;
 import org.dmg.pmml.OpType;
+import org.jpmml.converter.ExpressionUtil;
 import org.jpmml.converter.Feature;
 import org.jpmml.converter.FeatureResolver;
 import org.jpmml.converter.FeatureUtil;
@@ -216,7 +217,7 @@ public class AbstractTranslator implements FeatureResolver {
 		PMMLEncoder encoder = ensureEncoder();
 
 		OpType opType = null;
-		DataType dataType = TypeUtil.getDataType(expression, this);
+		DataType dataType = ExpressionUtil.getDataType(expression, this);
 
 		if(dataType != null){
 			opType = TypeUtil.getOpType(dataType);
