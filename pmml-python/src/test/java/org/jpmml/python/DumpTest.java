@@ -166,6 +166,7 @@ public class DumpTest extends PickleUtilTest {
 		unpicklePandasSeries("python-3.9_pandas-1.5.2");
 		unpicklePandasSeries("python-3.9_pandas-2.0.2");
 		unpicklePandasSeries("python-3.9_pandas-2.1.3");
+		unpicklePandasSeries("python-3.9_pandas-2.2.0");
 
 		unpicklePandasSeriesNA("python-3.9_pandas-1.4.1");
 		unpicklePandasSeriesNA("python-3.9_pandas-1.4.3");
@@ -173,6 +174,7 @@ public class DumpTest extends PickleUtilTest {
 		unpicklePandasSeriesNA("python-3.9_pandas-1.5.2");
 		unpicklePandasSeriesNA("python-3.9_pandas-2.0.2");
 		unpicklePandasSeriesNA("python-3.9_pandas-2.1.3");
+		unpicklePandasSeriesNA("python-3.9_pandas-2.2.0");
 
 		unpicklePandasCategorical("python-3.9_pandas-1.4.1");
 		unpicklePandasCategorical("python-3.9_pandas-1.4.3");
@@ -180,6 +182,7 @@ public class DumpTest extends PickleUtilTest {
 		unpicklePandasCategorical("python-3.9_pandas-1.5.2");
 		unpicklePandasCategorical("python-3.9_pandas-2.0.2");
 		unpicklePandasCategorical("python-3.9_pandas-2.1.3");
+		unpicklePandasCategorical("python-3.9_pandas-2.2.0");
 
 		unpicklePandasDataFrame("python-3.9_pandas-1.1.3");
 		unpicklePandasDataFrame("python-3.9_pandas-1.2.3");
@@ -191,6 +194,7 @@ public class DumpTest extends PickleUtilTest {
 		unpicklePandasDataFrame("python-3.9_pandas-1.5.2");
 		unpicklePandasDataFrame("python-3.9_pandas-2.0.2");
 		unpicklePandasDataFrame("python-3.9_pandas-2.1.3");
+		unpicklePandasDataFrame("python-3.9_pandas-2.2.0");
 
 		unpicklePandasDtypes("python-3.9_pandas-1.4.1");
 		unpicklePandasDtypes("python-3.9_pandas-1.4.3");
@@ -198,6 +202,7 @@ public class DumpTest extends PickleUtilTest {
 		unpicklePandasDtypes("python-3.9_pandas-1.5.2");
 		unpicklePandasDtypes("python-3.9_pandas-2.0.2");
 		unpicklePandasDtypes("python-3.9_pandas-2.1.3");
+		unpicklePandasDtypes("python-3.9_pandas-2.2.0");
 	}
 
 	@Test
@@ -236,26 +241,31 @@ public class DumpTest extends PickleUtilTest {
 		unpicklePandasSeries("python-3.11_pandas-1.5.2");
 		unpicklePandasSeries("python-3.11_pandas-2.0.2");
 		unpicklePandasSeries("python-3.11_pandas-2.1.3");
+		unpicklePandasSeries("python-3.11_pandas-2.2.0");
 
 		unpicklePandasSeriesNA("python-3.11_pandas-1.5.1");
 		unpicklePandasSeriesNA("python-3.11_pandas-1.5.2");
 		unpicklePandasSeriesNA("python-3.11_pandas-2.0.2");
 		unpicklePandasSeriesNA("python-3.11_pandas-2.1.3");
+		unpicklePandasSeriesNA("python-3.11_pandas-2.2.0");
 
 		unpicklePandasCategorical("python-3.11_pandas-1.5.1");
 		unpicklePandasCategorical("python-3.11_pandas-1.5.2");
 		unpicklePandasCategorical("python-3.11_pandas-2.0.2");
 		unpicklePandasCategorical("python-3.11_pandas-2.1.3");
+		unpicklePandasCategorical("python-3.11_pandas-2.2.0");
 
 		unpicklePandasDataFrame("python-3.11_pandas-1.5.1");
 		unpicklePandasDataFrame("python-3.11_pandas-1.5.2");
 		unpicklePandasDataFrame("python-3.11_pandas-2.0.2");
 		unpicklePandasDataFrame("python-3.11_pandas-2.1.3");
+		unpicklePandasDataFrame("python-3.11_pandas-2.2.0");
 
 		unpicklePandasDtypes("python-3.11_pandas-1.5.1");
 		unpicklePandasDtypes("python-3.11_pandas-1.5.2");
 		unpicklePandasDtypes("python-3.11_pandas-2.0.2");
 		unpicklePandasDtypes("python-3.11_pandas-2.1.3");
+		unpicklePandasDtypes("python-3.11_pandas-2.2.0");
 	}
 
 	private void unpickleBuiltinDtypes(String prefix) throws IOException {
