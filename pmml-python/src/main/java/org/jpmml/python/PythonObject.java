@@ -122,8 +122,12 @@ public class PythonObject extends ClassDict {
 		return get(name, Boolean.class);
 	}
 
+	public Boolean getOptionalBoolean(String name){
+		return getOptional(name, Boolean.class);
+	}
+
 	public Boolean getOptionalBoolean(String name, Boolean defaultValue){
-		Boolean value = getOptional(name, Boolean.class);
+		Boolean value = getOptionalBoolean(name);
 
 		if(value == null){
 			return defaultValue;
@@ -133,11 +137,27 @@ public class PythonObject extends ClassDict {
 	}
 
 	public Integer getInteger(String name){
-		return ValueUtil.asInteger(getNumber(name));
+		Number value = getNumber(name);
+
+		return ValueUtil.asInteger(value);
+	}
+
+	public Integer getOptionalInteger(String name){
+		Number value = getOptionalNumber(name);
+
+		if(value == null){
+			return null;
+		}
+
+		return ValueUtil.asInteger(value);
 	}
 
 	public Number getNumber(String name){
 		return get(name, Number.class);
+	}
+
+	public Number getOptionalNumber(String name){
+		return getOptional(name, Number.class);
 	}
 
 	public Object getObject(String name){
