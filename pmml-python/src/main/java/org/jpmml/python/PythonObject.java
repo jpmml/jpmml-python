@@ -238,6 +238,11 @@ public class PythonObject extends ClassDict {
 		return Lists.transform(values, castFunction);
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<String> getStringArray(String name){
+		return (List<String>)getArray(name, String.class);
+	}
+
 	public <E> List<? extends E> getArray(String name, Class<? extends E> clazz){
 		List<?> values = getArray(name);
 
