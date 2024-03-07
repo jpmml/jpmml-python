@@ -55,15 +55,36 @@ public class LoadTypeConstructor extends ClassDictConstructor {
 			throw new RuntimeException(roe);
 		}
 
-		String[] modules = {"builtins", "types"};
-		for(String module : modules){
-			IObjectConstructor objectConstructor = objectConstructors.get(module + "." + name);
-
-			if(objectConstructor != null){
-				return objectConstructor;
-			}
+		IObjectConstructor objectConstructor = findObjectConstructor(name, objectConstructors);
+		if(objectConstructor != null){
+			return objectConstructor;
 		}
 
 		throw new IllegalArgumentException(name);
+	}
+
+	static
+	private IObjectConstructor findObjectConstructor(String name, Map<String, IObjectConstructor> objectConstructors){
+
+		switch(name){
+			case "PartialType":
+				{
+					return objectConstructors.get("functools.partial");
+				}
+			default:
+				{
+					String[] modules = {"builtins", "types"};
+
+					for(String module : modules){
+						IObjectConstructor objectConstructor = objectConstructors.get(module + "." + name);
+
+						if(objectConstructor != null){
+							return objectConstructor;
+						}
+					}
+
+					return null;
+				}
+		}
 	}
 }
