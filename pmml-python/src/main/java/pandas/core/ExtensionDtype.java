@@ -18,16 +18,13 @@
  */
 package pandas.core;
 
-import org.dmg.pmml.DataType;
 import org.jpmml.python.PythonObject;
+import org.jpmml.python.TypeInfo;
 
 abstract
-public class ExtensionDtype extends PythonObject {
+public class ExtensionDtype extends PythonObject implements TypeInfo {
 
 	public ExtensionDtype(String module, String name){
 		super(module, name);
 	}
-
-	abstract
-	public DataType getDataType();
 }
