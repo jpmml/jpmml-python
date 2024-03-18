@@ -172,6 +172,7 @@ dtypes = [
 	pandas.BooleanDtype(),
 	pandas.Int8Dtype(), pandas.Int16Dtype(), pandas.Int32Dtype(), pandas.Int64Dtype(),
 	pandas.UInt8Dtype(), pandas.UInt16Dtype(), pandas.UInt32Dtype(), pandas.UInt64Dtype(),
+	pandas.Float32Dtype(), pandas.Float64Dtype(),
 	pandas.StringDtype()
 ]
 _pickle_pandas_dtypes(dtypes)
