@@ -21,9 +21,9 @@ package numpy.core;
 import java.util.Arrays;
 
 import net.razorvine.pickle.PickleException;
-import org.jpmml.python.CustomPythonObjectConstructor;
+import org.jpmml.python.CythonObjectConstructor;
 
-public class FromBufferConstructor extends CustomPythonObjectConstructor {
+public class FromBufferConstructor extends CythonObjectConstructor {
 
 	public FromBufferConstructor(String module, String name){
 		super(module, name, NDArray.class);

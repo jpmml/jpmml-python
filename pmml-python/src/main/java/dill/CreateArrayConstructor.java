@@ -23,9 +23,9 @@ import java.util.Arrays;
 import net.razorvine.pickle.PickleException;
 import net.razorvine.pickle.objects.ClassDictConstructor;
 import numpy.core.NDArray;
-import org.jpmml.python.CustomPythonObjectConstructor;
+import org.jpmml.python.CythonObjectConstructor;
 
-public class CreateArrayConstructor extends CustomPythonObjectConstructor {
+public class CreateArrayConstructor extends CythonObjectConstructor {
 
 	public CreateArrayConstructor(String module, String name){
 		super(module, name, NDArray.class);

@@ -80,8 +80,8 @@ public class PythonObjectConstructor extends ClassDictConstructor {
 			}
 		} else
 
-		if(first instanceof CustomPythonObjectConstructor){
-			CustomPythonObjectConstructor dictConstructor = (CustomPythonObjectConstructor)first;
+		if(first instanceof CythonObjectConstructor){
+			CythonObjectConstructor dictConstructor = (CythonObjectConstructor)first;
 
 			CythonObject dict = dictConstructor.construct(new Object[0]);
 

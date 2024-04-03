@@ -202,7 +202,7 @@ public class PickleUtil {
 				} else
 
 				{
-					dictConstructor = new CustomPythonObjectConstructor(module, name, clazz.asSubclass(CythonObject.class));
+					dictConstructor = new CythonObjectConstructor(module, name, clazz.asSubclass(CythonObject.class));
 				}
 			} else
 

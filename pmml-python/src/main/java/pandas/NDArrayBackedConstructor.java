@@ -21,9 +21,9 @@ package pandas;
 import java.util.Arrays;
 
 import net.razorvine.pickle.PickleException;
-import org.jpmml.python.CustomPythonObjectConstructor;
+import org.jpmml.python.CythonObjectConstructor;
 
-public class NDArrayBackedConstructor extends CustomPythonObjectConstructor {
+public class NDArrayBackedConstructor extends CythonObjectConstructor {
 
 	public NDArrayBackedConstructor(String module, String name, Class<? extends NDArrayBacked> clazz){
 		super(module, name, clazz);

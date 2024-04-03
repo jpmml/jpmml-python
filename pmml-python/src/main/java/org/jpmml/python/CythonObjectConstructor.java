@@ -18,9 +18,9 @@
  */
 package org.jpmml.python;
 
-public class CustomPythonObjectConstructor extends PythonObjectConstructor {
+public class CythonObjectConstructor extends PythonObjectConstructor {
 
-	public CustomPythonObjectConstructor(String module, String name, Class<? extends CythonObject> clazz){
+	public CythonObjectConstructor(String module, String name, Class<? extends CythonObject> clazz){
 		super(module, name, clazz);
 	}
 
