@@ -62,7 +62,7 @@ public class NumpyArrayWrapper extends PythonObject {
 
 	public Integer getNumpyArrayAlignmentBytes(){
 
-		if(!containsKey("numpy_array_alignment_bytes")){
+		if(!hasattr("numpy_array_alignment_bytes")){
 			return null;
 		}
 

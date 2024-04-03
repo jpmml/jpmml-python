@@ -63,7 +63,7 @@ public class Series extends PythonObject implements HasArray {
 	public SingleBlockManager getBlockManager(){
 
 		// Pandas 1.0
-		if(containsKey("_data")){
+		if(hasattr("_data")){
 			return get("_data", SingleBlockManager.class);
 		}
 

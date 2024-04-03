@@ -72,7 +72,7 @@ public class BlockManager extends CythonObject {
 
 	public List<Index> getAxesArray(){
 
-		if(containsKey("axes_array")){
+		if(hasattr("axes_array")){
 			return getList("axes_array", Index.class);
 		}
 
@@ -82,7 +82,7 @@ public class BlockManager extends CythonObject {
 
 	public List<Index> getBlockItems(){
 
-		if(containsKey("block_items")){
+		if(hasattr("block_items")){
 			return getList("block_items", Index.class);
 		}
 
@@ -98,7 +98,7 @@ public class BlockManager extends CythonObject {
 
 	public List<HasArray> getBlockValues(){
 
-		if(containsKey("block_values")){
+		if(hasattr("block_values")){
 			return getList("block_values", HasArray.class);
 		}
 

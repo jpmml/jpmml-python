@@ -28,7 +28,7 @@ public class DataFrame extends PythonObject {
 
 	public BlockManager getData(){
 
-		if(containsKey("_data")){
+		if(hasattr("_data")){
 			return get("_data", BlockManager.class);
 		}
 

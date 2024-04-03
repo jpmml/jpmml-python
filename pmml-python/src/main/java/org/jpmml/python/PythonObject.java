@@ -73,6 +73,15 @@ public class PythonObject extends ClassDict {
 		put("__class__", className);
 	}
 
+	@Override
+	public boolean containsKey(Object key){
+		return super.containsKey(key);
+	}
+
+	public boolean hasattr(String name){
+		return containsKey(name);
+	}
+
 	public <E> E get(String name, Class<? extends E> clazz){
 		Object value = get(name);
 
