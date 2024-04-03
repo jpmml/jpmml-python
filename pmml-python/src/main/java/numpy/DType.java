@@ -28,10 +28,10 @@ import java.util.Set;
 
 import org.dmg.pmml.DataType;
 import org.jpmml.python.ClassDictUtil;
-import org.jpmml.python.CustomPythonObject;
+import org.jpmml.python.CythonObject;
 import org.jpmml.python.TypeInfo;
 
-public class DType extends CustomPythonObject implements TypeInfo {
+public class DType extends CythonObject implements TypeInfo {
 
 	public DType(String module, String name){
 		super(module, name);

@@ -19,10 +19,10 @@
 package numpy.core;
 
 import org.jpmml.python.ClassDictUtil;
-import org.jpmml.python.CustomPythonObject;
+import org.jpmml.python.CythonObject;
 import org.jpmml.python.Identifiable;
 
-public class UFunc extends CustomPythonObject implements Identifiable {
+public class UFunc extends CythonObject implements Identifiable {
 
 	public UFunc(String module, String name){
 		super(module, name);

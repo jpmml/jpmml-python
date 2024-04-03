@@ -26,10 +26,10 @@ import java.util.Map;
 import net.razorvine.pickle.PickleException;
 import numpy.core.NDArray;
 import org.jpmml.python.ClassDictUtil;
-import org.jpmml.python.CustomPythonObject;
+import org.jpmml.python.CythonObject;
 import org.jpmml.python.HasArray;
 
-public class NDArrayBacked extends CustomPythonObject implements HasArray {
+public class NDArrayBacked extends CythonObject implements HasArray {
 
 	public NDArrayBacked(String module, String name){
 		super(module, name);

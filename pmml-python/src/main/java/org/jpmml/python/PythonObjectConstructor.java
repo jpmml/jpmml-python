@@ -72,7 +72,8 @@ public class PythonObjectConstructor extends ClassDictConstructor {
 			ClassDictConstructor dictConstructor = (ClassDictConstructor)first;
 
 			ClassDict dict = (ClassDict)dictConstructor.construct(new Object[0]);
-			dict.__setstate__(new HashMap<String, Object>()); // Initializes the previously uninitialized "__class__" attribute
+			// Initialize the previously uninitialized "__class__" attribute
+			dict.__setstate__(new HashMap<String, Object>());
 
 			if(isObject(dict) && (second == null)){
 				return newObject();
@@ -82,7 +83,7 @@ public class PythonObjectConstructor extends ClassDictConstructor {
 		if(first instanceof CustomPythonObjectConstructor){
 			CustomPythonObjectConstructor dictConstructor = (CustomPythonObjectConstructor)first;
 
-			CustomPythonObject dict = dictConstructor.construct(new Object[0]);
+			CythonObject dict = dictConstructor.construct(new Object[0]);
 
 			if(isObject(dict) && (second == null)){
 				return newObject();

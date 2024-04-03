@@ -22,9 +22,9 @@ import java.util.HashMap;
 
 import numpy.DType;
 import org.jpmml.python.ClassDictUtil;
-import org.jpmml.python.CustomPythonObject;
+import org.jpmml.python.CythonObject;
 
-public class MaskedArray extends CustomPythonObject {
+public class MaskedArray extends CythonObject {
 
 	public MaskedArray(String module, String name){
 		super(module, name);

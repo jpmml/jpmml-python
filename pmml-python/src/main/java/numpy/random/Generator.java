@@ -20,9 +20,9 @@ package numpy.random;
 
 import java.util.HashMap;
 
-import org.jpmml.python.CustomPythonObject;
+import org.jpmml.python.CythonObject;
 
-public class Generator extends CustomPythonObject {
+public class Generator extends CythonObject {
 
 	public Generator(String module, String name){
 		super(module, name);

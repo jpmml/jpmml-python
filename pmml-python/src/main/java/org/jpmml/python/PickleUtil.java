@@ -195,14 +195,14 @@ public class PickleUtil {
 
 		if((PythonObject.class).isAssignableFrom(clazz)){
 
-			if((CustomPythonObject.class).isAssignableFrom(clazz)){
+			if((CythonObject.class).isAssignableFrom(clazz)){
 
 				if((NDArrayBacked.class).isAssignableFrom(clazz)){
 					dictConstructor = new NDArrayBackedConstructor(module, name, clazz.asSubclass(NDArrayBacked.class));
 				} else
 
 				{
-					dictConstructor = new CustomPythonObjectConstructor(module, name, clazz.asSubclass(CustomPythonObject.class));
+					dictConstructor = new CustomPythonObjectConstructor(module, name, clazz.asSubclass(CythonObject.class));
 				}
 			} else
 

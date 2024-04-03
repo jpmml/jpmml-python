@@ -19,9 +19,9 @@
 package builtins;
 
 import org.jpmml.python.ClassDictUtil;
-import org.jpmml.python.CustomPythonObject;
+import org.jpmml.python.CythonObject;
 
-public class Slice extends CustomPythonObject {
+public class Slice extends CythonObject {
 
 	public Slice(String module, String name){
 		super(module, name);

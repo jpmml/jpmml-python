@@ -19,9 +19,9 @@
 package builtins;
 
 import org.jpmml.python.ClassDictUtil;
-import org.jpmml.python.CustomPythonObject;
+import org.jpmml.python.CythonObject;
 
-public class GetAttr extends CustomPythonObject {
+public class GetAttr extends CythonObject {
 
 	public GetAttr(String module, String name){
 		super(module, name);

@@ -22,9 +22,9 @@ import java.util.List;
 
 import builtins.Slice;
 import org.jpmml.python.ClassDictUtil;
-import org.jpmml.python.CustomPythonObject;
+import org.jpmml.python.CythonObject;
 
-public class Block extends CustomPythonObject {
+public class Block extends CythonObject {
 
 	public Block(String module, String name){
 		super(module, name);

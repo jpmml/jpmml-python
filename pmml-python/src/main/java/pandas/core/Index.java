@@ -24,12 +24,12 @@ import net.razorvine.pickle.objects.ClassDictConstructor;
 import numpy.core.NDArray;
 import org.jpmml.python.ClassDictConstructorUtil;
 import org.jpmml.python.ClassDictUtil;
-import org.jpmml.python.CustomPythonObject;
+import org.jpmml.python.CythonObject;
 import org.jpmml.python.HasArray;
 import org.jpmml.python.PythonObject;
 import org.jpmml.python.SliceUtil;
 
-public class Index extends CustomPythonObject implements HasArray {
+public class Index extends CythonObject implements HasArray {
 
 	public Index(String module, String name){
 		super(module, name);

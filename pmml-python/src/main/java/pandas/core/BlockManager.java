@@ -23,10 +23,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.jpmml.python.ClassDictUtil;
-import org.jpmml.python.CustomPythonObject;
+import org.jpmml.python.CythonObject;
 import org.jpmml.python.HasArray;
 
-public class BlockManager extends CustomPythonObject {
+public class BlockManager extends CythonObject {
 
 	public BlockManager(String module, String name){
 		super(module, name);

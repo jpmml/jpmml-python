@@ -27,9 +27,9 @@ import net.razorvine.pickle.PickleException;
 import net.razorvine.pickle.objects.ClassDict;
 import net.razorvine.pickle.objects.ClassDictConstructor;
 import org.jpmml.python.ClassDictUtil;
-import org.jpmml.python.CustomPythonObject;
+import org.jpmml.python.CythonObject;
 
-public class Partial extends CustomPythonObject implements IObjectConstructor {
+public class Partial extends CythonObject implements IObjectConstructor {
 
 	public Partial(String module, String name){
 		super(module, name);

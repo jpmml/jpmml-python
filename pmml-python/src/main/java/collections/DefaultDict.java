@@ -19,9 +19,9 @@
 package collections;
 
 import org.jpmml.python.ClassDictUtil;
-import org.jpmml.python.CustomPythonObject;
+import org.jpmml.python.CythonObject;
 
-public class DefaultDict extends CustomPythonObject {
+public class DefaultDict extends CythonObject {
 
 	public DefaultDict(String module, String name){
 		super(module, name);

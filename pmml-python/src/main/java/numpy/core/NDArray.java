@@ -27,11 +27,11 @@ import java.util.List;
 import com.google.common.base.Charsets;
 import net.razorvine.pickle.objects.ClassDictConstructor;
 import org.jpmml.python.ClassDictUtil;
-import org.jpmml.python.CustomPythonObject;
+import org.jpmml.python.CythonObject;
 import org.jpmml.python.HasArray;
 import org.jpmml.python.HasContent;
 
-public class NDArray extends CustomPythonObject implements HasArray, HasContent<Object> {
+public class NDArray extends CythonObject implements HasArray, HasContent<Object> {
 
 	private Object content = null;
 

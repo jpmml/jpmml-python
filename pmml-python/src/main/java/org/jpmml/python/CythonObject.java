@@ -25,9 +25,9 @@ import java.util.LinkedHashMap;
 import net.razorvine.pickle.PickleException;
 
 abstract
-public class CustomPythonObject extends PythonObject {
+public class CythonObject extends PythonObject {
 
-	public CustomPythonObject(String module, String name){
+	public CythonObject(String module, String name){
 		super(module, name);
 
 		reset();

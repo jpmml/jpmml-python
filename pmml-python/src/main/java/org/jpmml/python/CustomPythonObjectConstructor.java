@@ -20,18 +20,18 @@ package org.jpmml.python;
 
 public class CustomPythonObjectConstructor extends PythonObjectConstructor {
 
-	public CustomPythonObjectConstructor(String module, String name, Class<? extends CustomPythonObject> clazz){
+	public CustomPythonObjectConstructor(String module, String name, Class<? extends CythonObject> clazz){
 		super(module, name, clazz);
 	}
 
 	@Override
-	public CustomPythonObject newObject(){
-		return (CustomPythonObject)super.newObject();
+	public CythonObject newObject(){
+		return (CythonObject)super.newObject();
 	}
 
 	@Override
-	public CustomPythonObject construct(Object[] args){
-		CustomPythonObject dict = newObject();
+	public CythonObject construct(Object[] args){
+		CythonObject dict = newObject();
 		dict.__init__(args);
 
 		return dict;

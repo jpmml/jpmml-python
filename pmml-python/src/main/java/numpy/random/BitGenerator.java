@@ -19,9 +19,9 @@
 package numpy.random;
 
 import org.jpmml.python.ClassDictUtil;
-import org.jpmml.python.CustomPythonObject;
+import org.jpmml.python.CythonObject;
 
-public class BitGenerator extends CustomPythonObject {
+public class BitGenerator extends CythonObject {
 
 	public BitGenerator(String module, String name){
 		super(module, name);
