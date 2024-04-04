@@ -25,6 +25,6 @@ public class PythonEnum extends PythonObject {
 	}
 
 	public Object getValue(){
-		return getattr("value", null);
+		return getObject("value");
 	}
 }

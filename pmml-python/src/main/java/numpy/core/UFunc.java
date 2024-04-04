@@ -35,12 +35,12 @@ public class UFunc extends CythonObject implements Identifiable {
 
 	@Override
 	public String getModule(){
-		return (String)getattr("module", null);
+		return getOptionalString("module");
 	}
 
 	@Override
 	public String getName(){
-		return (String)getattr("name", null);
+		return getOptionalString("name");
 	}
 
 	private static final String[] INIT_ATTRIBUTES = {

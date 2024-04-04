@@ -65,11 +65,11 @@ public class Partial extends CythonObject implements IObjectConstructor {
 	}
 
 	public Object[] getArgs(){
-		return get("args", Object[].class);
+		return getTuple("args");
 	}
 
 	public Map<String, ?> getKeywords(){
-		return get("kwds", Map.class);
+		return getDict("kwds");
 	}
 
 	private static final String[] INIT_ATTRIBUTES = {

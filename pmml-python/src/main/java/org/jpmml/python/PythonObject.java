@@ -216,13 +216,13 @@ public class PythonObject extends ClassDict {
 	}
 
 	public Object getScalar(String name){
-		Object object = getattr(name);
+		Object object = getObject(name);
 
 		return ScalarUtil.decode(object);
 	}
 
 	public Object getOptionalScalar(String name){
-		Object object = getOptional(name, Object.class);
+		Object object = getOptionalObject(name);
 
 		return ScalarUtil.decode(object);
 	}
@@ -240,7 +240,7 @@ public class PythonObject extends ClassDict {
 	}
 
 	public List<?> getArray(String name){
-		Object object = getattr(name);
+		Object object = getObject(name);
 
 		if(object instanceof HasArray){
 			HasArray hasArray = (HasArray)object;
@@ -252,7 +252,7 @@ public class PythonObject extends ClassDict {
 	}
 
 	public List<?> getArray(String name, String key){
-		Object object = getattr(name);
+		Object object = getObject(name);
 
 		if(object instanceof NDArrayWrapper){
 			NDArrayWrapper arrayWrapper = (NDArrayWrapper)object;
@@ -281,7 +281,7 @@ public class PythonObject extends ClassDict {
 	}
 
 	public List<Number> getNumberArray(String name){
-		Object object = getattr(name);
+		Object object = getObject(name);
 
 		if((Number.class).isInstance(object)){
 			return Collections.singletonList((Number)object);
@@ -325,7 +325,7 @@ public class PythonObject extends ClassDict {
 	}
 
 	public int[] getArrayShape(String name){
-		Object object = getattr(name);
+		Object object = getObject(name);
 
 		if(object instanceof HasArray){
 			HasArray hasArray = (HasArray)object;
@@ -373,7 +373,7 @@ public class PythonObject extends ClassDict {
 	}
 
 	public List<?> getListLike(String name){
-		Object object = getattr(name);
+		Object object = getObject(name);
 
 		if(object instanceof HasArray){
 			return getArray(name);
@@ -385,7 +385,7 @@ public class PythonObject extends ClassDict {
 	}
 
 	public <E> List<E> getListLike(String name, Class<? extends E> clazz){
-		Object object = getattr(name);
+		Object object = getObject(name);
 
 		if(clazz.isInstance(object)){
 			return Collections.singletonList(clazz.cast(object));

@@ -97,11 +97,11 @@ public class Scalar extends CythonObject implements HasArray, HasContent<List<?>
 	}
 
 	public DType getDType(){
-		return (DType)getattr("dtype", null);
+		return getOptional("dtype", DType.class);
 	}
 
 	public byte[] getObj(){
-		Object obj = getattr("obj", null);
+		Object obj = getOptionalObject("obj");
 
 		if(obj instanceof String){
 			String string = (String)obj;

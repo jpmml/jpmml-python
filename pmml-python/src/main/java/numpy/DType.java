@@ -89,19 +89,19 @@ public class DType extends CythonObject implements TypeInfo {
 	}
 
 	public Map<String, Object[]> getValues(){
-		return (Map)getattr("values", null);
+		return getOptional("values", Map.class);
 	}
 
 	public String getObj(){
-		return (String)getattr("obj", null);
+		return getOptionalString("obj");
 	}
 
 	public String getOrder(){
-		return (String)getattr("order", null);
+		return getOptionalString("order");
 	}
 
 	public Integer getWSize(){
-		return (Integer)getattr("w_size", null);
+		return getOptionalInteger("w_size");
 	}
 
 	static
