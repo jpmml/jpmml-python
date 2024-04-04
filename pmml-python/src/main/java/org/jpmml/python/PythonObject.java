@@ -78,19 +78,37 @@ public class PythonObject extends ClassDict {
 		return super.containsKey(key);
 	}
 
+	@Override
+	public Object get(Object key){
+		return super.get(key);
+	}
+
 	public boolean hasattr(String name){
 		return containsKey(name);
 	}
 
+	public Object getattr(String name){
+
+		if(!containsKey(name)){
+			throw new IllegalArgumentException("Attribute \'" + ClassDictUtil.formatMember(this, name) + "\' not set");
+		}
+
+		return get(name);
+	}
+
+	public Object getattr(String name, Object defaultValue){
+
+		if(!containsKey(name)){
+			return defaultValue;
+		}
+
+		return get(name);
+	}
+
 	public <E> E get(String name, Class<? extends E> clazz){
-		Object value = get(name);
+		Object value = getattr(name);
 
 		if(value == null){
-
-			if(!containsKey(name)){
-				throw new IllegalArgumentException("Attribute \'" + ClassDictUtil.formatMember(this, name) + "\' not set");
-			}
-
 			throw new IllegalArgumentException("Attribute \'" + ClassDictUtil.formatMember(this, name) + "\' has a missing (None/null) value");
 		} // End if
 
@@ -118,7 +136,7 @@ public class PythonObject extends ClassDict {
 	}
 
 	public <E> E getOptional(String name, Class<? extends E> clazz){
-		Object value = get(name);
+		Object value = getattr(name, null);
 
 		if(value == null){
 			return null;
@@ -178,7 +196,7 @@ public class PythonObject extends ClassDict {
 	}
 
 	public Object getScalar(String name){
-		Object object = get(name);
+		Object object = getattr(name);
 
 		return ScalarUtil.decode(object);
 	}
@@ -202,7 +220,7 @@ public class PythonObject extends ClassDict {
 	}
 
 	public List<?> getArray(String name){
-		Object object = get(name);
+		Object object = getattr(name);
 
 		if(object instanceof HasArray){
 			HasArray hasArray = (HasArray)object;
@@ -214,7 +232,7 @@ public class PythonObject extends ClassDict {
 	}
 
 	public List<?> getArray(String name, String key){
-		Object object = get(name);
+		Object object = getattr(name);
 
 		if(object instanceof NDArrayWrapper){
 			NDArrayWrapper arrayWrapper = (NDArrayWrapper)object;
@@ -243,7 +261,7 @@ public class PythonObject extends ClassDict {
 	}
 
 	public List<Number> getNumberArray(String name){
-		Object object = get(name);
+		Object object = getattr(name);
 
 		if((Number.class).isInstance(object)){
 			return Collections.singletonList((Number)object);
@@ -287,7 +305,7 @@ public class PythonObject extends ClassDict {
 	}
 
 	public int[] getArrayShape(String name){
-		Object object = get(name);
+		Object object = getattr(name);
 
 		if(object instanceof HasArray){
 			HasArray hasArray = (HasArray)object;
@@ -335,7 +353,7 @@ public class PythonObject extends ClassDict {
 	}
 
 	public List<?> getListLike(String name){
-		Object object = get(name);
+		Object object = getattr(name);
 
 		if(object instanceof HasArray){
 			return getArray(name);
@@ -347,7 +365,7 @@ public class PythonObject extends ClassDict {
 	}
 
 	public <E> List<E> getListLike(String name, Class<? extends E> clazz){
-		Object object = get(name);
+		Object object = getattr(name);
 
 		if(clazz.isInstance(object)){
 			return Collections.singletonList(clazz.cast(object));

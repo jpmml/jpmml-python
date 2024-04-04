@@ -66,15 +66,15 @@ public class MaskedArray extends CythonObject {
 	}
 
 	public NDArray getData(){
-		return (NDArray)get("data");
+		return (NDArray)getattr("data", null);
 	}
 
 	public NDArray getMask(){
-		return (NDArray)get("mask");
+		return (NDArray)getattr("mask", null);
 	}
 
 	public Object getFillValue(){
-		return get("fill_value");
+		return getattr("fill_value", null);
 	}
 
 	public MaskedArray setFillValue(Object fillValue){

@@ -96,7 +96,7 @@ public class MaskedArray extends PythonObject implements HasArray {
 	}
 
 	public Object getDType(){
-		return get("_dtype");
+		return getattr("_dtype", null);
 	}
 
 	public NDArray getMask(){

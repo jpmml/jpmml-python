@@ -109,19 +109,19 @@ public class NDArray extends CythonObject implements HasArray, HasContent<Object
 	}
 
 	public Object[] getShape(){
-		return (Object[])get("shape");
+		return (Object[])getattr("shape", null);
 	}
 
 	public Object getDescr(){
-		return get("descr");
+		return getattr("descr", null);
 	}
 
 	public Boolean getFortranOrder(){
-		return (Boolean)get("fortran_order");
+		return (Boolean)getattr("fortran_order", null);
 	}
 
 	public Object getData(){
-		Object data = get("data");
+		Object data = getattr("data", null);
 
 		if(data instanceof String){
 			String string = (String)data;

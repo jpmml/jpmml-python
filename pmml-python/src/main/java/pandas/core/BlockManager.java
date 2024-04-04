@@ -106,7 +106,7 @@ public class BlockManager extends CythonObject {
 		Object[] blocks = getTuple("blocks");
 
 		return Arrays.stream(blocks)
-			.map(block -> (HasArray)((Block)block).get("values"))
+			.map(block -> (HasArray)((Block)block).getattr("values", null))
 			.collect(Collectors.toList());
 	}
 

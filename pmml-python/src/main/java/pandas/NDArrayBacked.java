@@ -99,7 +99,7 @@ public class NDArrayBacked extends CythonObject implements HasArray {
 	}
 
 	public Object getDType(){
-		return get("_dtype");
+		return getattr("_dtype", null);
 	}
 
 	private static final String[] SETSTATE_ATTRIBUTES = {
