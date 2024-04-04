@@ -90,6 +90,11 @@ public class PythonObject extends ClassDict {
 		return super.put(key, value);
 	}
 
+	@Override
+	public Object remove(Object key){
+		return super.remove(key);
+	}
+
 	public boolean hasattr(String name){
 		return containsKey(name);
 	}
@@ -114,6 +119,10 @@ public class PythonObject extends ClassDict {
 
 	public void setattr(String name, Object value){
 		put(name, value);
+	}
+
+	public void delattr(String name){
+		remove(name);
 	}
 
 	public <E> E get(String name, Class<? extends E> clazz){
