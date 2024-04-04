@@ -72,7 +72,7 @@ public class Series extends PythonObject implements HasArray {
 	}
 
 	public Series setBlockManager(SingleBlockManager singleBlockManager){
-		put("_mgr", singleBlockManager);
+		setattr("_mgr", singleBlockManager);
 
 		return this;
 	}

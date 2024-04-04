@@ -67,10 +67,12 @@ public class PythonObject extends ClassDict {
 		return super.getClassName();
 	}
 
-	public void setClassName(String className){
+	public PythonObject setClassName(String className){
 		ReflectionUtil.setFieldValue(PythonObject.FIELD_CLASSNAME, this, className);
 
-		put("__class__", className);
+		setattr("__class__", className);
+
+		return this;
 	}
 
 	@Override
@@ -81,6 +83,11 @@ public class PythonObject extends ClassDict {
 	@Override
 	public Object get(Object key){
 		return super.get(key);
+	}
+
+	@Override
+	public Object put(String key, Object value){
+		return super.put(key, value);
 	}
 
 	public boolean hasattr(String name){
@@ -103,6 +110,10 @@ public class PythonObject extends ClassDict {
 		}
 
 		return get(name);
+	}
+
+	public void setattr(String name, Object value){
+		put(name, value);
 	}
 
 	public <E> E get(String name, Class<? extends E> clazz){

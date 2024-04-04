@@ -78,7 +78,7 @@ public class MaskedArray extends CythonObject {
 	}
 
 	public MaskedArray setFillValue(Object fillValue){
-		put("fill_value", fillValue);
+		setattr("fill_value", fillValue);
 
 		return this;
 	}

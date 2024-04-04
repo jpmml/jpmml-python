@@ -91,7 +91,7 @@ public class BlockManager extends CythonObject {
 	}
 
 	public BlockManager setBlockItems(List<Index> blockItems){
-		put("block_items", blockItems);
+		setattr("block_items", blockItems);
 
 		return this;
 	}
@@ -111,7 +111,7 @@ public class BlockManager extends CythonObject {
 	}
 
 	public BlockManager setBlockValues(List<HasArray> blockValues){
-		put("block_values", blockValues);
+		setattr("block_values", blockValues);
 
 		return this;
 	}
