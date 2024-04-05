@@ -89,7 +89,7 @@ public class DType extends CythonObject implements TypeInfo {
 	}
 
 	public Map<String, Object[]> getValues(){
-		return getOptional("values", Map.class);
+		return (Map)getOptionalDict("values");
 	}
 
 	public String getObj(){

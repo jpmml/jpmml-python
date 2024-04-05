@@ -409,6 +409,11 @@ public class PythonObject extends ClassDict {
 		return get(name, Map.class);
 	}
 
+	@SuppressWarnings("unchecked")
+	public Map<String, ?> getOptionalDict(String name){
+		return getOptional(name, Map.class);
+	}
+
 	public <E extends PythonObject> E getPythonObject(String name, E object){
 		Map<String, ?> map = getDict(name);
 
