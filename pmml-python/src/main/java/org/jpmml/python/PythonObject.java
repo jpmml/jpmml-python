@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import joblib.NDArrayWrapper;
 import net.razorvine.pickle.objects.ClassDict;
@@ -396,6 +397,36 @@ public class PythonObject extends ClassDict {
 
 	public List<HasArray> getArrayList(String name){
 		return getList(name, HasArray.class);
+	}
+
+	public <E> List<List<E>> getArrayList(String name, Class<? extends E> clazz){
+		List<HasArray> values = getArrayList(name);
+
+		CastFunction<E> castFunction = new CastFunction<E>(clazz){
+
+			@Override
+			protected String formatMessage(Object object){
+				return "List of arrays attribute \'" + ClassDictUtil.formatMember(PythonObject.this, name) + "\' contains an unsupported value (" + ClassDictUtil.formatClass(object) + ")";
+			}
+		};
+
+		Function<HasArray, List<E>> function = new Function<HasArray, List<E>>(){
+
+			@Override
+			public List<E> apply(HasArray hasArray){
+
+				// A list may contain null elements
+				if(hasArray == null){
+					return null;
+				}
+
+				List<?> values = hasArray.getArrayContent();
+
+				return Lists.transform(values, castFunction);
+			}
+		};
+
+		return Lists.transform(values, function);
 	}
 
 	public List<?> getListLike(String name){
