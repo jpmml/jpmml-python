@@ -394,6 +394,10 @@ public class PythonObject extends ClassDict {
 		return getList(name, Object[].class);
 	}
 
+	public List<HasArray> getArrayList(String name){
+		return getList(name, HasArray.class);
+	}
+
 	public List<?> getListLike(String name){
 		Object object = getObject(name);
 

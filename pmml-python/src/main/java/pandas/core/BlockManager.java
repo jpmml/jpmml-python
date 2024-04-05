@@ -99,14 +99,14 @@ public class BlockManager extends CythonObject {
 	public List<HasArray> getBlockValues(){
 
 		if(hasattr("block_values")){
-			return getList("block_values", HasArray.class);
+			return getArrayList("block_values");
 		}
 
 		// Pandas 1.3+
 		Object[] blocks = getTuple("blocks");
 
 		return Arrays.stream(blocks)
-			.map(block -> ((Block)block).getOptional("values", HasArray.class))
+			.map(block -> ((Block)block).get("values", HasArray.class))
 			.collect(Collectors.toList());
 	}
 
