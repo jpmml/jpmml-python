@@ -266,7 +266,7 @@ public class PythonObject extends ClassDict {
 		throw new IllegalArgumentException("The value of \'" + ClassDictUtil.formatMember(this, name) + "\' attribute (" + ClassDictUtil.formatClass(object) + ") is not a supported array type");
 	}
 
-	public <E> List<? extends E> getArray(String name, Class<? extends E> clazz){
+	public <E> List<E> getArray(String name, Class<? extends E> clazz){
 		HasArray hasArray = getArray(name);
 
 		List<?> values = hasArray.getArrayContent();
@@ -308,9 +308,8 @@ public class PythonObject extends ClassDict {
 		return shape;
 	}
 
-	@SuppressWarnings("unchecked")
 	public List<Boolean> getBooleanArray(String name){
-		return (List<Boolean>)getArray(name, Boolean.class);
+		return getArray(name, Boolean.class);
 	}
 
 	public List<Integer> getIntegerArray(String name){
@@ -346,14 +345,12 @@ public class PythonObject extends ClassDict {
 		return Lists.transform(values, castFunction);
 	}
 
-	@SuppressWarnings("unchecked")
 	public List<Object> getObjectArray(String name){
-		return (List<Object>)getArray(name, Object.class);
+		return getArray(name, Object.class);
 	}
 
-	@SuppressWarnings("unchecked")
 	public List<String> getStringArray(String name){
-		return (List<String>)getArray(name, String.class);
+		return getArray(name, String.class);
 	}
 
 	public List<?> getArray(String name, String key){
