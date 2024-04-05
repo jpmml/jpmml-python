@@ -382,6 +382,10 @@ public class PythonObject extends ClassDict {
 		return Lists.transform(values, castFunction);
 	}
 
+	public List<Object> getObjectList(String name){
+		return getList(name, Object.class);
+	}
+
 	public List<Object[]> getTupleList(String name){
 		return getList(name, Object[].class);
 	}
