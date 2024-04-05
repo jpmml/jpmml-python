@@ -347,6 +347,11 @@ public class PythonObject extends ClassDict {
 	}
 
 	@SuppressWarnings("unchecked")
+	public List<Object> getObjectArray(String name){
+		return (List<Object>)getArray(name, Object.class);
+	}
+
+	@SuppressWarnings("unchecked")
 	public List<String> getStringArray(String name){
 		return (List<String>)getArray(name, String.class);
 	}

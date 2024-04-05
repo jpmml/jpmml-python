@@ -45,7 +45,7 @@ public class Block extends CythonObject {
 	}
 
 	public List<?> getValues(){
-		return getArray("values", Object.class);
+		return getObjectArray("values");
 	}
 
 	private static final String[] INIT_ATTRIBUTES = {
