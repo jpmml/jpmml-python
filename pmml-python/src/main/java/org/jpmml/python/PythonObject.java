@@ -239,6 +239,10 @@ public class PythonObject extends ClassDict {
 		return get(name, Object[].class);
 	}
 
+	public Object[] getOptionalTuple(String name){
+		return getOptional(name, Object[].class);
+	}
+
 	public List<?> getArray(String name){
 		Object object = getObject(name);
 
