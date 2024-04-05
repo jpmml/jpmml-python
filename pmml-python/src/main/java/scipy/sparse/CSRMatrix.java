@@ -45,7 +45,7 @@ public class CSRMatrix extends PythonObject implements HasArray {
 	}
 
 	public List<?> getData(){
-		return getArray("data");
+		return getArray("data", Object.class);
 	}
 
 	public List<Integer> getIndices(){

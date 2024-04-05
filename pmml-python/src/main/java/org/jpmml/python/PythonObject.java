@@ -254,20 +254,22 @@ public class PythonObject extends ClassDict {
 		return getOptional(name, Map.class);
 	}
 
-	public List<?> getArray(String name){
+	public HasArray getArray(String name){
 		Object object = getObject(name);
 
 		if(object instanceof HasArray){
 			HasArray hasArray = (HasArray)object;
 
-			return hasArray.getArrayContent();
+			return hasArray;
 		}
 
 		throw new IllegalArgumentException("The value of \'" + ClassDictUtil.formatMember(this, name) + "\' attribute (" + ClassDictUtil.formatClass(object) + ") is not a supported array type");
 	}
 
 	public <E> List<? extends E> getArray(String name, Class<? extends E> clazz){
-		List<?> values = getArray(name);
+		HasArray hasArray = getArray(name);
+
+		List<?> values = hasArray.getArrayContent();
 
 		CastFunction<E> castFunction = new CastFunction<E>(clazz){
 
@@ -324,7 +326,9 @@ public class PythonObject extends ClassDict {
 			return Collections.singletonList((Number)object);
 		}
 
-		List<?> values = getArray(name);
+		HasArray hasArray = getArray(name);
+
+		List<?> values = hasArray.getArrayContent();
 
 		CastFunction<Number> castFunction = new CastFunction<Number>(Number.class){
 
@@ -433,7 +437,9 @@ public class PythonObject extends ClassDict {
 		Object object = getObject(name);
 
 		if(object instanceof HasArray){
-			return getArray(name);
+			HasArray hasArray = getArray(name);
+
+			return hasArray.getArrayContent();
 		} else
 
 		{
