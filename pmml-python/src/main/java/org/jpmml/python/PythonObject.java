@@ -167,48 +167,6 @@ public class PythonObject extends ClassDict {
 		return get(name, clazz);
 	}
 
-	public Boolean getBoolean(String name){
-		return get(name, Boolean.class);
-	}
-
-	public Boolean getOptionalBoolean(String name){
-		return getOptional(name, Boolean.class);
-	}
-
-	public Boolean getOptionalBoolean(String name, Boolean defaultValue){
-		Boolean value = getOptionalBoolean(name);
-
-		if(value == null){
-			return defaultValue;
-		}
-
-		return value;
-	}
-
-	public Integer getInteger(String name){
-		Number value = getNumber(name);
-
-		return ValueUtil.asInteger(value);
-	}
-
-	public Integer getOptionalInteger(String name){
-		Number value = getOptionalNumber(name);
-
-		if(value == null){
-			return null;
-		}
-
-		return ValueUtil.asInteger(value);
-	}
-
-	public Number getNumber(String name){
-		return get(name, Number.class);
-	}
-
-	public Number getOptionalNumber(String name){
-		return getOptional(name, Number.class);
-	}
-
 	public Object getObject(String name){
 		return get(name, Object.class);
 	}
@@ -227,6 +185,48 @@ public class PythonObject extends ClassDict {
 		Object object = getOptionalObject(name);
 
 		return ScalarUtil.decode(object);
+	}
+
+	public Boolean getBoolean(String name){
+		return get(name, Boolean.class);
+	}
+
+	public Boolean getOptionalBoolean(String name){
+		return getOptional(name, Boolean.class);
+	}
+
+	public Boolean getOptionalBoolean(String name, Boolean defaultValue){
+		Boolean value = getOptionalBoolean(name);
+
+		if(value == null){
+			return defaultValue;
+		}
+
+		return value;
+	}
+
+	public Number getNumber(String name){
+		return get(name, Number.class);
+	}
+
+	public Number getOptionalNumber(String name){
+		return getOptional(name, Number.class);
+	}
+
+	public Integer getInteger(String name){
+		Number value = getNumber(name);
+
+		return ValueUtil.asInteger(value);
+	}
+
+	public Integer getOptionalInteger(String name){
+		Number value = getOptionalNumber(name);
+
+		if(value == null){
+			return null;
+		}
+
+		return ValueUtil.asInteger(value);
 	}
 
 	public String getString(String name){
@@ -309,14 +309,12 @@ public class PythonObject extends ClassDict {
 		return shape;
 	}
 
-	public List<Boolean> getBooleanArray(String name){
-		return getArray(name, Boolean.class);
+	public List<Object> getObjectArray(String name){
+		return getArray(name, Object.class);
 	}
 
-	public List<Integer> getIntegerArray(String name){
-		List<Number> values = getNumberArray(name);
-
-		return ValueUtil.asIntegers(values);
+	public List<Boolean> getBooleanArray(String name){
+		return getArray(name, Boolean.class);
 	}
 
 	public List<Number> getNumberArray(String name){
@@ -346,8 +344,10 @@ public class PythonObject extends ClassDict {
 		return Lists.transform(values, castFunction);
 	}
 
-	public List<Object> getObjectArray(String name){
-		return getArray(name, Object.class);
+	public List<Integer> getIntegerArray(String name){
+		List<Number> values = getNumberArray(name);
+
+		return ValueUtil.asIntegers(values);
 	}
 
 	public List<String> getStringArray(String name){
