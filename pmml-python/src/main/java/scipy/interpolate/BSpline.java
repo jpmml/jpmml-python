@@ -32,6 +32,10 @@ public class BSpline extends PythonObject {
 		return getNumberArray("c");
 	}
 
+	public int[] getCShape(){
+		return getArrayShape("c");
+	}
+
 	public Boolean getExtrapolate(){
 		return getBoolean("extrapolate");
 	}
