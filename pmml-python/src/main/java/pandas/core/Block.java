@@ -44,7 +44,7 @@ public class Block extends CythonObject {
 		return get("slice", Slice.class);
 	}
 
-	public List<?> getValues(){
+	public List<Object> getValues(){
 		return getObjectArray("values");
 	}
 

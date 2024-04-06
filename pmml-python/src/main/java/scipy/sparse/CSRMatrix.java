@@ -44,7 +44,7 @@ public class CSRMatrix extends PythonObject implements HasArray {
 		throw new UnsupportedOperationException();
 	}
 
-	public List<?> getData(){
+	public List<Object> getData(){
 		return getObjectArray("data");
 	}
 

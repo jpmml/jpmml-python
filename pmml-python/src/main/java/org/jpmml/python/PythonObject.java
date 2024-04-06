@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
@@ -313,7 +314,7 @@ public class PythonObject extends ClassDict {
 	}
 
 	public List<Integer> getIntegerArray(String name){
-		List<? extends Number> values = getNumberArray(name);
+		List<Number> values = getNumberArray(name);
 
 		return ValueUtil.asIntegers(values);
 	}
@@ -452,6 +453,10 @@ public class PythonObject extends ClassDict {
 	public <E> List<E> getListLike(String name, Class<? extends E> clazz){
 		Object object = getObject(name);
 
+		if(Objects.equals(Object.class, clazz)){
+			throw new IllegalArgumentException();
+		} // End if
+
 		if(clazz.isInstance(object)){
 			return Collections.singletonList(clazz.cast(object));
 		}
@@ -467,18 +472,6 @@ public class PythonObject extends ClassDict {
 		};
 
 		return Lists.transform(values, castFunction);
-	}
-
-	public <E extends PythonObject> E getPythonObject(String name, E object){
-		Map<String, ?> map = getDict(name);
-
-		if(map.containsKey("__class__")){
-			throw new IllegalArgumentException("Dict attribute \'" + ClassDictUtil.formatMember(PythonObject.this, name) + "\' has a non-dict value (" + ClassDictUtil.formatClass(map) + ")");
-		}
-
-		object.putAll(map);
-
-		return object;
 	}
 
 	private static final Field FIELD_CLASSNAME = ReflectionUtil.getField(ClassDict.class, "classname");

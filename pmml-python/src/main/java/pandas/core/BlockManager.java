@@ -73,17 +73,17 @@ public class BlockManager extends CythonObject {
 	public List<Index> getAxesArray(){
 
 		if(hasattr("axes_array")){
-			return getList("axes_array", Index.class);
+			return getIndexList("axes_array");
 		}
 
 		// Pandas 1.3+
-		return getList("axes", Index.class);
+		return getIndexList("axes");
 	}
 
 	public List<Index> getBlockItems(){
 
 		if(hasattr("block_items")){
-			return getList("block_items", Index.class);
+			return getIndexList("block_items");
 		}
 
 		// Pandas 1.3+
@@ -114,6 +114,10 @@ public class BlockManager extends CythonObject {
 		setattr("block_values", blockValues);
 
 		return this;
+	}
+
+	public List<Index> getIndexList(String name){
+		return getList(name, Index.class);
 	}
 
 	private static final String[] INIT_ATTRIBUTES = {

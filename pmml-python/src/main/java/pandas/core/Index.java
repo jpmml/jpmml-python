@@ -19,6 +19,7 @@
 package pandas.core;
 
 import java.util.List;
+import java.util.Map;
 
 import net.razorvine.pickle.objects.ClassDictConstructor;
 import numpy.core.NDArray;
@@ -89,6 +90,18 @@ public class Index extends CythonObject implements HasArray {
 			default:
 				return getPythonObject("data", this.new NDArrayData(getPythonModule(), "data"));
 		}
+	}
+
+	private <E extends PythonObject> E getPythonObject(String name, E object){
+		Map<String, ?> map = getDict(name);
+
+		if(map.containsKey("__class__")){
+			throw new IllegalArgumentException("Dict attribute \'" + ClassDictUtil.formatMember(this, name) + "\' has a non-dict value (" + ClassDictUtil.formatClass(map) + ")");
+		}
+
+		object.putAll(map);
+
+		return object;
 	}
 
 	public class RangeData extends Data {
