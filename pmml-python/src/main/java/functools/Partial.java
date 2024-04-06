@@ -26,8 +26,8 @@ import net.razorvine.pickle.IObjectConstructor;
 import net.razorvine.pickle.PickleException;
 import net.razorvine.pickle.objects.ClassDict;
 import net.razorvine.pickle.objects.ClassDictConstructor;
-import org.jpmml.python.ClassDictUtil;
 import org.jpmml.python.CythonObject;
+import org.jpmml.python.CythonObjectUtil;
 
 public class Partial extends CythonObject implements IObjectConstructor {
 
@@ -37,12 +37,12 @@ public class Partial extends CythonObject implements IObjectConstructor {
 
 	@Override
 	public void __init__(Object[] args){
-		super.__setstate__(ClassDictUtil.createAttributeMap(INIT_ATTRIBUTES, args));
+		super.__setstate__(CythonObjectUtil.createState(INIT_ATTRIBUTES, args));
 	}
 
 	@Override
 	public void __setstate__(Object[] args){
-		super.__setstate__(ClassDictUtil.createAttributeMap(SETSTATE_ATTRIBUTES, args));
+		super.__setstate__(CythonObjectUtil.createState(SETSTATE_ATTRIBUTES, args));
 	}
 
 	@Override

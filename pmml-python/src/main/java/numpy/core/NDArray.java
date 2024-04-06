@@ -26,8 +26,8 @@ import java.util.List;
 
 import com.google.common.base.Charsets;
 import net.razorvine.pickle.objects.ClassDictConstructor;
-import org.jpmml.python.ClassDictUtil;
 import org.jpmml.python.CythonObject;
+import org.jpmml.python.CythonObjectUtil;
 import org.jpmml.python.HasArray;
 import org.jpmml.python.HasContent;
 
@@ -59,7 +59,7 @@ public class NDArray extends CythonObject implements HasArray, HasContent<Object
 	 */
 	@Override
 	public void __setstate__(Object[] args){
-		super.__setstate__(ClassDictUtil.createAttributeMap(SETSTATE_ATTRIBUTES, args));
+		super.__setstate__(CythonObjectUtil.createState(SETSTATE_ATTRIBUTES, args));
 	}
 
 	@Override

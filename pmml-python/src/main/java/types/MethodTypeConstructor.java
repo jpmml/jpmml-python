@@ -23,7 +23,7 @@ import java.util.Arrays;
 import net.razorvine.pickle.PickleException;
 import net.razorvine.pickle.objects.ClassDict;
 import net.razorvine.pickle.objects.ClassDictConstructor;
-import org.jpmml.python.ClassDictUtil;
+import org.jpmml.python.CythonObjectUtil;
 
 public class MethodTypeConstructor extends ClassDictConstructor {
 
@@ -42,7 +42,7 @@ public class MethodTypeConstructor extends ClassDictConstructor {
 		ClassDict self = (ClassDict)args[1];
 
 		MethodType dict = new MethodType();
-		dict.__setstate__(ClassDictUtil.createAttributeMap(SETSTATE_ATTRIBUTES, args));
+		dict.__setstate__(CythonObjectUtil.createState(SETSTATE_ATTRIBUTES, args));
 
 		return dict;
 	}

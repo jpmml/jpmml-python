@@ -27,6 +27,7 @@ import net.razorvine.pickle.PickleException;
 import net.razorvine.pickle.objects.ClassDict;
 import net.razorvine.pickle.objects.ClassDictConstructor;
 import org.jpmml.python.ClassDictUtil;
+import org.jpmml.python.CythonObjectUtil;
 
 public class CreateCodeConstructor extends ClassDictConstructor {
 
@@ -54,7 +55,7 @@ public class CreateCodeConstructor extends ClassDictConstructor {
 			String[] names = CreateCodeConstructor.STATE_ATTRIBUTES[i];
 
 			if(names.length == args.length){
-				return ClassDictUtil.createAttributeMap(names, args);
+				return CythonObjectUtil.createState(names, args);
 			}
 		}
 

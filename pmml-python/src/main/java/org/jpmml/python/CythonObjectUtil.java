@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Villu Ruusmann
+ * Copyright (c) 2024 Villu Ruusmann
  *
  * This file is part of JPMML-Python
  *
@@ -16,25 +16,32 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with JPMML-Python.  If not, see <http://www.gnu.org/licenses/>.
  */
-package builtins;
+package org.jpmml.python;
 
-import org.jpmml.python.CythonObject;
-import org.jpmml.python.CythonObjectUtil;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 
-public class Slice extends CythonObject {
+import net.razorvine.pickle.PickleException;
 
-	public Slice(String module, String name){
-		super(module, name);
+public class CythonObjectUtil {
+
+	private CythonObjectUtil(){
 	}
 
-	@Override
-	public void __init__(Object[] args){
-		super.__setstate__(CythonObjectUtil.createState(INIT_ATTRIBUTES, args));
-	}
+	static
+	public HashMap<String, Object> createState(String[] attributes, Object[] args){
 
-	private static final String[] INIT_ATTRIBUTES = {
-		"start",
-		"stop",
-		"step"
-	};
+		if(attributes.length != args.length){
+			throw new PickleException(Arrays.deepToString(args));
+		}
+
+		HashMap<String, Object> result = new LinkedHashMap<>();
+
+		for(int i = 0; i < attributes.length; i++){
+			result.put(attributes[i], args[i]);
+		}
+
+		return result;
+	}
 }

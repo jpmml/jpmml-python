@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 
 import org.jpmml.python.ClassDictUtil;
 import org.jpmml.python.CythonObject;
+import org.jpmml.python.CythonObjectUtil;
 import org.jpmml.python.HasArray;
 
 public class BlockManager extends CythonObject {
@@ -40,7 +41,7 @@ public class BlockManager extends CythonObject {
 		} else
 
 		{
-			super.__setstate__(ClassDictUtil.createAttributeMap(INIT_ATTRIBUTES, args));
+			super.__setstate__(CythonObjectUtil.createState(INIT_ATTRIBUTES, args));
 		}
 	}
 
@@ -51,7 +52,7 @@ public class BlockManager extends CythonObject {
 			args = ClassDictUtil.extractArgs(args, 0, 3);
 		}
 
-		super.__setstate__(ClassDictUtil.createAttributeMap(SETSTATE_ATTRIBUTES, args));
+		super.__setstate__(CythonObjectUtil.createState(SETSTATE_ATTRIBUTES, args));
 	}
 
 	public Index getColumnAxis(){

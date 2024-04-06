@@ -29,6 +29,7 @@ import java.util.Set;
 import org.dmg.pmml.DataType;
 import org.jpmml.python.ClassDictUtil;
 import org.jpmml.python.CythonObject;
+import org.jpmml.python.CythonObjectUtil;
 import org.jpmml.python.TypeInfo;
 
 public class DType extends CythonObject implements TypeInfo {
@@ -39,7 +40,7 @@ public class DType extends CythonObject implements TypeInfo {
 
 	@Override
 	public void __init__(Object[] args){
-		super.__setstate__(ClassDictUtil.createAttributeMap(INIT_ATTRIBUTES, args));
+		super.__setstate__(CythonObjectUtil.createState(INIT_ATTRIBUTES, args));
 	}
 
 	/**
@@ -55,7 +56,7 @@ public class DType extends CythonObject implements TypeInfo {
 			args = ClassDictUtil.extractArgs(args, 0, SETSTATE_ATTRIBUTES.length);
 		}
 
-		super.__setstate__(ClassDictUtil.createAttributeMap(SETSTATE_ATTRIBUTES, args));
+		super.__setstate__(CythonObjectUtil.createState(SETSTATE_ATTRIBUTES, args));
 	}
 
 	@Override

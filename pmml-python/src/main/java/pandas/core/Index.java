@@ -26,6 +26,7 @@ import numpy.core.NDArray;
 import org.jpmml.python.ClassDictConstructorUtil;
 import org.jpmml.python.ClassDictUtil;
 import org.jpmml.python.CythonObject;
+import org.jpmml.python.CythonObjectUtil;
 import org.jpmml.python.HasArray;
 import org.jpmml.python.PythonObject;
 import org.jpmml.python.SliceUtil;
@@ -38,12 +39,12 @@ public class Index extends CythonObject implements HasArray {
 
 	@Override
 	public void __init__(Object[] args){
-		super.__setstate__(ClassDictUtil.createAttributeMap(INIT_ATTRIBUTES, args));
+		super.__setstate__(CythonObjectUtil.createState(INIT_ATTRIBUTES, args));
 	}
 
 	@Override
 	public void __setstate__(Object[] args){
-		super.__setstate__(ClassDictUtil.createAttributeMap(SETSTATE_ATTRIBUTES, args));
+		super.__setstate__(CythonObjectUtil.createState(SETSTATE_ATTRIBUTES, args));
 	}
 
 	@Override

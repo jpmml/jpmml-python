@@ -21,8 +21,8 @@ package pandas.core;
 import java.util.List;
 
 import builtins.Slice;
-import org.jpmml.python.ClassDictUtil;
 import org.jpmml.python.CythonObject;
+import org.jpmml.python.CythonObjectUtil;
 
 public class Block extends CythonObject {
 
@@ -37,7 +37,7 @@ public class Block extends CythonObject {
 			args = new Object[]{args[0], args[1], null};
 		}
 
-		super.__setstate__(ClassDictUtil.createAttributeMap(INIT_ATTRIBUTES, args));
+		super.__setstate__(CythonObjectUtil.createState(INIT_ATTRIBUTES, args));
 	}
 
 	public Slice getSlice(){

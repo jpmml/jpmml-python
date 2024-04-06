@@ -23,7 +23,7 @@ import java.util.Arrays;
 import net.razorvine.pickle.PickleException;
 import net.razorvine.pickle.objects.ClassDict;
 import net.razorvine.pickle.objects.ClassDictConstructor;
-import org.jpmml.python.ClassDictUtil;
+import org.jpmml.python.CythonObjectUtil;
 import types.FunctionType;
 
 public class CreateFunctionConstructor extends ClassDictConstructor {
@@ -40,7 +40,7 @@ public class CreateFunctionConstructor extends ClassDictConstructor {
 		}
 
 		ClassDict dict = new FunctionType();
-		dict.__setstate__(ClassDictUtil.createAttributeMap(new String[]{"code", "globals", "name", "defaults", "closure"}, args));
+		dict.__setstate__(CythonObjectUtil.createState(new String[]{"code", "globals", "name", "defaults", "closure"}, args));
 
 		return dict;
 	}

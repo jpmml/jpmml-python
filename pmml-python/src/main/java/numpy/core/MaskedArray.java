@@ -21,8 +21,8 @@ package numpy.core;
 import java.util.HashMap;
 
 import numpy.DType;
-import org.jpmml.python.ClassDictUtil;
 import org.jpmml.python.CythonObject;
+import org.jpmml.python.CythonObjectUtil;
 
 public class MaskedArray extends CythonObject {
 
@@ -34,7 +34,7 @@ public class MaskedArray extends CythonObject {
 	public void __init__(Object[] args){
 
 		if(args.length == 4){
-			HashMap<String, Object> values = ClassDictUtil.createAttributeMap(
+			HashMap<String, Object> values = CythonObjectUtil.createState(
 				new String[]{"data", "mask"},
 				new Object[]{new NDArray(), new NDArray()}
 			);

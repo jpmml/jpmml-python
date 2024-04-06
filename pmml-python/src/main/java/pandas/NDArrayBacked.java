@@ -25,8 +25,8 @@ import java.util.Map;
 
 import net.razorvine.pickle.PickleException;
 import numpy.core.NDArray;
-import org.jpmml.python.ClassDictUtil;
 import org.jpmml.python.CythonObject;
+import org.jpmml.python.CythonObjectUtil;
 import org.jpmml.python.HasArray;
 
 public class NDArrayBacked extends CythonObject implements HasArray {
@@ -59,7 +59,7 @@ public class NDArrayBacked extends CythonObject implements HasArray {
 				throw new PickleException(Arrays.toString(args));
 			}
 
-			super.__setstate__(ClassDictUtil.createAttributeMap(SETSTATE_ATTRIBUTES, stateArgs));
+			super.__setstate__(CythonObjectUtil.createState(SETSTATE_ATTRIBUTES, stateArgs));
 
 			if(args[2] instanceof Map){
 				__setstate__(new Object[]{args[2]});

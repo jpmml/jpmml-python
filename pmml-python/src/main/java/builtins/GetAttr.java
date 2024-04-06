@@ -18,8 +18,8 @@
  */
 package builtins;
 
-import org.jpmml.python.ClassDictUtil;
 import org.jpmml.python.CythonObject;
+import org.jpmml.python.CythonObjectUtil;
 
 public class GetAttr extends CythonObject {
 
@@ -29,7 +29,7 @@ public class GetAttr extends CythonObject {
 
 	@Override
 	public void __init__(Object[] args){
-		super.__setstate__(ClassDictUtil.createAttributeMap(INIT_ATTRIBUTES, args));
+		super.__setstate__(CythonObjectUtil.createState(INIT_ATTRIBUTES, args));
 	}
 
 	public Object getObj(){

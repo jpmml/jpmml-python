@@ -18,8 +18,8 @@
  */
 package numpy.core;
 
-import org.jpmml.python.ClassDictUtil;
 import org.jpmml.python.CythonObject;
+import org.jpmml.python.CythonObjectUtil;
 import org.jpmml.python.Identifiable;
 
 public class UFunc extends CythonObject implements Identifiable {
@@ -30,7 +30,7 @@ public class UFunc extends CythonObject implements Identifiable {
 
 	@Override
 	public void __init__(Object[] args){
-		super.__setstate__(ClassDictUtil.createAttributeMap(INIT_ATTRIBUTES, args));
+		super.__setstate__(CythonObjectUtil.createState(INIT_ATTRIBUTES, args));
 	}
 
 	@Override
