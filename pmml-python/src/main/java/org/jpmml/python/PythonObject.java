@@ -93,6 +93,11 @@ public class PythonObject extends ClassDict {
 	}
 
 	@Override
+	public void putAll(Map<? extends String, ?> map){
+		super.putAll(map);
+	}
+
+	@Override
 	public Object remove(Object key){
 		return super.remove(key);
 	}
@@ -121,6 +126,10 @@ public class PythonObject extends ClassDict {
 
 	public void setattr(String name, Object value){
 		put(name, value);
+	}
+
+	public void update(Map<String, ?> dict){
+		putAll(dict);
 	}
 
 	public void delattr(String name){

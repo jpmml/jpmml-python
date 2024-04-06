@@ -93,13 +93,13 @@ public class Index extends CythonObject implements HasArray {
 	}
 
 	private <E extends PythonObject> E getPythonObject(String name, E object){
-		Map<String, ?> map = getDict(name);
+		Map<String, ?> dict = getDict(name);
 
-		if(map.containsKey("__class__")){
-			throw new IllegalArgumentException("Dict attribute \'" + ClassDictUtil.formatMember(this, name) + "\' has a non-dict value (" + ClassDictUtil.formatClass(map) + ")");
+		if(dict.containsKey("__class__")){
+			throw new IllegalArgumentException("Dict attribute \'" + ClassDictUtil.formatMember(this, name) + "\' has a non-dict value (" + ClassDictUtil.formatClass(dict) + ")");
 		}
 
-		object.putAll(map);
+		object.update(dict);
 
 		return object;
 	}
