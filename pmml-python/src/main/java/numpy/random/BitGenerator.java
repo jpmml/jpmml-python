@@ -19,7 +19,6 @@
 package numpy.random;
 
 import org.jpmml.python.CythonObject;
-import org.jpmml.python.CythonObjectUtil;
 
 public class BitGenerator extends CythonObject {
 
@@ -29,7 +28,7 @@ public class BitGenerator extends CythonObject {
 
 	@Override
 	public void __init__(Object[] args){
-		super.__setstate__(CythonObjectUtil.createState(INIT_ATTRIBUTES, args));
+		super.__setstate__(INIT_ATTRIBUTES, args);
 	}
 
 	private static final String[] INIT_ATTRIBUTES = {

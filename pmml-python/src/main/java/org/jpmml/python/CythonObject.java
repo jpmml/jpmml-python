@@ -58,12 +58,16 @@ public class CythonObject extends PythonObject {
 		return result;
 	}
 
+	public void __setstate__(String[] attributes, Object[] args){
+		__setstate__(CythonObjectUtil.createState(attributes, args));
+	}
+
 	@Override
-	public void __setstate__(HashMap<String, Object> values){
+	public void __setstate__(HashMap<String, Object> newState){
 		HashMap<String, Object> state = __getstate__();
 
 		// The state is additive
-		state.putAll(values);
+		state.putAll(newState);
 
 		super.__setstate__(state);
 	}

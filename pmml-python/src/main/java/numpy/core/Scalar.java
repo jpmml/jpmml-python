@@ -27,7 +27,6 @@ import com.google.common.base.Charsets;
 import com.google.common.collect.Iterables;
 import numpy.DType;
 import org.jpmml.python.CythonObject;
-import org.jpmml.python.CythonObjectUtil;
 import org.jpmml.python.HasArray;
 import org.jpmml.python.HasContent;
 
@@ -42,7 +41,7 @@ public class Scalar extends CythonObject implements HasArray, HasContent<List<?>
 
 	@Override
 	public void __init__(Object[] args){
-		super.__setstate__(CythonObjectUtil.createState(INIT_ATTRIBUTES, args));
+		super.__setstate__(INIT_ATTRIBUTES, args);
 	}
 
 	@Override

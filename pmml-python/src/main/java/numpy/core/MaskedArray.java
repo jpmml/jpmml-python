@@ -18,11 +18,11 @@
  */
 package numpy.core;
 
-import java.util.HashMap;
+import java.util.Arrays;
 
+import net.razorvine.pickle.PickleException;
 import numpy.DType;
 import org.jpmml.python.CythonObject;
-import org.jpmml.python.CythonObjectUtil;
 
 public class MaskedArray extends CythonObject {
 
@@ -33,18 +33,20 @@ public class MaskedArray extends CythonObject {
 	@Override
 	public void __init__(Object[] args){
 
+		if(args.length == 0){
+			super.__init__(args);
+		} else
+
 		if(args.length == 4){
-			HashMap<String, Object> values = CythonObjectUtil.createState(
+			super.__setstate__(
 				new String[]{"data", "mask"},
 				new Object[]{new NDArray(), new NDArray()}
 			);
+		} else
 
-			super.__setstate__(values);
-
-			return;
+		{
+			throw new PickleException(Arrays.deepToString(args));
 		}
-
-		super.__init__(args);
 	}
 
 	@Override

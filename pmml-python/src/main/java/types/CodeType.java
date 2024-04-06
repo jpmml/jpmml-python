@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Villu Ruusmann
+ * Copyright (c) 2024 Villu Ruusmann
  *
  * This file is part of JPMML-Python
  *
@@ -16,22 +16,17 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with JPMML-Python.  If not, see <http://www.gnu.org/licenses/>.
  */
-package collections;
+package types;
 
-import org.jpmml.python.CythonObject;
+import net.razorvine.pickle.objects.ClassDict;
 
-public class DefaultDict extends CythonObject {
+public class CodeType extends ClassDict {
 
-	public DefaultDict(String module, String name){
+	public CodeType(){
+		this("types", "CodeType");
+	}
+
+	public CodeType(String module, String name){
 		super(module, name);
 	}
-
-	@Override
-	public void __init__(Object[] args){
-		super.__setstate__(INIT_ATTRIBUTES, args);
-	}
-
-	private static final String[] INIT_ATTRIBUTES = {
-		"default_factory"
-	};
 }

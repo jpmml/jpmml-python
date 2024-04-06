@@ -18,8 +18,6 @@
  */
 package numpy.random;
 
-import java.util.HashMap;
-
 public class LegacyRandomState extends RandomState {
 
 	public LegacyRandomState(String module, String name){
@@ -28,11 +26,11 @@ public class LegacyRandomState extends RandomState {
 
 	@Override
 	public void __init__(Object[] args){
-		Object bitGenerator = BitGeneratorUtil.createBitGenerator(args);
+		BitGenerator bitGenerator = BitGeneratorUtil.createBitGenerator(args);
 
-		HashMap<String, Object> attributes = new HashMap<>();
-		attributes.put("bit_generator", bitGenerator);
-
-		super.__setstate__(attributes);
+		super.__setstate__(
+			new String[]{"bit_generator"},
+			new Object[]{bitGenerator}
+		);
 	}
 }

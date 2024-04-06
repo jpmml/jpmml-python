@@ -18,9 +18,8 @@
  */
 package dill;
 
-import java.util.Arrays;
+import java.util.HashMap;
 
-import net.razorvine.pickle.PickleException;
 import net.razorvine.pickle.objects.ClassDict;
 import net.razorvine.pickle.objects.ClassDictConstructor;
 import org.jpmml.python.CythonObjectUtil;
@@ -34,14 +33,22 @@ public class CreateFunctionConstructor extends ClassDictConstructor {
 
 	@Override
 	public Object construct(Object[] args){
-
-		if(args.length != 5){
-			throw new PickleException(Arrays.deepToString(args));
-		}
-
 		ClassDict dict = new FunctionType();
-		dict.__setstate__(CythonObjectUtil.createState(new String[]{"code", "globals", "name", "defaults", "closure"}, args));
+		dict.__setstate__(createState(args));
 
 		return dict;
 	}
+
+	static
+	private HashMap<String, Object> createState(Object[] args){
+		return CythonObjectUtil.createState(CreateFunctionConstructor.STATE_ATTRIBUTES, args);
+	}
+
+	private static final String[] STATE_ATTRIBUTES = {
+		"code",
+		"globals",
+		"name",
+		"defaults",
+		"closure"
+	};
 }

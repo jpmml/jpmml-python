@@ -28,6 +28,7 @@ import net.razorvine.pickle.objects.ClassDict;
 import net.razorvine.pickle.objects.ClassDictConstructor;
 import org.jpmml.python.ClassDictUtil;
 import org.jpmml.python.CythonObjectUtil;
+import types.CodeType;
 
 public class CreateCodeConstructor extends ClassDictConstructor {
 
@@ -37,25 +38,24 @@ public class CreateCodeConstructor extends ClassDictConstructor {
 
 	@Override
 	public Object construct(Object[] args){
-
-		if(!(args[0] instanceof Integer)){
-			args = ClassDictUtil.extractArgs(args, 1, args.length);
-		}
-
-		ClassDict dict = new ClassDict("types", "CodeType");
-		dict.__setstate__(createStateMap(args));
+		ClassDict dict = new CodeType();
+		dict.__setstate__(createState(args));
 
 		return dict;
 	}
 
 	static
-	private HashMap<String, Object> createStateMap(Object[] args){
+	private HashMap<String, Object> createState(Object[] args){
+
+		if(!(args[0] instanceof Integer)){
+			args = ClassDictUtil.extractArgs(args, 1, args.length);
+		}
 
 		for(int i = 0; i < 4; i++){
-			String[] names = CreateCodeConstructor.STATE_ATTRIBUTES[i];
+			String[] attributes = CreateCodeConstructor.STATE_ATTRIBUTES[i];
 
-			if(names.length == args.length){
-				return CythonObjectUtil.createState(names, args);
+			if(attributes.length == args.length){
+				return CythonObjectUtil.createState(attributes, args);
 			}
 		}
 

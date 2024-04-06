@@ -19,7 +19,6 @@
 package numpy.random;
 
 import org.jpmml.python.CythonObject;
-import org.jpmml.python.CythonObjectUtil;
 
 public class RandomState extends CythonObject {
 
@@ -29,7 +28,7 @@ public class RandomState extends CythonObject {
 
 	@Override
 	public void __setstate__(Object[] args){
-		super.__setstate__(CythonObjectUtil.createState(SETSTATE_ATTRIBUTES, args));
+		super.__setstate__(SETSTATE_ATTRIBUTES, args);
 	}
 
 	private static final String[] SETSTATE_ATTRIBUTES = {

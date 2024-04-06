@@ -19,6 +19,7 @@
 package types;
 
 import java.util.Arrays;
+import java.util.HashMap;
 
 import net.razorvine.pickle.PickleException;
 import net.razorvine.pickle.objects.ClassDict;
@@ -41,10 +42,15 @@ public class MethodTypeConstructor extends ClassDictConstructor {
 		FunctionType func = (FunctionType)args[0];
 		ClassDict self = (ClassDict)args[1];
 
-		MethodType dict = new MethodType();
-		dict.__setstate__(CythonObjectUtil.createState(SETSTATE_ATTRIBUTES, args));
+		ClassDict dict = new MethodType();
+		dict.__setstate__(createState(args));
 
 		return dict;
+	}
+
+	static
+	private HashMap<String, Object> createState(Object[] args){
+		return CythonObjectUtil.createState(MethodTypeConstructor.SETSTATE_ATTRIBUTES, args);
 	}
 
 	private static final String[] SETSTATE_ATTRIBUTES = {
