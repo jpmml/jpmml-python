@@ -19,7 +19,6 @@
 package org.jpmml.python;
 
 import java.lang.reflect.Field;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -111,7 +110,7 @@ public class PythonObject extends ClassDict {
 	public Object getattr(String name){
 
 		if(!containsKey(name)){
-			throw new IllegalArgumentException("Attribute \'" + ClassDictUtil.formatMember(this, name) + "\' not set");
+			throw new AttributeException("Attribute \'" + ClassDictUtil.formatMember(this, name) + "\' not set");
 		}
 
 		return get(name);
@@ -142,7 +141,7 @@ public class PythonObject extends ClassDict {
 		Object value = getattr(name);
 
 		if(value == null){
-			throw new IllegalArgumentException("Attribute \'" + ClassDictUtil.formatMember(this, name) + "\' has a missing (None/null) value");
+			throw new AttributeException("Attribute \'" + ClassDictUtil.formatMember(this, name) + "\' has a missing (None/null) value");
 		} // End if
 
 		if(Objects.equals(Boolean.class, clazz) || (Number.class).isAssignableFrom(clazz) || Objects.equals(String.class, clazz)){
@@ -295,7 +294,7 @@ public class PythonObject extends ClassDict {
 			return hasArray;
 		}
 
-		throw new IllegalArgumentException("The value of \'" + ClassDictUtil.formatMember(this, name) + "\' attribute (" + ClassDictUtil.formatClass(object) + ") is not a supported array type");
+		throw new AttributeException("The value of \'" + ClassDictUtil.formatMember(this, name) + "\' attribute (" + ClassDictUtil.formatClass(object) + ") is not a supported array type");
 	}
 
 	public <E> List<E> getArray(String name, Class<? extends E> clazz){
@@ -327,14 +326,14 @@ public class PythonObject extends ClassDict {
 			return new int[]{1};
 		}
 
-		throw new IllegalArgumentException("The value of \'" + ClassDictUtil.formatMember(this, name) + "\' attribute (" + ClassDictUtil.formatClass(object) +") is not a supported array type");
+		throw new AttributeException("The value of \'" + ClassDictUtil.formatMember(this, name) + "\' attribute (" + ClassDictUtil.formatClass(object) +") is not a supported array type");
 	}
 
 	public int[] getArrayShape(String name, int length){
 		int[] shape = getArrayShape(name);
 
 		if(shape.length != length){
-			throw new IllegalArgumentException("Expected " + length + "-dimensional array, got " + shape.length + "-dimensional (" + Arrays.toString(shape) + ") array");
+			throw new AttributeException("Array attribute \'" + ClassDictUtil.formatMember(this, name) + "\' is mis-shaped");
 		}
 
 		return shape;
@@ -400,7 +399,7 @@ public class PythonObject extends ClassDict {
 			return NDArrayUtil.getContent(array, key);
 		}
 
-		throw new IllegalArgumentException("The value of \'" + ClassDictUtil.formatMember(this, name) + "\' attribute (" + ClassDictUtil.formatClass(object) + ") is not a supported array type");
+		throw new AttributeException("The value of \'" + ClassDictUtil.formatMember(this, name) + "\' attribute (" + ClassDictUtil.formatClass(object) + ") is not a supported array type");
 	}
 
 	public List<?> getList(String name){

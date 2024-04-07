@@ -23,6 +23,7 @@ import java.util.Map;
 
 import net.razorvine.pickle.objects.ClassDictConstructor;
 import numpy.core.NDArray;
+import org.jpmml.python.AttributeException;
 import org.jpmml.python.ClassDictConstructorUtil;
 import org.jpmml.python.ClassDictUtil;
 import org.jpmml.python.CythonObject;
@@ -96,7 +97,7 @@ public class Index extends CythonObject implements HasArray {
 		Map<String, ?> dict = getDict(name);
 
 		if(dict.containsKey("__class__")){
-			throw new IllegalArgumentException("Dict attribute \'" + ClassDictUtil.formatMember(this, name) + "\' has a non-dict value (" + ClassDictUtil.formatClass(dict) + ")");
+			throw new AttributeException("Dict attribute \'" + ClassDictUtil.formatMember(this, name) + "\' has a non-dict value (" + ClassDictUtil.formatClass(dict) + ")");
 		}
 
 		object.update(dict);
