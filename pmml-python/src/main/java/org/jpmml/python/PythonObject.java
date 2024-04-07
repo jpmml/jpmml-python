@@ -27,10 +27,12 @@ import java.util.Objects;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
+import functools.Partial;
 import joblib.NDArrayWrapper;
 import net.razorvine.pickle.objects.ClassDict;
 import numpy.core.NDArray;
 import numpy.core.NDArrayUtil;
+import numpy.core.Scalar;
 import numpy.core.ScalarUtil;
 import org.jpmml.converter.ValueUtil;
 import org.jpmml.model.ReflectionUtil;
@@ -143,16 +145,28 @@ public class PythonObject extends ClassDict {
 			throw new IllegalArgumentException("Attribute \'" + ClassDictUtil.formatMember(this, name) + "\' has a missing (None/null) value");
 		} // End if
 
-		if(value instanceof PythonObjectConstructor){
-			PythonObjectConstructor dictConstructor = (PythonObjectConstructor)value;
+		if(Objects.equals(Boolean.class, clazz) || (Number.class).isAssignableFrom(clazz) || Objects.equals(String.class, clazz)){
 
-			if((Identifiable.class).isAssignableFrom(clazz)){
+			if(value instanceof Scalar){
+				Scalar scalar = (Scalar)value;
+
+				value = scalar.getOnlyElement();
+			}
+		} else
+
+		if(Objects.equals(Identifiable.class, clazz)){
+
+			if(value instanceof Partial){
+				Partial partial = (Partial)value;
+
+				value = partial.toIdentifiable();
+			} else
+
+			if(value instanceof PythonObjectConstructor){
+				PythonObjectConstructor dictConstructor = (PythonObjectConstructor)value;
+
 				value = dictConstructor.newObject();
 			}
-		} // End if
-
-		if((Boolean.class).isAssignableFrom(clazz) || (Number.class).isAssignableFrom(clazz) || (String.class).isAssignableFrom(clazz)){
-			value = ScalarUtil.decode(value);
 		}
 
 		CastFunction<E> castFunction = new CastFunction<E>(clazz){
@@ -244,6 +258,14 @@ public class PythonObject extends ClassDict {
 
 	public String getOptionalString(String name){
 		return getOptional(name, String.class);
+	}
+
+	public Identifiable getIdentifiable(String name){
+		return get(name, Identifiable.class);
+	}
+
+	public Identifiable getOptionalIdentifiable(String name){
+		return getOptional(name, Identifiable.class);
 	}
 
 	public Object[] getTuple(String name){
