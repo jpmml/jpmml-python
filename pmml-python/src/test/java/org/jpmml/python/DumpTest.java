@@ -121,6 +121,7 @@ public class DumpTest extends PickleUtilTest {
 	@Test
 	public void python39() throws Exception {
 		unpickle("python-3.9_dill-0.3.6.pkl");
+		unpickle("python-3.9_dill-0.3.8.pkl");
 
 		unpickle("python-3.9_joblib-1.0.1.pkl.z");
 		unpickle("python-3.9_joblib-1.1.0.pkl.z");
@@ -208,6 +209,7 @@ public class DumpTest extends PickleUtilTest {
 	@Test
 	public void python311() throws Exception {
 		unpickle("python-3.11_dill-0.3.6.pkl");
+		unpickle("python-3.11_dill-0.3.8.pkl");
 
 		unpickle("python-3.11_joblib-1.2.0.pkl.z");
 		unpickle("python-3.11_joblib-1.3.1.pkl.z");
@@ -271,6 +273,7 @@ public class DumpTest extends PickleUtilTest {
 	@Test
 	public void python312() throws Exception {
 		unpickle("python-3.12_dill-0.3.6.pkl");
+		unpickle("python-3.12_dill-0.3.8.pkl");
 
 		unpickle("python-3.12_joblib-1.3.2.pkl.z");
 
