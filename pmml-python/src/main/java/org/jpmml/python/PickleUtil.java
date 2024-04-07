@@ -21,17 +21,20 @@ package org.jpmml.python;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
 import joblib.NDArrayWrapperConstructor;
 import joblib.NumpyArrayWrapper;
+import net.razorvine.pickle.IObjectConstructor;
 import net.razorvine.pickle.Opcodes;
 import net.razorvine.pickle.Unpickler;
 import net.razorvine.pickle.objects.ClassDictConstructor;
@@ -84,6 +87,22 @@ public class PickleUtil {
 			};
 
 			return unpickler.load(is);
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	static
+	public Map<String, IObjectConstructor> getObjectConstructors(){
+
+		try {
+			Field objectConstructorsField = Unpickler.class.getDeclaredField("objectConstructors");
+			if(!objectConstructorsField.isAccessible()){
+				objectConstructorsField.setAccessible(true);
+			}
+
+			return (Map<String, IObjectConstructor>)objectConstructorsField.get(null);
+		} catch(ReflectiveOperationException roe){
+			throw new RuntimeException(roe);
 		}
 	}
 

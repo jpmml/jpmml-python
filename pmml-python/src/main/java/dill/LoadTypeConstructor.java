@@ -18,14 +18,13 @@
  */
 package dill;
 
-import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Map;
 
 import net.razorvine.pickle.IObjectConstructor;
 import net.razorvine.pickle.PickleException;
-import net.razorvine.pickle.Unpickler;
 import net.razorvine.pickle.objects.ClassDictConstructor;
+import org.jpmml.python.PickleUtil;
 
 public class LoadTypeConstructor extends ClassDictConstructor {
 
@@ -42,29 +41,17 @@ public class LoadTypeConstructor extends ClassDictConstructor {
 
 		String name = (String)args[0];
 
-		Map<String, IObjectConstructor> objectConstructors;
-
-		try {
-			Field objectConstructorsField = Unpickler.class.getDeclaredField("objectConstructors");
-			if(!objectConstructorsField.isAccessible()){
-				objectConstructorsField.setAccessible(true);
-			}
-
-			objectConstructors = (Map<String, IObjectConstructor>)objectConstructorsField.get(null);
-		} catch(ReflectiveOperationException roe){
-			throw new RuntimeException(roe);
-		}
-
-		IObjectConstructor objectConstructor = findObjectConstructor(name, objectConstructors);
+		IObjectConstructor objectConstructor = findObjectConstructor(name);
 		if(objectConstructor != null){
 			return objectConstructor;
 		}
 
-		throw new IllegalArgumentException(name);
+		throw new PickleException(Arrays.deepToString(args));
 	}
 
 	static
-	private IObjectConstructor findObjectConstructor(String name, Map<String, IObjectConstructor> objectConstructors){
+	private IObjectConstructor findObjectConstructor(String name){
+		Map<String, IObjectConstructor> objectConstructors = PickleUtil.getObjectConstructors();
 
 		switch(name){
 			case "PartialType":
