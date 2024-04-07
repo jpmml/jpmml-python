@@ -44,8 +44,13 @@ public class CastFunction<E> implements Function<Object, E> {
 
 			return clazz.cast(object);
 		} catch(ClassCastException cce){
-			throw new IllegalArgumentException(formatMessage(object), cce);
+			throw createPythonException(formatMessage(object), cce)
+				.fillInStackTrace();
 		}
+	}
+
+	public PythonException createPythonException(String message, ClassCastException cause){
+		return new PythonException(message, cause);
 	}
 
 	public Class<? extends E> getClazz(){

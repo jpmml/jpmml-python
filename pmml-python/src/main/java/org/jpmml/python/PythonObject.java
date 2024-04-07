@@ -168,7 +168,7 @@ public class PythonObject extends ClassDict {
 			}
 		}
 
-		CastFunction<E> castFunction = new CastFunction<E>(clazz){
+		CastFunction<E> castFunction = new AttributeCastFunction<E>(clazz){
 
 			@Override
 			protected String formatMessage(Object object){
@@ -302,7 +302,7 @@ public class PythonObject extends ClassDict {
 
 		List<?> values = hasArray.getArrayContent();
 
-		CastFunction<E> castFunction = new CastFunction<E>(clazz){
+		CastFunction<E> castFunction = new AttributeCastFunction<E>(clazz){
 
 			@Override
 			protected String formatMessage(Object object){
@@ -358,7 +358,7 @@ public class PythonObject extends ClassDict {
 
 		List<?> values = hasArray.getArrayContent();
 
-		CastFunction<Number> castFunction = new CastFunction<Number>(Number.class){
+		CastFunction<Number> castFunction = new AttributeCastFunction<Number>(Number.class){
 
 			@Override
 			public Number apply(Object object){
@@ -409,7 +409,7 @@ public class PythonObject extends ClassDict {
 	public <E> List<E> getList(String name, Class<? extends E> clazz){
 		List<?> values = getList(name);
 
-		CastFunction<E> castFunction = new CastFunction<E>(clazz){
+		CastFunction<E> castFunction = new AttributeCastFunction<E>(clazz){
 
 			@Override
 			protected String formatMessage(Object object){
@@ -439,7 +439,7 @@ public class PythonObject extends ClassDict {
 	public <E> List<List<E>> getArrayList(String name, Class<? extends E> clazz){
 		List<HasArray> values = getArrayList(name);
 
-		CastFunction<E> castFunction = new CastFunction<E>(clazz){
+		CastFunction<E> castFunction = new AttributeCastFunction<E>(clazz){
 
 			@Override
 			protected String formatMessage(Object object){
@@ -493,7 +493,7 @@ public class PythonObject extends ClassDict {
 
 		List<?> values = getListLike(name);
 
-		CastFunction<E> castFunction = new CastFunction<E>(clazz){
+		CastFunction<E> castFunction = new AttributeCastFunction<E>(clazz){
 
 			@Override
 			protected String formatMessage(Object object){

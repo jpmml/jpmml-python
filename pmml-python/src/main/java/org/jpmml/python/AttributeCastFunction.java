@@ -18,25 +18,15 @@
  */
 package org.jpmml.python;
 
-public class PythonException extends RuntimeException {
+abstract
+public class AttributeCastFunction<E> extends CastFunction<E> {
 
-	public PythonException(String message){
-		super(message);
-	}
-
-	public PythonException(String message, Throwable cause){
-		super(message, cause);
+	public AttributeCastFunction(Class<? extends E> clazz){
+		super(clazz);
 	}
 
 	@Override
-	synchronized
-	public PythonException initCause(Throwable cause){
-		return (PythonException)super.initCause(cause);
-	}
-
-	@Override
-	synchronized
-	public PythonException fillInStackTrace(){
-		return (PythonException)super.fillInStackTrace();
+	public AttributeException createPythonException(String message, ClassCastException cause){
+		return new AttributeException(message, cause);
 	}
 }
