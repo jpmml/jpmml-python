@@ -86,7 +86,7 @@ public class PredicateTranslatorTest extends TranslatorTest {
 			translatePredicate(predicateTranslator, "X['a'] > X['b']");
 
 			fail();
-		} catch(IllegalArgumentException iae){
+		} catch(TranslationException te){
 			// Ignored
 		}
 

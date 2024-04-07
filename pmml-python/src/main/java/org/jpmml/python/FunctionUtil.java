@@ -62,7 +62,7 @@ public class FunctionUtil {
 			return encodeScipyFunction(module, name, expressions);
 		}
 
-		throw new IllegalArgumentException("Function \'" + formatFunction(module, name) + "\' is not supported");
+		throw new TranslationException("Function \'" + formatFunction(module, name) + "\' is not supported");
 	}
 
 	static
@@ -78,7 +78,7 @@ public class FunctionUtil {
 			}
 		}
 
-		throw new IllegalArgumentException("Function \'" + formatFunction(module, name) + "\' is not supported");
+		throw new TranslationException("Function \'" + formatFunction(module, name) + "\' is not supported");
 	}
 
 	static
@@ -142,7 +142,7 @@ public class FunctionUtil {
 			}
 		}
 
-		throw new IllegalArgumentException("Function \'" + formatFunction(module, name) +"\' is not supported");
+		throw new TranslationException("Function \'" + formatFunction(module, name) +"\' is not supported");
 	}
 
 	static
@@ -160,7 +160,7 @@ public class FunctionUtil {
 			}
 		}
 
-		throw new IllegalArgumentException("Function \'" + formatFunction(module, name) +"\' is not supported");
+		throw new TranslationException("Function \'" + formatFunction(module, name) +"\' is not supported");
 	}
 
 	static
@@ -249,7 +249,7 @@ public class FunctionUtil {
 			}
 		}
 
-		throw new IllegalArgumentException("Function \'" + formatFunction(module, name) + "\' is not supported");
+		throw new TranslationException("Function \'" + formatFunction(module, name) + "\' is not supported");
 	}
 
 	static
@@ -269,7 +269,7 @@ public class FunctionUtil {
 			}
 		}
 
-		throw new IllegalArgumentException("Function \'" + formatFunction(module, name) + "\' is not supported");
+		throw new TranslationException("Function \'" + formatFunction(module, name) + "\' is not supported");
 	}
 
 	static
@@ -287,7 +287,7 @@ public class FunctionUtil {
 			}
 		}
 
-		throw new IllegalArgumentException("Function \'" + formatFunction(module, name) + "\' is not supported");
+		throw new TranslationException("Function \'" + formatFunction(module, name) + "\' is not supported");
 	}
 
 	static

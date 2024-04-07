@@ -18,13 +18,13 @@
  */
 package org.jpmml.python;
 
-public class AttributeException extends PythonException {
+public class TranslationException extends PythonException {
 
-	public AttributeException(String message){
+	public TranslationException(String message){
 		super(message);
 	}
 
-	public AttributeException(String message, Throwable cause){
+	public TranslationException(String message, Throwable cause){
 		super(message, cause);
 	}
 }

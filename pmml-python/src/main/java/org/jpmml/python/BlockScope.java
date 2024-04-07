@@ -49,21 +49,21 @@ public class BlockScope extends Scope {
 			return feature;
 		}
 
-		throw new IllegalArgumentException("Name \'" + name + "\' is not defined");
+		throw new TranslationException("Name \'" + name + "\' is not defined");
 	}
 
 	@Override
 	public Feature getFeature(String name, int columnIndex){
 		getFeature(name);
 
-		throw new IllegalArgumentException("Name \'" + name + "\' is not subscriptable");
+		throw new TranslationException("Name \'" + name + "\' is not subscriptable");
 	}
 
 	@Override
 	public Feature getFeature(String name, String columnName){
 		getFeature(name);
 
-		throw new IllegalArgumentException("Name \'" + name + "\' is not subscriptable");
+		throw new TranslationException("Name \'" + name + "\' is not subscriptable");
 	}
 
 	@Override

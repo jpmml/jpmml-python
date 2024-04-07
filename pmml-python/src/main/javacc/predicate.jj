@@ -62,7 +62,7 @@ public class PredicateTranslator extends AbstractTranslator {
 		try {
 			predicate = translatePredicateInternal();
 		} catch(ParseException pe){
-			throw new IllegalArgumentException("Python predicate \'" + string + "\' is either invalid or not supported", pe);
+			throw new TranslationException("Python predicate \'" + string + "\' is either invalid or not supported", pe);
 		}
 
 		return predicate;
@@ -158,7 +158,7 @@ public class PredicateTranslator extends AbstractTranslator {
 		} else
 
 		{
-			throw new IllegalArgumentException("The left-hand side of the predicate (" + object + ") is not a feature reference");
+			throw new TranslationException("The left-hand side of the predicate (" + object + ") is not a feature reference");
 		}
 	}
 
@@ -182,7 +182,7 @@ public class PredicateTranslator extends AbstractTranslator {
 		} else
 
 		{
-			throw new IllegalArgumentException("The right-hand side of the predicate (" + object + ") is not a value");
+			throw new TranslationException("The right-hand side of the predicate (" + object + ") is not a value");
 		}
 	}
 
@@ -224,7 +224,7 @@ public class PredicateTranslator extends AbstractTranslator {
 			return True.INSTANCE;
 		} // End if
 
-		throw new IllegalArgumentException("The expression (" + object + ") is not a predicate");
+		throw new TranslationException("The expression (" + object + ") is not a predicate");
 	}
 
 	static
@@ -237,7 +237,7 @@ public class PredicateTranslator extends AbstractTranslator {
 		} else
 
 		{
-			throw new IllegalArgumentException("The function argument (" + object + ") is not a feature reference");
+			throw new TranslationException("The function argument (" + object + ") is not a feature reference");
 		}
 	}
 }

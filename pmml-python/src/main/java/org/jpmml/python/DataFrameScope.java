@@ -53,7 +53,7 @@ public class DataFrameScope extends Scope {
 		String variableName = getVariableName();
 
 		if((variableName).equals(name)){
-			throw new IllegalArgumentException("Name \'" + variableName + "\' refers to a row vector. Use an array indexing expression " + variableName + "[<column index>] or " + variableName + "[<column name>] to refer to a specific row vector element");
+			throw new TranslationException("Name \'" + variableName + "\' refers to a row vector. Use an array indexing expression " + variableName + "[<column index>] or " + variableName + "[<column name>] to refer to a specific row vector element");
 		}
 
 		Feature feature = resolveFeature(name);
@@ -62,7 +62,7 @@ public class DataFrameScope extends Scope {
 			return feature;
 		}
 
-		throw new IllegalArgumentException("Name \'" + name + "\' is not defined");
+		throw new TranslationException("Name \'" + name + "\' is not defined");
 	}
 
 	@Override
@@ -77,7 +77,7 @@ public class DataFrameScope extends Scope {
 				return columns.get(columnIndex);
 			}
 
-			throw new IllegalArgumentException("Column index " + columnIndex + " not in range " + Arrays.asList(0, columns.size()));
+			throw new TranslationException("Column index " + columnIndex + " not in range " + Arrays.asList(0, columns.size()));
 		} else
 
 		{
@@ -85,7 +85,7 @@ public class DataFrameScope extends Scope {
 				return columns.get(columns.size() - (-columnIndex));
 			}
 
-			throw new IllegalArgumentException("Column index " + columnIndex + " not in range " + Arrays.asList(-columns.size(), -1));
+			throw new TranslationException("Column index " + columnIndex + " not in range " + Arrays.asList(-columns.size(), -1));
 		}
 	}
 
@@ -100,7 +100,7 @@ public class DataFrameScope extends Scope {
 			return feature;
 		}
 
-		throw new IllegalArgumentException("Column name \'" + columnName + "\' is not in " + FeatureUtil.formatNames(columns, '\''));
+		throw new TranslationException("Column name \'" + columnName + "\' is not in " + FeatureUtil.formatNames(columns, '\''));
 	}
 
 	@Override
@@ -119,7 +119,7 @@ public class DataFrameScope extends Scope {
 		String variableName = getVariableName();
 
 		if(!(variableName).equals(name)){
-			throw new IllegalArgumentException("Name \'" + name + "\' is not defined");
+			throw new TranslationException("Name \'" + name + "\' is not defined");
 		}
 	}
 

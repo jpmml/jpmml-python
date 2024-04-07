@@ -21,6 +21,7 @@ package numpy;
 import numpy.core.TypeDescriptor;
 import org.dmg.pmml.DataType;
 import org.jpmml.python.ClassDictUtil;
+import org.jpmml.python.TranslationException;
 
 public class DTypeUtil {
 
@@ -45,7 +46,7 @@ public class DTypeUtil {
 		} else
 
 		{
-			throw new IllegalArgumentException("The type descriptor object (" + ClassDictUtil.formatClass(descr) + ") is not supported");
+			throw new TranslationException("The type descriptor object (" + ClassDictUtil.formatClass(descr) + ") is not supported");
 		}
 	}
 }

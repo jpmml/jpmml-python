@@ -34,7 +34,7 @@ public class PythonTypeUtil {
 			case "datetime64[s]":
 				return DataType.DATE_TIME;
 			default:
-				throw new IllegalArgumentException("Python data type \'" + dtype + "\' is not supported");
+				throw new TranslationException("Python data type \'" + dtype + "\' is not supported");
 		}
 	}
 }

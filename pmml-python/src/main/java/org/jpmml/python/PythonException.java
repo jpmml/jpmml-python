@@ -18,13 +18,20 @@
  */
 package org.jpmml.python;
 
-public class AttributeException extends PythonException {
+abstract
+public class PythonException extends RuntimeException {
 
-	public AttributeException(String message){
+	public PythonException(String message){
 		super(message);
 	}
 
-	public AttributeException(String message, Throwable cause){
+	public PythonException(String message, Throwable cause){
 		super(message, cause);
+	}
+
+	@Override
+	synchronized
+	public PythonException initCause(Throwable cause){
+		return (PythonException)super.initCause(cause);
 	}
 }

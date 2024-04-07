@@ -95,7 +95,7 @@ public class AbstractTranslator implements FeatureResolver {
 
 			functionDef = functionDefParser.parseFunctionDef(string);
 		} catch(ParseException pe){
-			throw new IllegalArgumentException("Python function definition \'" + toSingleLine(string) + "\' is either invalid or not supported", pe);
+			throw new TranslationException("Python function definition \'" + toSingleLine(string) + "\' is either invalid or not supported", pe);
 		}
 
 		functionDefs.put(functionDef.getName(), functionDef);
@@ -149,7 +149,7 @@ public class AbstractTranslator implements FeatureResolver {
 					.map(FunctionDef.Parameter::getName)
 					.collect(Collectors.joining(", ", name + "(", ")"));
 
-				throw new IllegalArgumentException("Function \'" + nameAndSignature + "\' expects " + parameters.size() + " argument(s), got " + arguments.size() + " argument(s)");
+				throw new TranslationException("Function \'" + nameAndSignature + "\' expects " + parameters.size() + " argument(s), got " + arguments.size() + " argument(s)");
 			}
 
 			List<Feature> features = arguments.stream()

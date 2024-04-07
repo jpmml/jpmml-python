@@ -82,7 +82,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 			expressionTranslator.translateDef(string);
 
 			fail();
-		} catch(IllegalArgumentException iae){
+		} catch(TranslationException te){
 			// Ignored
 		}
 
@@ -649,7 +649,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 			translateExpression(expressionTranslator, "X[[0]]");
 
 			fail();
-		} catch(IllegalArgumentException iae){
+		} catch(TranslationException te){
 			// Ignored
 		}
 
@@ -668,7 +668,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 			translateExpression(expressionTranslator, "X[" + features.size() + "]");
 
 			fail();
-		} catch(IllegalArgumentException iae){
+		} catch(TranslationException te){
 			// Ignored
 		}
 
@@ -687,7 +687,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 			translateExpression(expressionTranslator, "X[" + "-" + (features.size() + 1) + "]");
 
 			fail();
-		} catch(IllegalArgumentException iae){
+		} catch(TranslationException te){
 			// Ignored
 		}
 	}
