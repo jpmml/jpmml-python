@@ -67,6 +67,13 @@ public class FunctionTest extends PickleUtilTest {
 		unpickleNumpyFunctions("python-3.11_numpy-1.26.2");
 	}
 
+	@Test
+	public void python312() throws Exception {
+		unpickleMathFunctions("python-3.12_math");
+
+		unpickleNumpyFunctions("python-3.12_numpy-1.26.2");
+	}
+
 	static
 	private void unpickleMathFunctions(String prefix) throws IOException {
 		String[] names = {"acos", "asin", "atan", "atan2", "ceil", "cos", "cosh", "degrees", "exp", "expm1", "fabs", "floor", "hypot", "isnan", "log", "log1p", "log10", "pow", "radians", "sin", "sinh", "sqrt", "tan", "tanh", "trunc"};

@@ -268,6 +268,40 @@ public class DumpTest extends PickleUtilTest {
 		unpicklePandasDtypes("python-3.11_pandas-2.2.0");
 	}
 
+	@Test
+	public void python312() throws Exception {
+		unpickle("python-3.12_dill-0.3.6.pkl");
+
+		unpickle("python-3.12_joblib-1.3.2.pkl.z");
+
+		unpickle("python-3.12_pickle-p2.pkl");
+		unpickle("python-3.12_pickle-p3.pkl");
+		unpickle("python-3.12_pickle-p4.pkl");
+		unpickle("python-3.12_pickle-p5.pkl");
+
+		unpickleBuiltinDtypes("python-3.12");
+
+		unpickleEnums("python-3.12");
+
+		unpickleNumpyArrays("python-3.12_numpy-1.26.2");
+
+		unpickleNumpyDtypes("python-3.12_numpy-1.26.2");
+
+		unpickleNumpyDatetimeDtypes("python-3.12_numpy-1.26.2");
+
+		unpickleNumpyRNGs("python-3.12_numpy-1.26.2");
+
+		unpicklePandasSeries("python-3.12_pandas-2.2.0");
+
+		unpicklePandasSeriesNA("python-3.12_pandas-2.2.0");
+
+		unpicklePandasCategorical("python-3.12_pandas-2.2.0");
+
+		unpicklePandasDataFrame("python-3.12_pandas-2.2.0");
+
+		unpicklePandasDtypes("python-3.12_pandas-2.2.0");
+	}
+
 	private void unpickleBuiltinDtypes(String prefix) throws IOException {
 		List<?> dtypes = (List<?>)unpickle(prefix + "_dtypes.pkl");
 
