@@ -38,6 +38,15 @@ public class CreateCodeConstructor extends ClassDictConstructor {
 
 	@Override
 	public Object construct(Object[] args){
+
+		if(args.length < 1){
+			throw new PickleException(Arrays.deepToString(args));
+		} // End if
+
+		if(!(args[0] instanceof Integer)){
+			args = ClassDictUtil.extractArgs(args, 1, args.length);
+		}
+
 		ClassDict dict = new CodeType();
 		dict.__setstate__(createState(args));
 
@@ -46,20 +55,27 @@ public class CreateCodeConstructor extends ClassDictConstructor {
 
 	static
 	private HashMap<String, Object> createState(Object[] args){
+		String[] attributes = findStateAttributes(args);
 
-		if(!(args[0] instanceof Integer)){
-			args = ClassDictUtil.extractArgs(args, 1, args.length);
+		if(attributes == null){
+			throw new PickleException(Arrays.deepToString(args));
 		}
 
-		for(int i = 0; i < 4; i++){
+		return CythonObjectUtil.createState(attributes, args);
+	}
+
+	static
+	private String[] findStateAttributes(Object[] args){
+
+		for(int i = 0; i < CreateCodeConstructor.STATE_ATTRIBUTES.length; i++){
 			String[] attributes = CreateCodeConstructor.STATE_ATTRIBUTES[i];
 
 			if(attributes.length == args.length){
-				return CythonObjectUtil.createState(attributes, args);
+				return attributes;
 			}
 		}
 
-		throw new PickleException(Arrays.deepToString(args));
+		return null;
 	}
 
 	static
