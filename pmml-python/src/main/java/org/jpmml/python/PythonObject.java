@@ -19,6 +19,7 @@
 package org.jpmml.python;
 
 import java.lang.reflect.Field;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -267,6 +268,26 @@ public class PythonObject extends ClassDict {
 		return getOptional(name, Identifiable.class);
 	}
 
+	public <E> E getEnum(String name, Function<String, E> function, Collection<E> values){
+		E value = function.apply(name);
+
+		if(!values.contains(value)){
+			throw new AttributeException("Attribute \'" + ClassDictUtil.formatMember(this, name) + "\' has an unsupported value " + formatValue(value) + ". Supported values are " + formatValues(values));
+		}
+
+		return value;
+	}
+
+	public <E> E getOptionalEnum(String name, Function< String, E> function, Collection<E> values){
+		E value = function.apply(name);
+
+		if((value != null)  && (!values.contains(value))){
+			throw new AttributeException("Attribute \'" + ClassDictUtil.formatMember(this, name) + "\' has an unsupported value " + formatValue(value) + ". Supported values are " + formatValues(values));
+		}
+
+		return value;
+	}
+
 	public Object[] getTuple(String name){
 		return get(name, Object[].class);
 	}
@@ -502,6 +523,31 @@ public class PythonObject extends ClassDict {
 		};
 
 		return Lists.transform(values, castFunction);
+	}
+
+	static
+	private String formatValue(Object value){
+
+		if(value instanceof Boolean){
+			Boolean booleanValue = (Boolean)value;
+
+			return booleanValue ? "True" : "False";
+		} else
+
+		if(value instanceof String){
+			String stringValue = (String)value;
+
+			return "\'" + stringValue + "\'";
+		}
+
+		return String.valueOf(value);
+	}
+
+	static
+	public String formatValues(Collection<?> values){
+		values = Lists.transform(Lists.newArrayList(values), PythonObject::formatValue);
+
+		return String.valueOf(values);
 	}
 
 	private static final Field FIELD_CLASSNAME = ReflectionUtil.getField(ClassDict.class, "classname");
