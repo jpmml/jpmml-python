@@ -268,21 +268,21 @@ public class PythonObject extends ClassDict {
 		return getOptional(name, Identifiable.class);
 	}
 
-	public <E> E getEnum(String name, Function<String, E> function, Collection<E> values){
+	public <E> E getEnum(String name, Function<String, E> function, Collection<E> enumValues){
 		E value = function.apply(name);
 
-		if(!values.contains(value)){
-			throw new AttributeException("Attribute \'" + ClassDictUtil.formatMember(this, name) + "\' has an unsupported value " + formatValue(value) + ". Supported values are " + formatValues(values));
+		if(!enumValues.contains(value)){
+			throw new AttributeException("Attribute \'" + ClassDictUtil.formatMember(this, name) + "\' has an unsupported value " + formatValue(value) + ". Supported values are " + formatValues(enumValues));
 		}
 
 		return value;
 	}
 
-	public <E> E getOptionalEnum(String name, Function< String, E> function, Collection<E> values){
+	public <E> E getOptionalEnum(String name, Function< String, E> function, Collection<E> enumValues){
 		E value = function.apply(name);
 
-		if((value != null)  && (!values.contains(value))){
-			throw new AttributeException("Attribute \'" + ClassDictUtil.formatMember(this, name) + "\' has an unsupported value " + formatValue(value) + ". Supported values are " + formatValues(values));
+		if((value != null)  && (!enumValues.contains(value))){
+			throw new AttributeException("Attribute \'" + ClassDictUtil.formatMember(this, name) + "\' has an unsupported value " + formatValue(value) + ". Supported values are " + formatValues(enumValues));
 		}
 
 		return value;
@@ -447,6 +447,25 @@ public class PythonObject extends ClassDict {
 
 	public List<String> getStringList(String name){
 		return getList(name, String.class);
+	}
+
+	public <E> List<E> getEnumList(String name, Function<String, List<E>> function, Collection<E> enumValues){
+		List<E> values = function.apply(name);
+
+		Function<E, E> enumFunction = new Function<E, E>(){
+
+			@Override
+			public E apply(E value){
+
+				if(!enumValues.contains(value)){
+					throw new AttributeException("List attribute \'" + ClassDictUtil.formatMember(PythonObject.this, name) + "\' contains an unsupported value " + formatValue(value) + ". Supported values are " + formatValues(enumValues));
+				}
+
+				return value;
+			}
+		};
+
+		return Lists.transform(values, enumFunction);
 	}
 
 	public List<Object[]> getTupleList(String name){
