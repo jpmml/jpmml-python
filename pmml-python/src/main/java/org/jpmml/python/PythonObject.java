@@ -272,7 +272,7 @@ public class PythonObject extends ClassDict {
 		E value = function.apply(name);
 
 		if(!enumValues.contains(value)){
-			throw new AttributeException("Attribute \'" + ClassDictUtil.formatMember(this, name) + "\' has an unsupported value " + formatValue(value) + ". Supported values are " + formatValues(enumValues));
+			throw new AttributeException("Attribute \'" + ClassDictUtil.formatMember(this, name) + "\' has an unsupported value " + PythonFormatterUtil.formatValue(value) + ". Supported values are " + PythonFormatterUtil.formatCollection(enumValues));
 		}
 
 		return value;
@@ -282,7 +282,7 @@ public class PythonObject extends ClassDict {
 		E value = function.apply(name);
 
 		if((value != null)  && (!enumValues.contains(value))){
-			throw new AttributeException("Attribute \'" + ClassDictUtil.formatMember(this, name) + "\' has an unsupported value " + formatValue(value) + ". Supported values are " + formatValues(enumValues));
+			throw new AttributeException("Attribute \'" + ClassDictUtil.formatMember(this, name) + "\' has an unsupported value " + PythonFormatterUtil.formatValue(value) + ". Supported values are " + PythonFormatterUtil.formatCollection(enumValues));
 		}
 
 		return value;
@@ -458,7 +458,7 @@ public class PythonObject extends ClassDict {
 			public E apply(E value){
 
 				if(!enumValues.contains(value)){
-					throw new AttributeException("List attribute \'" + ClassDictUtil.formatMember(PythonObject.this, name) + "\' contains an unsupported value " + formatValue(value) + ". Supported values are " + formatValues(enumValues));
+					throw new AttributeException("List attribute \'" + ClassDictUtil.formatMember(PythonObject.this, name) + "\' contains an unsupported value " + PythonFormatterUtil.formatValue(value) + ". Supported values are " + PythonFormatterUtil.formatCollection(enumValues));
 				}
 
 				return value;
@@ -542,31 +542,6 @@ public class PythonObject extends ClassDict {
 		};
 
 		return Lists.transform(values, castFunction);
-	}
-
-	static
-	private String formatValue(Object value){
-
-		if(value instanceof Boolean){
-			Boolean booleanValue = (Boolean)value;
-
-			return booleanValue ? "True" : "False";
-		} else
-
-		if(value instanceof String){
-			String stringValue = (String)value;
-
-			return "\'" + stringValue + "\'";
-		}
-
-		return String.valueOf(value);
-	}
-
-	static
-	public String formatValues(Collection<?> values){
-		values = Lists.transform(Lists.newArrayList(values), PythonObject::formatValue);
-
-		return String.valueOf(values);
 	}
 
 	private static final Field FIELD_CLASSNAME = ReflectionUtil.getField(ClassDict.class, "classname");
