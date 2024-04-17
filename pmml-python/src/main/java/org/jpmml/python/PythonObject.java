@@ -142,7 +142,7 @@ public class PythonObject extends ClassDict {
 		Object value = getattr(name);
 
 		if(value == null){
-			throw new AttributeException("Attribute \'" + ClassDictUtil.formatMember(this, name) + "\' has a missing (None/null) value");
+			throw new AttributeException("Attribute \'" + ClassDictUtil.formatMember(this, name) + "\' has a missing (None) value");
 		} // End if
 
 		if(Objects.equals(Boolean.class, clazz) || (Number.class).isAssignableFrom(clazz) || Objects.equals(String.class, clazz)){
@@ -315,7 +315,7 @@ public class PythonObject extends ClassDict {
 			return hasArray;
 		}
 
-		throw new AttributeException("The value of \'" + ClassDictUtil.formatMember(this, name) + "\' attribute (" + ClassDictUtil.formatClass(object) + ") is not a supported array type");
+		throw new AttributeException("Array attribute \'" + ClassDictUtil.formatMember(this, name) + "\' has an unsupported value (" + ClassDictUtil.formatClass(object) + ")");
 	}
 
 	public <E> List<E> getArray(String name, Class<? extends E> clazz){
@@ -347,7 +347,7 @@ public class PythonObject extends ClassDict {
 			return new int[]{1};
 		}
 
-		throw new AttributeException("The value of \'" + ClassDictUtil.formatMember(this, name) + "\' attribute (" + ClassDictUtil.formatClass(object) +") is not a supported array type");
+		throw new AttributeException("Array attribute \'" + ClassDictUtil.formatMember(this, name) + "\' has an unsuppoted value (" + ClassDictUtil.formatClass(object) +")");
 	}
 
 	public int[] getArrayShape(String name, int length){
@@ -420,7 +420,7 @@ public class PythonObject extends ClassDict {
 			return NDArrayUtil.getContent(array, key);
 		}
 
-		throw new AttributeException("The value of \'" + ClassDictUtil.formatMember(this, name) + "\' attribute (" + ClassDictUtil.formatClass(object) + ") is not a supported array type");
+		throw new AttributeException("Array attribute \'" + ClassDictUtil.formatMember(this, name) + "\' has an unsupported value (" + ClassDictUtil.formatClass(object) + ")");
 	}
 
 	public List<?> getList(String name){

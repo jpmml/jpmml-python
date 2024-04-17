@@ -97,7 +97,7 @@ public class Index extends CythonObject implements HasArray {
 		Map<String, ?> dict = getDict(name);
 
 		if(dict.containsKey("__class__")){
-			throw new AttributeException("Dict attribute \'" + ClassDictUtil.formatMember(this, name) + "\' has a non-dict value (" + ClassDictUtil.formatClass(dict) + ")");
+			throw new AttributeException("Dict attribute \'" + ClassDictUtil.formatMember(this, name) + "\' has an unsupported value (" + ClassDictUtil.formatClass(dict) + ")");
 		}
 
 		object.update(dict);
