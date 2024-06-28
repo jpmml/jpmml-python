@@ -1,17 +1,24 @@
 from common import _dill, _pickle, _platform, _platform_module
 
 from numpy.random import default_rng, RandomState
-from sklearn.datasets import load_iris
 from enum import Enum
-#from sklearn.externals import joblib as sklearn_joblib
-from sklearn.linear_model import LogisticRegressionCV
 
 import builtins
 import dill
 import joblib
 import numpy
-import pandas
 import pickle
+
+with_pandas = True
+with_sklearn = True
+
+if with_pandas:
+	import pandas
+
+if with_sklearn:
+	from sklearn.datasets import load_iris
+	#from sklearn.externals import joblib as sklearn_joblib
+	from sklearn.linear_model import LogisticRegressionCV
 
 class Color(Enum):
 	RED = 1
@@ -26,18 +33,19 @@ class ColorCode(Enum):
 def _format_dtype(dtype):
 	return (dtype if type(dtype) == str else dtype.__name__)
 
-iris = load_iris()
+if with_sklearn:
+	iris = load_iris()
 
-iris_classifier = LogisticRegressionCV()
-iris_classifier.fit(iris.data, iris.target)
+	iris_classifier = LogisticRegressionCV()
+	iris_classifier.fit(iris.data, iris.target)
 
-_dill(iris_classifier, "dump/" + _platform_module("dill", dill.__version__) + ".pkl")
+	_dill(iris_classifier, "dump/" + _platform_module("dill", dill.__version__) + ".pkl")
 
-#sklearn_joblib.dump(iris_classifier, "dump/" + _platform_module("sklearn-joblib", sklearn_joblib.__version__) + ".pkl.z", compress = True)
-joblib.dump(iris_classifier, "dump/" + _platform_module("joblib", joblib.__version__) + ".pkl.z", compress = True)
+	#sklearn_joblib.dump(iris_classifier, "dump/" + _platform_module("sklearn-joblib", sklearn_joblib.__version__) + ".pkl.z", compress = True)
+	joblib.dump(iris_classifier, "dump/" + _platform_module("joblib", joblib.__version__) + ".pkl.z", compress = True)
 
-for protocol in range(2, pickle.HIGHEST_PROTOCOL + 1):
-	_pickle(iris_classifier, "dump/" + _platform_module("pickle", "p" + str(protocol)) + ".pkl")
+	for protocol in range(2, pickle.HIGHEST_PROTOCOL + 1):
+		_pickle(iris_classifier, "dump/" + _platform_module("pickle", "p" + str(protocol)) + ".pkl")
 
 def _pickle_builtin_dtypes(dtypes):
 	_pickle(dtypes, "dump/" + _platform() + "_dtypes.pkl")
@@ -73,29 +81,33 @@ values = numpy.asarray([0, 1], dtype = numpy.int8)
 _pickle_numpy_array(values, bool)
 
 values = numpy.asarray([False, True], dtype = bool)
-series = pandas.Series(values, name = "y", dtype = bool)
-_pickle_pandas_series(series, bool)
-categorical = pandas.Categorical(values, categories = [False, True], ordered = True)
-_pickle_pandas_categorical(categorical, bool)
-series = pandas.Series(values, name = "y", dtype = pandas.BooleanDtype())
-series[1] = pandas.NA
-_pickle_pandas_series(series, "bool-na")
+
+if with_pandas:
+	series = pandas.Series(values, name = "y", dtype = bool)
+	_pickle_pandas_series(series, bool)
+	categorical = pandas.Categorical(values, categories = [False, True], ordered = True)
+	_pickle_pandas_categorical(categorical, bool)
+	series = pandas.Series(values, name = "y", dtype = pandas.BooleanDtype())
+	series[1] = pandas.NA
+	_pickle_pandas_series(series, "bool-na")
 
 values = numpy.asarray([x for x in range(-128, 127, 1)], dtype = numpy.int8)
 _pickle_numpy_array(values, numpy.int8)
 
-series = pandas.Series(values, name = "y", dtype = numpy.int8)
-_pickle_pandas_series(series, numpy.int8)
-series = pandas.Series(values, name = "y", dtype = pandas.Int8Dtype())
-series[1] = pandas.NA
-_pickle_pandas_series(series, "int8-na")
+if with_pandas:
+	series = pandas.Series(values, name = "y", dtype = numpy.int8)
+	_pickle_pandas_series(series, numpy.int8)
+	series = pandas.Series(values, name = "y", dtype = pandas.Int8Dtype())
+	series[1] = pandas.NA
+	_pickle_pandas_series(series, "int8-na")
 
 values = numpy.asarray([x for x in range(0, 255, 1)], dtype = numpy.uint8)
 _pickle_numpy_array(values, numpy.uint8)
 
-series = pandas.Series(values, name = "y", dtype = pandas.UInt8Dtype())
-series[1] = pandas.NA
-_pickle_pandas_series(series, "uint8-na")
+if with_pandas:
+	series = pandas.Series(values, name = "y", dtype = pandas.UInt8Dtype())
+	series[1] = pandas.NA
+	_pickle_pandas_series(series, "uint8-na")
 
 values = numpy.asarray([x for x in range(-32768, 32767, 127)], dtype = numpy.int16)
 _pickle_numpy_array(values, numpy.int16)
@@ -110,28 +122,33 @@ _pickle_numpy_array(values, numpy.int64)
 _pickle_numpy_array(values, numpy.float32)
 _pickle_numpy_array(values, numpy.float64)
 
-series = pandas.Series(values, name = "y", dtype = int)
-_pickle_pandas_series(series, int)
+if with_pandas:
+	series = pandas.Series(values, name = "y", dtype = int)
+	_pickle_pandas_series(series, int)
 
 values = numpy.asarray([x for x in range(0, 4294967295, 64 * 32767)], dtype = numpy.uint32)
 _pickle_numpy_array(values, numpy.uint32)
 _pickle_numpy_array(values, numpy.uint64)
 
 values = numpy.asarray(["a", "b", "c"], dtype = str)
-series = pandas.Series(values, name = "y", dtype = pandas.StringDtype())
-series[1] = pandas.NA
-_pickle_pandas_series(series, "str-na")
 
-categorical = pandas.Categorical(values = ["a", "b", "c", "d", "e"], dtype = pandas.CategoricalDtype(categories = ["a", "e", "b", "d", "c"], ordered = True))
-_pickle_pandas_categorical(categorical, str)
+if with_pandas:
+	series = pandas.Series(values, name = "y", dtype = pandas.StringDtype())
+	series[1] = pandas.NA
+	_pickle_pandas_series(series, "str-na")
 
-df = pandas.DataFrame(data = {
-	"bool" : [False, False, True],
-	"int" : [0, 1, 2],
-	"float" : [0.0, 1.0, 2.0],
-	"str" : ["zero", "one", "two"]
-})
-_pickle_pandas_dataframe(df)
+if with_pandas:
+	categorical = pandas.Categorical(values = ["a", "b", "c", "d", "e"], dtype = pandas.CategoricalDtype(categories = ["a", "e", "b", "d", "c"], ordered = True))
+	_pickle_pandas_categorical(categorical, str)
+
+if with_pandas:
+	df = pandas.DataFrame(data = {
+		"bool" : [False, False, True],
+		"int" : [0, 1, 2],
+		"float" : [0.0, 1.0, 2.0],
+		"str" : ["zero", "one", "two"]
+	})
+	_pickle_pandas_dataframe(df)
 
 dtypes = [
 	builtins.bool,
@@ -168,14 +185,15 @@ for datetime_unit in datetime_units:
 
 _pickle_numpy_datetime_dtypes(datetime_dtypes)
 
-dtypes = [
-	pandas.BooleanDtype(),
-	pandas.Int8Dtype(), pandas.Int16Dtype(), pandas.Int32Dtype(), pandas.Int64Dtype(),
-	pandas.UInt8Dtype(), pandas.UInt16Dtype(), pandas.UInt32Dtype(), pandas.UInt64Dtype(),
-	pandas.Float32Dtype(), pandas.Float64Dtype(),
-	pandas.StringDtype()
-]
-_pickle_pandas_dtypes(dtypes)
+if with_pandas:
+	dtypes = [
+		pandas.BooleanDtype(),
+		pandas.Int8Dtype(), pandas.Int16Dtype(), pandas.Int32Dtype(), pandas.Int64Dtype(),
+		pandas.UInt8Dtype(), pandas.UInt16Dtype(), pandas.UInt32Dtype(), pandas.UInt64Dtype(),
+		pandas.Float32Dtype(), pandas.Float64Dtype(),
+		pandas.StringDtype()
+	]
+	_pickle_pandas_dtypes(dtypes)
 
 def legacy_rng(seed):
 	return RandomState(seed = seed)
