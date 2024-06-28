@@ -31,17 +31,32 @@ public class BitGeneratorUtil {
 	static
 	public BitGenerator createBitGenerator(Object[] args){
 
-		// Numpy 1.23.4
+		// NumPy 1.23.4 or NumPy 2.0.0+
 		if(args.length == 1){
-			String bitGeneratorName = (String)args[0];
 
-			// XXX
-			BitGenerator bitGenerator = new BitGenerator("numpy.random._" + bitGeneratorName.toLowerCase(), bitGeneratorName);
+			// NumPy 1.23.4
+			if(args[0] instanceof String){
+				String bitGeneratorName = (String)args[0];
 
-			return bitGenerator;
+				// XXX
+				BitGenerator bitGenerator = new BitGenerator("numpy.random._" + bitGeneratorName.toLowerCase(), bitGeneratorName);
+
+				return bitGenerator;
+			} else
+
+			// NumPy 2.0.0+
+			if(args[0] instanceof BitGenerator){
+				BitGenerator bitGenerator = (BitGenerator)args[0];
+
+				return bitGenerator;
+			} else
+
+			{
+				throw new PickleException(Arrays.deepToString(args));
+			}
 		} else
 
-		// Numpy 1.24.1+
+		// NumPy 1.24.1+
 		if(args.length == 2){
 			String bitGeneratorName = (String)args[0];
 			ClassDictConstructor bitGeneratorCtor = (ClassDictConstructor)args[1];

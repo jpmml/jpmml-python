@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Villu Ruusmann
+ * Copyright (c) 2024 Villu Ruusmann
  *
  * This file is part of JPMML-Python
  *
@@ -20,28 +20,19 @@ package numpy.random;
 
 import org.jpmml.python.CythonObject;
 
-public class BitGenerator extends CythonObject {
+public class SeedSequence extends CythonObject {
 
-	public BitGenerator(String module, String name){
+	public SeedSequence(String module, String name){
 		super(module, name);
 	}
 
 	@Override
 	public void __init__(Object[] args){
-		super.__setstate__(INIT_ATTRIBUTES, args);
+		// Ignored
 	}
 
 	@Override
 	public void __setstate__(Object[] args){
-		super.__setstate__(SETSTATE_ATTRIBUTES, args);
+		// Ignored
 	}
-
-	private static final String[] INIT_ATTRIBUTES = {
-		"seed"
-	};
-
-	private static final String[] SETSTATE_ATTRIBUTES = {
-		"_seed_seq",
-		"state"
-	};
 }

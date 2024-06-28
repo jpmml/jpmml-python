@@ -56,6 +56,7 @@ public class FunctionTest extends PickleUtilTest {
 		unpickleNumpyFunctions("python-3.9_numpy-1.23.4");
 		unpickleNumpyFunctions("python-3.9_numpy-1.24.1");
 		unpickleNumpyFunctions("python-3.9_numpy-1.26.2");
+		unpickleNumpyFunctions("python-3.9_numpy-2.0.0");
 	}
 
 	@Test
@@ -65,6 +66,7 @@ public class FunctionTest extends PickleUtilTest {
 		unpickleNumpyFunctions("python-3.11_numpy-1.23.4");
 		unpickleNumpyFunctions("python-3.11_numpy-1.24.1");
 		unpickleNumpyFunctions("python-3.11_numpy-1.26.2");
+		unpickleNumpyFunctions("python-3.11_numpy-2.0.0");
 	}
 
 	@Test
@@ -72,6 +74,7 @@ public class FunctionTest extends PickleUtilTest {
 		unpickleMathFunctions("python-3.12_math");
 
 		unpickleNumpyFunctions("python-3.12_numpy-1.26.2");
+		unpickleNumpyFunctions("python-3.12_numpy-2.0.0");
 	}
 
 	static
