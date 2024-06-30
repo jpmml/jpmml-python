@@ -10,7 +10,7 @@
 
 	<groupId>org.jpmml</groupId>
 	<artifactId>jpmml-python</artifactId>
-	<version>1.2.3</version>
+	<version>1.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>JPMML-Python</name>
@@ -41,7 +41,7 @@
 		<connection>scm:git:git@github.com:jpmml/jpmml-python.git</connection>
 		<developerConnection>scm:git:git@github.com:jpmml/jpmml-python.git</developerConnection>
 		<url>git://github.com/jpmml/jpmml-python.git</url>
-		<tag>1.2.3</tag>
+		<tag>HEAD</tag>
 	</scm>
 	<issueManagement>
 		<system>GitHub</system>
@@ -49,7 +49,7 @@
 	</issueManagement>
 
 	<properties>
-		<project.build.outputTimestamp>2024-06-30T09:28:39Z</project.build.outputTimestamp>
+		<project.build.outputTimestamp>2024-06-30T09:29:09Z</project.build.outputTimestamp>
 	</properties>
 
 	<dependencyManagement>
@@ -57,12 +57,12 @@
 			<dependency>
 				<groupId>org.jpmml</groupId>
 				<artifactId>pmml-python</artifactId>
-				<version>1.2.3</version>
+				<version>1.2-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jpmml</groupId>
 				<artifactId>pmml-python-testing</artifactId>
-				<version>1.2.3</version>
+				<version>1.2-SNAPSHOT</version>
 			</dependency>
 
 			<dependency>
