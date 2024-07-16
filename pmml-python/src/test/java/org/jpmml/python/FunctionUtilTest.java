@@ -27,12 +27,14 @@ import java.util.stream.Collectors;
 import org.dmg.pmml.Expression;
 import org.dmg.pmml.FieldRef;
 import org.jpmml.evaluator.EvaluationContext;
+import org.jpmml.evaluator.EvaluationException;
 import org.jpmml.evaluator.FieldValue;
 import org.jpmml.evaluator.FieldValueUtil;
 import org.jpmml.evaluator.VirtualEvaluationContext;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class FunctionUtilTest {
 
@@ -90,13 +92,27 @@ public class FunctionUtilTest {
 		assertEquals(0.5d, (Double)evaluateExpression("scipy.special", "expit", 0d), 1e-8);
 		assertEquals(0.81757448d, (Double)evaluateExpression("scipy.special", "expit", 1.5d), 1e-8);
 
-		assertEquals(Double.NaN, evaluateExpression("scipy.special", "logit", -5d));
+		try {
+			evaluateExpression("scipy.special", "logit", -2d);
+
+			fail();
+		} catch(EvaluationException ee){
+			// Ignored
+		}
+
 		assertEquals(Double.NEGATIVE_INFINITY, evaluateExpression("scipy.special", "logit", 0d));
 		assertEquals(-1.5d, (Double)evaluateExpression("scipy.special", "logit", 0.18242552d), 3e-8);
 		assertEquals(0d, (Double)evaluateExpression("scipy.special", "logit", 0.5d), 1e-8);
 		assertEquals(1.5d, (Double)evaluateExpression("scipy.special", "logit", 0.81757448d), 3e-8);
 		assertEquals(Double.POSITIVE_INFINITY, evaluateExpression("scipy.special", "logit", 1d));
-		assertEquals(Double.NaN, evaluateExpression("scipy.special", "logit", 5d));
+
+		try {
+			evaluateExpression("scipy.special", "logit", 2d);
+
+			fail();
+		} catch(EvaluationException ee){
+			// Ignored
+		}
 	}
 
 	static

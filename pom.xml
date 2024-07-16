@@ -68,23 +68,23 @@
 			<dependency>
 				<groupId>org.jpmml</groupId>
 				<artifactId>pmml-converter</artifactId>
-				<version>1.5.6</version>
+				<version>1.5.7</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jpmml</groupId>
 				<artifactId>pmml-converter-testing</artifactId>
-				<version>1.5.6</version>
+				<version>1.5.7</version>
 			</dependency>
 
 			<dependency>
 				<groupId>org.jpmml</groupId>
 				<artifactId>pmml-evaluator</artifactId>
-				<version>1.6.4</version>
+				<version>1.6.5</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jpmml</groupId>
 				<artifactId>pmml-evaluator-testing</artifactId>
-				<version>1.6.4</version>
+				<version>1.6.5</version>
 			</dependency>
 
 			<dependency>
@@ -96,6 +96,13 @@
 				<groupId>net.razorvine</groupId>
 				<artifactId>serpent</artifactId>
 				<version>1.40</version>
+			</dependency>
+
+			<!-- Inherited from com.google.guava:guava via org.jpmml:pmml-converter dependency -->
+			<dependency>
+				<groupId>com.google.guava</groupId>
+				<artifactId>failureaccess</artifactId>
+				<version>1.0.2</version>
 			</dependency>
 
 			<dependency>
