@@ -18,37 +18,28 @@
  */
 package org.jpmml.python;
 
-public class RegExUtil {
+public enum RegExFlavour {
+	PCRE,
+	PCRE2,
+	RE {
 
-	private RegExUtil(){
+		@Override
+		public String translateReplacement(String replacement){
+			return replacement
+				.replaceAll("\\$", "\\$\\$")
+				.replaceAll("\\\\(\\d)", "\\$$1");
+		}
+	},
+	;
+
+	private RegExFlavour(){
 	}
 
-	static
-	public String translatePattern(String pattern, String reFlavour){
-
-		switch(reFlavour){
-			case RegExFlavours.PCRE:
-			case RegExFlavours.PCRE2:
-			case RegExFlavours.RE:
-				return pattern;
-			default:
-				throw new IllegalArgumentException(reFlavour);
-		}
+	public String translatePattern(String pattern){
+		return pattern;
 	}
 
-	static
-	public String translateReplacement(String replacement, String reFlavour){
-
-		switch(reFlavour){
-			case RegExFlavours.PCRE:
-			case RegExFlavours.PCRE2:
-				return replacement;
-			case RegExFlavours.RE:
-				return replacement
-					.replaceAll("\\$", "\\$\\$")
-					.replaceAll("\\\\(\\d)", "\\$$1");
-			default:
-				throw new IllegalArgumentException(reFlavour);
-		}
+	public String translateReplacement(String replacement){
+		return replacement;
 	}
 }

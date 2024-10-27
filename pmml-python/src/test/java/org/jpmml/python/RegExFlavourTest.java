@@ -18,9 +18,23 @@
  */
 package org.jpmml.python;
 
-public interface RegExFlavours {
+import org.junit.Test;
 
-	String PCRE = "pcre";
-	String PCRE2 = "pcre2";
-	String RE = "re";
+import static org.junit.Assert.assertEquals;
+
+public class RegExFlavourTest {
+
+	@Test
+	public void translateReplacement(){
+		assertEquals("$$", RegExFlavour.RE.translateReplacement("$"));
+
+		assertEquals("$$", RegExFlavour.PCRE.translateReplacement("$$"));
+		assertEquals("$$$$", RegExFlavour.RE.translateReplacement("$$"));
+
+		assertEquals("$1", RegExFlavour.PCRE.translateReplacement("$1"));
+		assertEquals("$$1", RegExFlavour.RE.translateReplacement("$1"));
+
+		assertEquals("\\1", RegExFlavour.PCRE.translateReplacement("\\1"));
+		assertEquals("$1", RegExFlavour.RE.translateReplacement("\\1"));
+	}
 }
