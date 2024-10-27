@@ -19,11 +19,14 @@
 package org.jpmml.python;
 
 import java.util.List;
+import java.util.function.Function;
 
 import org.dmg.pmml.Apply;
+import org.dmg.pmml.Constant;
 import org.dmg.pmml.Expression;
 import org.dmg.pmml.PMMLFunctions;
 import org.jpmml.converter.ExpressionUtil;
+import org.jpmml.converter.PMMLUtil;
 
 public class FunctionUtil {
 
@@ -47,7 +50,7 @@ public class FunctionUtil {
 		} else
 
 		if((module).equals("pcre") || (module).equals("re")){
-			return encodePCREFunction(module, name, expressions);
+			return encodeRegExFunction(module, name, expressions);
 		} else
 
 		if((module).equals("numpy") || (module).startsWith("numpy.")){
@@ -146,15 +149,27 @@ public class FunctionUtil {
 	}
 
 	static
-	public Apply encodePCREFunction(String module, String name, List<Expression> expressions){
+	public Apply encodeRegExFunction(String module, String name, List<Expression> expressions){
 
-		if((module).equals("pcre") || (module).equals("re")){
+		if((module).equals("pcre")){
 
 			switch(name){
 				case "search":
-					return search(expressions);
+					return search(expressions, RegExFlavour.PCRE);
 				case "sub":
-					return sub(expressions);
+					return sub(expressions, RegExFlavour.PCRE);
+				default:
+					break;
+			}
+		} else
+
+		if((module).equals("re")){
+
+			switch(name){
+				case "search":
+					return search(expressions, RegExFlavour.RE);
+				case "sub":
+					return sub(expressions, RegExFlavour.RE);
 				default:
 					break;
 			}
@@ -355,11 +370,12 @@ public class FunctionUtil {
 	}
 
 	static
-	private Apply search(List<Expression> expressions){
+	private Apply search(List<Expression> expressions, RegExFlavour reFlavour){
 		return ExpressionUtil.createApply(PMMLFunctions.MATCHES,
 			getElement(expressions, 2, 1),
-			getElement(expressions, 2, 0)
-		);
+			updateConstant(getElement(expressions, 2, 0), reFlavour::translatePattern)
+		)
+			.addExtensions(PMMLUtil.createExtension("re_flavour", (reFlavour.name()).toLowerCase()));
 	}
 
 	static
@@ -381,12 +397,13 @@ public class FunctionUtil {
 	}
 
 	static
-	private Apply sub(List<Expression> expressions){
+	private Apply sub(List<Expression> expressions, RegExFlavour reFlavour){
 		return ExpressionUtil.createApply(PMMLFunctions.REPLACE,
 			getElement(expressions, 3, 2),
-			getElement(expressions, 3, 0),
-			getElement(expressions, 3, 1)
-		);
+			updateConstant(getElement(expressions, 3, 0), reFlavour::translatePattern),
+			updateConstant(getElement(expressions, 3, 1), reFlavour::translateReplacement)
+		)
+			.addExtensions(PMMLUtil.createExtension("re_flavour", (reFlavour.name()).toLowerCase()));
 	}
 
 	static
@@ -410,6 +427,20 @@ public class FunctionUtil {
 	static
 	private String formatFunction(String module, String name){
 		return module + "." + name;
+	}
+
+	static
+	private Expression updateConstant(Expression expression, Function<String, String> function){
+
+		if(expression instanceof Constant){
+			Constant constant = (Constant)expression;
+
+			constant.setValue(function.apply((String)constant.getValue()));
+
+			return constant;
+		}
+
+		return expression;
 	}
 
 	static
