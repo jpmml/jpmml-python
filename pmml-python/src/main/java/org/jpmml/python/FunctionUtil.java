@@ -49,7 +49,7 @@ public class FunctionUtil {
 			return encodeMathFunction(module, name, expressions);
 		} else
 
-		if((module).equals("pcre") || (module).equals("re")){
+		if((module).equals("pcre") || (module).equals("pcre2") || (module).equals("re")){
 			return encodeRegExFunction(module, name, expressions);
 		} else
 
@@ -158,6 +158,16 @@ public class FunctionUtil {
 					return search(expressions, RegExFlavour.PCRE);
 				case "sub":
 					return sub(expressions, RegExFlavour.PCRE);
+				default:
+					break;
+			}
+		} else
+
+		if((module).equals("pcre2")){
+
+			switch(name){
+				case "substitute":
+					return sub(expressions, RegExFlavour.PCRE2);
 				default:
 					break;
 			}

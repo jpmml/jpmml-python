@@ -61,7 +61,11 @@ public class FunctionUtilTest {
 		arguments.put("pattern", "B+");
 		arguments.put("repl", "c");
 
-		assertEquals("c", evaluateExpression("pcre", "sub", withString(arguments, "BBBB")));
+		assertEquals("AcA", evaluateExpression("pcre", "sub", withString(arguments, "ABBA")));
+
+		assertEquals("AcA", evaluateExpression("pcre2", "substitute", withString(arguments, "ABBA")));
+
+		assertEquals("AcA", evaluateExpression("re", "sub", withString(arguments, "ABBA")));
 	}
 
 	@Test
