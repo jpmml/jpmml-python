@@ -375,7 +375,7 @@ public class FunctionUtil {
 			getElement(expressions, 2, 1),
 			updateConstant(getElement(expressions, 2, 0), reFlavour::translatePattern)
 		)
-			.addExtensions(PMMLUtil.createExtension("re_flavour", (reFlavour.name()).toLowerCase()));
+			.addExtensions(PMMLUtil.createExtension("re_flavour",  reFlavour.module()));
 	}
 
 	static
@@ -403,7 +403,7 @@ public class FunctionUtil {
 			updateConstant(getElement(expressions, 3, 0), reFlavour::translatePattern),
 			updateConstant(getElement(expressions, 3, 1), reFlavour::translateReplacement)
 		)
-			.addExtensions(PMMLUtil.createExtension("re_flavour", (reFlavour.name()).toLowerCase()));
+			.addExtensions(PMMLUtil.createExtension("re_flavour", reFlavour.module()));
 	}
 
 	static

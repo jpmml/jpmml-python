@@ -35,6 +35,10 @@ public enum RegExFlavour {
 	private RegExFlavour(){
 	}
 
+	public String module(){
+		return name().toLowerCase();
+	}
+
 	public String translatePattern(String pattern){
 		return pattern;
 	}
