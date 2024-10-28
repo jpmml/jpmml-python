@@ -139,12 +139,18 @@ TOKEN:
 	< NAME: <LETTER> (<LETTER> | <DIGIT>)* >
 	|
 	< STRING:
-		( ["r", "R"] ) ?
+		( ["r", "R"] )?
 		(
-			"\"" (~["\""])* "\""
-			|
 			"\'" (~["\'"])* "\'"
+			|
+			"\"" (~["\""])* "\""
 		)
+	>
+	|
+	< MULTILINE_STRING:
+		"\'\'\'" (~["\'"] | "\'\'\'" (~["\'"])* "\'\'\'")* "\'\'\'"
+		|
+		"\"\"\"" (~["\""] | "\"\"\"" (~["\""])* "\"\"\"")* "\"\"\""
 	>
 	|
 	< #DIGIT: ["0" - "9"] >
@@ -154,19 +160,4 @@ TOKEN:
 	< #LETTER: ["a" - "z", "A" - "Z", "_"]>
 	|
 	< #EXPONENT: ["e", "E"] (["+", "-"])? (<DIGIT>)+ >
-}
-
-MORE:
-{
-	"\"\"\"" : IN_MULTILINE_STRING
-}
-
-<IN_MULTILINE_STRING> MORE:
-{
-	< ~[] >
-}
-
-<IN_MULTILINE_STRING> TOKEN:
-{
-	< MULTILINE_STRING: "\"\"\"" > : DEFAULT
 }

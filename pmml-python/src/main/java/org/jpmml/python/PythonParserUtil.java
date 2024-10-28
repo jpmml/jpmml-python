@@ -86,7 +86,7 @@ public class PythonParserUtil {
 	static
 	public String translateRawString(String image){
 
-		if(image.length() < 3 || !(image.charAt(0) == 'r' || image.charAt(0) == 'R') || !(image.charAt(1) == '\"' || image.charAt(1) == '\'') || (image.charAt(1) != image.charAt(image.length() - 1))){
+		if(image.length() < 3 || !(image.charAt(0) == 'r' || image.charAt(0) == 'R') || !(image.charAt(1) == '\'' || image.charAt(1) == '\"') || (image.charAt(1) != image.charAt(image.length() - 1))){
 			throw new IllegalArgumentException(image);
 		}
 
@@ -97,7 +97,7 @@ public class PythonParserUtil {
 	static
 	public String translateRegularString(String image){
 
-		if((image.length() < 2) || !(image.charAt(0) == '\"' || image.charAt(0) == '\'') || (image.charAt(0) != image.charAt(image.length() - 1))){
+		if((image.length() < 2) || !(image.charAt(0) == '\'' || image.charAt(0) == '\"') || (image.charAt(0) != image.charAt(image.length() - 1))){
 			throw new IllegalArgumentException(image);
 		}
 
@@ -107,7 +107,7 @@ public class PythonParserUtil {
 	static
 	public String translateMultilineString(String image){
 
-		if(image.length() < 6 || !image.startsWith("\"\"\"") || !image.endsWith("\"\"\"")){
+		if(image.length() < 6 || !((image.startsWith("\'\'\'") && image.endsWith("\'\'\'")) || (image.startsWith("\"\"\"") && image.endsWith("\"\"\"")))){
 			throw new IllegalArgumentException(image);
 		}
 

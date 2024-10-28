@@ -799,17 +799,19 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 		Map<String, Object> arguments = new HashMap<>();
 		arguments.put(feature.getName(), "Hello World!");
 
-		assertEquals(true, evaluateExpression(expressionTranslator, "x.startswith(\"Hello\")", arguments));
 		assertEquals(true, evaluateExpression(expressionTranslator, "x.startswith('Hello')", arguments));
+		assertEquals(true, evaluateExpression(expressionTranslator, "x.startswith(\"Hello\")", arguments));
+		assertEquals(true, evaluateExpression(expressionTranslator, "x.startswith(\'\'\'Hello\'\'\')", arguments));
 		assertEquals(true, evaluateExpression(expressionTranslator, "x.startswith(\"\"\"Hello\"\"\")", arguments));
 
-		assertEquals(false, evaluateExpression(expressionTranslator, "x.startswith(\"Hello!\")", arguments));
+		assertEquals(false, evaluateExpression(expressionTranslator, "x.startswith('Hello!')", arguments));
 
-		assertEquals(true, evaluateExpression(expressionTranslator, "x.endswith(\"World!\")", arguments));
 		assertEquals(true, evaluateExpression(expressionTranslator, "x.endswith('World!')", arguments));
+		assertEquals(true, evaluateExpression(expressionTranslator, "x.endswith(\"World!\")", arguments));
+		assertEquals(true, evaluateExpression(expressionTranslator, "x.endswith(\'\'\'World!\'\'\')", arguments));
 		assertEquals(true, evaluateExpression(expressionTranslator, "x.endswith(\"\"\"World!\"\"\")", arguments));
 
-		assertEquals(false, evaluateExpression(expressionTranslator, "x.endswith('World')", arguments));
+		assertEquals(false, evaluateExpression(expressionTranslator, "x.endswith(\"World\")", arguments));
 	}
 
 	static

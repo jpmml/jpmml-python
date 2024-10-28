@@ -39,4 +39,11 @@ public class PythonParserUtilTest {
 
 		assertEquals("\\", PythonParserUtil.translateRegularString("\"\\\""));
 	}
+
+	@Test
+	public void tranlateMultilineString(){
+		assertEquals("", PythonParserUtil.translateMultilineString("\'\'\'" + "\'\'\'"));
+		assertEquals("", PythonParserUtil.translateMultilineString("\"\"\"" + "\"\"\""));
+
+	}
 }
