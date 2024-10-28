@@ -107,7 +107,7 @@ public class PythonParserUtil {
 	static
 	public String translateMultilineString(String image){
 
-		if(image.length() < 6 || !((image.startsWith("\'\'\'") && image.endsWith("\'\'\'")) || (image.startsWith("\"\"\"") && image.endsWith("\"\"\"")))){
+		if(image.length() < 6 || !((image.startsWith("'''") && image.endsWith("'''")) || (image.startsWith("\"\"\"") && image.endsWith("\"\"\"")))){
 			throw new IllegalArgumentException(image);
 		}
 

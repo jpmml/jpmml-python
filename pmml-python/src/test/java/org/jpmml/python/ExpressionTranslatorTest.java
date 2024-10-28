@@ -236,7 +236,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 		assertEquals(DataType.STRING, ExpressionUtil.getDataType(expected, expressionTranslator));
 
-		string = "\'positive\' if X[0] > 0 else \'negative\' if X[0] < 0 else \'zero\'";
+		string = "'positive' if X[0] > 0 else 'negative' if X[0] < 0 else 'zero'";
 
 		checkExpression(expected, translateExpression(expressionTranslator, string));
 
@@ -294,7 +294,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 		assertEquals(DataType.STRING, ExpressionUtil.getDataType(expected, expressionTranslator));
 
-		String string = "X[0].lower() if (X[1][0:1].strip()) == \'low\' else X[0].upper()";
+		String string = "X[0].lower() if (X[1][0:1].strip()) == 'low' else X[0].upper()";
 
 		checkExpression(expected, translateExpression(expressionTranslator, string));
 
@@ -589,12 +589,12 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 		assertEquals(DataType.STRING, ExpressionUtil.getDataType(expectedNonCompact, expressionTranslator));
 		assertEquals(DataType.STRING, ExpressionUtil.getDataType(expectedCompact, expressionTranslator));
 
-		String string = "\'19\' + X[0] + \'-01-01\'";
+		String string = "'19' + X[0] + '-01-01'";
 
 		checkExpression(expectedNonCompact, translateExpression(expressionTranslator, string));
 		checkExpression(expectedCompact, translateExpression(expressionTranslator, string, true));
 
-		string = "\"19\" + X[\'a\'] + \"-01-01\"";
+		string = "\"19\" + X['a'] + \"-01-01\"";
 
 		checkExpression(expectedNonCompact, translateExpression(expressionTranslator, string));
 		checkExpression(expectedCompact, translateExpression(expressionTranslator, string, true));
@@ -801,14 +801,14 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 		assertEquals(true, evaluateExpression(expressionTranslator, "x.startswith('Hello')", arguments));
 		assertEquals(true, evaluateExpression(expressionTranslator, "x.startswith(\"Hello\")", arguments));
-		assertEquals(true, evaluateExpression(expressionTranslator, "x.startswith(\'\'\'Hello\'\'\')", arguments));
+		assertEquals(true, evaluateExpression(expressionTranslator, "x.startswith('''Hello''')", arguments));
 		assertEquals(true, evaluateExpression(expressionTranslator, "x.startswith(\"\"\"Hello\"\"\")", arguments));
 
 		assertEquals(false, evaluateExpression(expressionTranslator, "x.startswith('Hello!')", arguments));
 
 		assertEquals(true, evaluateExpression(expressionTranslator, "x.endswith('World!')", arguments));
 		assertEquals(true, evaluateExpression(expressionTranslator, "x.endswith(\"World!\")", arguments));
-		assertEquals(true, evaluateExpression(expressionTranslator, "x.endswith(\'\'\'World!\'\'\')", arguments));
+		assertEquals(true, evaluateExpression(expressionTranslator, "x.endswith('''World!''')", arguments));
 		assertEquals(true, evaluateExpression(expressionTranslator, "x.endswith(\"\"\"World!\"\"\")", arguments));
 
 		assertEquals(false, evaluateExpression(expressionTranslator, "x.endswith(\"World\")", arguments));

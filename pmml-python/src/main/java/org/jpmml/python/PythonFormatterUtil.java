@@ -63,11 +63,11 @@ public class PythonFormatterUtil {
 	public String formatString(String value){
 
 		if(value.contains("\n")){
-			return "\"\"\"" + value + "\"\"\"";
+			return "'''" + value + "'''";
 		} else
 
 		{
-			return "\'" + value + "\'";
+			return "'" + value + "'";
 		}
 	}
 

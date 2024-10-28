@@ -118,7 +118,7 @@ public class PredicateTranslatorTest extends TranslatorTest {
 
 		expected = createSimpleSetPredicate("a", SimpleSetPredicate.BooleanOperator.IS_IN, Array.Type.STRING, Arrays.asList("one", "two", "three", "four"));
 
-		checkPredicate(expected, translatePredicate(predicateTranslator, "X[0] in [\'one\', \"two\", \'\'\'three\'\'\', \"\"\"four\"\"\"]"));
+		checkPredicate(expected, translatePredicate(predicateTranslator, "X[0] in ['one', \"two\", '''three''', \"\"\"four\"\"\"]"));
 	}
 
 	@Test

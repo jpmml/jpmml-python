@@ -42,7 +42,7 @@ public class PythonParserUtilTest {
 
 	@Test
 	public void tranlateMultilineString(){
-		assertEquals("", PythonParserUtil.translateMultilineString("\'\'\'" + "\'\'\'"));
+		assertEquals("", PythonParserUtil.translateMultilineString("'''" + "'''"));
 		assertEquals("", PythonParserUtil.translateMultilineString("\"\"\"" + "\"\"\""));
 
 	}
