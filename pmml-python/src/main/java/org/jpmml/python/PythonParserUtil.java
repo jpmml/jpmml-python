@@ -74,6 +74,29 @@ public class PythonParserUtil {
 	static
 	public String translateString(String image){
 
+		if(image.startsWith("r") || image.startsWith("R")){
+			return translateRawString(image);
+		} else
+
+		{
+			return translateRegularString(image);
+		}
+	}
+
+	static
+	public String translateRawString(String image){
+
+		if(image.length() < 3 || !(image.charAt(0) == 'r' || image.charAt(0) == 'R') || !(image.charAt(1) == '\"' || image.charAt(1) == '\'') || (image.charAt(1) != image.charAt(image.length() - 1))){
+			throw new IllegalArgumentException(image);
+		}
+
+		return image.substring(2, image.length() - 1)
+			.replaceAll("\\\\", "\\\\" + "\\\\");
+	}
+
+	static
+	public String translateRegularString(String image){
+
 		if((image.length() < 2) || !(image.charAt(0) == '\"' || image.charAt(0) == '\'') || (image.charAt(0) != image.charAt(image.length() - 1))){
 			throw new IllegalArgumentException(image);
 		}

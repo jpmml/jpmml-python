@@ -236,11 +236,11 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 		assertEquals(DataType.STRING, ExpressionUtil.getDataType(expected, expressionTranslator));
 
-		string = "\"positive\" if X[0] > 0 else \"negative\" if X[0] < 0 else \"zero\"";
+		string = "\'positive\' if X[0] > 0 else \'negative\' if X[0] < 0 else \'zero\'";
 
 		checkExpression(expected, translateExpression(expressionTranslator, string));
 
-		string = "numpy.where(X[0] > 0, \"positive\", numpy.where(X[0] < 0, \"negative\", \"zero\"))";
+		string = "numpy.where(X[0] > 0, r\"positive\", numpy.where(X[0] < 0, r\"negative\", r\"zero\"))";
 
 		checkExpression(expected, translateExpression(expressionTranslator, string));
 
@@ -300,7 +300,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 		expressionTranslator = new ExpressionTranslator(new BlockScope(stringFeatures));
 
-		string = "a.lower() if (b[0:1].strip()) == \'low\' else a.upper()";
+		string = "a.lower() if (b[0:1].strip()) == r\"low\" else a.upper()";
 
 		checkExpression(expected, translateExpression(expressionTranslator, string));
 
@@ -601,7 +601,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 		expressionTranslator = new ExpressionTranslator(new BlockScope(stringFeatures));
 
-		string = "\"19\" + a + \"-01-01\"";
+		string = "r\"19\" + a + r\"-01-01\"";
 
 		checkExpression(expectedNonCompact, translateExpression(expressionTranslator, string));
 		checkExpression(expectedCompact, translateExpression(expressionTranslator, string, true));
