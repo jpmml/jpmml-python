@@ -135,6 +135,9 @@ values = numpy.asarray([x for x in range(0, 4294967295, 64 * 32767)], dtype = nu
 _pickle_numpy_array(values, numpy.uint32)
 _pickle_numpy_array(values, numpy.uint64)
 
+values = numpy.asarray([1 + 2j, 3 + 4j], dtype = "complex64")
+_pickle_numpy_array(values, "complex64")
+
 values = numpy.asarray(["a", "b", "c"], dtype = str)
 
 if with_pandas:

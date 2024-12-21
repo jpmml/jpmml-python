@@ -32,6 +32,7 @@ import builtins.Type;
 import com.google.common.collect.Iterables;
 import net.razorvine.pickle.Unpickler;
 import numpy.DType;
+import numpy.core.Complex;
 import numpy.core.NDArray;
 import numpy.random.Generator;
 import numpy.random.LegacyRandomState;
@@ -151,6 +152,9 @@ public class DumpTest extends PickleUtilTest {
 		unpickleNumpyArrays("python-3.9_numpy-1.26.2");
 		unpickleNumpyArrays("python-3.9_numpy-2.0.0");
 
+		unpickleNumpyComplexArrays("python-3.9_numpy-1.26.2");
+		unpickleNumpyComplexArrays("python-3.9_numpy-2.0.0");
+
 		unpickleNumpyDatetimeArrays("python-3.9_numpy-1.26.2");
 		unpickleNumpyDatetimeArrays("python-3.9_numpy-2.0.0");
 
@@ -241,6 +245,10 @@ public class DumpTest extends PickleUtilTest {
 		unpickleNumpyArrays("python-3.11_numpy-2.0.0");
 		unpickleNumpyArrays("python-3.11_numpy-2.1.2");
 
+		unpickleNumpyComplexArrays("python-3.11_numpy-1.26.2");
+		unpickleNumpyComplexArrays("python-3.11_numpy-2.0.0");
+		unpickleNumpyComplexArrays("python-3.11_numpy-2.1.2");
+
 		unpickleNumpyDatetimeArrays("python-3.11_numpy-1.26.2");
 		unpickleNumpyDatetimeArrays("python-3.11_numpy-2.0.0");
 		unpickleNumpyDatetimeArrays("python-3.11_numpy-2.1.2");
@@ -313,6 +321,10 @@ public class DumpTest extends PickleUtilTest {
 		unpickleNumpyArrays("python-3.12_numpy-2.0.0");
 		unpickleNumpyArrays("python-3.12_numpy-2.1.2");
 
+		unpickleNumpyComplexArrays("python-3.12_numpy-1.26.2");
+		unpickleNumpyComplexArrays("python-3.12_numpy-2.0.0");
+		unpickleNumpyComplexArrays("python-3.12_numpy-2.1.2");
+
 		unpickleNumpyDatetimeArrays("python-3.12_numpy-1.26.2");
 		unpickleNumpyDatetimeArrays("python-3.12_numpy-2.0.0");
 		unpickleNumpyDatetimeArrays("python-3.12_numpy-2.1.2");
@@ -378,6 +390,15 @@ public class DumpTest extends PickleUtilTest {
 		for(String dtype : dtypes){
 			unpickleNumpyArray(prefix + "_" + dtype + ".pkl", 0L, 4294967295L, 64 * 32767);
 		}
+	}
+
+	private void unpickleNumpyComplexArrays(String prefix) throws IOException {
+		List<Complex> complexes = Arrays.asList(
+			new Complex(1f, 2f),
+			new Complex(3f, 4f)
+		);
+
+		unpickleNumpyArray(prefix + "_complex64.pkl", complexes);
 	}
 
 	private void unpickleNumpyDatetimeArrays(String prefix) throws IOException {

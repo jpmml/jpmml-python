@@ -120,6 +120,15 @@ public class TypeDescriptor {
 					default:
 						throw new IllegalArgumentException(descr);
 				}
+			case COMPLEX_FLOAT:
+				switch(size){
+					case 8:
+						return DataType.FLOAT;
+					case 16:
+						return DataType.DOUBLE;
+					default:
+						throw new IllegalArgumentException(descr);
+				}
 			case DATETIME:
 				switch(size){
 					case 8:
@@ -212,6 +221,28 @@ public class TypeDescriptor {
 							return NDArrayUtil.readFloat(is, byteOrder);
 						case 8:
 							return NDArrayUtil.readDouble(is, byteOrder);
+						default:
+							break;
+					}
+				}
+				break;
+			case COMPLEX_FLOAT:
+				{
+					switch(size){
+						case 8:
+							{
+								float real = NDArrayUtil.readFloat(is, byteOrder);
+								float imaginary = NDArrayUtil.readFloat(is, byteOrder);
+
+								return new Complex(real, imaginary);
+							}
+						case 16:
+							{
+								double real = NDArrayUtil.readDouble(is, byteOrder);
+								double imaginary = NDArrayUtil.readDouble(is, byteOrder);
+
+								return new Complex(real, imaginary);
+							}
 						default:
 							break;
 					}
