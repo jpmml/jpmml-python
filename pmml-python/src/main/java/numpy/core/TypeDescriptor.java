@@ -134,6 +134,10 @@ public class TypeDescriptor {
 							case "m":
 							case "s":
 								return DataType.DATE_TIME;
+							case "ms":
+							case "us":
+							case "ns":
+								return DataType.DATE_TIME;
 							default:
 								throw new IllegalArgumentException(datetimeUnit);
 						}
@@ -248,6 +252,9 @@ public class TypeDescriptor {
 								case "h":
 								case "m":
 								case "s":
+								case "ms":
+								case "us":
+								case "ns":
 									{
 										long millis;
 
@@ -260,6 +267,15 @@ public class TypeDescriptor {
 												break;
 											case "s":
 												millis = TimeUnit.SECONDS.toMillis(value);
+												break;
+											case "ms":
+												millis = TimeUnit.MILLISECONDS.toMillis(value);
+												break;
+											case "us":
+												millis = TimeUnit.MICROSECONDS.toMillis(value);
+												break;
+											case "ns":
+												millis = TimeUnit.NANOSECONDS.toMillis(value);
 												break;
 											default:
 												throw new IllegalArgumentException(datetimeUnit);
