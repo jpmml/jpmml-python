@@ -133,7 +133,7 @@ public class NDArrayUtil {
 	}
 
 	/**
-	 * http://docs.scipy.org/doc/numpy-dev/neps/npy-format.html
+	 * https://numpy.org/doc/stable/reference/generated/numpy.lib.format.html
 	 */
 	static
 	public NDArray parseNpy(InputStream is) throws IOException {

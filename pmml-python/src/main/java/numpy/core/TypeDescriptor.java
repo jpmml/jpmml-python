@@ -32,8 +32,8 @@ import org.dmg.pmml.DataType;
 import org.jpmml.python.CalendarUtil;
 
 /**
- * http://docs.scipy.org/doc/numpy/reference/arrays.dtypes.html
- * http://docs.scipy.org/doc/numpy/reference/generated/numpy.dtype.byteorder.html
+ * https://docs.scipy.org/doc/numpy/reference/arrays.dtypes.html
+ * https://docs.scipy.org/doc/numpy/reference/generated/numpy.dtype.byteorder.html
  */
 public class TypeDescriptor {
 
