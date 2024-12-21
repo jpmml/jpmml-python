@@ -19,10 +19,14 @@
 package org.jpmml.python;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.IntFunction;
+import java.util.stream.Collectors;
 
 import builtins.Type;
 import com.google.common.collect.Iterables;
@@ -147,6 +151,9 @@ public class DumpTest extends PickleUtilTest {
 		unpickleNumpyArrays("python-3.9_numpy-1.26.2");
 		unpickleNumpyArrays("python-3.9_numpy-2.0.0");
 
+		unpickleNumpyDatetimeArrays("python-3.9_numpy-1.26.2");
+		unpickleNumpyDatetimeArrays("python-3.9_numpy-2.0.0");
+
 		unpickleNumpyDtypes("python-3.9_numpy-1.22.3");
 		unpickleNumpyDtypes("python-3.9_numpy-1.23.4");
 		unpickleNumpyDtypes("python-3.9_numpy-1.24.1");
@@ -234,6 +241,10 @@ public class DumpTest extends PickleUtilTest {
 		unpickleNumpyArrays("python-3.11_numpy-2.0.0");
 		unpickleNumpyArrays("python-3.11_numpy-2.1.2");
 
+		unpickleNumpyDatetimeArrays("python-3.11_numpy-1.26.2");
+		unpickleNumpyDatetimeArrays("python-3.11_numpy-2.0.0");
+		unpickleNumpyDatetimeArrays("python-3.11_numpy-2.1.2");
+
 		unpickleNumpyDtypes("python-3.11_numpy-1.23.4");
 		unpickleNumpyDtypes("python-3.11_numpy-1.24.1");
 		unpickleNumpyDtypes("python-3.11_numpy-1.26.2");
@@ -302,6 +313,10 @@ public class DumpTest extends PickleUtilTest {
 		unpickleNumpyArrays("python-3.12_numpy-2.0.0");
 		unpickleNumpyArrays("python-3.12_numpy-2.1.2");
 
+		unpickleNumpyDatetimeArrays("python-3.12_numpy-1.26.2");
+		unpickleNumpyDatetimeArrays("python-3.12_numpy-2.0.0");
+		unpickleNumpyDatetimeArrays("python-3.12_numpy-2.1.2");
+
 		unpickleNumpyDtypes("python-3.12_numpy-1.26.2");
 		unpickleNumpyDtypes("python-3.12_numpy-2.0.0");
 		unpickleNumpyDtypes("python-3.12_numpy-2.1.2");
@@ -363,6 +378,37 @@ public class DumpTest extends PickleUtilTest {
 		for(String dtype : dtypes){
 			unpickleNumpyArray(prefix + "_" + dtype + ".pkl", 0L, 4294967295L, 64 * 32767);
 		}
+	}
+
+	private void unpickleNumpyDatetimeArrays(String prefix) throws IOException {
+		List<LocalDateTime> datetimes = Arrays.asList(
+			LocalDateTime.of(1957, 10, 4, 19, 28, 34),
+			LocalDateTime.of(1961, 4, 12, 6, 7, 0),
+			LocalDateTime.of(1969, 7, 20, 20, 17, 0)
+		);
+
+		unpickle(prefix + "_datetime64Y.pkl");
+		unpickle(prefix + "_datetime64M.pkl");
+
+		List<LocalDate> dayDates = datetimes.stream()
+			.map(datetime -> LocalDate.of(datetime.getYear(), datetime.getMonth(), datetime.getDayOfMonth()))
+			.collect(Collectors.toList());
+
+		unpickleNumpyArray(prefix + "_datetime64D.pkl", dayDates);
+
+		List<LocalDateTime> hourDatetimes = datetimes.stream()
+			.map(datetime-> datetime.truncatedTo(ChronoUnit.HOURS))
+			.collect(Collectors.toList());
+
+		unpickleNumpyArray(prefix + "_datetime64h.pkl", hourDatetimes);
+
+		List<LocalDateTime> minuteDatetimes = datetimes.stream()
+			.map(datetime -> datetime.truncatedTo(ChronoUnit.MINUTES))
+			.collect(Collectors.toList());
+
+		unpickleNumpyArray(prefix + "_datetime64m.pkl", minuteDatetimes);
+
+		unpickleNumpyArray(prefix + "_datetime64s.pkl", datetimes);
 	}
 
 	private void unpickleNumpyArray(String name, List<?> expectedValues) throws IOException {

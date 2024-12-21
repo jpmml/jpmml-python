@@ -19,6 +19,7 @@
 package numpy;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -27,7 +28,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.dmg.pmml.DataType;
-import org.jpmml.python.ClassDictUtil;
 import org.jpmml.python.CythonObject;
 import org.jpmml.python.TypeInfo;
 
@@ -48,11 +48,10 @@ public class DType extends CythonObject implements TypeInfo {
 	@Override
 	public void __setstate__(Object[] args){
 
-		// XXX
-		if(args.length == (SETSTATE_ATTRIBUTES.length + 1)){
-			Object[] datetime_data = (Object[])args[SETSTATE_ATTRIBUTES.length];
+		if(args.length == SETSTATE_DATETIME_ATTRIBUTES.length){
+			super.__setstate__(SETSTATE_DATETIME_ATTRIBUTES, args);
 
-			args = ClassDictUtil.extractArgs(args, 0, SETSTATE_ATTRIBUTES.length);
+			return;
 		}
 
 		super.__setstate__(SETSTATE_ATTRIBUTES, args);
@@ -88,6 +87,12 @@ public class DType extends CythonObject implements TypeInfo {
 		throw new IllegalArgumentException();
 	}
 
+	public boolean hasValues(){
+		Map<String, Object[]> values = getValues();
+
+		return (values != null);
+	}
+
 	public Map<String, Object[]> getValues(){
 		return (Map)getOptionalDict("values");
 	}
@@ -102,6 +107,10 @@ public class DType extends CythonObject implements TypeInfo {
 
 	public Integer getWSize(){
 		return getOptionalInteger("w_size");
+	}
+
+	public Object[] getDatetimeData(){
+		return getOptionalTuple("datetime_data");
 	}
 
 	static
@@ -123,7 +132,7 @@ public class DType extends CythonObject implements TypeInfo {
 
 			DType dtype = (DType)value[0];
 
-			result.add(new Object[]{key, dtype.toDescr()});
+			result.add(new Object[]{key, dtype});
 		}
 
 		return result;
@@ -157,4 +166,14 @@ public class DType extends CythonObject implements TypeInfo {
 		"alignment",
 		"flags"
 	};
+
+	private static final String[] SETSTATE_DATETIME_ATTRIBUTES;
+
+	static {
+		List<String> names = new ArrayList<>();
+		names.addAll(Arrays.asList(SETSTATE_ATTRIBUTES));
+		names.add("datetime_data");
+
+		SETSTATE_DATETIME_ATTRIBUTES = names.toArray(new String[names.size()]);
+	}
 }

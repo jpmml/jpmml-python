@@ -54,7 +54,12 @@ def _pickle_enums(enums):
 	_pickle(enums, "dump/" + _platform() + "_enums.pkl")
 
 def _pickle_numpy_array(values, dtype):
-	_pickle(values.astype(dtype), "dump/" + _platform_module("numpy", numpy.__version__) + "_" + dtype.__name__ + ".pkl")
+	def dtype_suffix(dtype):
+		if isinstance(dtype, str):
+			return dtype.replace("[", "").replace("]", "")
+		return dtype.__name__
+
+	_pickle(values.astype(dtype), "dump/" + _platform_module("numpy", numpy.__version__) + "_" + dtype_suffix(dtype) + ".pkl")
 
 def _pickle_numpy_dtypes(dtypes):
 	_pickle(dtypes, "dump/" + _platform_module("numpy", numpy.__version__) + "_dtypes.pkl")
@@ -141,6 +146,12 @@ if with_pandas:
 	categorical = pandas.Categorical(values = ["a", "b", "c", "d", "e"], dtype = pandas.CategoricalDtype(categories = ["a", "e", "b", "d", "c"], ordered = True))
 	_pickle_pandas_categorical(categorical, str)
 
+values = numpy.asarray(["1957-10-04T19:28:34Z", "1961-04-12T06:07:00Z", "1969-07-20T20:17:00Z"], dtype = str)
+
+datetime_units = ["s", "m", "h", "D", "M", "Y"]
+for datetime_unit in datetime_units:
+	_pickle_numpy_array(values, "datetime64[{}]".format(datetime_unit))
+
 if with_pandas:
 	df = pandas.DataFrame(data = {
 		"bool" : [False, False, True],
@@ -179,7 +190,6 @@ datetime_dtypes = []
 
 now = numpy.datetime64("now")
 
-datetime_units = ["s", "m", "h", "D", "M", "Y"]
 for datetime_unit in datetime_units:
 	datetime_dtypes.append(now.astype("datetime64[{}]".format(datetime_unit)).dtype)
 

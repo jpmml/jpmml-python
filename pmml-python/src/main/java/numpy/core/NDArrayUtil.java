@@ -188,14 +188,16 @@ public class NDArrayUtil {
 
 	static
 	public Object parseData(InputStream is, Object descr, Object[] shape, Integer numpyArrayAlignmentBytes) throws IOException {
+		boolean simple = false;
+
 		Integer wSize = null;
 
 		if(descr instanceof DType){
 			DType dtype = (DType)descr;
 
-			wSize = dtype.getWSize();
+			simple = !dtype.hasValues();
 
-			descr = dtype.toDescr();
+			wSize = dtype.getWSize();
 		}
 
 		int length = 1;
@@ -204,27 +206,35 @@ public class NDArrayUtil {
 			length *= ValueUtil.asInt((Number)shape[i]);
 		} // End if
 
-		if(descr instanceof String){
-			return parseArray(is, (String)descr, length, numpyArrayAlignmentBytes);
+		if(simple){
+			return parseArray(is, descr, length, numpyArrayAlignmentBytes);
+		} else
+
+		{
+			if(descr instanceof DType){
+				DType dtype = (DType)descr;
+
+				descr = dtype.toDescr();
+			}
+
+			List<Object[]> dims = (List<Object[]>)descr;
+
+			Map<String, List<?>> result = new LinkedHashMap<>();
+
+			List<Object[]> objects = parseMultiArray(is, (List)TupleUtil.extractElementList(dims, 1), length, wSize, numpyArrayAlignmentBytes);
+
+			for(int i = 0; i < dims.size(); i++){
+				Object[] dim = dims.get(i);
+
+				result.put((String)dim[0], TupleUtil.extractElementList(objects, i));
+			}
+
+			return result;
 		}
-
-		List<Object[]> dims = (List<Object[]>)descr;
-
-		Map<String, List<?>> result = new LinkedHashMap<>();
-
-		List<Object[]> objects = parseMultiArray(is, (List)TupleUtil.extractElementList(dims, 1), length, wSize, numpyArrayAlignmentBytes);
-
-		for(int i = 0; i < dims.size(); i++){
-			Object[] dim = dims.get(i);
-
-			result.put((String)dim[0], TupleUtil.extractElementList(objects, i));
-		}
-
-		return result;
 	}
 
 	static
-	public List<Object> parseArray(InputStream is, String descr, int length, Integer numpyArrayAlignmentBytes) throws IOException {
+	public List<Object> parseArray(InputStream is, Object descr, int length, Integer numpyArrayAlignmentBytes) throws IOException {
 		List<Object> result = new ArrayList<>(length);
 
 		TypeDescriptor descriptor = new TypeDescriptor(descr);
@@ -259,18 +269,25 @@ public class NDArrayUtil {
 	}
 
 	static
-	public List<Object[]> parseMultiArray(InputStream is, List<String> descrs, int length, Integer wSize, Integer numpyArrayAlignmentBytes) throws IOException {
+	public List<Object[]> parseMultiArray(InputStream is, List<Object> descrs, int length, Integer wSize, Integer numpyArrayAlignmentBytes) throws IOException {
 		List<Object[]> result = new ArrayList<>(length);
 
 		List<TypeDescriptor> descriptors = new ArrayList<>();
 
 		int size = 0;
 
-		for(String descr : descrs){
+		for(Object descr : descrs){
 			TypeDescriptor descriptor = new TypeDescriptor(descr);
 
 			if(descriptor.isObject()){
-				throw new IllegalArgumentException(descr);
+
+				if(descr instanceof DType){
+					DType dtype = (DType)descr;
+
+					descr = (String)dtype.toDescr();
+				}
+
+				throw new IllegalArgumentException((String)descr);
 			}
 
 			descriptors.add(descriptor);

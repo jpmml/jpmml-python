@@ -3,10 +3,15 @@ package numpy.core;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteOrder;
+import java.util.Calendar;
+import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 import com.google.common.io.ByteStreams;
 import com.google.common.primitives.UnsignedInts;
+import numpy.DType;
 import org.dmg.pmml.DataType;
+import org.jpmml.python.CalendarUtil;
 
 /**
  * http://docs.scipy.org/doc/numpy/reference/arrays.dtypes.html
@@ -22,8 +27,36 @@ public class TypeDescriptor {
 
 	private int size = 0;
 
+	private Object[] datetimeData = null;
 
-	public TypeDescriptor(String descr){
+
+	public TypeDescriptor(Object descr){
+
+		if(descr instanceof String){
+			String string = (String)descr;
+
+			parseDescr(string);
+		} else
+
+		if(descr instanceof DType){
+			DType dtype = (DType)descr;
+
+			String string = (String)dtype.toDescr();
+
+			parseDescr(string);
+
+			Object[] datetimeData = dtype.getDatetimeData();
+			if(datetimeData != null){
+				setDatetimeData(datetimeData);
+			}
+		} else
+
+		{
+			throw new IllegalArgumentException();
+		}
+	}
+
+	private void parseDescr(String descr){
 		setDescr(descr);
 
 		int i = 0;
@@ -167,6 +200,89 @@ public class TypeDescriptor {
 					}
 				}
 				break;
+			case DATETIME:
+				{
+					Object[] datetimeData = getDatetimeData();
+					if(datetimeData == null){
+						throw new IllegalStateException();
+					}
+
+					Object units = ((Object[])datetimeData[1])[0];
+
+					String unitsString;
+
+					if(units instanceof String){
+						unitsString = (String)units;
+					} else
+
+					if(units instanceof byte[]){
+						unitsString = new String((byte[])units);
+					} else
+
+					{
+						throw new IllegalArgumentException();
+					}
+
+					switch(size){
+						case 8:
+							long value = NDArrayUtil.readLong(is, byteOrder);
+
+							Calendar calendar = Calendar.getInstance();
+
+							// Local dates/datetimes relative to UTC
+							calendar.setTimeZone(TypeDescriptor.TIMEZONE_UTC);
+
+							switch(unitsString){
+								case "Y":
+								case "M":
+								case "D":
+									{
+										long millis;
+
+										switch(unitsString){
+											case "D":
+												millis = TimeUnit.DAYS.toMillis(value);
+												break;
+											default:
+												throw new IllegalArgumentException(unitsString);
+										}
+
+										calendar.setTimeInMillis(millis);
+
+										return CalendarUtil.toLocalDate(calendar);
+									}
+								case "h":
+								case "m":
+								case "s":
+									{
+										long millis;
+
+										switch(unitsString){
+											case "h":
+												millis = TimeUnit.HOURS.toMillis(value);
+												break;
+											case "m":
+												millis = TimeUnit.MINUTES.toMillis(value);
+												break;
+											case "s":
+												millis = TimeUnit.SECONDS.toMillis(value);
+												break;
+											default:
+												throw new IllegalArgumentException(unitsString);
+										}
+
+										calendar.setTimeInMillis(millis);
+
+										return CalendarUtil.toLocalDateTime(calendar);
+									}
+								default:
+									throw new IllegalArgumentException(unitsString);
+							}
+						default:
+							break;
+					}
+				}
+				break;
 			case OBJECT:
 				{
 					return NDArrayUtil.readObject(is);
@@ -237,6 +353,14 @@ public class TypeDescriptor {
 		this.size = size;
 	}
 
+	public Object[] getDatetimeData(){
+		return this.datetimeData;
+	}
+
+	private void setDatetimeData(Object[] datetimeData){
+		this.datetimeData = datetimeData;
+	}
+
 	static
 	public enum Kind {
 		BOOLEAN,
@@ -284,4 +408,6 @@ public class TypeDescriptor {
 			}
 		}
 	}
+
+	private static final TimeZone TIMEZONE_UTC = TimeZone.getTimeZone("UTC");
 }
