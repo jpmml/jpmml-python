@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import numpy.core.TypeDescriptor;
 import org.dmg.pmml.DataType;
 import org.jpmml.python.CythonObject;
 import org.jpmml.python.TypeInfo;
@@ -59,12 +60,9 @@ public class DType extends CythonObject implements TypeInfo {
 
 	@Override
 	public DataType getDataType(){
-		String obj = getObj();
-		String order = getOrder();
+		TypeDescriptor typeDescriptor = new TypeDescriptor(this);
 
-		String descr = formatDescr(obj, order);
-
-		return DTypeUtil.getDataType(descr);
+		return typeDescriptor.getDataType();
 	}
 
 	public Object toDescr(){

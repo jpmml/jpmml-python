@@ -20,7 +20,7 @@ package pandas.core;
 
 import java.util.List;
 
-import numpy.DTypeUtil;
+import numpy.core.TypeDescriptor;
 import org.dmg.pmml.DataType;
 import org.jpmml.python.PythonObject;
 import org.jpmml.python.TypeInfo;
@@ -35,7 +35,9 @@ public class CategoricalDtype extends PythonObject implements TypeInfo {
 	public DataType getDataType(){
 		Object descr = getDescr();
 
-		return DTypeUtil.getDataType(descr);
+		TypeDescriptor typeDescriptor = new TypeDescriptor(descr);
+
+		return typeDescriptor.getDataType();
 	}
 
 	public Object getDescr(){

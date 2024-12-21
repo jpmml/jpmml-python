@@ -123,7 +123,20 @@ public class TypeDescriptor {
 			case DATETIME:
 				switch(size){
 					case 8:
-						return DataType.DATE_TIME;
+						String datetimeUnit = getDatetimeUnit();
+
+						switch(datetimeUnit){
+							case "Y":
+							case "M":
+							case "D":
+								return DataType.DATE;
+							case "h":
+							case "m":
+							case "s":
+								return DataType.DATE_TIME;
+							default:
+								throw new IllegalArgumentException(datetimeUnit);
+						}
 					default:
 						throw new IllegalArgumentException(descr);
 				}
@@ -202,26 +215,7 @@ public class TypeDescriptor {
 				break;
 			case DATETIME:
 				{
-					Object[] datetimeData = getDatetimeData();
-					if(datetimeData == null){
-						throw new IllegalStateException();
-					}
-
-					Object units = ((Object[])datetimeData[1])[0];
-
-					String unitsString;
-
-					if(units instanceof String){
-						unitsString = (String)units;
-					} else
-
-					if(units instanceof byte[]){
-						unitsString = new String((byte[])units);
-					} else
-
-					{
-						throw new IllegalArgumentException();
-					}
+					String datetimeUnit = getDatetimeUnit();
 
 					switch(size){
 						case 8:
@@ -232,19 +226,19 @@ public class TypeDescriptor {
 							// Local dates/datetimes relative to UTC
 							calendar.setTimeZone(TypeDescriptor.TIMEZONE_UTC);
 
-							switch(unitsString){
+							switch(datetimeUnit){
 								case "Y":
 								case "M":
 								case "D":
 									{
 										long millis;
 
-										switch(unitsString){
+										switch(datetimeUnit){
 											case "D":
 												millis = TimeUnit.DAYS.toMillis(value);
 												break;
 											default:
-												throw new IllegalArgumentException(unitsString);
+												throw new IllegalArgumentException(datetimeUnit);
 										}
 
 										calendar.setTimeInMillis(millis);
@@ -257,7 +251,7 @@ public class TypeDescriptor {
 									{
 										long millis;
 
-										switch(unitsString){
+										switch(datetimeUnit){
 											case "h":
 												millis = TimeUnit.HOURS.toMillis(value);
 												break;
@@ -268,7 +262,7 @@ public class TypeDescriptor {
 												millis = TimeUnit.SECONDS.toMillis(value);
 												break;
 											default:
-												throw new IllegalArgumentException(unitsString);
+												throw new IllegalArgumentException(datetimeUnit);
 										}
 
 										calendar.setTimeInMillis(millis);
@@ -276,7 +270,7 @@ public class TypeDescriptor {
 										return CalendarUtil.toLocalDateTime(calendar);
 									}
 								default:
-									throw new IllegalArgumentException(unitsString);
+									throw new IllegalArgumentException(datetimeUnit);
 							}
 						default:
 							break;
@@ -318,6 +312,31 @@ public class TypeDescriptor {
 				return true;
 			default:
 				return false;
+		}
+	}
+
+	public String getDatetimeUnit(){
+		Object[] datetimeData = getDatetimeData();
+		if(datetimeData == null){
+			throw new IllegalStateException();
+		}
+
+		Object units = ((Object[])datetimeData[1])[0];
+
+		if(units instanceof String){
+			String string = (String)units;
+
+			return string;
+		} else
+
+		if(units instanceof byte[]){
+			byte[] bytes = (byte[])units;
+
+			return new String(bytes);
+		} else
+
+		{
+			throw new IllegalArgumentException();
 		}
 	}
 
