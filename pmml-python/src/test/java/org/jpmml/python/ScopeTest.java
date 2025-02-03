@@ -23,10 +23,10 @@ import java.util.Collections;
 import org.dmg.pmml.DataType;
 import org.dmg.pmml.OpType;
 import org.jpmml.converter.PMMLEncoder;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class ScopeTest {
 

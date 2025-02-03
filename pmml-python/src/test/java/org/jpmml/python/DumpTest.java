@@ -36,7 +36,7 @@ import numpy.core.Complex;
 import numpy.core.NDArray;
 import numpy.random.Generator;
 import numpy.random.LegacyRandomState;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import pandas.core.BlockManager;
 import pandas.core.Categorical;
 import pandas.core.CategoricalDtype;
@@ -45,10 +45,10 @@ import pandas.core.ExtensionDtype;
 import pandas.core.Index;
 import pandas.core.Series;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class DumpTest extends PickleUtilTest {
 
