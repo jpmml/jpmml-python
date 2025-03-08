@@ -26,7 +26,6 @@ import java.util.stream.Collectors;
 
 import org.dmg.pmml.Expression;
 import org.dmg.pmml.FieldRef;
-import org.jpmml.evaluator.EvaluationContext;
 import org.jpmml.evaluator.EvaluationException;
 import org.jpmml.evaluator.FieldValue;
 import org.jpmml.evaluator.FieldValueUtil;
@@ -139,7 +138,7 @@ public class FunctionUtilTest {
 
 		Expression expression = FunctionUtil.encodeFunction(module, name, fieldRefs);
 
-		EvaluationContext context = new VirtualEvaluationContext();
+		VirtualEvaluationContext context = new VirtualEvaluationContext();
 		context.declareAll(arguments);
 
 		FieldValue value = org.jpmml.evaluator.ExpressionUtil.evaluate(expression, context);

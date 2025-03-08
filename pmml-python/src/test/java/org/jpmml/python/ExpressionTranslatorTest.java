@@ -36,7 +36,6 @@ import org.jpmml.converter.ExpressionUtil;
 import org.jpmml.converter.Feature;
 import org.jpmml.converter.PMMLEncoder;
 import org.jpmml.converter.StringFeature;
-import org.jpmml.evaluator.EvaluationContext;
 import org.jpmml.evaluator.FieldValue;
 import org.jpmml.evaluator.FieldValueUtil;
 import org.jpmml.evaluator.VirtualEvaluationContext;
@@ -833,7 +832,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 	private Object evaluateExpression(ExpressionTranslator expressionTranslator, String string, Map<String, ?> arguments){
 		Expression expression = translateExpression(expressionTranslator, string);
 
-		EvaluationContext context = new VirtualEvaluationContext();
+		VirtualEvaluationContext context = new VirtualEvaluationContext();
 		context.declareAll(arguments);
 
 		FieldValue value = org.jpmml.evaluator.ExpressionUtil.evaluate(expression, context);
