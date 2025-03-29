@@ -18,7 +18,7 @@
  */
 options {
 	JAVA_TEMPLATE_TYPE = "modern";
-	JDK_VERSION = "1.8";
+	JDK_VERSION = "11";
 	STATIC = false;
 }
 
