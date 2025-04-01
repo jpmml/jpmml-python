@@ -123,7 +123,9 @@ public class PredicateTranslatorTest extends TranslatorTest {
 
 	@Test
 	public void translateFunctionInvocationPredicate(){
-		PredicateTranslator predicateTranslator = new PredicateTranslator(new DataFrameScope(doubleFeatures));
+		PMMLEncoder encoder = new PMMLEncoder();
+
+		PredicateTranslator predicateTranslator = new PredicateTranslator(new DataFrameScope(doubleFeatures, encoder));
 
 		Predicate expected = new SimplePredicate("a", SimplePredicate.Operator.IS_MISSING, null);
 
@@ -163,8 +165,7 @@ public class PredicateTranslatorTest extends TranslatorTest {
 
 		String signumDef =
 			"def signum(x):" + newline +
-			"	is_negative = is_negative(x)" + newline +
-			"	if is_negative:" + newline +
+			"	if is_negative(x):" + newline +
 			"		return -1" + newline +
 			"	elif is_positive(x):" + newline +
 			"		return 1" + newline +
@@ -191,8 +192,8 @@ public class PredicateTranslatorTest extends TranslatorTest {
 		assertNotNull(encoder.getDerivedField("signum(a)"));
 		assertNull(encoder.getDerivedField("signum(b)"));
 
-		assertNotNull(encoder.getDerivedField("is_negative(a)"));
-		assertNotNull(encoder.getDerivedField("is_positive(a)"));
+		assertNotNull(encoder.getDefineFunction("is_negative"));
+		assertNotNull(encoder.getDefineFunction("is_positive"));
 
 		expected = new SimplePredicate("signum(b)", SimplePredicate.Operator.NOT_EQUAL, 0);
 
@@ -200,9 +201,6 @@ public class PredicateTranslatorTest extends TranslatorTest {
 
 		assertNotNull(encoder.getDerivedField("signum(a)"));
 		assertNotNull(encoder.getDerivedField("signum(b)"));
-
-		assertNotNull(encoder.getDerivedField("is_negative(b)"));
-		assertNotNull(encoder.getDerivedField("is_positive(b)"));
 
 		expected = new CompoundPredicate(CompoundPredicate.BooleanOperator.OR, null)
 			.addPredicates(new SimplePredicate("is_positive(c)", SimplePredicate.Operator.EQUAL, true))

@@ -18,23 +18,27 @@
  */
 package org.jpmml.python;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import org.dmg.pmml.Apply;
 import org.dmg.pmml.DataType;
+import org.dmg.pmml.DefineFunction;
 import org.dmg.pmml.DerivedField;
 import org.dmg.pmml.Expression;
 import org.dmg.pmml.Field;
 import org.dmg.pmml.FieldRef;
 import org.dmg.pmml.OpType;
+import org.dmg.pmml.ParameterField;
 import org.jpmml.converter.ExpressionUtil;
 import org.jpmml.converter.Feature;
 import org.jpmml.converter.FeatureResolver;
 import org.jpmml.converter.FeatureUtil;
-import org.jpmml.converter.FieldNameUtil;
+import org.jpmml.converter.ObjectFeature;
 import org.jpmml.converter.PMMLEncoder;
 import org.jpmml.converter.TypeUtil;
 
@@ -158,7 +162,18 @@ public class AbstractTranslator implements FeatureResolver {
 					if(argument instanceof FieldRef){
 						FieldRef fieldRef = (FieldRef)argument;
 
-						Field<?> field = encoder.getField(fieldRef.requireField());
+						Field field;
+
+						try {
+							field = encoder.getField(fieldRef.requireField());
+						} catch(IllegalArgumentException iae){
+							ParameterField parameterField = new ParameterField(fieldRef.requireField())
+								.setOpType(null)
+								// XXX: Since null is not allowed, use DataType#STRING as the next most versatile data type
+								.setDataType(DataType.STRING);
+
+							return new ObjectFeature(encoder, parameterField);
+						}
 
 						return FeatureUtil.createFeature(field, encoder);
 					}
@@ -167,23 +182,32 @@ public class AbstractTranslator implements FeatureResolver {
 				})
 				.collect(Collectors.toList());
 
-			String fieldName = FieldNameUtil.create(name, features);
+			DefineFunction defineFunction = encoder.getDefineFunction(name);
+			if(defineFunction == null){
+				List<Feature> parameterFeatures = new ArrayList<>();
 
-			DerivedField derivedField = encoder.getDerivedField(fieldName);
-			if(derivedField == null){
-				Scope scope = new FunctionDefScope(functionDef, features, encoder);
+				for(int i = 0; i < parameters.size(); i++){
+					FunctionDef.Parameter parameter = parameters.get(i);
+					Feature feature = features.get(i);
+
+					ParameterField parameterField = new ParameterField(parameter.getName())
+						.setOpType(null)
+						.setDataType(feature.getDataType());
+
+					Feature parameterFeature = new ObjectFeature(encoder, parameterField){
+
+						@Override
+						public Field<?> getField(){
+							return parameterField;
+						}
+					};
+
+					parameterFeatures.add(parameterFeature);
+				}
+
+				Scope scope = new FunctionDefScope(functionDef, parameterFeatures, encoder);
 
 				ExpressionTranslator expressionTranslator = new ExpressionTranslator(scope){
-
-					@Override
-					public DerivedField createDerivedField(String name, Expression expression){
-
-						if((functionDef.getName()).equals(name)){
-							name = fieldName;
-						}
-
-						return super.createDerivedField(name, expression);
-					}
 
 					@Override
 					public FunctionDef getFunctionDef(String name){
@@ -191,10 +215,16 @@ public class AbstractTranslator implements FeatureResolver {
 					}
 				};
 
-				derivedField = expressionTranslator.translateDef(functionDef.getString());
+				defineFunction = expressionTranslator.translateDef(functionDef.getString());
 			}
 
-			return new FieldRef(derivedField);
+			Apply apply = ExpressionUtil.createApply(defineFunction);
+
+			for(Feature feature : features){
+				apply.addExpressions(feature.ref());
+			}
+
+			return apply;
 		}
 
 		List<Expression> expressions = arguments.stream()
@@ -213,8 +243,36 @@ public class AbstractTranslator implements FeatureResolver {
 		return FunctionUtil.encodeFunction(module, name, expressions);
 	}
 
-	protected DerivedField createDerivedField(String name, Expression expression){
+	protected DefineFunction createDefineFunction(String name, Expression expression){
 		PMMLEncoder encoder = ensureEncoder();
+
+		OpType opType = null;
+		DataType dataType = ExpressionUtil.getDataType(expression, this);
+
+		if(dataType != null){
+			opType = TypeUtil.getOpType(dataType);
+		} else
+
+		// XXX
+		{
+			opType = OpType.CONTINUOUS;
+			dataType = DataType.DOUBLE;
+		}
+
+		DefineFunction defineFunction = new DefineFunction(name, opType, dataType, null, expression);
+
+		encoder.addDefineFunction(defineFunction);
+
+		return defineFunction;
+	}
+
+	protected DerivedField ensureDerivedField(String name, Expression expression){
+		PMMLEncoder encoder = ensureEncoder();
+
+		DerivedField derivedField = encoder.getDerivedField(name);
+		if(derivedField != null){
+			return derivedField;
+		}
 
 		OpType opType = null;
 		DataType dataType = ExpressionUtil.getDataType(expression, this);

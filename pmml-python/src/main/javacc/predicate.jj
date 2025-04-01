@@ -33,6 +33,7 @@ import org.dmg.pmml.Apply;
 import org.dmg.pmml.Array;
 import org.dmg.pmml.CompoundPredicate;
 import org.dmg.pmml.DataType;
+import org.dmg.pmml.DerivedField;
 import org.dmg.pmml.Expression;
 import org.dmg.pmml.False;
 import org.dmg.pmml.FieldRef;
@@ -42,6 +43,7 @@ import org.dmg.pmml.SimplePredicate;
 import org.dmg.pmml.SimpleSetPredicate;
 import org.dmg.pmml.True;
 import org.jpmml.converter.Feature;
+import org.jpmml.converter.FieldNameUtil;
 import org.jpmml.converter.PMMLUtil;
 import org.jpmml.converter.TypeUtil;
 import org.jpmml.converter.ValueUtil;
@@ -52,6 +54,21 @@ public class PredicateTranslator extends AbstractTranslator {
 		this(new NullProvider());
 
 		setScope(scope);
+	}
+
+	@Override
+	public Expression encodeFunction(String dottedName, List<?> arguments){
+		Expression expression = super.encodeFunction(dottedName, arguments);
+
+		if(expression instanceof Apply){
+			Apply apply = (Apply)expression;
+
+			String name = formatApply(apply);
+
+			ensureDerivedField(name, apply);
+		}
+
+		return expression;
 	}
 
 	public Predicate translatePredicate(String string){
@@ -149,17 +166,23 @@ public class PredicateTranslator extends AbstractTranslator {
 			Feature feature = (Feature)object;
 
 			return feature.getName();
+		} // End if
+
+		if(object instanceof Apply){
+			Apply apply = (Apply)object;
+
+			String name = formatApply(apply);
+
+			return name;
 		} else
 
 		if(object instanceof FieldRef){
 			FieldRef fieldRef = (FieldRef)object;
 
 			return fieldRef.requireField();
-		} else
+		} // End if
 
-		{
-			throw new TranslationException("The left-hand side of the predicate (" + object + ") is not a feature reference");
-		}
+		throw new TranslationException("The left-hand side of the predicate (" + object + ") is not a feature reference");
 	}
 
 	static
@@ -179,11 +202,9 @@ public class PredicateTranslator extends AbstractTranslator {
 
 		if(object instanceof String){
 			return (String)object;
-		} else
-
-		{
-			throw new TranslationException("The right-hand side of the predicate (" + object + ") is not a value");
 		}
+
+		throw new TranslationException("The right-hand side of the predicate (" + object + ") is not a value");
 	}
 
 	static
@@ -234,11 +255,27 @@ public class PredicateTranslator extends AbstractTranslator {
 			Feature feature = (Feature)object;
 			
 			return feature;
-		} else
-
-		{
-			throw new TranslationException("The function argument (" + object + ") is not a feature reference");
 		}
+
+		throw new TranslationException("The function argument (" + object + ") is not a feature reference");
+	}
+
+	static
+	private String formatApply(Apply apply){
+		String function = apply.requireFunction();
+		List<String> arguments = new ArrayList<>();
+
+		if(apply.hasExpressions()){
+			List<Expression> expressions = apply.getExpressions();
+			
+			for(int i = 0; i < expressions.size(); i++){
+				FieldRef fieldRef = (FieldRef)expressions.get(i);
+				
+				arguments.add(fieldRef.requireField());
+			}
+		}
+
+		return FieldNameUtil.create(function, arguments);
 	}
 }
 PARSER_END(PredicateTranslator)

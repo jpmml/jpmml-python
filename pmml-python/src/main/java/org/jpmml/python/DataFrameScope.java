@@ -37,6 +37,10 @@ public class DataFrameScope extends Scope {
 		this("X", columns, null);
 	}
 
+	public DataFrameScope(List<? extends Feature> columns, PMMLEncoder encoder){
+		this("X", columns, encoder);
+	}
+
 	public DataFrameScope(String variableName, List<? extends Feature> columns){
 		this(variableName, columns, null);
 	}

@@ -26,6 +26,7 @@ import java.util.Map;
 
 import org.dmg.pmml.Constant;
 import org.dmg.pmml.DataType;
+import org.dmg.pmml.DefineFunction;
 import org.dmg.pmml.DerivedField;
 import org.dmg.pmml.Expression;
 import org.dmg.pmml.FieldRef;
@@ -87,11 +88,11 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 		string = string.replace("    ", "\t");
 
-		DerivedField derivedField = expressionTranslator.translateDef(string);
+		DefineFunction defineFunction = expressionTranslator.translateDef(string);
 
-		assertEquals("ratio_signum", derivedField.requireName());
-		assertEquals(OpType.CONTINUOUS, derivedField.requireOpType());
-		assertEquals(DataType.INTEGER, derivedField.requireDataType());
+		assertEquals("ratio_signum", defineFunction.requireName());
+		assertEquals(OpType.CONTINUOUS, defineFunction.requireOpType());
+		assertEquals(DataType.INTEGER, defineFunction.requireDataType());
 
 		DerivedField ratioDerivedField = encoder.getDerivedField("ratio");
 
@@ -111,7 +112,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 			)
 		);
 
-		checkExpression(expected, derivedField.getExpression());
+		checkExpression(expected, defineFunction.getExpression());
 
 		encoder = new PMMLEncoder();
 
@@ -130,9 +131,9 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 		string += newline;
 		string += newline;
 
-		derivedField = expressionTranslator.translateDef(string);
+		defineFunction = expressionTranslator.translateDef(string);
 
-		checkExpression(expected, derivedField.getExpression());
+		checkExpression(expected, defineFunction.getExpression());
 	}
 
 	@Test
@@ -167,11 +168,11 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 			"		else:" + newline +
 			"			return 'III' # Lower left" + newline;
 
-		DerivedField derivedField = expressionTranslator.translateDef(string);
+		DefineFunction defineFunction = expressionTranslator.translateDef(string);
 
-		assertEquals("quadrant", derivedField.requireName());
-		assertEquals(OpType.CATEGORICAL, derivedField.requireOpType());
-		assertEquals(DataType.STRING, derivedField.requireDataType());
+		assertEquals("quadrant", defineFunction.requireName());
+		assertEquals(OpType.CATEGORICAL, defineFunction.requireOpType());
+		assertEquals(DataType.STRING, defineFunction.requireDataType());
 
 		Constant zero = ExpressionUtil.createConstant(DataType.INTEGER, 0);
 
@@ -189,7 +190,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 			)
 		);
 
-		checkExpression(expected, derivedField.getExpression());
+		checkExpression(expected, defineFunction.getExpression());
 	}
 
 	@Test

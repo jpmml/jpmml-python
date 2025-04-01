@@ -37,9 +37,11 @@ import com.google.common.collect.Iterables;
 import org.dmg.pmml.Apply;
 import org.dmg.pmml.Constant;
 import org.dmg.pmml.DataType;
+import org.dmg.pmml.DefineFunction;
 import org.dmg.pmml.DerivedField;
 import org.dmg.pmml.Expression;
 import org.dmg.pmml.FieldRef;
+import org.dmg.pmml.ParameterField;
 import org.dmg.pmml.PMMLFunctions;
 import org.jpmml.converter.ExpressionUtil;
 import org.jpmml.converter.Feature;
@@ -58,18 +60,18 @@ public class ExpressionTranslator extends AbstractTranslator {
 		setScope(scope);
 	}
 
-	public DerivedField translateDef(String string){
+	public DefineFunction translateDef(String string){
 		ReInit(new StringProvider(ensureTerminator(string)));
 
-		DerivedField derivedField;
+		DefineFunction defineFunction;
 
 		try {
-			derivedField = translateDefInternal();
+			defineFunction = translateDefInternal();
 		} catch(ParseException pe){
 			throw new TranslationException("Python function definition \'" + toSingleLine(string) + "\' is either invalid or not supported", pe);
 		}
 
-		return derivedField;
+		return defineFunction;
 	}
 
 	public Expression translateStatement(String string){
@@ -390,15 +392,15 @@ PARSER_END(ExpressionTranslator)
 
 @python.productions@
 
-private DerivedField translateDefInternal():
+private DefineFunction translateDefInternal():
 {
-	DerivedField derivedField;
+	DefineFunction defineFunction;
 }
 {
-	derivedField = Def() ( <NEWLINE> )* <EOF>
+	defineFunction = Def() ( <NEWLINE> )* <EOF>
 
 	{
-		return derivedField;
+		return defineFunction;
 	}
 }
 
@@ -426,7 +428,7 @@ private Expression translateExpressionInternal():
 	}
 }
 
-private DerivedField Def():
+private DefineFunction Def():
 {
 	Token name;
 	List<Token> parameters;
@@ -442,7 +444,15 @@ private DerivedField Def():
 	{
 		this.variableMap.clear();
 
-		return createDerivedField(name.image, getOnlyStatement(block));
+		DefineFunction defineFunction = createDefineFunction(name.image, getOnlyStatement(block));
+
+		for(int i = 0; i < parameters.size(); i++){
+			Token parameter = parameters.get(i);
+
+			defineFunction.addParameterFields(new ParameterField(parameter.image));
+		}
+
+		return defineFunction;
 	}
 }
 
@@ -651,7 +661,7 @@ private Expression Assignment():
 				return null;
 			}
 
-			DerivedField derivedField = createDerivedField(name.image, expression);
+			DerivedField derivedField = ensureDerivedField(name.image, expression);
 		}
 
 		return null;
