@@ -516,6 +516,19 @@ private void Dedent(){
 	this.indents.pop();
 }
 
+JAVACODE
+private boolean BlockContinuation(){
+	String expectedIndent = this.indents.peek();
+
+	String indent = getIndent();
+
+	if((indent).equals(expectedIndent)){
+		return true;
+	}
+
+	return false;
+}
+
 private List<Expression> Statements():
 {
 	Expression statement;
@@ -525,6 +538,14 @@ private List<Expression> Statements():
 	(
 		<NEWLINE>
 		|
+		{
+			if(!BlockContinuation()){
+
+				if(!statements.isEmpty()){
+					return statements;
+				}
+			}
+		}
 		statement = Statement() { statements.add(statement); } 
 	)+
 

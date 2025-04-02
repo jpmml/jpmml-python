@@ -28,6 +28,7 @@ import org.dmg.pmml.Constant;
 import org.dmg.pmml.DataType;
 import org.dmg.pmml.DefineFunction;
 import org.dmg.pmml.Expression;
+import org.dmg.pmml.Extension;
 import org.dmg.pmml.FieldRef;
 import org.dmg.pmml.OpType;
 import org.dmg.pmml.PMMLFunctions;
@@ -68,22 +69,11 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 			"	:param float x1: dividend" + newline +
 			"	:param float x2: divisor" + newline +
 			"	\"\"\"" + newline +
-			// Four spaces instead of a tab
-			"    import numpy as np, pandas as pd" + newline +
+			"	import numpy as np, pandas as pd" + newline +
 			"	# Determine the signum of ratio" + newline +
 			"	if (x1 / x2) < 0.0: return np.ceil(-1.5)" + newline +
 			"	elif (x1 / x2) > 0.0: return np.floor(1.5)" + newline +
 			"	else: return 0" + newline;
-
-		try {
-			expressionTranslator.translateDef(string);
-
-			fail();
-		} catch(TranslationException te){
-			// Ignored
-		}
-
-		string = string.replace("    ", "\t");
 
 		DefineFunction defineFunction = expressionTranslator.translateDef(string);
 
@@ -183,6 +173,54 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 				ExpressionUtil.createConstant(DataType.STRING, "II"),
 				ExpressionUtil.createConstant(DataType.STRING, "III")
 			)
+		);
+
+		checkExpression(expected, defineFunction.getExpression());
+	}
+
+	@Test
+	public void translateContainsDef(){
+		PMMLEncoder encoder = new PMMLEncoder();
+
+		List<Feature> variables = Arrays.asList(
+			new StringFeature(encoder, "string"),
+			new StringFeature(encoder, "substring")
+		);
+
+		ExpressionTranslator expressionTranslator = new ExpressionTranslator(new BlockScope(variables, encoder));
+
+		String newline = "\n";
+
+		String string =
+			"def contains(string, substring):" + newline +
+			"	if re.search(substring, string):" + newline +
+			"		return True" + newline +
+			"	return False" + newline;
+
+		try {
+			expressionTranslator.translateDef(string);
+
+			fail();
+		} catch(IllegalArgumentException iae){
+			// Ignored
+		}
+
+		string = string.replace("\treturn False", "\telse:\n\t\treturn False");
+
+		DefineFunction defineFunction = expressionTranslator.translateDef(string);
+
+		assertEquals("contains", defineFunction.requireName());
+		assertEquals(OpType.CATEGORICAL, defineFunction.requireOpType());
+		assertEquals(DataType.BOOLEAN, defineFunction.requireDataType());
+
+		Extension reFlavourExtension = new Extension()
+			.setName("re_flavour")
+			.setValue("re");
+
+		Expression expected = ExpressionUtil.createApply(PMMLFunctions.IF,
+			ExpressionUtil.createApply(PMMLFunctions.MATCHES, new FieldRef("string"), new FieldRef("substring"))
+				.addExtensions(reFlavourExtension),
+			ExpressionUtil.createConstant(DataType.BOOLEAN, Boolean.TRUE), ExpressionUtil.createConstant(DataType.BOOLEAN, Boolean.FALSE)
 		);
 
 		checkExpression(expected, defineFunction.getExpression());
