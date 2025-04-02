@@ -38,7 +38,6 @@ import org.dmg.pmml.Apply;
 import org.dmg.pmml.Constant;
 import org.dmg.pmml.DataType;
 import org.dmg.pmml.DefineFunction;
-import org.dmg.pmml.DerivedField;
 import org.dmg.pmml.Expression;
 import org.dmg.pmml.FieldRef;
 import org.dmg.pmml.ParameterField;
@@ -153,6 +152,13 @@ public class ExpressionTranslator extends AbstractTranslator {
 		}
 
 		throw new TranslationException("Constant \'" + dottedName + "\' is not supported");
+	}
+
+	private void checkAssignment(Token name) throws ParseException {
+
+		if(name != null){
+			throw new ParseException("Invalid syntax");
+		}
 	}
 
 	private String getIndent() throws ParseException {
@@ -651,18 +657,7 @@ private Expression Assignment():
 	expression = Expression()
 	
 	{
-		if(name != null){
-
-			if(expression instanceof FieldRef){
-				FieldRef fieldRef = (FieldRef)expression;
-
-				this.variableMap.put(name.image, fieldRef);
-
-				return null;
-			}
-
-			DerivedField derivedField = ensureDerivedField(name.image, expression);
-		}
+		checkAssignment(name);
 
 		return null;
 	}

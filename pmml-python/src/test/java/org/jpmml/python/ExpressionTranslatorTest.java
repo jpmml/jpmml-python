@@ -27,7 +27,6 @@ import java.util.Map;
 import org.dmg.pmml.Constant;
 import org.dmg.pmml.DataType;
 import org.dmg.pmml.DefineFunction;
-import org.dmg.pmml.DerivedField;
 import org.dmg.pmml.Expression;
 import org.dmg.pmml.FieldRef;
 import org.dmg.pmml.OpType;
@@ -69,13 +68,11 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 			"	:param float x1: dividend" + newline +
 			"	:param float x2: divisor" + newline +
 			"	\"\"\"" + newline +
-			"	import numpy as np, pandas as pd" + newline +
-			"	# Calculate ratio" + newline +
 			// Four spaces instead of a tab
-			"    ratio = (x1 / x2)" + newline +
+			"    import numpy as np, pandas as pd" + newline +
 			"	# Determine the signum of ratio" + newline +
-			"	if ratio < 0.0: return np.ceil(-1.5)" + newline +
-			"	elif ratio > 0.0: return np.floor(1.5)" + newline +
+			"	if (x1 / x2) < 0.0: return np.ceil(-1.5)" + newline +
+			"	elif (x1 / x2) > 0.0: return np.floor(1.5)" + newline +
 			"	else: return 0" + newline;
 
 		try {
@@ -94,17 +91,15 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 		assertEquals(OpType.CONTINUOUS, defineFunction.requireOpType());
 		assertEquals(DataType.INTEGER, defineFunction.requireDataType());
 
-		DerivedField ratioDerivedField = encoder.getDerivedField("ratio");
-
 		Expression expected = ExpressionUtil.createApply(PMMLFunctions.IF,
 			ExpressionUtil.createApply(PMMLFunctions.LESSTHAN,
-				new FieldRef(ratioDerivedField),
+				ExpressionUtil.createApply(PMMLFunctions.DIVIDE, new FieldRef("x1"), new FieldRef("x2")),
 				ExpressionUtil.createConstant(DataType.DOUBLE, 0.0)
 			),
 			ExpressionUtil.createApply(PMMLFunctions.CEIL, ExpressionUtil.createConstant(DataType.DOUBLE, -1.5)),
 			ExpressionUtil.createApply(PMMLFunctions.IF,
 				ExpressionUtil.createApply(PMMLFunctions.GREATERTHAN,
-					new FieldRef(ratioDerivedField),
+					ExpressionUtil.createApply(PMMLFunctions.DIVIDE, new FieldRef("x1"), new FieldRef("x2")),
 					ExpressionUtil.createConstant(DataType.DOUBLE, 0.0)
 				),
 				ExpressionUtil.createApply(PMMLFunctions.FLOOR, ExpressionUtil.createConstant(DataType.DOUBLE, 1.5)),
