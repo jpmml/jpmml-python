@@ -201,7 +201,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 			expressionTranslator.translateDef(string);
 
 			fail();
-		} catch(IllegalArgumentException iae){
+		} catch(TranslationException te){
 			// Ignored
 		}
 

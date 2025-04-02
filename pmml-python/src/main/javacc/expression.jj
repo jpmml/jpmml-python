@@ -29,11 +29,11 @@ package org.jpmml.python;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.google.common.collect.Iterables;
 import org.dmg.pmml.Apply;
 import org.dmg.pmml.Constant;
 import org.dmg.pmml.DataType;
@@ -371,17 +371,25 @@ public class ExpressionTranslator extends AbstractTranslator {
 	static
 	private Expression getOnlyStatement(List<Expression> statements){
 
-		for(int i = 0; i < statements.size(); i++){
-			Expression statement = statements.get(i);
+		for(Iterator<Expression> it = statements.iterator(); it.hasNext(); ){
+			Expression statement = it.next();
 
-			if(statement != null){
-				statements = statements.subList(i, statements.size());
-
-				break;
+			if(statement == null){
+				it.remove();
 			}
 		}
 
-		return Iterables.getOnlyElement(statements);
+		if(statements.size() == 0){
+			throw new TranslationException("Block does not contain any PMML-compatible statements");
+		} else
+
+		if(statements.size() == 1){
+			return statements.get(0);
+		} else
+
+		{
+			throw new TranslationException("Block contains more than one PMML-compatible statements");
+		}
 	}
 
 	static
