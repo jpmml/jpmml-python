@@ -28,6 +28,7 @@ package org.jpmml.python;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Deque;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -398,6 +399,10 @@ public class ExpressionTranslator extends AbstractTranslator {
 		private Block(List<Expression> statements){
 			super(statements);
 		}
+
+		Expression getOnlyStatement(){
+			return ExpressionTranslator.getOnlyStatement(this);
+		}
 	}
 }
 PARSER_END(ExpressionTranslator)
@@ -420,13 +425,13 @@ private DefineFunction translateDefInternal():
 
 private Expression translateStatementInternal():
 {
-	Expression expression;
+	List<Expression> expressions;
 }
 {
-	expression = Statement() ( <NEWLINE> )* <EOF>
+	expressions = Statement() ( <NEWLINE> )* <EOF>
 
 	{
-		return expression;
+		return getOnlyStatement(expressions);
 	}
 }
 
@@ -458,7 +463,7 @@ private DefineFunction Def():
 	{
 		this.variableMap.clear();
 
-		DefineFunction defineFunction = createDefineFunction(name.image, getOnlyStatement(block));
+		DefineFunction defineFunction = createDefineFunction(name.image, block.getOnlyStatement());
 
 		for(int i = 0; i < parameters.size(); i++){
 			Token parameter = parameters.get(i);
@@ -539,7 +544,7 @@ private boolean BlockContinuation(){
 
 private List<Expression> Statements():
 {
-	Expression statement;
+	List<Expression> statement;
 	List<Expression> statements = new ArrayList<>();
 }
 {
@@ -554,7 +559,7 @@ private List<Expression> Statements():
 				}
 			}
 		}
-		statement = Statement() { statements.add(statement); } 
+		statement = Statement() { statements.addAll(statement); } 
 	)+
 
 	{
@@ -562,7 +567,7 @@ private List<Expression> Statements():
 	}
 }
 
-private Expression Statement():
+private List<Expression> Statement():
 {
 	Expression statement;
 	List<Expression> statements;
@@ -575,13 +580,13 @@ private Expression Statement():
 	}
 
 	(
-		statement = CompoundStatement()
+		statement = CompoundStatement() { statements = Collections.singletonList(statement); }
 		|
-		statements = SimpleStatements() { statement = getOnlyStatement(statements); }
+		statements = SimpleStatements()
 	)
 
 	{
-		return statement;
+		return statements;
 	}
 }
 
@@ -639,7 +644,7 @@ private Apply IfStatement():
 	Apply tail;
 }
 {
-	<IF> condition = Expression() <COLON> block = Block() { if_statement = ExpressionUtil.createApply(PMMLFunctions.IF, condition, getOnlyStatement(block)); tail = if_statement; } ( elif_statement = ElIfStatement() { tail.addExpressions(elif_statement); tail = elif_statement; } )* ( block = ElseBlock() { tail.addExpressions(getOnlyStatement(block)); } )?
+	<IF> condition = Expression() <COLON> block = Block() { if_statement = ExpressionUtil.createApply(PMMLFunctions.IF, condition, block.getOnlyStatement()); tail = if_statement; } ( elif_statement = ElIfStatement() { tail.addExpressions(elif_statement); tail = elif_statement; } )* ( block = ElseBlock() { tail.addExpressions(block.getOnlyStatement()); } )?
 
 	{
 		return if_statement;
@@ -655,7 +660,7 @@ private Apply ElIfStatement():
 	<ELIF> condition = Expression() <COLON> block = Block()
 
 	{
-		return ExpressionUtil.createApply(PMMLFunctions.IF, condition, getOnlyStatement(block));
+		return ExpressionUtil.createApply(PMMLFunctions.IF, condition, block.getOnlyStatement());
 	}
 }
 
