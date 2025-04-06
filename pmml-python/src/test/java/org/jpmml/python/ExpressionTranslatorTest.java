@@ -213,13 +213,9 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 		assertEquals(OpType.CATEGORICAL, defineFunction.requireOpType());
 		assertEquals(DataType.BOOLEAN, defineFunction.requireDataType());
 
-		Extension reFlavourExtension = new Extension()
-			.setName("re_flavour")
-			.setValue("re");
-
 		Expression expected = ExpressionUtil.createApply(PMMLFunctions.IF,
 			ExpressionUtil.createApply(PMMLFunctions.MATCHES, new FieldRef("string"), new FieldRef("substring"))
-				.addExtensions(reFlavourExtension),
+				.addExtensions(new Extension("re_flavour", "re")),
 			ExpressionUtil.createConstant(DataType.BOOLEAN, Boolean.TRUE), ExpressionUtil.createConstant(DataType.BOOLEAN, Boolean.FALSE)
 		);
 
