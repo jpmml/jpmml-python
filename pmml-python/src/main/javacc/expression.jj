@@ -34,7 +34,9 @@ import java.util.Deque;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
+import java.util.Objects;
 
 import org.dmg.pmml.Apply;
 import org.dmg.pmml.Constant;
@@ -391,7 +393,7 @@ public class ExpressionTranslator extends AbstractTranslator {
 	}
 
 	static
-	private Expression getOnlyStatement(List<Expression> statements){
+	private List<Expression> cleanStatements(List<Expression> statements){
 
 		for(Iterator<Expression> it = statements.iterator(); it.hasNext(); ){
 			Expression statement = it.next();
@@ -401,11 +403,41 @@ public class ExpressionTranslator extends AbstractTranslator {
 			}
 		}
 
-		if(statements.size() == 0){
+		for(ListIterator<Expression> it = statements.listIterator(statements.size()); it.hasPrevious() && (statements.size() > 1); ){
+			Expression lastStatement = it.previous();
+			Expression secondToLastStatement = statements.get(statements.size() - 2);
+
+			if(secondToLastStatement instanceof Apply){
+				Apply apply = (Apply)secondToLastStatement;
+
+				if(Objects.equals(PMMLFunctions.IF, apply.requireFunction())){
+					List<Expression> expressions = apply.getExpressions();
+
+					if(expressions.size() == 2){
+						apply.addExpressions(lastStatement);
+
+						it.remove();
+
+						continue;
+					}
+				}
+			}
+
+			break;
+		}
+
+		return statements;
+	}
+
+	static
+	private Expression getOnlyStatement(List<Expression> statements){
+		int size = statements.size();
+
+		if(size == 0){
 			throw new TranslationException("Block does not contain any PMML-compatible statements");
 		} else
 
-		if(statements.size() == 1){
+		if(size == 1){
 			return statements.get(0);
 		} else
 
@@ -446,13 +478,15 @@ private DefineFunction translateDefInternal():
 
 private Expression translateStatementInternal():
 {
-	List<Expression> expressions;
+	List<Expression> statements;
 }
 {
-	expressions = Statement() ( <NEWLINE> )* <EOF>
+	statements = Statement() ( <NEWLINE> )* <EOF>
 
 	{
-		return getOnlyStatement(expressions);
+		statements = ExpressionTranslator.cleanStatements(statements);
+
+		return ExpressionTranslator.getOnlyStatement(statements);
 	}
 }
 
@@ -529,8 +563,10 @@ private Block Block():
 		|
 		statements = SimpleStatements()
 	)
-	
+
 	{
+		statements = ExpressionTranslator.cleanStatements(statements);
+
 		return new Block(statements);
 	}
 }

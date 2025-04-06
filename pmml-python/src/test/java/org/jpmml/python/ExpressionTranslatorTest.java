@@ -220,29 +220,19 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 		String string =
 			"def contains(string, substring):" + newline +
 			"	if re.search(substring, string):" + newline +
-			"		return True" + newline +
-			"	return False" + newline;
-
-		try {
-			expressionTranslator.translateDef(string);
-
-			fail();
-		} catch(TranslationException te){
-			// Ignored
-		}
-
-		string = string.replace("\treturn False", "\telse:\n\t\treturn False");
+			"		return 1" + newline +
+			"	return 0" + newline;
 
 		DefineFunction defineFunction = expressionTranslator.translateDef(string);
 
 		assertEquals("contains", defineFunction.requireName());
-		assertEquals(OpType.CATEGORICAL, defineFunction.requireOpType());
-		assertEquals(DataType.BOOLEAN, defineFunction.requireDataType());
+		assertEquals(OpType.CONTINUOUS, defineFunction.requireOpType());
+		assertEquals(DataType.INTEGER, defineFunction.requireDataType());
 
 		Expression expected = ExpressionUtil.createApply(PMMLFunctions.IF,
 			ExpressionUtil.createApply(PMMLFunctions.MATCHES, new FieldRef("string"), new FieldRef("substring"))
 				.addExtensions(RegExFlavour.RE.createExtension()),
-			ExpressionUtil.createConstant(DataType.BOOLEAN, Boolean.TRUE), ExpressionUtil.createConstant(DataType.BOOLEAN, Boolean.FALSE)
+			ExpressionUtil.createConstant(DataType.INTEGER, 1), ExpressionUtil.createConstant(DataType.INTEGER, 0)
 		);
 
 		checkExpression(expected, defineFunction.requireExpression());
