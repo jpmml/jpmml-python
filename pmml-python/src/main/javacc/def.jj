@@ -51,9 +51,10 @@ PARSER_END(FunctionDefParser)
 public void FunctionDef(FunctionDef functionDef):
 {
 	Token name;
+	Token returnType = null;
 }
 {
-	<DEF> name = <NAME> { functionDef.setName(name.image); } Parameters(functionDef) <COLON>
+	<DEF> name = <NAME> { functionDef.setName(name.image); } Parameters(functionDef) ( <ARROW> returnType = <NAME> { functionDef.setReturnType(returnType.image); } )? <COLON>
 }
 
 public void Parameters(FunctionDef functionDef):

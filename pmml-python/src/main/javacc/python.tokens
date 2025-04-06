@@ -122,6 +122,11 @@ TOKEN:
 
 TOKEN:
 {
+	< ARROW: "->" >
+}
+
+TOKEN:
+{
 	< INT:
 		"0"
 		|

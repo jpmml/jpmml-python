@@ -64,7 +64,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 		String newline = "\n";
 
 		String string =
-			"def ratio_signum(x1, x2):" + newline +
+			"def ratio_signum(x1, x2) -> int:" + newline +
 			"	\"\"\"" + newline +
 			"	" + newline +
 			"	:param float x1: dividend" + newline +
@@ -161,7 +161,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 		String newline = "\n";
 
 		String string =
-			"def quadrant(x, y):" + newline +
+			"def quadrant(x, y) -> str:" + newline +
 			"	# Right side" + newline +
 			"	if x >= 0:" + newline +
 			"		# Upper half" + newline +
@@ -218,7 +218,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 		String newline = "\n";
 
 		String string =
-			"def contains(string, substring):" + newline +
+			"def contains(string, substring) -> int:" + newline +
 			"	if re.search(substring, string):" + newline +
 			"		return 1" + newline +
 			"	return 0" + newline;

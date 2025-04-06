@@ -506,6 +506,7 @@ private DefineFunction Def():
 {
 	Token name;
 	List<Token> parameters;
+	Token returnType = null;
 	Block block;
 }
 {
@@ -513,10 +514,10 @@ private DefineFunction Def():
 		this.variableMap.clear();
 	}
 
-	<DEF> name = <NAME> parameters = Parameters() <COLON> block = Block()
+	<DEF> name = <NAME> parameters = Parameters() ( <ARROW> returnType = <NAME> )? <COLON> block = Block()
 
 	{
-		DefineFunction defineFunction = createDefineFunction(name.image, block.getOnlyStatement());
+		DefineFunction defineFunction = createDefineFunction(name.image, (returnType != null ? returnType.image : null), block.getOnlyStatement());
 
 		for(int i = 0; i < parameters.size(); i++){
 			Token parameter = parameters.get(i);

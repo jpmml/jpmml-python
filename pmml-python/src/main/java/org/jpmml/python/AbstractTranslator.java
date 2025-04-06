@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import builtins.Type;
 import org.dmg.pmml.Apply;
 import org.dmg.pmml.DataType;
 import org.dmg.pmml.DefineFunction;
@@ -243,11 +244,21 @@ public class AbstractTranslator implements FeatureResolver {
 		return FunctionUtil.encodeFunction(module, name, expressions);
 	}
 
-	protected DefineFunction createDefineFunction(String name, Expression expression){
+	protected DefineFunction createDefineFunction(String name, String returnType, Expression expression){
 		PMMLEncoder encoder = ensureEncoder();
 
-		OpType opType = null;
-		DataType dataType = ExpressionUtil.getDataType(expression, this);
+		OpType opType;
+		DataType dataType;
+
+		if(returnType != null){
+			Type type = Type.forClassName(returnType);
+
+			dataType = type.getDataType();
+		} else
+
+		{
+			dataType = ExpressionUtil.getDataType(expression, this);
+		} // End if
 
 		if(dataType != null){
 			opType = TypeUtil.getOpType(dataType);

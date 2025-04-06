@@ -64,7 +64,25 @@ public class Type extends PythonObject implements TypeInfo {
 				return DataType.INTEGER;
 			default:
 				throw new TranslationException("Python data type \'" + className + "\' is not supported");
-
 		}
+	}
+
+	static
+	public Type forClassName(String className){
+		String module;
+		String name;
+
+		int dot = className.lastIndexOf('.');
+		if(dot > -1){
+			module = className.substring(0, dot);
+			name = className.substring(dot + 1);
+		} else
+
+		{
+			module = "builtins";
+			name = className;
+		}
+
+		return new Type(module, name);
 	}
 }

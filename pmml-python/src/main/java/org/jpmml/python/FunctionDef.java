@@ -30,6 +30,8 @@ public class FunctionDef {
 
 	private List<Parameter> parameters = new ArrayList<>();
 
+	private String returnType = null;
+
 
 	public FunctionDef(String string){
 		setString(string);
@@ -53,6 +55,14 @@ public class FunctionDef {
 
 	public List<Parameter> getParameters(){
 		return this.parameters;
+	}
+
+	public String getReturnType(){
+		return this.returnType;
+	}
+
+	public void setReturnType(String returnType){
+		this.returnType = returnType;
 	}
 
 	static
