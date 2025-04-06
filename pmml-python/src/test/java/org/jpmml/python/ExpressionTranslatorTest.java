@@ -71,7 +71,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 			"	:param float x2: divisor" + newline +
 			"	\"\"\"" + newline +
 			"	import numpy as xnp, pandas as xpd" + newline +
-			"	ratio = (x1 / x2)" + newline +
+			"	ratio: float = (x1 / x2)" + newline +
 			"	# Determine the signum of ratio" + newline +
 			"	if ratio < 0.0: return xnp.ceil(-1.5)" + newline +
 			"	elif ratio > 0.0: return xnp.floor(1.5)" + newline +

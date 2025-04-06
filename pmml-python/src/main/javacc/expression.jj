@@ -38,6 +38,7 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.Objects;
 
+import builtins.Type;
 import org.dmg.pmml.Apply;
 import org.dmg.pmml.Constant;
 import org.dmg.pmml.DataType;
@@ -184,14 +185,14 @@ public class ExpressionTranslator extends AbstractTranslator {
 		return null;
 	}
 
-	private void putVariable(String name, Expression expression){
+	private void putVariable(String name, Type type, Expression expression){
 		PMMLEncoder encoder = ensureEncoder();
 
 		if(this.variableMap.containsKey(name)){
 			throw new TranslationException("Python variable \'" + name + "\' re-assigned in function body");
 		}
 
-		DerivedField derivedField = ensureDerivedField(name, expression);
+		DerivedField derivedField = ensureDerivedField(name, type, expression);
 
 		// XXX
 		encoder.removeDerivedField(derivedField.requireName());
@@ -517,7 +518,7 @@ private DefineFunction Def():
 	<DEF> name = <NAME> parameters = Parameters() ( <ARROW> returnType = <NAME> )? <COLON> block = Block()
 
 	{
-		DefineFunction defineFunction = createDefineFunction(name.image, (returnType != null ? returnType.image : null), block.getOnlyStatement());
+		DefineFunction defineFunction = createDefineFunction(name.image, (returnType != null ? Type.forClassName(returnType.image) : null), block.getOnlyStatement());
 
 		for(int i = 0; i < parameters.size(); i++){
 			Token parameter = parameters.get(i);
@@ -742,6 +743,7 @@ private Block ElseBlock():
 private Expression Assignment():
 {
 	Token name;
+	Token type = null;
 	Expression expression;
 }
 {
@@ -749,13 +751,16 @@ private Expression Assignment():
 		LOOKAHEAD(<NAME> <ASSIGN>)
 		name = <NAME> <ASSIGN>
 		|
+		LOOKAHEAD( <NAME> <COLON> )
+		name = <NAME> <COLON> type = <NAME> <ASSIGN>
+		|
 		{ name = null; }
 	)
 	expression = Expression()
 	
 	{
 		if(name != null){
-			putVariable(name.image, expression);
+			putVariable(name.image, (type != null ? Type.forClassName(type.image) : null), expression);
 		}
 
 		return null;

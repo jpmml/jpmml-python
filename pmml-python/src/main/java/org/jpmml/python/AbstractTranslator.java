@@ -33,7 +33,10 @@ import org.dmg.pmml.DerivedField;
 import org.dmg.pmml.Expression;
 import org.dmg.pmml.Field;
 import org.dmg.pmml.FieldRef;
+import org.dmg.pmml.HasExpression;
+import org.dmg.pmml.HasType;
 import org.dmg.pmml.OpType;
+import org.dmg.pmml.PMMLObject;
 import org.dmg.pmml.ParameterField;
 import org.jpmml.converter.ExpressionUtil;
 import org.jpmml.converter.Feature;
@@ -244,40 +247,19 @@ public class AbstractTranslator implements FeatureResolver {
 		return FunctionUtil.encodeFunction(module, name, expressions);
 	}
 
-	protected DefineFunction createDefineFunction(String name, String returnType, Expression expression){
+	protected DefineFunction createDefineFunction(String name, Type type, Expression expression){
 		PMMLEncoder encoder = ensureEncoder();
 
-		OpType opType;
-		DataType dataType;
+		DefineFunction defineFunction = new DefineFunction(name, OpType.CONTINUOUS, DataType.DOUBLE, null, expression);
 
-		if(returnType != null){
-			Type type = Type.forClassName(returnType);
-
-			dataType = type.getDataType();
-		} else
-
-		{
-			dataType = ExpressionUtil.getDataType(expression, this);
-		} // End if
-
-		if(dataType != null){
-			opType = TypeUtil.getOpType(dataType);
-		} else
-
-		// XXX
-		{
-			opType = OpType.CONTINUOUS;
-			dataType = DataType.DOUBLE;
-		}
-
-		DefineFunction defineFunction = new DefineFunction(name, opType, dataType, null, expression);
+		updateType(defineFunction, type);
 
 		encoder.addDefineFunction(defineFunction);
 
 		return defineFunction;
 	}
 
-	protected DerivedField ensureDerivedField(String name, Expression expression){
+	protected DerivedField ensureDerivedField(String name, Type type, Expression expression){
 		PMMLEncoder encoder = ensureEncoder();
 
 		DerivedField derivedField = encoder.getDerivedField(name);
@@ -285,20 +267,36 @@ public class AbstractTranslator implements FeatureResolver {
 			return derivedField;
 		}
 
-		OpType opType = null;
-		DataType dataType = ExpressionUtil.getDataType(expression, this);
+		derivedField = new DerivedField(name, OpType.CONTINUOUS, DataType.DOUBLE, expression);
+
+		updateType(derivedField, type);
+
+		encoder.addDerivedField(derivedField);
+
+		return derivedField;
+	}
+
+	private <E extends PMMLObject & HasType<E> & HasExpression<E>> void updateType(E object, Type type){
+		OpType opType;
+		DataType dataType;
+
+		if(type != null){
+			dataType = type.getDataType();
+		} else
+
+		{
+			Expression expression = object.getExpression();
+
+			dataType = ExpressionUtil.getDataType(expression, this);
+		} // End if
 
 		if(dataType != null){
 			opType = TypeUtil.getOpType(dataType);
-		} else
 
-		// XXX
-		{
-			opType = OpType.CONTINUOUS;
-			dataType = DataType.DOUBLE;
+			object
+				.setOpType(opType)
+				.setDataType(dataType);
 		}
-
-		return encoder.createDerivedField(name, opType, dataType, expression);
 	}
 
 	public Scope getScope(){

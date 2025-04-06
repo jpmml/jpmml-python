@@ -64,7 +64,7 @@ public class PredicateTranslator extends AbstractTranslator {
 
 			String name = formatApply(apply);
 
-			ensureDerivedField(name, apply);
+			ensureDerivedField(name, null, apply);
 		}
 
 		return expression;
