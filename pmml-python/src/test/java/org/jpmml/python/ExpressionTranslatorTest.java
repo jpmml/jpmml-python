@@ -25,8 +25,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.dmg.pmml.Constant;
+import org.dmg.pmml.DataField;
 import org.dmg.pmml.DataType;
 import org.dmg.pmml.DefineFunction;
+import org.dmg.pmml.DerivedField;
 import org.dmg.pmml.Expression;
 import org.dmg.pmml.FieldRef;
 import org.dmg.pmml.OpType;
@@ -69,26 +71,51 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 			"	:param float x2: divisor" + newline +
 			"	\"\"\"" + newline +
 			"	import numpy as np, pandas as pd" + newline +
+			"	ratio = (x1 / x2)" + newline +
 			"	# Determine the signum of ratio" + newline +
-			"	if (x1 / x2) < 0.0: return np.ceil(-1.5)" + newline +
-			"	elif (x1 / x2) > 0.0: return np.floor(1.5)" + newline +
+			"	if ratio < 0.0: return np.ceil(-1.5)" + newline +
+			"	elif ratio > 0.0: return np.floor(1.5)" + newline +
 			"	else: return 0" + newline;
 
 		DefineFunction defineFunction = expressionTranslator.translateDef(string);
+
+		Map<String, DataField> dataFieldMap = encoder.getDataFields();
+		Map<String, DerivedField> derivedFieldMap = encoder.getDerivedFields();
+		Map<String, DefineFunction> defineFunctionsMap = encoder.getDefineFunctions();
+
+		assertEquals(0, dataFieldMap.size());
+		assertEquals(0, derivedFieldMap.size());
+		assertEquals(1, defineFunctionsMap.size());
 
 		assertEquals("ratio_signum", defineFunction.requireName());
 		assertEquals(OpType.CONTINUOUS, defineFunction.requireOpType());
 		assertEquals(DataType.INTEGER, defineFunction.requireDataType());
 
-		Expression expected = ExpressionUtil.createApply(PMMLFunctions.IF,
+		List<DerivedField> derivedFields = defineFunction.getDerivedFields();
+
+		assertEquals(1, derivedFields.size());
+
+		DerivedField derivedField = derivedFields.get(0);
+
+		assertEquals("ratio", derivedField.requireName());
+		assertEquals(OpType.CONTINUOUS, derivedField.requireOpType());
+		assertEquals(DataType.DOUBLE, derivedField.requireDataType());
+
+		Expression expected = ExpressionUtil.createApply(PMMLFunctions.DIVIDE,
+			new FieldRef("x1"), new FieldRef("x2")
+		);
+
+		checkExpression(expected, derivedField.requireExpression());
+
+		expected = ExpressionUtil.createApply(PMMLFunctions.IF,
 			ExpressionUtil.createApply(PMMLFunctions.LESSTHAN,
-				ExpressionUtil.createApply(PMMLFunctions.DIVIDE, new FieldRef("x1"), new FieldRef("x2")),
+				new FieldRef(derivedField),
 				ExpressionUtil.createConstant(DataType.DOUBLE, 0.0)
 			),
 			ExpressionUtil.createApply(PMMLFunctions.CEIL, ExpressionUtil.createConstant(DataType.DOUBLE, -1.5)),
 			ExpressionUtil.createApply(PMMLFunctions.IF,
 				ExpressionUtil.createApply(PMMLFunctions.GREATERTHAN,
-					ExpressionUtil.createApply(PMMLFunctions.DIVIDE, new FieldRef("x1"), new FieldRef("x2")),
+					new FieldRef(derivedField),
 					ExpressionUtil.createConstant(DataType.DOUBLE, 0.0)
 				),
 				ExpressionUtil.createApply(PMMLFunctions.FLOOR, ExpressionUtil.createConstant(DataType.DOUBLE, 1.5)),
@@ -96,7 +123,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 			)
 		);
 
-		checkExpression(expected, defineFunction.getExpression());
+		checkExpression(expected, defineFunction.requireExpression());
 
 		encoder = new PMMLEncoder();
 
@@ -117,7 +144,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 		defineFunction = expressionTranslator.translateDef(string);
 
-		checkExpression(expected, defineFunction.getExpression());
+		checkExpression(expected, defineFunction.requireExpression());
 	}
 
 	@Test
@@ -174,7 +201,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 			)
 		);
 
-		checkExpression(expected, defineFunction.getExpression());
+		checkExpression(expected, defineFunction.requireExpression());
 	}
 
 	@Test
@@ -218,7 +245,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 			ExpressionUtil.createConstant(DataType.BOOLEAN, Boolean.TRUE), ExpressionUtil.createConstant(DataType.BOOLEAN, Boolean.FALSE)
 		);
 
-		checkExpression(expected, defineFunction.getExpression());
+		checkExpression(expected, defineFunction.requireExpression());
 	}
 
 	@Test

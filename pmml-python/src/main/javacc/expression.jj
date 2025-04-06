@@ -28,6 +28,7 @@ package org.jpmml.python;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.Iterator;
@@ -39,19 +40,21 @@ import org.dmg.pmml.Apply;
 import org.dmg.pmml.Constant;
 import org.dmg.pmml.DataType;
 import org.dmg.pmml.DefineFunction;
+import org.dmg.pmml.DerivedField;
 import org.dmg.pmml.Expression;
 import org.dmg.pmml.FieldRef;
 import org.dmg.pmml.ParameterField;
 import org.dmg.pmml.PMMLFunctions;
 import org.jpmml.converter.ExpressionUtil;
 import org.jpmml.converter.Feature;
+import org.jpmml.converter.PMMLEncoder;
 import org.jpmml.converter.visitors.ExpressionCompactor;
 
 public class ExpressionTranslator extends AbstractTranslator {
 
 	private Deque<String> indents = new ArrayDeque<>();
 
-	private Map<String, FieldRef> variableMap = new LinkedHashMap<>();
+	private Map<String, DerivedField> variableMap = new LinkedHashMap<>();
 
 
 	public ExpressionTranslator(Scope scope){
@@ -155,13 +158,6 @@ public class ExpressionTranslator extends AbstractTranslator {
 		throw new TranslationException("Constant \'" + dottedName + "\' is not supported");
 	}
 
-	private void checkAssignment(Token name) throws ParseException {
-
-		if(name != null){
-			throw new ParseException("Invalid syntax");
-		}
-	}
-
 	private String getIndent() throws ParseException {
 		Token nextToken = getToken(1);
 		
@@ -174,6 +170,31 @@ public class ExpressionTranslator extends AbstractTranslator {
 		if(!(indent).equals(expectedIndent)){
 			throw new ParseException("Unexpected indent");
 		}
+	}
+
+	private FieldRef getVariable(String name){
+		DerivedField derivedField = this.variableMap.get(name);
+
+		if(derivedField != null){
+			return new FieldRef(derivedField);
+		}
+
+		return null;
+	}
+
+	private void putVariable(String name, Expression expression){
+		PMMLEncoder encoder = ensureEncoder();
+
+		if(this.variableMap.containsKey(name)){
+			throw new TranslationException("Python variable \'" + name + "\' re-assigned in function body");
+		}
+
+		DerivedField derivedField = ensureDerivedField(name, expression);
+
+		// XXX
+		encoder.removeDerivedField(derivedField.requireName());
+
+		this.variableMap.put(name, derivedField);
 	}
 
 	static
@@ -461,8 +482,6 @@ private DefineFunction Def():
 	<DEF> name = <NAME> parameters = Parameters() <COLON> block = Block()
 
 	{
-		this.variableMap.clear();
-
 		DefineFunction defineFunction = createDefineFunction(name.image, block.getOnlyStatement());
 
 		for(int i = 0; i < parameters.size(); i++){
@@ -470,6 +489,13 @@ private DefineFunction Def():
 
 			defineFunction.addParameterFields(new ParameterField(parameter.image));
 		}
+
+		Collection<DerivedField> derivedFields = this.variableMap.values();
+		for(DerivedField derivedField : derivedFields){
+			defineFunction.addDerivedFields(derivedField);
+		}
+
+		this.variableMap.clear();
 
 		return defineFunction;
 	}
@@ -691,7 +717,9 @@ private Expression Assignment():
 	expression = Expression()
 	
 	{
-		checkAssignment(name);
+		if(name != null){
+			putVariable(name.image, expression);
+		}
 
 		return null;
 	}
@@ -1033,7 +1061,7 @@ private Expression NameInvocationExpression(String dottedName):
 			return encodeConstant(dottedName);
 		}
 
-		FieldRef fieldRef = this.variableMap.get(dottedName);
+		FieldRef fieldRef = getVariable(dottedName);
 		if(fieldRef != null){
 			return fieldRef;
 		}
