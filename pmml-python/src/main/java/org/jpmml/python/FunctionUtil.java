@@ -26,7 +26,6 @@ import org.dmg.pmml.Constant;
 import org.dmg.pmml.Expression;
 import org.dmg.pmml.PMMLFunctions;
 import org.jpmml.converter.ExpressionUtil;
-import org.jpmml.converter.PMMLUtil;
 
 public class FunctionUtil {
 
@@ -385,7 +384,7 @@ public class FunctionUtil {
 			getElement(expressions, 2, 1),
 			updateConstant(getElement(expressions, 2, 0), reFlavour::translatePattern)
 		)
-			.addExtensions(PMMLUtil.createExtension("re_flavour",  reFlavour.module()));
+			.addExtensions(reFlavour.createExtension());
 	}
 
 	static
@@ -413,7 +412,7 @@ public class FunctionUtil {
 			updateConstant(getElement(expressions, 3, 0), reFlavour::translatePattern),
 			updateConstant(getElement(expressions, 3, 1), reFlavour::translateReplacement)
 		)
-			.addExtensions(PMMLUtil.createExtension("re_flavour", reFlavour.module()));
+			.addExtensions(reFlavour.createExtension());
 	}
 
 	static

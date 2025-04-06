@@ -28,7 +28,6 @@ import org.dmg.pmml.Constant;
 import org.dmg.pmml.DataType;
 import org.dmg.pmml.DefineFunction;
 import org.dmg.pmml.Expression;
-import org.dmg.pmml.Extension;
 import org.dmg.pmml.FieldRef;
 import org.dmg.pmml.OpType;
 import org.dmg.pmml.PMMLFunctions;
@@ -215,7 +214,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 		Expression expected = ExpressionUtil.createApply(PMMLFunctions.IF,
 			ExpressionUtil.createApply(PMMLFunctions.MATCHES, new FieldRef("string"), new FieldRef("substring"))
-				.addExtensions(new Extension("re_flavour", "re")),
+				.addExtensions(RegExFlavour.RE.createExtension()),
 			ExpressionUtil.createConstant(DataType.BOOLEAN, Boolean.TRUE), ExpressionUtil.createConstant(DataType.BOOLEAN, Boolean.FALSE)
 		);
 

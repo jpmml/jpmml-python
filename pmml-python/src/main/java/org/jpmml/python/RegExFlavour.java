@@ -18,6 +18,8 @@
  */
 package org.jpmml.python;
 
+import org.dmg.pmml.Extension;
+
 public enum RegExFlavour {
 	PCRE,
 	PCRE2,
@@ -45,5 +47,9 @@ public enum RegExFlavour {
 
 	public String translateReplacement(String replacement){
 		return replacement;
+	}
+
+	public Extension createExtension(){
+		return new Extension("re_flavour", module());
 	}
 }
