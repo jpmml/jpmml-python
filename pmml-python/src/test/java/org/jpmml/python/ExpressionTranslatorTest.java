@@ -45,6 +45,7 @@ import org.jpmml.model.ReflectionUtil;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -778,6 +779,21 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 		assertEquals("", evaluateExpression(expressionTranslator, "x[-1:-1]", arguments));
 		assertEquals("", evaluateExpression(expressionTranslator, "x[-1:-7]", arguments));
 		assertEquals("", evaluateExpression(expressionTranslator, "x[-1:-13]", arguments));
+	}
+
+	@Test
+	public void translateUnicodeStringExpression(){
+		Feature feature = new StringFeature(encoder, "x");
+
+		ExpressionTranslator expressionTranslator = new ExpressionTranslator(new BlockScope(Collections.singletonList(feature)));
+
+		Map<String, Object> arguments = new HashMap<>();
+		arguments.put(feature.getName(), "你好，世界!");
+
+		assertFalse((Boolean)evaluateExpression(expressionTranslator, "x == 'Hello World!'", arguments));
+		assertTrue((Boolean)evaluateExpression(expressionTranslator, "x == '你好，世界!'", arguments));
+
+		assertTrue((Boolean)evaluateExpression(expressionTranslator, "x in [\"Hello World!\", \"你好，世界!\"]", arguments));
 	}
 
 	@Test

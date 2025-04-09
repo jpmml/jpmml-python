@@ -20,6 +20,7 @@ options {
 	JAVA_TEMPLATE_TYPE = "modern";
 	JDK_VERSION = "11";
 	STATIC = false;
+	UNICODE_INPUT = true;
 	BUILD_TOKEN_MANAGER = false;
 }
 
