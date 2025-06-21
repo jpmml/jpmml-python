@@ -19,6 +19,7 @@
 package org.jpmml.python;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 import builtins.GetAttr;
 import net.razorvine.pickle.Opcodes;
@@ -26,6 +27,13 @@ import net.razorvine.pickle.PickleException;
 import net.razorvine.pickle.Unpickler;
 
 public class CustomUnpickler extends Unpickler {
+
+	public Object load(Storage storage) throws PickleException, IOException {
+
+		try(InputStream is = storage.getObject()){
+			return load(is);
+		}
+	}
 
 	@Override
 	protected Object dispatch(short key) throws PickleException, IOException {
