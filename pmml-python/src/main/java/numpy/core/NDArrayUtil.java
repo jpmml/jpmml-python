@@ -36,7 +36,7 @@ import net.razorvine.serpent.Parser;
 import net.razorvine.serpent.ast.Ast;
 import numpy.DType;
 import org.jpmml.converter.ValueUtil;
-import org.jpmml.python.CustomUnpickler;
+import org.jpmml.python.PythonUnpickler;
 import org.jpmml.python.TupleUtil;
 
 public class NDArrayUtil {
@@ -445,7 +445,7 @@ public class NDArrayUtil {
 
 	static
 	public Object readObject(InputStream is) throws IOException {
-		Unpickler unpickler = new CustomUnpickler();
+		Unpickler unpickler = new PythonUnpickler();
 
 		return unpickler.load(is);
 	}

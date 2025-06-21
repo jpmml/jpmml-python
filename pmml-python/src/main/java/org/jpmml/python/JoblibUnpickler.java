@@ -28,7 +28,7 @@ import net.razorvine.pickle.PickleException;
 import net.razorvine.pickle.Unpickler;
 import numpy.core.NDArray;
 
-public class JoblibUnpickler extends CustomUnpickler {
+public class JoblibUnpickler extends PythonUnpickler {
 
 	private InputStream is = null;
 

@@ -26,7 +26,7 @@ import net.razorvine.pickle.Opcodes;
 import net.razorvine.pickle.PickleException;
 import net.razorvine.pickle.Unpickler;
 
-public class CustomUnpickler extends Unpickler {
+public class PythonUnpickler extends Unpickler {
 
 	public Object load(Storage storage) throws PickleException, IOException {
 
