@@ -20,12 +20,13 @@ package org.jpmml.python;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map;
 
 import joblib.NDArrayWrapperConstructor;
 import joblib.NumpyArrayWrapper;
+import net.razorvine.pickle.IObjectConstructor;
 import net.razorvine.pickle.Opcodes;
 import net.razorvine.pickle.PickleException;
-import net.razorvine.pickle.Unpickler;
 import numpy.core.NDArray;
 
 public class JoblibUnpickler extends PythonUnpickler {
@@ -40,16 +41,24 @@ public class JoblibUnpickler extends PythonUnpickler {
 			new NDArrayWrapperConstructor("sklearn.externals.joblib.numpy_pickle", "NDArrayWrapper", storage),
 		};
 
-		for(PythonObjectConstructor constructor : constructors){
-			Unpickler.registerConstructor(constructor.getModule(), constructor.getName(), constructor);
-		}
+		synchronized(JoblibUnpickler.LOCK){
+			Map<String, IObjectConstructor> objectConstructors = PickleUtil.getObjectConstructors();
 
-		try(InputStream is = storage.getObject()){
-			this.is = is;
+			try(InputStream is = storage.getObject()){
+				this.is = is;
 
-			return load(is);
-		} finally {
-			this.is = null;
+				for(PythonObjectConstructor constructor : constructors){
+					objectConstructors.put(constructor.getModule() + "." + constructor.getName(), constructor);
+				}
+
+				return load(is);
+			} finally {
+				this.is = null;
+
+				for(PythonObjectConstructor constructor : constructors){
+					objectConstructors.remove(constructor.getModule() + "." + constructor.getName());
+				}
+			}
 		}
 	}
 
@@ -72,4 +81,6 @@ public class JoblibUnpickler extends PythonUnpickler {
 
 		return result;
 	}
+
+	private static final Object LOCK = new Object();
 }
