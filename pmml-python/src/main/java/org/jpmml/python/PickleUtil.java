@@ -32,13 +32,10 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-import joblib.NDArrayWrapperConstructor;
-import joblib.NumpyArrayWrapper;
 import net.razorvine.pickle.IObjectConstructor;
-import net.razorvine.pickle.Opcodes;
+import net.razorvine.pickle.PickleException;
 import net.razorvine.pickle.Unpickler;
 import net.razorvine.pickle.objects.ClassDictConstructor;
-import numpy.core.NDArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pandas.NDArrayBacked;
@@ -50,42 +47,10 @@ public class PickleUtil {
 	}
 
 	static
-	public Object unpickle(Storage storage) throws IOException {
-		PythonObjectConstructor[] constructors = {
-			new NDArrayWrapperConstructor("joblib.numpy_pickle", "NDArrayWrapper", storage),
-			new NDArrayWrapperConstructor("sklearn.externals.joblib.numpy_pickle", "NDArrayWrapper", storage),
-		};
+	public Object unpickle(Storage storage) throws PickleException, IOException {
+		JoblibUnpickler unpickler = new JoblibUnpickler();
 
-		for(PythonObjectConstructor constructor : constructors){
-			Unpickler.registerConstructor(constructor.getModule(), constructor.getName(), constructor);
-		}
-
-		try(InputStream is = storage.getObject()){
-			Unpickler unpickler = new CustomUnpickler(){
-
-				@Override
-				protected Object dispatch(short key) throws IOException {
-					Object result = super.dispatch(key);
-
-					if(key == Opcodes.BUILD){
-						Object head = peekHead();
-
-						// Modify the stack by replacing NumpyArrayWrapper with NDArray
-						if(head instanceof NumpyArrayWrapper){
-							NumpyArrayWrapper arrayWrapper = (NumpyArrayWrapper)head;
-
-							NDArray array = arrayWrapper.toArray(is);
-
-							replaceHead(array);
-						}
-					}
-
-					return result;
-				}
-			};
-
-			return unpickler.load(is);
-		}
+		return unpickler.load(storage);
 	}
 
 	@SuppressWarnings("unchecked")
