@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.util.function.Predicate;
 
 import com.google.common.base.Equivalence;
+import net.razorvine.pickle.Unpickler;
 import org.jpmml.converter.testing.ModelEncoderBatch;
 import org.jpmml.evaluator.ResultField;
 import org.jpmml.python.JoblibUnpickler;
@@ -51,11 +52,15 @@ public class PythonEncoderBatch extends ModelEncoderBatch {
 		Object object;
 
 		try(Storage storage = StorageUtil.createStorage(is)){
-			PythonUnpickler pythonUnpickler = new JoblibUnpickler();
+			PythonUnpickler pythonUnpickler = (PythonUnpickler)getUnpickler();
 
 			object = pythonUnpickler.load(storage);
 		}
 
 		return clazz.cast(object);
+	}
+
+	public Unpickler getUnpickler(){
+		return new JoblibUnpickler();
 	}
 }
