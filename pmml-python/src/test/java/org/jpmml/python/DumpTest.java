@@ -50,7 +50,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class DumpTest extends PickleUtilTest {
+public class DumpTest extends UnpicklerTest {
 
 	@Test
 	public void python27() throws IOException {

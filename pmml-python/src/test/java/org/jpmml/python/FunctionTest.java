@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class FunctionTest extends PickleUtilTest {
+public class FunctionTest extends UnpicklerTest {
 
 	@Test
 	public void python27() throws IOException {

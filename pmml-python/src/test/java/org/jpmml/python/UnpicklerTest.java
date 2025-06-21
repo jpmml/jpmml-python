@@ -25,13 +25,13 @@ import java.io.InputStream;
 import com.google.common.io.ByteStreams;
 
 abstract
-public class PickleUtilTest {
+public class UnpicklerTest {
 
 	static
 	protected Object unpickle(String dir, String name) throws IOException {
 		byte[] bytes;
 
-		InputStream is = (PickleUtilTest.class).getResourceAsStream(("/" + dir + "/") + name);
+		InputStream is = (UnpicklerTest.class).getResourceAsStream(("/" + dir + "/") + name);
 
 		try {
 			bytes = ByteStreams.toByteArray(is);
@@ -54,7 +54,7 @@ public class PickleUtilTest {
 	}
 
 	static {
-		ClassLoader clazzLoader = PickleUtilTest.class.getClassLoader();
+		ClassLoader clazzLoader = UnpicklerTest.class.getClassLoader();
 
 		PickleUtil.init(clazzLoader, "python2pmml.properties");
 	}
