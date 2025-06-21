@@ -47,7 +47,9 @@ public class PickleUtilTest {
 		InputStream is = new ByteArrayInputStream(bytes);
 
 		try(Storage storage = StorageUtil.createStorage(is)){
-			return PickleUtil.unpickle(storage);
+			PythonUnpickler pythonUnpickler = new JoblibUnpickler();
+
+			return pythonUnpickler.load(storage);
 		}
 	}
 

@@ -25,7 +25,8 @@ import java.util.function.Predicate;
 import com.google.common.base.Equivalence;
 import org.jpmml.converter.testing.ModelEncoderBatch;
 import org.jpmml.evaluator.ResultField;
-import org.jpmml.python.PickleUtil;
+import org.jpmml.python.JoblibUnpickler;
+import org.jpmml.python.PythonUnpickler;
 import org.jpmml.python.Storage;
 import org.jpmml.python.StorageUtil;
 
@@ -47,10 +48,14 @@ public class PythonEncoderBatch extends ModelEncoderBatch {
 	public <E> E loadPickle(Class<? extends E> clazz) throws IOException {
 		InputStream is = open(getPklPath());
 
-		try(Storage storage = StorageUtil.createStorage(is)){
-			Object object = PickleUtil.unpickle(storage);
+		Object object;
 
-			return clazz.cast(object);
+		try(Storage storage = StorageUtil.createStorage(is)){
+			PythonUnpickler pythonUnpickler = new JoblibUnpickler();
+
+			object = pythonUnpickler.load(storage);
 		}
+
+		return clazz.cast(object);
 	}
 }

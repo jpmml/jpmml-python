@@ -33,7 +33,6 @@ import java.util.Properties;
 import java.util.Set;
 
 import net.razorvine.pickle.IObjectConstructor;
-import net.razorvine.pickle.PickleException;
 import net.razorvine.pickle.Unpickler;
 import net.razorvine.pickle.objects.ClassDictConstructor;
 import org.slf4j.Logger;
@@ -44,13 +43,6 @@ import pandas.NDArrayBackedConstructor;
 public class PickleUtil {
 
 	private PickleUtil(){
-	}
-
-	static
-	public Object unpickle(Storage storage) throws PickleException, IOException {
-		JoblibUnpickler unpickler = new JoblibUnpickler();
-
-		return unpickler.load(storage);
 	}
 
 	@SuppressWarnings("unchecked")
