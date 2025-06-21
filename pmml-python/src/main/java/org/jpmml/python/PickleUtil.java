@@ -68,17 +68,15 @@ public class PickleUtil {
 					Object result = super.dispatch(key);
 
 					if(key == Opcodes.BUILD){
-						Object head = super.stack.peek();
+						Object head = peekHead();
 
 						// Modify the stack by replacing NumpyArrayWrapper with NDArray
 						if(head instanceof NumpyArrayWrapper){
 							NumpyArrayWrapper arrayWrapper = (NumpyArrayWrapper)head;
 
-							super.stack.pop();
-
 							NDArray array = arrayWrapper.toArray(is);
 
-							super.stack.add(array);
+							replaceHead(array);
 						}
 					}
 

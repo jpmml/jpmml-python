@@ -32,22 +32,20 @@ public class CustomUnpickler extends Unpickler {
 		Object result = super.dispatch(key);
 
 		if(key == Opcodes.GLOBAL || key == Opcodes.STACK_GLOBAL){
-			Object head = super.stack.peek();
+			Object head = peekHead();
 
 			if(head instanceof IConstantConstructor){
 				IConstantConstructor constantConstructor = (IConstantConstructor)head;
 
-				super.stack.pop();
-
 				Object value = constantConstructor.construct();
 
-				super.stack.add(value);
+				replaceHead(value);
 			}
 		} else
 
 		// Python 3.11+
 		if(key == Opcodes.REDUCE){
-			Object head = super.stack.peek();
+			Object head = peekHead();
 
 			if(head instanceof GetAttr){
 				GetAttr getAttr = (GetAttr)head;
@@ -58,15 +56,22 @@ public class CustomUnpickler extends Unpickler {
 				if(obj instanceof PythonEnumConstructor){
 					PythonEnumConstructor enumConstructor = (PythonEnumConstructor)obj;
 
-					super.stack.pop();
-
 					PythonEnum _enum = enumConstructor.construct(new Object[]{name});
 
-					super.stack.add(_enum);
+					replaceHead(_enum);
 				}
 			}
 		}
 
 		return result;
+	}
+
+	protected Object peekHead(){
+		return super.stack.peek();
+	}
+
+	protected void replaceHead(Object object){
+		super.stack.pop();
+		super.stack.add(object);
 	}
 }
