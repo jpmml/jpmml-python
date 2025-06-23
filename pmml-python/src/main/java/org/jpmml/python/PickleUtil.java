@@ -121,7 +121,7 @@ public class PickleUtil {
 
 	static
 	private void registerNullConstructor(String key){
-		logger.debug("Mapping Python class {} to null");
+		logger.debug("Mapping Python class {} to null", key);
 
 		int dot = key.lastIndexOf('.');
 		if(dot < 0){
