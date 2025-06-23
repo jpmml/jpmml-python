@@ -139,9 +139,9 @@ public class ClassDictUtil {
 		} else
 
 		if(object instanceof ClassDictConstructor){
-			ClassDictConstructor classDictConstructor = (ClassDictConstructor)object;
+			ClassDictConstructor dictConstructor = (ClassDictConstructor)object;
 
-			return "Python class " + ClassDictConstructorUtil.getClassName(classDictConstructor);
+			return "Python class " + ClassDictConstructorUtil.getClassName(dictConstructor);
 		}
 
 		Class<?> clazz = object.getClass();
