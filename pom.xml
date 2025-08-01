@@ -49,7 +49,7 @@
 	</issueManagement>
 
 	<properties>
-		<jpmml-converter.version>1.6.2</jpmml-converter.version>
+		<jpmml-converter.version>1.6.3</jpmml-converter.version>
 		<jpmml-evaluator.version>1.7.3</jpmml-evaluator.version>
 		<project.build.outputTimestamp>2025-06-21T18:19:09Z</project.build.outputTimestamp>
 	</properties>
@@ -104,7 +104,7 @@
 			<dependency>
 				<groupId>com.google.guava</groupId>
 				<artifactId>failureaccess</artifactId>
-				<version>1.0.2</version>
+				<version>1.0.3</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
