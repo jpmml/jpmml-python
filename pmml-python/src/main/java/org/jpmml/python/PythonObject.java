@@ -111,7 +111,7 @@ public class PythonObject extends ClassDict {
 	public Object getattr(String name){
 
 		if(!containsKey(name)){
-			throw new AttributeException("Attribute \'" + ClassDictUtil.formatMember(this, name) + "\' not set");
+			throw new MissingAttributeException(this, name);
 		}
 
 		return get(name);
