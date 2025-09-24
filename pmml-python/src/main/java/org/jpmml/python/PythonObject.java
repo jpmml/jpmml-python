@@ -142,7 +142,7 @@ public class PythonObject extends ClassDict {
 		Object value = getattr(name);
 
 		if(value == null){
-			throw new AttributeException("Attribute \'" + ClassDictUtil.formatMember(this, name) + "\' has a missing (None) value");
+			throw new InvalidAttributeException("Attribute \'" + ClassDictUtil.formatMember(this, name) + "\' has a missing (None) value");
 		} // End if
 
 		if(Objects.equals(Boolean.class, clazz) || (Number.class).isAssignableFrom(clazz) || Objects.equals(String.class, clazz)){
@@ -272,7 +272,7 @@ public class PythonObject extends ClassDict {
 		E value = function.apply(name);
 
 		if(!enumValues.contains(value)){
-			throw new AttributeException("Attribute \'" + ClassDictUtil.formatMember(this, name) + "\' has an unsupported value " + PythonFormatterUtil.formatValue(value) + ". Supported values are " + PythonFormatterUtil.formatCollection(enumValues));
+			throw new InvalidAttributeException("Attribute \'" + ClassDictUtil.formatMember(this, name) + "\' has an unsupported value " + PythonFormatterUtil.formatValue(value) + ". Supported values are " + PythonFormatterUtil.formatCollection(enumValues));
 		}
 
 		return value;
@@ -282,7 +282,7 @@ public class PythonObject extends ClassDict {
 		E value = function.apply(name);
 
 		if((value != null)  && (!enumValues.contains(value))){
-			throw new AttributeException("Attribute \'" + ClassDictUtil.formatMember(this, name) + "\' has an unsupported value " + PythonFormatterUtil.formatValue(value) + ". Supported values are " + PythonFormatterUtil.formatCollection(enumValues));
+			throw new InvalidAttributeException("Attribute \'" + ClassDictUtil.formatMember(this, name) + "\' has an unsupported value " + PythonFormatterUtil.formatValue(value) + ". Supported values are " + PythonFormatterUtil.formatCollection(enumValues));
 		}
 
 		return value;
@@ -315,7 +315,7 @@ public class PythonObject extends ClassDict {
 			return hasArray;
 		}
 
-		throw new AttributeException("Array attribute \'" + ClassDictUtil.formatMember(this, name) + "\' has an unsupported value (" + ClassDictUtil.formatClass(object) + ")");
+		throw new InvalidAttributeException("Array attribute \'" + ClassDictUtil.formatMember(this, name) + "\' has an unsupported value (" + ClassDictUtil.formatClass(object) + ")");
 	}
 
 	public <E> List<E> getArray(String name, Class<? extends E> clazz){
@@ -347,14 +347,14 @@ public class PythonObject extends ClassDict {
 			return new int[]{1};
 		}
 
-		throw new AttributeException("Array attribute \'" + ClassDictUtil.formatMember(this, name) + "\' has an unsuppoted value (" + ClassDictUtil.formatClass(object) +")");
+		throw new InvalidAttributeException("Array attribute \'" + ClassDictUtil.formatMember(this, name) + "\' has an unsuppoted value (" + ClassDictUtil.formatClass(object) +")");
 	}
 
 	public int[] getArrayShape(String name, int length){
 		int[] shape = getArrayShape(name);
 
 		if(shape.length != length){
-			throw new AttributeException("Array attribute \'" + ClassDictUtil.formatMember(this, name) + "\' is mis-shaped");
+			throw new InvalidAttributeException("Array attribute \'" + ClassDictUtil.formatMember(this, name) + "\' is mis-shaped");
 		}
 
 		return shape;
@@ -420,7 +420,7 @@ public class PythonObject extends ClassDict {
 			return NDArrayUtil.getContent(array, key);
 		}
 
-		throw new AttributeException("Array attribute \'" + ClassDictUtil.formatMember(this, name) + "\' has an unsupported value (" + ClassDictUtil.formatClass(object) + ")");
+		throw new InvalidAttributeException("Array attribute \'" + ClassDictUtil.formatMember(this, name) + "\' has an unsupported value (" + ClassDictUtil.formatClass(object) + ")");
 	}
 
 	public List<?> getList(String name){
@@ -458,7 +458,7 @@ public class PythonObject extends ClassDict {
 			public E apply(E value){
 
 				if(!enumValues.contains(value)){
-					throw new AttributeException("List attribute \'" + ClassDictUtil.formatMember(PythonObject.this, name) + "\' contains an unsupported value " + PythonFormatterUtil.formatValue(value) + ". Supported values are " + PythonFormatterUtil.formatCollection(enumValues));
+					throw new InvalidAttributeException("List attribute \'" + ClassDictUtil.formatMember(PythonObject.this, name) + "\' contains an unsupported value " + PythonFormatterUtil.formatValue(value) + ". Supported values are " + PythonFormatterUtil.formatCollection(enumValues));
 				}
 
 				return value;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Villu Ruusmann
+ * Copyright (c) 2025 Villu Ruusmann
  *
  * This file is part of JPMML-Python
  *
@@ -18,15 +18,13 @@
  */
 package org.jpmml.python;
 
-abstract
-public class AttributeCastFunction<E> extends CastFunction<E> {
+public class InvalidAttributeException extends AttributeException {
 
-	public AttributeCastFunction(Class<? extends E> clazz){
-		super(clazz);
+	public InvalidAttributeException(String message){
+		super(message);
 	}
 
-	@Override
-	public InvalidAttributeException createPythonException(String message, ClassCastException cause){
-		return new InvalidAttributeException(message, cause);
+	public InvalidAttributeException(String message, Exception cause){
+		super(message, cause);
 	}
 }
