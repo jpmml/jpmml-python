@@ -18,6 +18,7 @@
  */
 package org.jpmml.python;
 
+abstract
 public class AttributeException extends PythonException {
 
 	public AttributeException(String message){
