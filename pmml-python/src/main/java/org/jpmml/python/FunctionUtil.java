@@ -23,8 +23,13 @@ import java.util.function.Function;
 
 import org.dmg.pmml.Apply;
 import org.dmg.pmml.Constant;
+import org.dmg.pmml.DataType;
+import org.dmg.pmml.DefineFunction;
 import org.dmg.pmml.Expression;
+import org.dmg.pmml.FieldRef;
+import org.dmg.pmml.OpType;
 import org.dmg.pmml.PMMLFunctions;
+import org.dmg.pmml.ParameterField;
 import org.jpmml.converter.ExpressionUtil;
 import org.jpmml.converter.PMMLEncoder;
 
@@ -139,7 +144,7 @@ public class FunctionUtil {
 				case "tanh":
 					return encodeUnaryFunction(PMMLFunctions.TANH, expressions);
 				case "trunc":
-					return trunc(expressions);
+					return trunc(expressions, encoder);
 				default:
 					break;
 			}
@@ -254,7 +259,7 @@ public class FunctionUtil {
 				case "rint":
 					return encodeUnaryFunction(PMMLFunctions.RINT, expressions);
 				case "sign":
-					return sign(expressions);
+					return sign(expressions, encoder);
 				case "sin":
 					return encodeUnaryFunction(PMMLFunctions.SIN, expressions);
 				case "sinh":
@@ -306,7 +311,7 @@ public class FunctionUtil {
 				case "expit":
 					return expit(expressions);
 				case "logit":
-					return logit(expressions);
+					return logit(expressions, encoder);
 				default:
 					break;
 			}
@@ -353,15 +358,17 @@ public class FunctionUtil {
 	}
 
 	static
-	private Apply logit(List<Expression> expressions){
-		Expression expression = getOnlyElement(expressions);
+	private Apply logit(List<Expression> expressions, PMMLEncoder encoder){
+		Function<Expression, Apply> applyGenerator = (expression) -> {
+			return ExpressionUtil.createApply(PMMLFunctions.LN,
+				ExpressionUtil.createApply(PMMLFunctions.DIVIDE,
+					expression,
+					ExpressionUtil.createApply(PMMLFunctions.SUBTRACT, ExpressionUtil.createConstant(1), expression)
+				)
+			);
+		};
 
-		return ExpressionUtil.createApply(PMMLFunctions.LN,
-			ExpressionUtil.createApply(PMMLFunctions.DIVIDE,
-				expression,
-				ExpressionUtil.createApply(PMMLFunctions.SUBTRACT, ExpressionUtil.createConstant(1), expression)
-			)
-		);
+		return ensureApply("logit", OpType.CONTINUOUS, DataType.DOUBLE, getOnlyElement(expressions), applyGenerator, encoder);
 	}
 
 	static
@@ -389,16 +396,18 @@ public class FunctionUtil {
 	}
 
 	static
-	private Apply sign(List<Expression> expressions){
-		Expression expression = getOnlyElement(expressions);
+	private Apply sign(List<Expression> expressions, PMMLEncoder encoder){
+		Function<Expression, Apply> applyGenerator = (expression) -> {
+			return ExpressionUtil.createApply(PMMLFunctions.IF, ExpressionUtil.createApply(PMMLFunctions.LESSTHAN, expression, ExpressionUtil.createConstant(0)),
+				ExpressionUtil.createConstant(-1), // x < 0
+				ExpressionUtil.createApply(PMMLFunctions.IF, ExpressionUtil.createApply(PMMLFunctions.GREATERTHAN, expression, ExpressionUtil.createConstant(0)),
+					ExpressionUtil.createConstant(+1), // x > 0
+					ExpressionUtil.createConstant(0) // x == 0
+				)
+			);
+		};
 
-		return ExpressionUtil.createApply(PMMLFunctions.IF, ExpressionUtil.createApply(PMMLFunctions.LESSTHAN, expression, ExpressionUtil.createConstant(0)),
-			ExpressionUtil.createConstant(-1), // x < 0
-			ExpressionUtil.createApply(PMMLFunctions.IF, ExpressionUtil.createApply(PMMLFunctions.GREATERTHAN, expression, ExpressionUtil.createConstant(0)),
-				ExpressionUtil.createConstant(+1), // x > 0
-				ExpressionUtil.createConstant(0) // x == 0
-			)
-		);
+		return ensureApply("sign", OpType.CATEGORICAL, DataType.INTEGER, getOnlyElement(expressions), applyGenerator, encoder);
 	}
 
 	static
@@ -417,13 +426,15 @@ public class FunctionUtil {
 	}
 
 	static
-	private Apply trunc(List<Expression> expressions){
-		Expression expression = getOnlyElement(expressions);
+	private Apply trunc(List<Expression> expressions, PMMLEncoder encoder){
+		Function<Expression, Apply> applyGenerator = (expression) -> {
+			return ExpressionUtil.createApply(PMMLFunctions.IF, ExpressionUtil.createApply(PMMLFunctions.LESSTHAN, expression, ExpressionUtil.createConstant(0)),
+				ExpressionUtil.createApply(PMMLFunctions.CEIL, expression), // x < 0
+				ExpressionUtil.createApply(PMMLFunctions.FLOOR, expression) // x >= 0
+			);
+		};
 
-		return ExpressionUtil.createApply(PMMLFunctions.IF, ExpressionUtil.createApply(PMMLFunctions.LESSTHAN, expression, ExpressionUtil.createConstant(0)),
-			ExpressionUtil.createApply(PMMLFunctions.CEIL, expression), // x < 0
-			ExpressionUtil.createApply(PMMLFunctions.FLOOR, expression) // x >= 0
-		);
+		return ensureApply("trunc", OpType.CONTINUOUS, DataType.INTEGER, getOnlyElement(expressions), applyGenerator, encoder);
 	}
 
 	static
@@ -432,6 +443,30 @@ public class FunctionUtil {
 			getElement(expressions, 3, 1),
 			getElement(expressions, 3, 2)
 		);
+	}
+
+	static
+	private Apply ensureApply(String name, OpType opType, DataType dataType, Expression expression, Function<Expression, Apply> applyGenerator, PMMLEncoder encoder){
+
+		if(expression instanceof FieldRef){
+			FieldRef fieldRef = (FieldRef)expression;
+
+			return applyGenerator.apply(fieldRef);
+		}
+
+		DefineFunction defineFunction = encoder.getDefineFunction(name);
+		if(defineFunction == null){
+			ParameterField valueField = new ParameterField("x");
+
+			Apply apply = applyGenerator.apply(new FieldRef(valueField));
+
+			defineFunction = new DefineFunction(name, opType, dataType, null, apply)
+				.addParameterFields(valueField);
+
+			encoder.addDefineFunction(defineFunction);
+		}
+
+		return ExpressionUtil.createApply(defineFunction, expression);
 	}
 
 	static
