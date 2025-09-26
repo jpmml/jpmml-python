@@ -83,6 +83,8 @@ public class FunctionUtil {
 		if((module).equals("builtins")){
 
 			switch(name){
+				case "bool":
+					return tobool(expressions, encoder);
 				case "float":
 					return tofloat(expressions, encoder);
 				case "int":
@@ -433,6 +435,49 @@ public class FunctionUtil {
 			updateConstant(getElement(expressions, 3, 1), reFlavour::translateReplacement)
 		)
 			.addExtensions(reFlavour.createExtension());
+	}
+
+	static
+	private Apply tobool(List<Expression> expressions, PMMLEncoder encoder){
+		Expression expression = getOnlyElement(expressions);
+
+		// XXX
+		FeatureResolver featureResolver = new FeatureResolver(){
+
+			@Override
+			public Feature resolveFeature(String name){
+				Field<?> field = encoder.getField(name);
+
+				return new ObjectFeature(encoder, field);
+			}
+		};
+
+		DataType dataType = ExpressionUtil.getDataType(expression, featureResolver);
+		if(dataType != null){
+
+			switch(dataType){
+				case STRING:
+					return ExpressionUtil.createApply(PMMLFunctions.GREATERTHAN,
+						ExpressionUtil.createApply(PMMLFunctions.STRINGLENGTH, expression), ExpressionUtil.createConstant(0)
+					);
+				case INTEGER:
+				case FLOAT:
+				case DOUBLE:
+					return ExpressionUtil.createApply(PMMLFunctions.NOTEQUAL,
+						expression, ExpressionUtil.createConstant(dataType, 0)
+					);
+				default:
+					break;
+			}
+		}
+
+		Function<ParameterField, FieldRef> expressionGenerator = (valueField) -> {
+			return new FieldRef(valueField);
+		};
+
+		DefineFunction defineFunction = ensureDefineFunction("bool", OpType.CATEGORICAL, DataType.BOOLEAN, expressionGenerator, encoder);
+
+		return ExpressionUtil.createApply(defineFunction, expression);
 	}
 
 	static

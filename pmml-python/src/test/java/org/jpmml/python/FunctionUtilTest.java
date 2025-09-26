@@ -58,6 +58,13 @@ public class FunctionUtilTest {
 
 		assertEquals("0", evaluateExpression("builtins", "str", 0));
 		assertEquals("3.14", evaluateExpression("builtins", "str", 3.14d));
+
+		assertEquals(true, evaluateExpression("builtins", "bool", -1));
+		assertEquals(false, evaluateExpression("builtins", "bool", 0));
+		assertEquals(true, evaluateExpression("builtins", "bool", 1));
+		assertEquals(false, evaluateExpression("builtins", "bool", ""));
+		assertEquals(true, evaluateExpression("builtins", "bool", "False"));
+		assertEquals(true, evaluateExpression("builtins", "bool", "True"));
 	}
 
 	@Test
