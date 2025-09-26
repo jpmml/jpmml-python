@@ -241,7 +241,10 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 	@Test
 	public void translateIfElseExpression(){
-		ExpressionTranslator expressionTranslator = new ExpressionTranslator(new DataFrameScope(doubleFeatures));
+		PMMLEncoder encoder = new PythonEncoder(){
+		};
+
+		ExpressionTranslator expressionTranslator = new ExpressionTranslator(new DataFrameScope(doubleFeatures, encoder));
 
 		Expression expected = ExpressionUtil.createApply(PMMLFunctions.IF,
 			ExpressionUtil.createApply(PMMLFunctions.GREATERTHAN,
@@ -311,7 +314,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 		checkExpression(expected, translateExpression(expressionTranslator, string));
 
-		expressionTranslator = new ExpressionTranslator(new DataFrameScope(stringFeatures));
+		expressionTranslator = new ExpressionTranslator(new DataFrameScope(stringFeatures, encoder));
 
 		expected = ExpressionUtil.createApply(PMMLFunctions.IF,
 			ExpressionUtil.createApply(PMMLFunctions.ISNOTMISSING,
@@ -330,7 +333,10 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 	@Test
 	public void translateStringIfElseExpression(){
-		ExpressionTranslator expressionTranslator = new ExpressionTranslator(new DataFrameScope(stringFeatures));
+		PMMLEncoder encoder = new PythonEncoder(){
+		};
+
+		ExpressionTranslator expressionTranslator = new ExpressionTranslator(new DataFrameScope(stringFeatures, encoder));
 
 		Expression expected = ExpressionUtil.createApply(PMMLFunctions.IF,
 			ExpressionUtil.createApply(PMMLFunctions.EQUAL, ExpressionUtil.createApply(PMMLFunctions.TRIMBLANKS, ExpressionUtil.createApply(PMMLFunctions.SUBSTRING, fieldRefs.get(1), ExpressionUtil.createConstant(DataType.INTEGER, 1), ExpressionUtil.createConstant(DataType.INTEGER, 1))), ExpressionUtil.createConstant(DataType.STRING, "low")),
@@ -344,13 +350,13 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 		checkExpression(expected, translateExpression(expressionTranslator, string));
 
-		expressionTranslator = new ExpressionTranslator(new BlockScope(stringFeatures));
+		expressionTranslator = new ExpressionTranslator(new BlockScope(stringFeatures, encoder));
 
 		string = "a.lower() if (b[0:1].strip()) == r\"low\" else a.upper()";
 
 		checkExpression(expected, translateExpression(expressionTranslator, string));
 
-		expressionTranslator = new ExpressionTranslator(new DataFrameScope(stringFeatures));
+		expressionTranslator = new ExpressionTranslator(new DataFrameScope(stringFeatures, encoder));
 
 		expected = ExpressionUtil.createApply(PMMLFunctions.IF,
 			ExpressionUtil.createApply(PMMLFunctions.GREATERTHAN, ExpressionUtil.createApply(PMMLFunctions.STRINGLENGTH, fieldRefs.get(0)), ExpressionUtil.createConstant(DataType.INTEGER, 0)),
@@ -367,7 +373,10 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 	@Test
 	public void translateLogicalExpression(){
-		ExpressionTranslator expressionTranslator = new ExpressionTranslator(new DataFrameScope(booleanFeatures));
+		PMMLEncoder encoder = new PythonEncoder(){
+		};
+
+		ExpressionTranslator expressionTranslator = new ExpressionTranslator(new DataFrameScope(booleanFeatures, encoder));
 
 		Expression expected = ExpressionUtil.createApply(PMMLFunctions.OR,
 			ExpressionUtil.createApply(PMMLFunctions.AND,
@@ -383,7 +392,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 		checkExpression(expected, translateExpression(expressionTranslator, string));
 
-		expressionTranslator = new ExpressionTranslator(new BlockScope(booleanFeatures));
+		expressionTranslator = new ExpressionTranslator(new BlockScope(booleanFeatures, encoder));
 
 		string = "a and b or c";
 
@@ -397,13 +406,13 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 		assertEquals(DataType.BOOLEAN, ExpressionUtil.getDataType(expected, expressionTranslator));
 
-		expressionTranslator = new ExpressionTranslator(new DataFrameScope(booleanFeatures));
+		expressionTranslator = new ExpressionTranslator(new DataFrameScope(booleanFeatures, encoder));
 
 		string = "not X[\"a\"]";
 
 		checkExpression(expected, translateExpression(expressionTranslator, string));
 
-		expressionTranslator = new ExpressionTranslator(new BlockScope(booleanFeatures));
+		expressionTranslator = new ExpressionTranslator(new BlockScope(booleanFeatures, encoder));
 
 		string = "not a";
 
@@ -412,7 +421,6 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 		string = "numpy.logical_not(a)";
 
 		checkExpression(expected, translateExpression(expressionTranslator, string));
-
 	}
 
 	@Test
@@ -830,7 +838,10 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 	@Test
 	public void translateFunctionInvocationExpression(){
-		ExpressionTranslator expressionTranslator = new ExpressionTranslator(new DataFrameScope(doubleFeatures));
+		PMMLEncoder encoder = new PythonEncoder(){
+		};
+
+		ExpressionTranslator expressionTranslator = new ExpressionTranslator(new DataFrameScope(doubleFeatures, encoder));
 
 		Expression expected = ExpressionUtil.createApply(PMMLFunctions.IF,
 			ExpressionUtil.createApply(PMMLFunctions.ISNOTMISSING, fieldRefs.get("a")),
@@ -844,7 +855,7 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 		checkExpression(expected, translateExpression(expressionTranslator, string));
 
-		expressionTranslator = new ExpressionTranslator(new BlockScope(doubleFeatures));
+		expressionTranslator = new ExpressionTranslator(new BlockScope(doubleFeatures, encoder));
 
 		string = "a if pandas.notnull(a) else b + c";
 

@@ -26,6 +26,7 @@ import org.dmg.pmml.Constant;
 import org.dmg.pmml.Expression;
 import org.dmg.pmml.PMMLFunctions;
 import org.jpmml.converter.ExpressionUtil;
+import org.jpmml.converter.PMMLEncoder;
 
 public class FunctionUtil {
 
@@ -33,42 +34,42 @@ public class FunctionUtil {
 	}
 
 	static
-	public Apply encodeFunction(Identifiable identifiable, List<Expression> expressions){
-		return encodeFunction(identifiable.getModule(), identifiable.getName(), expressions);
+	public Apply encodeFunction(Identifiable identifiable, List<Expression> expressions, PMMLEncoder encoder){
+		return encodeFunction(identifiable.getModule(), identifiable.getName(), expressions, null);
 	}
 
 	static
-	public Apply encodeFunction(String module, String name, List<Expression> expressions){
+	public Apply encodeFunction(String module, String name, List<Expression> expressions, PMMLEncoder encoder){
 
 		if((module).equals("builtins")){
-			return encodePythonFunction(module, name, expressions);
+			return encodeBuiltinFunction(module, name, expressions, encoder);
 		} else
 
 		if((module).equals("math")){
-			return encodeMathFunction(module, name, expressions);
+			return encodeMathFunction(module, name, expressions, encoder);
 		} else
 
 		if((module).equals("pcre") || (module).equals("pcre2") || (module).equals("re")){
-			return encodeRegExFunction(module, name, expressions);
+			return encodeRegExFunction(module, name, expressions, encoder);
 		} else
 
 		if((module).equals("numpy") || (module).startsWith("numpy.")){
-			return encodeNumpyFunction(module, name, expressions);
+			return encodeNumpyFunction(module, name, expressions, encoder);
 		} else
 
 		if((module).equals("pandas") || (module).startsWith("pandas.")){
-			return encodePandasFunction(module, name, expressions);
+			return encodePandasFunction(module, name, expressions, encoder);
 		} else
 
 		if((module).equals("scipy") || (module).startsWith("scipy.")){
-			return encodeScipyFunction(module, name, expressions);
+			return encodeScipyFunction(module, name, expressions, encoder);
 		}
 
 		throw new TranslationException("Function \'" + formatFunction(module, name) + "\' is not supported");
 	}
 
 	static
-	public Apply encodePythonFunction(String module, String name, List<Expression> expressions){
+	public Apply encodeBuiltinFunction(String module, String name, List<Expression> expressions, PMMLEncoder encoder){
 
 		if((module).equals("builtins")){
 
@@ -84,7 +85,7 @@ public class FunctionUtil {
 	}
 
 	static
-	public Apply encodeMathFunction(String module, String name, List<Expression> expressions){
+	public Apply encodeMathFunction(String module, String name, List<Expression> expressions, PMMLEncoder encoder){
 
 		if((module).equals("math")){
 
@@ -148,7 +149,7 @@ public class FunctionUtil {
 	}
 
 	static
-	public Apply encodeRegExFunction(String module, String name, List<Expression> expressions){
+	public Apply encodeRegExFunction(String module, String name, List<Expression> expressions, PMMLEncoder encoder){
 
 		if((module).equals("pcre")){
 
@@ -188,7 +189,7 @@ public class FunctionUtil {
 	}
 
 	static
-	public Apply encodeNumpyFunction(String module, String name, List<Expression> expressions){
+	public Apply encodeNumpyFunction(String module, String name, List<Expression> expressions, PMMLEncoder encoder){
 
 		// XXX
 		if((module).equals("numpy") || (module).startsWith("numpy.")){
@@ -277,7 +278,7 @@ public class FunctionUtil {
 	}
 
 	static
-	public Apply encodePandasFunction(String module, String name, List<Expression> expressions){
+	public Apply encodePandasFunction(String module, String name, List<Expression> expressions, PMMLEncoder encoder){
 
 		if((module).equals("pandas")){
 
@@ -297,7 +298,7 @@ public class FunctionUtil {
 	}
 
 	static
-	public Apply encodeScipyFunction(String module, String name, List<Expression> expressions){
+	public Apply encodeScipyFunction(String module, String name, List<Expression> expressions, PMMLEncoder encoder){
 
 		if((module).equals("scipy.special")){
 

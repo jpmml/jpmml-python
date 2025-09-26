@@ -128,6 +128,8 @@ public class AbstractTranslator implements FeatureResolver {
 	}
 
 	public Expression encodeFunction(String dottedName, List<?> arguments){
+		PMMLEncoder encoder = ensureEncoder();
+
 		String module;
 		String name;
 
@@ -149,8 +151,6 @@ public class AbstractTranslator implements FeatureResolver {
 		} // End if
 
 		if(functionDef != null){
-			PMMLEncoder encoder = ensureEncoder();
-
 			List<FunctionDef.Parameter> parameters = functionDef.getParameters();
 			if(arguments.size() != parameters.size()){
 				String nameAndSignature = parameters.stream()
@@ -244,7 +244,7 @@ public class AbstractTranslator implements FeatureResolver {
 			})
 			.collect(Collectors.toList());
 
-		return FunctionUtil.encodeFunction(module, name, expressions);
+		return FunctionUtil.encodeFunction(module, name, expressions, encoder);
 	}
 
 	protected DefineFunction createDefineFunction(String name, Type type, Expression expression){

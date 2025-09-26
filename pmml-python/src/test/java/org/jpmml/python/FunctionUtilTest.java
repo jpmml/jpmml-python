@@ -24,8 +24,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.dmg.pmml.DefineFunction;
 import org.dmg.pmml.Expression;
 import org.dmg.pmml.FieldRef;
+import org.jpmml.converter.PMMLEncoder;
 import org.jpmml.evaluator.EvaluationException;
 import org.jpmml.evaluator.FieldValue;
 import org.jpmml.evaluator.FieldValueUtil;
@@ -132,13 +134,22 @@ public class FunctionUtilTest {
 
 	static
 	private Object evaluateExpression(String module, String name, Map<String, ?> arguments){
+		PMMLEncoder encoder = new PythonEncoder(){
+		};
+
 		List<Expression> fieldRefs = (arguments.keySet()).stream()
 			.map(FieldRef::new)
 			.collect(Collectors.toList());
 
-		Expression expression = FunctionUtil.encodeFunction(module, name, fieldRefs);
+		Expression expression = FunctionUtil.encodeFunction(module, name, fieldRefs, encoder);
 
-		VirtualEvaluationContext context = new VirtualEvaluationContext();
+		VirtualEvaluationContext context = new VirtualEvaluationContext(){
+
+			@Override
+			public DefineFunction getDefineFunction(String name){
+				return encoder.getDefineFunction(name);
+			}
+		};
 		context.declareAll(arguments);
 
 		FieldValue value = org.jpmml.evaluator.ExpressionUtil.evaluate(expression, context);
