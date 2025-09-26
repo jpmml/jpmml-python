@@ -26,11 +26,15 @@ import org.dmg.pmml.Constant;
 import org.dmg.pmml.DataType;
 import org.dmg.pmml.DefineFunction;
 import org.dmg.pmml.Expression;
+import org.dmg.pmml.Field;
 import org.dmg.pmml.FieldRef;
 import org.dmg.pmml.OpType;
 import org.dmg.pmml.PMMLFunctions;
 import org.dmg.pmml.ParameterField;
 import org.jpmml.converter.ExpressionUtil;
+import org.jpmml.converter.Feature;
+import org.jpmml.converter.FeatureResolver;
+import org.jpmml.converter.ObjectFeature;
 import org.jpmml.converter.PMMLEncoder;
 
 public class FunctionUtil {
@@ -81,6 +85,8 @@ public class FunctionUtil {
 			switch(name){
 				case "float":
 					return tofloat(expressions, encoder);
+				case "int":
+					return toint(expressions, encoder);
 				case "len":
 					return encodeUnaryFunction(PMMLFunctions.STRINGLENGTH, expressions);
 				case "str":
@@ -438,6 +444,42 @@ public class FunctionUtil {
 		DefineFunction defineFunction = ensureDefineFunction("float", OpType.CONTINUOUS, DataType.DOUBLE, expressionGenerator, encoder);
 
 		return ExpressionUtil.createApply(defineFunction, getOnlyElement(expressions));
+	}
+
+	static
+	private Apply toint(List<Expression> expressions, PMMLEncoder encoder){
+		Expression expression = getOnlyElement(expressions);
+
+		// XXX
+		FeatureResolver featureResolver = new FeatureResolver(){
+
+			@Override
+			public Feature resolveFeature(String name){
+				Field<?> field = encoder.getField(name);
+
+				return new ObjectFeature(encoder, field);
+			}
+		};
+
+		DataType dataType = ExpressionUtil.getDataType(expression, featureResolver);
+		if(dataType != null){
+
+			switch(dataType){
+				case FLOAT:
+				case DOUBLE:
+					return trunc(expressions, encoder);
+				default:
+					break;
+			}
+		}
+
+		Function<ParameterField, FieldRef> expressionGenerator = (valueField) -> {
+			return new FieldRef(valueField);
+		};
+
+		DefineFunction defineFunction = ensureDefineFunction("int", OpType.CONTINUOUS, DataType.INTEGER, expressionGenerator, encoder);
+
+		return ExpressionUtil.createApply(defineFunction, expression);
 	}
 
 	static

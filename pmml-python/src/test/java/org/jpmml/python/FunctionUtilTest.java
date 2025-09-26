@@ -24,10 +24,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.dmg.pmml.DataField;
+import org.dmg.pmml.DataType;
 import org.dmg.pmml.DefineFunction;
 import org.dmg.pmml.Expression;
 import org.dmg.pmml.FieldRef;
+import org.dmg.pmml.OpType;
 import org.jpmml.converter.PMMLEncoder;
+import org.jpmml.converter.TypeUtil;
 import org.jpmml.evaluator.EvaluationException;
 import org.jpmml.evaluator.FieldValue;
 import org.jpmml.evaluator.FieldValueUtil;
@@ -45,6 +49,12 @@ public class FunctionUtilTest {
 		assertEquals(3.14d, evaluateExpression("builtins", "float", "3.14"));
 		assertEquals(0.0d, evaluateExpression("builtins", "float", false));
 		assertEquals(1.0d, evaluateExpression("builtins", "float", true));
+
+		assertEquals(-3, evaluateExpression("builtins", "int", -3.14d));
+		assertEquals(3, evaluateExpression("builtins", "int", 3.14d));
+		assertEquals(0, evaluateExpression("builtins", "int", "0"));
+		assertEquals(0, evaluateExpression("builtins", "int", false));
+		assertEquals(1, evaluateExpression("builtins", "int", true));
 
 		assertEquals("0", evaluateExpression("builtins", "str", 0));
 		assertEquals("3.14", evaluateExpression("builtins", "str", 3.14d));
@@ -148,8 +158,20 @@ public class FunctionUtilTest {
 		PMMLEncoder encoder = new PythonEncoder(){
 		};
 
-		List<Expression> fieldRefs = (arguments.keySet()).stream()
-			.map(FieldRef::new)
+		List<Expression> fieldRefs = (arguments.entrySet()).stream()
+			.map((entry) -> {
+				String key = entry.getKey();
+				Object value = entry.getValue();
+
+				DataType dataType = TypeUtil.getDataType(value);
+				OpType opType = TypeUtil.getOpType(dataType);
+
+				DataField dataField = new DataField(key, opType, dataType);
+
+				encoder.addDataField(dataField);
+
+				return new FieldRef(key);
+			})
 			.collect(Collectors.toList());
 
 		Expression expression = FunctionUtil.encodeFunction(module, name, fieldRefs, encoder);
