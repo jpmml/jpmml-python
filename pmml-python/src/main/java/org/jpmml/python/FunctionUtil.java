@@ -26,15 +26,12 @@ import org.dmg.pmml.Constant;
 import org.dmg.pmml.DataType;
 import org.dmg.pmml.DefineFunction;
 import org.dmg.pmml.Expression;
-import org.dmg.pmml.Field;
 import org.dmg.pmml.FieldRef;
 import org.dmg.pmml.OpType;
 import org.dmg.pmml.PMMLFunctions;
 import org.dmg.pmml.ParameterField;
 import org.jpmml.converter.ExpressionUtil;
-import org.jpmml.converter.Feature;
 import org.jpmml.converter.FeatureResolver;
-import org.jpmml.converter.ObjectFeature;
 import org.jpmml.converter.PMMLEncoder;
 
 public class FunctionUtil {
@@ -441,18 +438,7 @@ public class FunctionUtil {
 	private Apply tobool(List<Expression> expressions, PMMLEncoder encoder){
 		Expression expression = getOnlyElement(expressions);
 
-		// XXX
-		FeatureResolver featureResolver = new FeatureResolver(){
-
-			@Override
-			public Feature resolveFeature(String name){
-				Field<?> field = encoder.getField(name);
-
-				return new ObjectFeature(encoder, field);
-			}
-		};
-
-		DataType dataType = ExpressionUtil.getDataType(expression, featureResolver);
+		DataType dataType = ExpressionUtil.getDataType(expression, (FeatureResolver)encoder);
 		if(dataType != null){
 
 			switch(dataType){
@@ -495,18 +481,7 @@ public class FunctionUtil {
 	private Apply toint(List<Expression> expressions, PMMLEncoder encoder){
 		Expression expression = getOnlyElement(expressions);
 
-		// XXX
-		FeatureResolver featureResolver = new FeatureResolver(){
-
-			@Override
-			public Feature resolveFeature(String name){
-				Field<?> field = encoder.getField(name);
-
-				return new ObjectFeature(encoder, field);
-			}
-		};
-
-		DataType dataType = ExpressionUtil.getDataType(expression, featureResolver);
+		DataType dataType = ExpressionUtil.getDataType(expression, (FeatureResolver)encoder);
 		if(dataType != null){
 
 			switch(dataType){

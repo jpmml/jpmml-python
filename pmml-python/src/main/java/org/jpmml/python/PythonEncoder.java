@@ -18,10 +18,27 @@
  */
 package org.jpmml.python;
 
+import org.dmg.pmml.Field;
+import org.jpmml.converter.Feature;
+import org.jpmml.converter.FeatureResolver;
+import org.jpmml.converter.FeatureUtil;
 import org.jpmml.converter.ModelEncoder;
 
 abstract
-public class PythonEncoder extends ModelEncoder {
+public class PythonEncoder extends ModelEncoder implements FeatureResolver {
+
+	@Override
+	public Feature resolveFeature(String name){
+		Field<?> field;
+
+		try {
+			field = getField(name);
+		} catch(IllegalArgumentException iae){
+			return null;
+		}
+
+		return FeatureUtil.createFeature(field, this);
+	}
 
 	static {
 		ClassLoader clazzLoader = PythonEncoder.class.getClassLoader();
