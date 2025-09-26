@@ -41,6 +41,11 @@ public class FunctionUtilTest {
 
 	@Test
 	public void evaluateBuiltinFunction(){
+		assertEquals(0.0d, evaluateExpression("builtins", "float", 0));
+		assertEquals(3.14d, evaluateExpression("builtins", "float", "3.14"));
+		assertEquals(0.0d, evaluateExpression("builtins", "float", false));
+		assertEquals(1.0d, evaluateExpression("builtins", "float", true));
+
 		assertEquals("0", evaluateExpression("builtins", "str", 0));
 		assertEquals("3.14", evaluateExpression("builtins", "str", 3.14d));
 	}
@@ -134,7 +139,7 @@ public class FunctionUtilTest {
 	}
 
 	static
-	private Object evaluateExpression(String module, String name, Number argument){
+	private Object evaluateExpression(String module, String name, Object argument){
 		return evaluateExpression(module, name, Collections.singletonMap("x", argument));
 	}
 

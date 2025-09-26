@@ -79,6 +79,8 @@ public class FunctionUtil {
 		if((module).equals("builtins")){
 
 			switch(name){
+				case "float":
+					return tofloat(expressions, encoder);
 				case "len":
 					return encodeUnaryFunction(PMMLFunctions.STRINGLENGTH, expressions);
 				case "str":
@@ -425,6 +427,17 @@ public class FunctionUtil {
 			updateConstant(getElement(expressions, 3, 1), reFlavour::translateReplacement)
 		)
 			.addExtensions(reFlavour.createExtension());
+	}
+
+	static
+	private Apply tofloat(List<Expression> expressions, PMMLEncoder encoder){
+		Function<ParameterField, FieldRef> expressionGenerator = (valueField) -> {
+			return new FieldRef(valueField);
+		};
+
+		DefineFunction defineFunction = ensureDefineFunction("float", OpType.CONTINUOUS, DataType.DOUBLE, expressionGenerator, encoder);
+
+		return ExpressionUtil.createApply(defineFunction, getOnlyElement(expressions));
 	}
 
 	static
