@@ -81,6 +81,8 @@ public class FunctionUtil {
 			switch(name){
 				case "len":
 					return encodeUnaryFunction(PMMLFunctions.STRINGLENGTH, expressions);
+				case "str":
+					return tostr(expressions, encoder);
 				default:
 					break;
 			}
@@ -426,6 +428,17 @@ public class FunctionUtil {
 	}
 
 	static
+	private Apply tostr(List<Expression> expressions, PMMLEncoder encoder){
+		Function<ParameterField, FieldRef> expressionGenerator = (valueField) -> {
+			return new FieldRef(valueField);
+		};
+
+		DefineFunction defineFunction = ensureDefineFunction("str", OpType.CATEGORICAL, DataType.STRING, expressionGenerator, encoder);
+
+		return ExpressionUtil.createApply(defineFunction, getOnlyElement(expressions));
+	}
+
+	static
 	private Apply trunc(List<Expression> expressions, PMMLEncoder encoder){
 		Function<Expression, Apply> applyGenerator = (expression) -> {
 			return ExpressionUtil.createApply(PMMLFunctions.IF, ExpressionUtil.createApply(PMMLFunctions.LESSTHAN, expression, ExpressionUtil.createConstant(0)),
@@ -454,19 +467,31 @@ public class FunctionUtil {
 			return applyGenerator.apply(fieldRef);
 		}
 
+		Function<ParameterField, Expression> applySupplier = (valueField) -> {
+			return applyGenerator.apply(new FieldRef(valueField));
+		};
+
+		DefineFunction defineFunction = ensureDefineFunction(name, opType, dataType, applySupplier, encoder);
+
+		return ExpressionUtil.createApply(defineFunction, expression);
+	}
+
+	static
+	private DefineFunction ensureDefineFunction(String name, OpType opType, DataType dataType, Function<ParameterField, ? extends Expression> expressionGenerator, PMMLEncoder encoder){
 		DefineFunction defineFunction = encoder.getDefineFunction(name);
+
 		if(defineFunction == null){
 			ParameterField valueField = new ParameterField("x");
 
-			Apply apply = applyGenerator.apply(new FieldRef(valueField));
+			Expression expression = expressionGenerator.apply(valueField);
 
-			defineFunction = new DefineFunction(name, opType, dataType, null, apply)
+			defineFunction = new DefineFunction(name, opType, dataType, null, expression)
 				.addParameterFields(valueField);
 
 			encoder.addDefineFunction(defineFunction);
 		}
 
-		return ExpressionUtil.createApply(defineFunction, expression);
+		return defineFunction;
 	}
 
 	static

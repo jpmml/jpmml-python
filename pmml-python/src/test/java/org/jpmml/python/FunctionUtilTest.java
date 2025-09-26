@@ -40,6 +40,12 @@ import static org.junit.jupiter.api.Assertions.fail;
 public class FunctionUtilTest {
 
 	@Test
+	public void evaluateBuiltinFunction(){
+		assertEquals("0", evaluateExpression("builtins", "str", 0));
+		assertEquals("3.14", evaluateExpression("builtins", "str", 3.14d));
+	}
+
+	@Test
 	public void evaluateMathFunction(){
 		assertEquals(-2, evaluateExpression("math", "trunc", -2.75d));
 		assertEquals(2, evaluateExpression("math", "trunc", 2.75d));
