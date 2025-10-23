@@ -90,6 +90,10 @@ public class FunctionUtil {
 					return toint(expressions, encoder);
 				case "len":
 					return encodeUnaryFunction(PMMLFunctions.STRINGLENGTH, expressions);
+				case "max":
+					return encodeAggregateFunction(PMMLFunctions.MAX, expressions);
+				case "min":
+					return encodeAggregateFunction(PMMLFunctions.MIN, expressions);
 				case "str":
 					return tostr(expressions, encoder);
 				default:
@@ -339,6 +343,19 @@ public class FunctionUtil {
 	static
 	public Apply encodeBinaryFunction(String function, List<Expression> expressions){
 		return ExpressionUtil.createApply(function, getElement(expressions, 2, 0), getElement(expressions, 2, 1));
+	}
+
+	static
+	public Apply encodeAggregateFunction(String function, List<Expression> expressions){
+		Apply apply = ExpressionUtil.createApply(function);
+
+		if(expressions.size() < 2){
+			throw new IllegalArgumentException();
+		}
+
+		(apply.getExpressions()).addAll(expressions);
+
+		return apply;
 	}
 
 	static

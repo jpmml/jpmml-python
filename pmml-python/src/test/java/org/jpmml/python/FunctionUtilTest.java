@@ -65,6 +65,14 @@ public class FunctionUtilTest {
 		assertEquals(false, evaluateExpression("builtins", "bool", ""));
 		assertEquals(true, evaluateExpression("builtins", "bool", "False"));
 		assertEquals(true, evaluateExpression("builtins", "bool", "True"));
+
+		Map<String, Object> arguments = new LinkedHashMap<>();
+		arguments.put("x1", 1);
+		arguments.put("x2", 7);
+		arguments.put("x3", 13);
+
+		assertEquals(13, evaluateExpression("builtins", "max", arguments));
+		assertEquals(1, evaluateExpression("builtins", "min", arguments));
 	}
 
 	@Test
