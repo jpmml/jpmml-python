@@ -80,6 +80,8 @@ public class FunctionUtil {
 		if((module).equals("builtins")){
 
 			switch(name){
+				case "abs":
+					return encodeUnaryFunction(PMMLFunctions.ABS, expressions);
 				case "bool":
 					return tobool(expressions, encoder);
 				case "float":
