@@ -46,7 +46,7 @@ public class PythonFormatterUtil {
 			return formatString((String)value);
 		}
 
-		throw new IllegalArgumentException();
+		throw new IllegalArgumentException("Expected Java primitive wrapper class, got " + ClassDictUtil.formatClass(value));
 	}
 
 	static

@@ -82,7 +82,7 @@ public class DType extends CythonObject implements TypeInfo {
 			return formatDescr(definition, values);
 		}
 
-		throw new IllegalArgumentException();
+		throw new IllegalArgumentException(String.valueOf(valueKeys));
 	}
 
 	public boolean hasValues(){

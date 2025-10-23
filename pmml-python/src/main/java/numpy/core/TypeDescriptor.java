@@ -70,7 +70,7 @@ public class TypeDescriptor {
 		} else
 
 		{
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException(String.valueOf(descr));
 		}
 	}
 
@@ -401,7 +401,7 @@ public class TypeDescriptor {
 		} else
 
 		{
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException(String.valueOf(units));
 		}
 	}
 
