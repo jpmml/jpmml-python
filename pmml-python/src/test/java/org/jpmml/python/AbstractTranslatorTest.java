@@ -18,8 +18,6 @@
  */
 package org.jpmml.python;
 
-import java.util.Map;
-
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -31,9 +29,13 @@ public class AbstractTranslatorTest {
 		AbstractTranslator abstractTranslator = new AbstractTranslator(){
 		};
 
-		Map<String, String> imports = abstractTranslator.getModuleImports();
-		imports.put("np", "numpy");
-		imports.put("pd", "pandas");
+		assertEquals("np.name", abstractTranslator.canonicalizeDottedName("np.name"));
+		assertEquals("np.ext.name", abstractTranslator.canonicalizeDottedName("np.ext.name"));
+
+		assertEquals("pd.name", abstractTranslator.canonicalizeDottedName("pd.name"));
+		assertEquals("pd.ext.name", abstractTranslator.canonicalizeDottedName("pd.ext.name"));
+
+		abstractTranslator.registerModuleAliases();
 
 		assertEquals("name", abstractTranslator.canonicalizeDottedName("name"));
 

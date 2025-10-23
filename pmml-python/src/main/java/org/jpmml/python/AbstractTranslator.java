@@ -66,6 +66,13 @@ public class AbstractTranslator implements FeatureResolver {
 		return scope.resolveFeature(name);
 	}
 
+	public void registerModuleAliases(){
+		Map<String, String> imports = getModuleImports();
+
+		imports.put("np", "numpy");
+		imports.put("pd", "pandas");
+	}
+
 	public PMMLEncoder ensureEncoder(){
 		Scope scope = ensureScope();
 
