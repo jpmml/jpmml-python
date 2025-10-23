@@ -78,6 +78,11 @@ public class Series extends PythonObject implements HasArray {
 	}
 
 	public String getName(){
+
+		if(hasattr("_name")){
+			return getString("_name");
+		}
+
 		return getOptionalString("name");
 	}
 
