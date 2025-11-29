@@ -63,7 +63,7 @@ public class Type extends PythonObject implements TypeInfo {
 			case "numpy.uint64":
 				return DataType.INTEGER;
 			default:
-				throw new TranslationException("Python data type \'" + className + "\' is not supported");
+				throw new TranslationException("Python data type \'" + className + "\' is not defined or not supported");
 		}
 	}
 

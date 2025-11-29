@@ -71,7 +71,7 @@ public class FunctionUtil {
 			return encodeScipyFunction(module, name, expressions, encoder);
 		}
 
-		throw new TranslationException("Function \'" + formatFunction(module, name) + "\' is not supported");
+		throw new TranslationException("Function \'" + formatFunction(module, name) + "\' is not defined or not supported");
 	}
 
 	static
@@ -101,7 +101,7 @@ public class FunctionUtil {
 			}
 		}
 
-		throw new TranslationException("Function \'" + formatFunction(module, name) + "\' is not supported");
+		throw new TranslationException("Function \'" + formatFunction(module, name) + "\' is not defined or not supported");
 	}
 
 	static
@@ -165,7 +165,7 @@ public class FunctionUtil {
 			}
 		}
 
-		throw new TranslationException("Function \'" + formatFunction(module, name) +"\' is not supported");
+		throw new TranslationException("Function \'" + formatFunction(module, name) +"\' is not defined or not supported");
 	}
 
 	static
@@ -205,7 +205,7 @@ public class FunctionUtil {
 			}
 		}
 
-		throw new TranslationException("Function \'" + formatFunction(module, name) +"\' is not supported");
+		throw new TranslationException("Function \'" + formatFunction(module, name) +"\' is not defined or not supported");
 	}
 
 	static
@@ -294,7 +294,7 @@ public class FunctionUtil {
 			}
 		}
 
-		throw new TranslationException("Function \'" + formatFunction(module, name) + "\' is not supported");
+		throw new TranslationException("Function \'" + formatFunction(module, name) + "\' is not defined or not supported");
 	}
 
 	static
@@ -314,7 +314,7 @@ public class FunctionUtil {
 			}
 		}
 
-		throw new TranslationException("Function \'" + formatFunction(module, name) + "\' is not supported");
+		throw new TranslationException("Function \'" + formatFunction(module, name) + "\' is not defined or not supported");
 	}
 
 	static
@@ -332,7 +332,7 @@ public class FunctionUtil {
 			}
 		}
 
-		throw new TranslationException("Function \'" + formatFunction(module, name) + "\' is not supported");
+		throw new TranslationException("Function \'" + formatFunction(module, name) + "\' is not defined or not supported");
 	}
 
 	static

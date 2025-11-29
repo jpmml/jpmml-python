@@ -75,7 +75,7 @@ public class ExpressionTranslator extends AbstractTranslator {
 		try {
 			defineFunction = translateDefInternal();
 		} catch(ParseException pe){
-			throw new TranslationException("Python function definition \'" + toSingleLine(string) + "\' is either invalid or not supported", pe);
+			throw new TranslationException("Python function definition \'" + toSingleLine(string) + "\' is invalid or not supported", pe);
 		}
 
 		return defineFunction;
@@ -93,7 +93,7 @@ public class ExpressionTranslator extends AbstractTranslator {
 		try {
 			statement = translateStatementInternal();
 		} catch(ParseException pe){
-			throw new TranslationException("Python statement \'" + toSingleLine(string) + "\' is either invalid or not supported", pe);
+			throw new TranslationException("Python statement \'" + toSingleLine(string) + "\' is invalid or not supported", pe);
 		}
 
 		if(compact){
@@ -115,7 +115,7 @@ public class ExpressionTranslator extends AbstractTranslator {
 		try {
 			expression = translateExpressionInternal();
 		} catch(ParseException pe){
-			throw new TranslationException("Python expression \'" + toSingleLine(string) + "\' is either invalid or not supported", pe);
+			throw new TranslationException("Python expression \'" + toSingleLine(string) + "\' is invalid or not supported", pe);
 		}
 
 		if(compact){
@@ -159,7 +159,7 @@ public class ExpressionTranslator extends AbstractTranslator {
 				break;
 		}
 
-		throw new TranslationException("Constant \'" + dottedName + "\' is not supported");
+		throw new TranslationException("Constant \'" + dottedName + "\' is not defined or not supported");
 	}
 
 	private String getIndent() throws ParseException {
@@ -300,7 +300,7 @@ public class ExpressionTranslator extends AbstractTranslator {
 			}
 		}
 
-		throw new TranslationException("Function \'" + name + "\' is not supported");
+		throw new TranslationException("Function \'" + name + "\' is not defined or not supported");
 	}
 
 	static
