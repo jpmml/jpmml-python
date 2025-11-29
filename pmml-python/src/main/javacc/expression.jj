@@ -300,7 +300,7 @@ public class ExpressionTranslator extends AbstractTranslator {
 			}
 		}
 
-		throw new TranslationException("Function \'" + name + "\' is not defined or not supported");
+		throw new MethodResolutionException("str" + "." + name);
 	}
 
 	static
