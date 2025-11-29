@@ -159,7 +159,7 @@ public class ExpressionTranslator extends AbstractTranslator {
 				break;
 		}
 
-		throw new TranslationException("Constant \'" + dottedName + "\' is not defined or not supported");
+		throw new ConstantResolutionException(dottedName);
 	}
 
 	private String getIndent() throws ParseException {
