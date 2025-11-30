@@ -47,27 +47,27 @@ public class FunctionUtil {
 	static
 	public Apply encodeFunction(String module, String name, List<Expression> expressions, PMMLEncoder encoder){
 
-		if(("builtins").equals(module)){
+		if(checkModulePrefix(module, "builtins")){
 			return encodeBuiltinFunction(module, name, expressions, encoder);
 		} else
 
-		if(("math").equals(module)){
+		if(checkModulePrefix(module, "math")){
 			return encodeMathFunction(module, name, expressions, encoder);
 		} else
 
-		if(("pcre").equals(module) || ("pcre2").equals(module) || ("re").equals(module)){
+		if(checkModulePrefix(module, "pcre") || checkModulePrefix(module, "pcre2") || checkModulePrefix(module, "re")){
 			return encodeRegExFunction(module, name, expressions, encoder);
 		} else
 
-		if(("numpy").equals(module)){
+		if(checkModulePrefix(module, "numpy")){
 			return encodeNumpyFunction(module, name, expressions, encoder);
 		} else
 
-		if(("pandas").equals(module)){
+		if(checkModulePrefix(module, "pandas")){
 			return encodePandasFunction(module, name, expressions, encoder);
 		} else
 
-		if(("scipy.special").equals(module)){
+		if(checkModulePrefix(module, "scipy")){
 			return encodeScipyFunction(module, name, expressions, encoder);
 		}
 
@@ -211,7 +211,8 @@ public class FunctionUtil {
 	static
 	public Apply encodeNumpyFunction(String module, String name, List<Expression> expressions, PMMLEncoder encoder){
 
-		if(("numpy").equals(module)){
+		// Use fuzzy matching
+		if(checkModulePrefix(module, "numpy")){
 
 			switch(name){
 				case "absolute":
@@ -599,6 +600,11 @@ public class FunctionUtil {
 		}
 
 		return expression;
+	}
+
+	static
+	private boolean checkModulePrefix(String module, String prefix){
+		return (prefix).equals(module) || (module != null && module.startsWith(prefix + "."));
 	}
 
 	static
