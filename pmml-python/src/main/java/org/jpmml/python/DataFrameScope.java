@@ -66,7 +66,7 @@ public class DataFrameScope extends Scope {
 			return feature;
 		}
 
-		throw new TranslationException("Name \'" + name + "\' is not defined");
+		throw new NameResolutionException(name);
 	}
 
 	@Override
@@ -123,7 +123,7 @@ public class DataFrameScope extends Scope {
 		String variableName = getVariableName();
 
 		if(!(variableName).equals(name)){
-			throw new TranslationException("Name \'" + name + "\' is not defined");
+			throw new NameResolutionException(name);
 		}
 	}
 

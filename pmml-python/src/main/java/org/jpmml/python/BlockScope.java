@@ -49,7 +49,7 @@ public class BlockScope extends Scope {
 			return feature;
 		}
 
-		throw new TranslationException("Name \'" + name + "\' is not defined");
+		throw new NameResolutionException(name);
 	}
 
 	@Override
