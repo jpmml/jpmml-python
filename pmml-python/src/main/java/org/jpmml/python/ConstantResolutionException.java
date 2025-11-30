@@ -18,7 +18,7 @@
  */
 package org.jpmml.python;
 
-public class ConstantResolutionException extends TranslationException {
+public class ConstantResolutionException extends ResolutionException {
 
 	public ConstantResolutionException(String dottedName){
 		super(formatMessage(dottedName));

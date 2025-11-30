@@ -71,7 +71,7 @@ public class FunctionUtil {
 			return encodeScipyFunction(module, name, expressions, encoder);
 		}
 
-		throw new FunctionResolutionException(formatFunction(module, name));
+		throw new FunctionResolutionException(module, name);
 	}
 
 	static
@@ -101,7 +101,7 @@ public class FunctionUtil {
 			}
 		}
 
-		throw new FunctionResolutionException(formatFunction(module, name));
+		throw new FunctionResolutionException(module, name);
 	}
 
 	static
@@ -165,7 +165,7 @@ public class FunctionUtil {
 			}
 		}
 
-		throw new FunctionResolutionException(formatFunction(module, name));
+		throw new FunctionResolutionException(module, name);
 	}
 
 	static
@@ -205,7 +205,7 @@ public class FunctionUtil {
 			}
 		}
 
-		throw new FunctionResolutionException(formatFunction(module, name));
+		throw new FunctionResolutionException(module, name);
 	}
 
 	static
@@ -294,7 +294,7 @@ public class FunctionUtil {
 			}
 		}
 
-		throw new FunctionResolutionException(formatFunction(module, name));
+		throw new FunctionResolutionException(module, name);
 	}
 
 	static
@@ -314,7 +314,7 @@ public class FunctionUtil {
 			}
 		}
 
-		throw new FunctionResolutionException(formatFunction(module, name));
+		throw new FunctionResolutionException(module, name);
 	}
 
 	static
@@ -332,7 +332,7 @@ public class FunctionUtil {
 			}
 		}
 
-		throw new FunctionResolutionException(formatFunction(module, name));
+		throw new FunctionResolutionException(module, name);
 	}
 
 	static
@@ -586,11 +586,6 @@ public class FunctionUtil {
 		}
 
 		return defineFunction;
-	}
-
-	static
-	private String formatFunction(String module, String name){
-		return module + "." + name;
 	}
 
 	static

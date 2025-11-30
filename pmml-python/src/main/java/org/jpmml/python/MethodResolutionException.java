@@ -18,7 +18,7 @@
  */
 package org.jpmml.python;
 
-public class MethodResolutionException extends TranslationException {
+public class MethodResolutionException extends ResolutionException {
 
 	public MethodResolutionException(String dottedName){
 		super(formatMessage(dottedName));

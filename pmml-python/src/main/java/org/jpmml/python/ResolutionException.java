@@ -18,18 +18,9 @@
  */
 package org.jpmml.python;
 
-public class FunctionResolutionException extends ResolutionException {
+public class ResolutionException extends PythonException {
 
-	public FunctionResolutionException(String module, String name){
-		super(formatMessage(module + "." + name));
-	}
-
-	public FunctionResolutionException(String dottedName){
-		super(formatMessage(dottedName));
-	}
-
-	static
-	private String formatMessage(String dottedName){
-		return "Function \'" + dottedName + "\' is not defined or not supported";
+	public ResolutionException(String message){
+		super(message);
 	}
 }

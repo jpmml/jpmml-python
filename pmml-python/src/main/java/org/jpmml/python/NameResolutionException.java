@@ -18,7 +18,7 @@
  */
 package org.jpmml.python;
 
-public class NameResolutionException extends TranslationException {
+public class NameResolutionException extends ResolutionException {
 
 	public NameResolutionException(String name){
 		super(formatMessage(name));
