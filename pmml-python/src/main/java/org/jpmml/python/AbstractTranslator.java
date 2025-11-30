@@ -110,7 +110,7 @@ public class AbstractTranslator implements FeatureResolver {
 
 			functionDef = functionDefParser.parseFunctionDef(string);
 		} catch(Exception e){
-			throw new TranslationException("Python function definition \'" + toSingleLine(string) + "\' is invalid or not supported", e);
+			throw new FunctionDefTranslationException(string, e);
 		}
 
 		functionDefs.put(functionDef.getName(), functionDef);
