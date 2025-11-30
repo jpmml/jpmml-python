@@ -56,14 +56,14 @@ public class BlockScope extends Scope {
 	public Feature getFeature(String name, int columnIndex){
 		getFeature(name);
 
-		throw new TranslationException("Name \'" + name + "\' is not subscriptable");
+		throw new OperationException("Name \'" + name + "\' is not subscriptable");
 	}
 
 	@Override
 	public Feature getFeature(String name, String columnName){
 		getFeature(name);
 
-		throw new TranslationException("Name \'" + name + "\' is not subscriptable");
+		throw new OperationException("Name \'" + name + "\' is not subscriptable");
 	}
 
 	@Override

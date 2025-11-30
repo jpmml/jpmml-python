@@ -190,7 +190,7 @@ public class ExpressionTranslator extends AbstractTranslator {
 		PMMLEncoder encoder = ensureEncoder();
 
 		if(this.variableMap.containsKey(name)){
-			throw new TranslationException("Python variable \'" + name + "\' re-assigned in function body");
+			throw new OperationException("Python variable \'" + name + "\' re-assigned in function body");
 		}
 
 		DerivedField derivedField = ensureDerivedField(name, type, expression);
@@ -436,7 +436,7 @@ public class ExpressionTranslator extends AbstractTranslator {
 		int size = statements.size();
 
 		if(size == 0){
-			throw new TranslationException("Block does not contain any PMML-compatible statements");
+			throw new OperationException("Block does not contain any PMML-compatible statements");
 		} else
 
 		if(size == 1){
@@ -444,7 +444,7 @@ public class ExpressionTranslator extends AbstractTranslator {
 		} else
 
 		{
-			throw new TranslationException("Block contains more than one PMML-compatible statements");
+			throw new OperationException("Block contains more than one PMML-compatible statements");
 		}
 	}
 

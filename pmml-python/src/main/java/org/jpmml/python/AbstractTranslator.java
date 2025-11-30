@@ -164,7 +164,7 @@ public class AbstractTranslator implements FeatureResolver {
 					.map(FunctionDef.Parameter::getName)
 					.collect(Collectors.joining(", ", name + "(", ")"));
 
-				throw new TranslationException("Function \'" + nameAndSignature + "\' expects " + parameters.size() + " argument(s), got " + arguments.size() + " argument(s)");
+				throw new OperationException("Function \'" + nameAndSignature + "\' expects " + parameters.size() + " argument(s), got " + arguments.size() + " argument(s)");
 			}
 
 			List<Feature> features = arguments.stream()

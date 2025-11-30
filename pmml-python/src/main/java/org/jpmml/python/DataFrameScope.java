@@ -57,7 +57,7 @@ public class DataFrameScope extends Scope {
 		String variableName = getVariableName();
 
 		if((variableName).equals(name)){
-			throw new TranslationException("Name \'" + variableName + "\' refers to a row vector. Use an array indexing expression " + variableName + "[<column index>] or " + variableName + "[<column name>] to refer to a specific row vector element");
+			throw new OperationException("Name \'" + variableName + "\' refers to a row vector. Use an array indexing expression " + variableName + "[<column index>] or " + variableName + "[<column name>] to refer to a specific row vector element");
 		}
 
 		Feature feature = resolveFeature(name);
@@ -81,7 +81,7 @@ public class DataFrameScope extends Scope {
 				return columns.get(columnIndex);
 			}
 
-			throw new TranslationException("Column index " + columnIndex + " not in range " + Arrays.asList(0, columns.size()));
+			throw new OperationException("Column index " + columnIndex + " not in range " + Arrays.asList(0, columns.size()));
 		} else
 
 		{
@@ -89,7 +89,7 @@ public class DataFrameScope extends Scope {
 				return columns.get(columns.size() - (-columnIndex));
 			}
 
-			throw new TranslationException("Column index " + columnIndex + " not in range " + Arrays.asList(-columns.size(), -1));
+			throw new OperationException("Column index " + columnIndex + " not in range " + Arrays.asList(-columns.size(), -1));
 		}
 	}
 
@@ -104,7 +104,7 @@ public class DataFrameScope extends Scope {
 			return feature;
 		}
 
-		throw new TranslationException("Column name \'" + columnName + "\' is not in " + FeatureUtil.formatNames(columns, '\''));
+		throw new OperationException("Column name \'" + columnName + "\' is not in " + FeatureUtil.formatNames(columns, '\''));
 	}
 
 	@Override

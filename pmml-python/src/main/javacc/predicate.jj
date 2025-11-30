@@ -182,7 +182,7 @@ public class PredicateTranslator extends AbstractTranslator {
 			return fieldRef.requireField();
 		} // End if
 
-		throw new TranslationException("The left-hand side of the predicate (" + object + ") is not a feature reference");
+		throw new OperationException("The left-hand side of the predicate (" + object + ") is not a feature reference");
 	}
 
 	static
@@ -204,7 +204,7 @@ public class PredicateTranslator extends AbstractTranslator {
 			return (String)object;
 		}
 
-		throw new TranslationException("The right-hand side of the predicate (" + object + ") is not a value");
+		throw new OperationException("The right-hand side of the predicate (" + object + ") is not a value");
 	}
 
 	static
@@ -245,7 +245,7 @@ public class PredicateTranslator extends AbstractTranslator {
 			return True.INSTANCE;
 		} // End if
 
-		throw new TranslationException("The expression (" + object + ") is not a predicate");
+		throw new OperationException("The expression (" + object + ") is not a predicate");
 	}
 
 	static
@@ -257,7 +257,7 @@ public class PredicateTranslator extends AbstractTranslator {
 			return feature;
 		}
 
-		throw new TranslationException("The function argument (" + object + ") is not a feature reference");
+		throw new OperationException("The function argument (" + object + ") is not a feature reference");
 	}
 
 	static
