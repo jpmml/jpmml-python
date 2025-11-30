@@ -115,7 +115,7 @@ public class ExpressionTranslator extends AbstractTranslator {
 		try {
 			expression = translateExpressionInternal();
 		} catch(Exception e){
-			throw new TranslationException("Python expression \'" + toSingleLine(string) + "\' is invalid or not supported", e);
+			throw new ExpressionTranslationException(string, e);
 		}
 
 		if(compact){
