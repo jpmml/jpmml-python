@@ -93,7 +93,7 @@ public class ExpressionTranslator extends AbstractTranslator {
 		try {
 			statement = translateStatementInternal();
 		} catch(Exception e){
-			throw new TranslationException("Python statement \'" + toSingleLine(string) + "\' is invalid or not supported", e);
+			throw new StatementTranslationException(string, e);
 		}
 
 		if(compact){
