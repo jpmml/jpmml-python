@@ -38,10 +38,11 @@ import org.jpmml.converter.PMMLEncoder;
 import org.jpmml.model.ReflectionUtil;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 public class PredicateTranslatorTest extends TranslatorTest {
 
@@ -79,16 +80,12 @@ public class PredicateTranslatorTest extends TranslatorTest {
 	}
 
 	@Test
-	public void translateComparisonPredicate(){
+	public void translateDoubleComparisonPredicate(){
 		PredicateTranslator predicateTranslator = new PredicateTranslator(new DataFrameScope(doubleFeatures));
 
-		try {
-			translatePredicate(predicateTranslator, "X['a'] > X['b']");
+		PredicateTranslationException exception = assertThrows(PredicateTranslationException.class, () -> translatePredicate(predicateTranslator, "X['a'] > X['b']"));
 
-			fail();
-		} catch(TranslationException te){
-			// Ignored
-		}
+		assertInstanceOf(OperationException.class, exception.getCause());
 
 		Predicate expected = new SimplePredicate("a", SimplePredicate.Operator.GREATER_THAN, 0d);
 
@@ -109,10 +106,13 @@ public class PredicateTranslatorTest extends TranslatorTest {
 		expected = createSimpleSetPredicate("a", SimpleSetPredicate.BooleanOperator.IS_NOT_IN, Array.Type.REAL, Arrays.asList(-1.5d, -1d, -0.5d, 0d));
 
 		checkPredicate(expected, translatePredicate(predicateTranslator, "X['a'] not in [-1.5, -1.0, -0.5, 0.0]"));
+	}
 
-		predicateTranslator = new PredicateTranslator(new DataFrameScope(stringFeatures));
+	@Test
+	public void translateStringComparisonPredicates(){
+		PredicateTranslator predicateTranslator = new PredicateTranslator(new DataFrameScope(stringFeatures));
 
-		expected = new SimplePredicate("a", SimplePredicate.Operator.EQUAL, "one");
+		Predicate expected = new SimplePredicate("a", SimplePredicate.Operator.EQUAL, "one");
 
 		checkPredicate(expected, translatePredicate(predicateTranslator, "X[0] == \"one\""));
 

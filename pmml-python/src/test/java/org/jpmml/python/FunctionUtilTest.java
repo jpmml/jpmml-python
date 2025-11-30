@@ -39,7 +39,7 @@ import org.jpmml.evaluator.VirtualEvaluationContext;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class FunctionUtilTest {
 
@@ -133,13 +133,7 @@ public class FunctionUtilTest {
 		assertEquals(0.5d, (Double)evaluateExpression("scipy.special", "expit", 0d), 1e-8);
 		assertEquals(0.81757448d, (Double)evaluateExpression("scipy.special", "expit", 1.5d), 1e-8);
 
-		try {
-			evaluateExpression("scipy.special", "logit", -2d);
-
-			fail();
-		} catch(EvaluationException ee){
-			// Ignored
-		}
+		assertThrows(EvaluationException.class, () -> evaluateExpression("scipy.special", "logit", -2d));
 
 		assertEquals(Double.NEGATIVE_INFINITY, evaluateExpression("scipy.special", "logit", 0d));
 		assertEquals(-1.5d, (Double)evaluateExpression("scipy.special", "logit", 0.18242552d), 3e-8);
@@ -147,13 +141,7 @@ public class FunctionUtilTest {
 		assertEquals(1.5d, (Double)evaluateExpression("scipy.special", "logit", 0.81757448d), 3e-8);
 		assertEquals(Double.POSITIVE_INFINITY, evaluateExpression("scipy.special", "logit", 1d));
 
-		try {
-			evaluateExpression("scipy.special", "logit", 2d);
-
-			fail();
-		} catch(EvaluationException ee){
-			// Ignored
-		}
+		assertThrows(EvaluationException.class, () -> evaluateExpression("scipy.special", "logit", 2d));
 	}
 
 	static

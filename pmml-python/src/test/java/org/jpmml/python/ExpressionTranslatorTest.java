@@ -46,8 +46,9 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 public class ExpressionTranslatorTest extends TranslatorTest {
 
@@ -699,13 +700,9 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 		ExpressionTranslator expressionTranslator = new ExpressionTranslator(new DataFrameScope(features));
 
-		try {
-			translateExpression(expressionTranslator, "X[[0]]");
+		ExpressionTranslationException exception = assertThrows(ExpressionTranslationException.class, () -> translateExpression(expressionTranslator, "X[[0]]"));
 
-			fail();
-		} catch(TranslationException te){
-			// Ignored
-		}
+		assertInstanceOf(OperationException.class, exception.getCause());
 
 		for(int i = 0; i < features.size(); i++){
 			Feature feature = features.get(i);
@@ -718,13 +715,9 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 			checkExpression(fieldRef, translateExpression(expressionTranslator, "X[:, [" + "+" + i + "]]"));
 		}
 
-		try {
-			translateExpression(expressionTranslator, "X[" + features.size() + "]");
+		exception = assertThrows(ExpressionTranslationException.class, () -> translateExpression(expressionTranslator, "X[" + features.size() + "]"));
 
-			fail();
-		} catch(TranslationException te){
-			// Ignored
-		}
+		assertInstanceOf(OperationException.class, exception.getCause());
 
 		for(int i = 1; i <= features.size(); i++){
 			Feature feature = features.get(features.size() - i);
@@ -737,13 +730,9 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 			checkExpression(fieldRef, translateExpression(expressionTranslator, "X[:, [" + "-" + i + "]]"));
 		}
 
-		try {
-			translateExpression(expressionTranslator, "X[" + "-" + (features.size() + 1) + "]");
+		exception = assertThrows(ExpressionTranslationException.class, () -> translateExpression(expressionTranslator, "X[" + "-" + (features.size() + 1) + "]"));
 
-			fail();
-		} catch(TranslationException te){
-			// Ignored
-		}
+		assertInstanceOf(OperationException.class, exception.getCause());
 	}
 
 	@Test
