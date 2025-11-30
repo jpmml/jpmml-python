@@ -20,8 +20,8 @@ package builtins;
 
 import org.dmg.pmml.DataType;
 import org.jpmml.python.PythonObject;
-import org.jpmml.python.TranslationException;
 import org.jpmml.python.TypeInfo;
+import org.jpmml.python.TypeResolutionException;
 
 public class Type extends PythonObject implements TypeInfo {
 
@@ -63,7 +63,7 @@ public class Type extends PythonObject implements TypeInfo {
 			case "numpy.uint64":
 				return DataType.INTEGER;
 			default:
-				throw new TranslationException("Python data type \'" + className + "\' is not defined or not supported");
+				throw new TypeResolutionException(className);
 		}
 	}
 

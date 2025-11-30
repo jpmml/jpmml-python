@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Villu Ruusmann
+ * Copyright (c) 2025 Villu Ruusmann
  *
  * This file is part of JPMML-Python
  *
@@ -18,23 +18,14 @@
  */
 package org.jpmml.python;
 
-import org.dmg.pmml.DataType;
+public class TypeResolutionException extends TranslationException {
 
-public class PythonTypeUtil {
-
-	private PythonTypeUtil(){
+	public TypeResolutionException(String dottedName){
+		super(formatMessage(dottedName));
 	}
 
 	static
-	public DataType parseDataType(String dtype){
-
-		switch(dtype){
-			case "datetime64[D]":
-				return DataType.DATE;
-			case "datetime64[s]":
-				return DataType.DATE_TIME;
-			default:
-				throw new TypeResolutionException(dtype);
-		}
+	private String formatMessage(String dottedName){
+		return "Type \'" + dottedName + "\' is not defined or not supported";
 	}
 }
