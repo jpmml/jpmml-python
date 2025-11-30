@@ -78,8 +78,8 @@ public class PredicateTranslator extends AbstractTranslator {
 
 		try {
 			predicate = translatePredicateInternal();
-		} catch(ParseException pe){
-			throw new TranslationException("Python predicate \'" + string + "\' is invalid or not supported", pe);
+		} catch(Exception e){
+			throw new TranslationException("Python predicate \'" + string + "\' is invalid or not supported", e);
 		}
 
 		return predicate;

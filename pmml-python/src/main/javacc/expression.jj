@@ -74,8 +74,8 @@ public class ExpressionTranslator extends AbstractTranslator {
 
 		try {
 			defineFunction = translateDefInternal();
-		} catch(ParseException pe){
-			throw new TranslationException("Python function definition \'" + toSingleLine(string) + "\' is invalid or not supported", pe);
+		} catch(Exception e){
+			throw new TranslationException("Python function definition \'" + toSingleLine(string) + "\' is invalid or not supported", e);
 		}
 
 		return defineFunction;
@@ -92,8 +92,8 @@ public class ExpressionTranslator extends AbstractTranslator {
 
 		try {
 			statement = translateStatementInternal();
-		} catch(ParseException pe){
-			throw new TranslationException("Python statement \'" + toSingleLine(string) + "\' is invalid or not supported", pe);
+		} catch(Exception e){
+			throw new TranslationException("Python statement \'" + toSingleLine(string) + "\' is invalid or not supported", e);
 		}
 
 		if(compact){
@@ -114,8 +114,8 @@ public class ExpressionTranslator extends AbstractTranslator {
 
 		try {
 			expression = translateExpressionInternal();
-		} catch(ParseException pe){
-			throw new TranslationException("Python expression \'" + toSingleLine(string) + "\' is invalid or not supported", pe);
+		} catch(Exception e){
+			throw new TranslationException("Python expression \'" + toSingleLine(string) + "\' is invalid or not supported", e);
 		}
 
 		if(compact){
