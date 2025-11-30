@@ -47,27 +47,27 @@ public class FunctionUtil {
 	static
 	public Apply encodeFunction(String module, String name, List<Expression> expressions, PMMLEncoder encoder){
 
-		if((module).equals("builtins")){
+		if(("builtins").equals(module)){
 			return encodeBuiltinFunction(module, name, expressions, encoder);
 		} else
 
-		if((module).equals("math")){
+		if(("math").equals(module)){
 			return encodeMathFunction(module, name, expressions, encoder);
 		} else
 
-		if((module).equals("pcre") || (module).equals("pcre2") || (module).equals("re")){
+		if(("pcre").equals(module) || ("pcre2").equals(module) || ("re").equals(module)){
 			return encodeRegExFunction(module, name, expressions, encoder);
 		} else
 
-		if((module).equals("numpy") || (module).startsWith("numpy.")){
+		if(("numpy").equals(module)){
 			return encodeNumpyFunction(module, name, expressions, encoder);
 		} else
 
-		if((module).equals("pandas") || (module).startsWith("pandas.")){
+		if(("pandas").equals(module)){
 			return encodePandasFunction(module, name, expressions, encoder);
 		} else
 
-		if((module).equals("scipy") || (module).startsWith("scipy.")){
+		if(("scipy.special").equals(module)){
 			return encodeScipyFunction(module, name, expressions, encoder);
 		}
 
@@ -77,7 +77,7 @@ public class FunctionUtil {
 	static
 	public Apply encodeBuiltinFunction(String module, String name, List<Expression> expressions, PMMLEncoder encoder){
 
-		if((module).equals("builtins")){
+		if(("builtins").equals(module)){
 
 			switch(name){
 				case "abs":
@@ -107,7 +107,7 @@ public class FunctionUtil {
 	static
 	public Apply encodeMathFunction(String module, String name, List<Expression> expressions, PMMLEncoder encoder){
 
-		if((module).equals("math")){
+		if(("math").equals(module)){
 
 			switch(name){
 				case "acos":
@@ -171,7 +171,7 @@ public class FunctionUtil {
 	static
 	public Apply encodeRegExFunction(String module, String name, List<Expression> expressions, PMMLEncoder encoder){
 
-		if((module).equals("pcre")){
+		if(("pcre").equals(module)){
 
 			switch(name){
 				case "search":
@@ -183,7 +183,7 @@ public class FunctionUtil {
 			}
 		} else
 
-		if((module).equals("pcre2")){
+		if(("pcre2").equals(module)){
 
 			switch(name){
 				case "substitute":
@@ -193,7 +193,7 @@ public class FunctionUtil {
 			}
 		} else
 
-		if((module).equals("re")){
+		if(("re").equals(module)){
 
 			switch(name){
 				case "search":
@@ -211,8 +211,7 @@ public class FunctionUtil {
 	static
 	public Apply encodeNumpyFunction(String module, String name, List<Expression> expressions, PMMLEncoder encoder){
 
-		// XXX
-		if((module).equals("numpy") || (module).startsWith("numpy.")){
+		if(("numpy").equals(module)){
 
 			switch(name){
 				case "absolute":
@@ -300,7 +299,7 @@ public class FunctionUtil {
 	static
 	public Apply encodePandasFunction(String module, String name, List<Expression> expressions, PMMLEncoder encoder){
 
-		if((module).equals("pandas")){
+		if(("pandas").equals(module)){
 
 			switch(name){
 				case "isna":
@@ -320,7 +319,7 @@ public class FunctionUtil {
 	static
 	public Apply encodeScipyFunction(String module, String name, List<Expression> expressions, PMMLEncoder encoder){
 
-		if((module).equals("scipy.special")){
+		if(("scipy.special").equals(module)){
 
 			switch(name){
 				case "expit":

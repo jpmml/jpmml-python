@@ -143,12 +143,12 @@ public class NDArray extends CythonObject implements HasArray, HasContent<Object
 			if((args[1] instanceof Object[] && Arrays.equals((Object[])args[1], new Object[]{0}))){
 
 				// Python 2(.7)
-				if((args[2] instanceof String) && ((String)args[2]).equals("b")){
+				if((args[2] instanceof String) && ("b").equals((String)args[2])){
 					return true;
 				} // End if
 
 				// Python 3(.4)
-				if((args[2] instanceof byte[] && Arrays.equals((byte[])args[2], new byte[]{(byte)'b'}))){
+				if((args[2] instanceof byte[] && Arrays.equals(new byte[]{(byte)'b'}, (byte[])args[2]))){
 					return true;
 				}
 			}
