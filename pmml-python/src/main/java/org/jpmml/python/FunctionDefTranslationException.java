@@ -18,6 +18,8 @@
  */
 package org.jpmml.python;
 
+import org.jpmml.converter.TranslationException;
+
 public class FunctionDefTranslationException extends TranslationException {
 
 	public FunctionDefTranslationException(String functionDef, Throwable cause){

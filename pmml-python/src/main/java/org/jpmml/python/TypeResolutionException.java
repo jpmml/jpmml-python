@@ -18,6 +18,8 @@
  */
 package org.jpmml.python;
 
+import org.jpmml.converter.ResolutionException;
+
 public class TypeResolutionException extends ResolutionException {
 
 	public TypeResolutionException(String dottedName){

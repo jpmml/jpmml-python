@@ -18,9 +18,42 @@
  */
 package org.jpmml.python;
 
-public class ResolutionException extends PythonException {
+import java.util.Objects;
 
-	public ResolutionException(String message){
-		super(message);
+import net.razorvine.pickle.objects.ClassDict;
+
+public class Attribute {
+
+	private ClassDict dict = null;
+
+	private String name = null;
+
+
+	public Attribute(ClassDict dict, String name){
+		setClassDict(dict);
+		setName(name);
+	}
+
+	public String format(){
+		ClassDict dict = getClassDict();
+		String name = getName();
+
+		return ClassDictUtil.formatMember(dict, name);
+	}
+
+	public ClassDict getClassDict(){
+		return this.dict;
+	}
+
+	private void setClassDict(ClassDict dict){
+		this.dict = Objects.requireNonNull(dict);
+	}
+
+	public String getName(){
+		return this.name;
+	}
+
+	private void setName(String name){
+		this.name = Objects.requireNonNull(name);
 	}
 }

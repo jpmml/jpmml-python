@@ -43,7 +43,9 @@ import org.jpmml.converter.Feature;
 import org.jpmml.converter.FeatureResolver;
 import org.jpmml.converter.FeatureUtil;
 import org.jpmml.converter.ObjectFeature;
+import org.jpmml.converter.OperationException;
 import org.jpmml.converter.PMMLEncoder;
+import org.jpmml.converter.ResolutionException;
 import org.jpmml.converter.TypeUtil;
 
 abstract
@@ -177,7 +179,7 @@ public class AbstractTranslator implements FeatureResolver {
 
 						try {
 							field = encoder.getField(fieldRef.requireField());
-						} catch(IllegalArgumentException iae){
+						} catch(ResolutionException re){
 							ParameterField parameterField = new ParameterField(fieldRef.requireField())
 								.setOpType(null)
 								// XXX: Since null is not allowed, use DataType#STRING as the next most versatile data type

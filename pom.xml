@@ -49,7 +49,7 @@
 	</issueManagement>
 
 	<properties>
-		<jpmml-converter.version>1.6.5</jpmml-converter.version>
+		<jpmml-converter.version>1.6.6</jpmml-converter.version>
 		<jpmml-evaluator.version>1.7.6</jpmml-evaluator.version>
 		<pickle.version>1.5</pickle.version>
 		<serpent.version>1.40</serpent.version>

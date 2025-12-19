@@ -18,6 +18,8 @@
  */
 package org.jpmml.python;
 
+import org.jpmml.converter.ResolutionException;
+
 public class FunctionResolutionException extends ResolutionException {
 
 	public FunctionResolutionException(String module, String name){

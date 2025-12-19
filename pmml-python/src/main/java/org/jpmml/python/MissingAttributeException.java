@@ -18,15 +18,9 @@
  */
 package org.jpmml.python;
 
-import net.razorvine.pickle.objects.ClassDict;
-
 public class MissingAttributeException extends AttributeException {
 
-	public MissingAttributeException(ClassDict dict, String name){
-		this("Attribute \'" + ClassDictUtil.formatMember(dict, name) + "\' not set");
-	}
-
-	public MissingAttributeException(String message){
-		super(message);
+	public MissingAttributeException(Attribute attribute){
+		super("Attribute \'" + attribute.format() + "\' not set", attribute);
 	}
 }

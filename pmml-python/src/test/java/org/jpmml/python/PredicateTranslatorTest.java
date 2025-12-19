@@ -34,6 +34,7 @@ import org.dmg.pmml.SimpleSetPredicate;
 import org.dmg.pmml.True;
 import org.jpmml.converter.ContinuousFeature;
 import org.jpmml.converter.Feature;
+import org.jpmml.converter.OperationException;
 import org.jpmml.converter.PMMLEncoder;
 import org.jpmml.model.ReflectionUtil;
 import org.junit.jupiter.api.Test;

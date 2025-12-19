@@ -18,6 +18,8 @@
  */
 package org.jpmml.python;
 
+import org.jpmml.converter.TranslationException;
+
 public class PredicateTranslationException extends TranslationException {
 
 	public PredicateTranslationException(String predicate, Throwable cause){

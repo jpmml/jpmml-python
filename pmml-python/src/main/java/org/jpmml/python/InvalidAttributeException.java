@@ -20,11 +20,11 @@ package org.jpmml.python;
 
 public class InvalidAttributeException extends AttributeException {
 
-	public InvalidAttributeException(String message){
-		super(message);
+	public InvalidAttributeException(String message, Attribute attribute){
+		super(message, attribute);
 	}
 
-	public InvalidAttributeException(String message, Exception cause){
-		super(message, cause);
+	public InvalidAttributeException(String message, Attribute attribute, Throwable cause){
+		super(message, attribute, cause);
 	}
 }

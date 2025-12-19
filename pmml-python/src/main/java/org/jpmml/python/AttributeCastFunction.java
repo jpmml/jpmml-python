@@ -18,15 +18,32 @@
  */
 package org.jpmml.python;
 
+import java.util.Objects;
+
 abstract
 public class AttributeCastFunction<E> extends CastFunction<E> {
 
-	public AttributeCastFunction(Class<? extends E> clazz){
+	private Attribute attribute = null;
+
+
+	public AttributeCastFunction(Attribute attribute, Class<? extends E> clazz){
 		super(clazz);
+
+		setAttribute(attribute);
 	}
 
 	@Override
 	public InvalidAttributeException createPythonException(String message, ClassCastException cause){
-		return new InvalidAttributeException(message, cause);
+		Attribute attribute = getAttribute();
+
+		return new InvalidAttributeException(message, attribute, cause);
+	}
+
+	public Attribute getAttribute(){
+		return this.attribute;
+	}
+
+	private void setAttribute(Attribute attribute){
+		this.attribute = Objects.requireNonNull(attribute);
 	}
 }

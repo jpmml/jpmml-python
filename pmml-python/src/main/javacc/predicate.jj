@@ -44,6 +44,7 @@ import org.dmg.pmml.SimpleSetPredicate;
 import org.dmg.pmml.True;
 import org.jpmml.converter.Feature;
 import org.jpmml.converter.FieldNameUtil;
+import org.jpmml.converter.OperationException;
 import org.jpmml.converter.PMMLUtil;
 import org.jpmml.converter.TypeUtil;
 import org.jpmml.converter.ValueUtil;

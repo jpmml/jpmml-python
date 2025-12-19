@@ -111,7 +111,7 @@ public class PythonObject extends ClassDict {
 	public Object getattr(String name){
 
 		if(!containsKey(name)){
-			throw new MissingAttributeException(this, name);
+			throw new MissingAttributeException(new Attribute(this, name));
 		}
 
 		return get(name);
@@ -142,7 +142,9 @@ public class PythonObject extends ClassDict {
 		Object value = getattr(name);
 
 		if(value == null){
-			throw new InvalidAttributeException("Attribute \'" + ClassDictUtil.formatMember(this, name) + "\' has a missing (None) value");
+			Attribute attribute = new Attribute(this, name);
+
+			throw new InvalidAttributeException("Attribute \'" +attribute.format() + "\' has a missing (None) value", attribute);
 		} // End if
 
 		if(Objects.equals(Boolean.class, clazz) || (Number.class).isAssignableFrom(clazz) || Objects.equals(String.class, clazz)){
@@ -169,11 +171,13 @@ public class PythonObject extends ClassDict {
 			}
 		}
 
-		CastFunction<E> castFunction = new AttributeCastFunction<E>(clazz){
+		Attribute attribute = new Attribute(this, name);
+
+		CastFunction<E> castFunction = new AttributeCastFunction<E>(attribute, clazz){
 
 			@Override
 			protected String formatMessage(Object object){
-				return "Attribute \'" + ClassDictUtil.formatMember(PythonObject.this, name) + "\' has an unsupported value (" + ClassDictUtil.formatClass(object) + ")";
+				return "Attribute \'" + attribute.format() + "\' has an unsupported value (" + ClassDictUtil.formatClass(object) + ")";
 			}
 		};
 
@@ -272,7 +276,9 @@ public class PythonObject extends ClassDict {
 		E value = function.apply(name);
 
 		if(!enumValues.contains(value)){
-			throw new InvalidAttributeException("Attribute \'" + ClassDictUtil.formatMember(this, name) + "\' has an unsupported value " + PythonFormatterUtil.formatValue(value) + ". Supported values are " + PythonFormatterUtil.formatCollection(enumValues));
+			Attribute attribute = new Attribute(this, name);
+
+			throw new InvalidAttributeException("Attribute \'" + attribute.format() + "\' has an unsupported value " + PythonFormatterUtil.formatValue(value) + ". Supported values are " + PythonFormatterUtil.formatCollection(enumValues), attribute);
 		}
 
 		return value;
@@ -282,7 +288,9 @@ public class PythonObject extends ClassDict {
 		E value = function.apply(name);
 
 		if((value != null)  && (!enumValues.contains(value))){
-			throw new InvalidAttributeException("Attribute \'" + ClassDictUtil.formatMember(this, name) + "\' has an unsupported value " + PythonFormatterUtil.formatValue(value) + ". Supported values are " + PythonFormatterUtil.formatCollection(enumValues));
+			Attribute attribute = new Attribute(this, name);
+
+			throw new InvalidAttributeException("Attribute \'" + attribute.format() + "\' has an unsupported value " + PythonFormatterUtil.formatValue(value) + ". Supported values are " + PythonFormatterUtil.formatCollection(enumValues), attribute);
 		}
 
 		return value;
@@ -315,7 +323,9 @@ public class PythonObject extends ClassDict {
 			return hasArray;
 		}
 
-		throw new InvalidAttributeException("Array attribute \'" + ClassDictUtil.formatMember(this, name) + "\' has an unsupported value (" + ClassDictUtil.formatClass(object) + ")");
+		Attribute attribute = new Attribute(this, name);
+
+		throw new InvalidAttributeException("Array attribute \'" + attribute.format() + "\' has an unsupported value (" + ClassDictUtil.formatClass(object) + ")", attribute);
 	}
 
 	public <E> List<E> getArray(String name, Class<? extends E> clazz){
@@ -323,11 +333,13 @@ public class PythonObject extends ClassDict {
 
 		List<?> values = hasArray.getArrayContent();
 
-		CastFunction<E> castFunction = new AttributeCastFunction<E>(clazz){
+		Attribute attribute = new Attribute(this, name);
+
+		CastFunction<E> castFunction = new AttributeCastFunction<E>(attribute, clazz){
 
 			@Override
 			protected String formatMessage(Object object){
-				return "Array attribute \'" + ClassDictUtil.formatMember(PythonObject.this, name) + "\' contains an unsupported value (" + ClassDictUtil.formatClass(object) + ")";
+				return "Array attribute \'" + attribute.format() + "\' contains an unsupported value (" + ClassDictUtil.formatClass(object) + ")";
 			}
 		};
 
@@ -347,14 +359,18 @@ public class PythonObject extends ClassDict {
 			return new int[]{1};
 		}
 
-		throw new InvalidAttributeException("Array attribute \'" + ClassDictUtil.formatMember(this, name) + "\' has an unsuppoted value (" + ClassDictUtil.formatClass(object) +")");
+		Attribute attribute = new Attribute(this, name);
+
+		throw new InvalidAttributeException("Array attribute \'" + attribute.format() + "\' has an unsuppoted value (" + ClassDictUtil.formatClass(object) +")", attribute);
 	}
 
 	public int[] getArrayShape(String name, int length){
 		int[] shape = getArrayShape(name);
 
 		if(shape.length != length){
-			throw new InvalidAttributeException("Array attribute \'" + ClassDictUtil.formatMember(this, name) + "\' is mis-shaped");
+			Attribute attribute = new Attribute(this, name);
+
+			throw new InvalidAttributeException("Array attribute \'" + attribute.format() + "\' is mis-shaped", attribute);
 		}
 
 		return shape;
@@ -379,7 +395,9 @@ public class PythonObject extends ClassDict {
 
 		List<?> values = hasArray.getArrayContent();
 
-		CastFunction<Number> castFunction = new AttributeCastFunction<Number>(Number.class){
+		Attribute attribute = new Attribute(this, name);
+
+		CastFunction<Number> castFunction = new AttributeCastFunction<Number>(attribute, Number.class){
 
 			@Override
 			public Number apply(Object object){
@@ -388,7 +406,7 @@ public class PythonObject extends ClassDict {
 
 			@Override
 			protected String formatMessage(Object object){
-				return "Array attribute \'" + ClassDictUtil.formatMember(PythonObject.this, name) + "\' contains an unsupported value (" + ClassDictUtil.formatClass(object) + ")";
+				return "Array attribute \'" + attribute.format() + "\' contains an unsupported value (" + ClassDictUtil.formatClass(object) + ")";
 			}
 		};
 
@@ -420,7 +438,9 @@ public class PythonObject extends ClassDict {
 			return NDArrayUtil.getContent(array, key);
 		}
 
-		throw new InvalidAttributeException("Array attribute \'" + ClassDictUtil.formatMember(this, name) + "\' has an unsupported value (" + ClassDictUtil.formatClass(object) + ")");
+		Attribute attribute = new Attribute(this, name);
+
+		throw new InvalidAttributeException("Array attribute \'" + attribute.format() + "\' has an unsupported value (" + ClassDictUtil.formatClass(object) + ")", attribute);
 	}
 
 	public List<?> getList(String name){
@@ -430,11 +450,13 @@ public class PythonObject extends ClassDict {
 	public <E> List<E> getList(String name, Class<? extends E> clazz){
 		List<?> values = getList(name);
 
-		CastFunction<E> castFunction = new AttributeCastFunction<E>(clazz){
+		Attribute attribute = new Attribute(this, name);
+
+		CastFunction<E> castFunction = new AttributeCastFunction<E>(attribute, clazz){
 
 			@Override
 			protected String formatMessage(Object object){
-				return "List attribute \'" + ClassDictUtil.formatMember(PythonObject.this, name) + "\' contains an unsupported value (" + ClassDictUtil.formatClass(object) + ")";
+				return "List attribute \'" + attribute.format() + "\' contains an unsupported value (" + ClassDictUtil.formatClass(object) + ")";
 			}
 		};
 
@@ -458,7 +480,9 @@ public class PythonObject extends ClassDict {
 			public E apply(E value){
 
 				if(!enumValues.contains(value)){
-					throw new InvalidAttributeException("List attribute \'" + ClassDictUtil.formatMember(PythonObject.this, name) + "\' contains an unsupported value " + PythonFormatterUtil.formatValue(value) + ". Supported values are " + PythonFormatterUtil.formatCollection(enumValues));
+					Attribute attribute = new Attribute(PythonObject.this, name);
+
+					throw new InvalidAttributeException("List attribute \'" + attribute.format() + "\' contains an unsupported value " + PythonFormatterUtil.formatValue(value) + ". Supported values are " + PythonFormatterUtil.formatCollection(enumValues), attribute);
 				}
 
 				return value;
@@ -479,11 +503,13 @@ public class PythonObject extends ClassDict {
 	public <E> List<List<E>> getArrayList(String name, Class<? extends E> clazz){
 		List<HasArray> values = getArrayList(name);
 
-		CastFunction<E> castFunction = new AttributeCastFunction<E>(clazz){
+		Attribute attribute = new Attribute(this, name);
+
+		CastFunction<E> castFunction = new AttributeCastFunction<E>(attribute, clazz){
 
 			@Override
 			protected String formatMessage(Object object){
-				return "List of arrays attribute \'" + ClassDictUtil.formatMember(PythonObject.this, name) + "\' contains an unsupported value (" + ClassDictUtil.formatClass(object) + ")";
+				return "List of arrays attribute \'" + attribute.format() + "\' contains an unsupported value (" + ClassDictUtil.formatClass(object) + ")";
 			}
 		};
 
@@ -533,11 +559,13 @@ public class PythonObject extends ClassDict {
 
 		List<?> values = getListLike(name);
 
-		CastFunction<E> castFunction = new AttributeCastFunction<E>(clazz){
+		Attribute attribute = new Attribute(this, name);
+
+		CastFunction<E> castFunction = new AttributeCastFunction<E>(attribute, clazz){
 
 			@Override
 			protected String formatMessage(Object object){
-				return "Array or list attribute \'" + ClassDictUtil.formatMember(PythonObject.this, name) + "\' contains an unsupported value (" + ClassDictUtil.formatClass(object) + ")";
+				return "Array or list attribute \'" + attribute.format() + "\' contains an unsupported value (" + ClassDictUtil.formatClass(object) + ")";
 			}
 		};
 

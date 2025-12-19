@@ -18,7 +18,9 @@
  */
 package org.jpmml.python;
 
-public class PythonException extends RuntimeException {
+import org.jpmml.converter.ConversionException;
+
+public class PythonException extends ConversionException {
 
 	public PythonException(String message){
 		super(message);
@@ -26,17 +28,5 @@ public class PythonException extends RuntimeException {
 
 	public PythonException(String message, Throwable cause){
 		super(message, cause);
-	}
-
-	@Override
-	synchronized
-	public PythonException initCause(Throwable cause){
-		return (PythonException)super.initCause(cause);
-	}
-
-	@Override
-	synchronized
-	public PythonException fillInStackTrace(){
-		return (PythonException)super.fillInStackTrace();
 	}
 }

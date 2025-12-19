@@ -24,6 +24,7 @@ import java.util.Objects;
 
 import org.jpmml.converter.Feature;
 import org.jpmml.converter.FeatureUtil;
+import org.jpmml.converter.OperationException;
 import org.jpmml.converter.PMMLEncoder;
 
 public class DataFrameScope extends Scope {

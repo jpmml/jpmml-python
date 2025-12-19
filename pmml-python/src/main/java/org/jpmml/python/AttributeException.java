@@ -21,11 +21,34 @@ package org.jpmml.python;
 abstract
 public class AttributeException extends PythonException {
 
-	public AttributeException(String message){
+	public AttributeException(String message, Attribute attribute){
 		super(message);
+
+		setContext(attribute);
 	}
 
-	public AttributeException(String message, Throwable cause){
+	public AttributeException(String message, Attribute attribute, Throwable cause){
 		super(message, cause);
+
+		setContext(attribute);
+	}
+
+	@Override
+	protected String getLocalizedContext(){
+		Attribute context = getContext();
+
+		return ClassDictUtil.formatClass(context.getClassDict());
+	}
+
+	@Override
+	public Attribute getContext(){
+		return (Attribute)super.getContext();
+	}
+
+	@Override
+	public AttributeException setContext(Object context){
+		Attribute attribute = (Attribute)context;
+
+		return (AttributeException)super.setContext(attribute);
 	}
 }

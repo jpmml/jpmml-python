@@ -18,6 +18,8 @@
  */
 package org.jpmml.python;
 
+import org.jpmml.converter.TranslationException;
+
 public class ExpressionTranslationException extends TranslationException {
 
 	public ExpressionTranslationException(String expression, Throwable cause){
