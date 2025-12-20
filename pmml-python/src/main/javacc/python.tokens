@@ -65,6 +65,8 @@ TOKEN:
 	|
 	< DIVIDE: "/" >
 	|
+	< FLOOR_DIVIDE: "//" >
+	|
 	< MODULO: "%" >
 	|
 	< TILDE: "~" >

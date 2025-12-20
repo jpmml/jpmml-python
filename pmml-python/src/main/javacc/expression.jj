@@ -236,6 +236,8 @@ public class ExpressionTranslator extends AbstractTranslator {
 	private String translateArithmeticOperator(Token operator){
 
 		switch(operator.kind){
+			case FLOOR_DIVIDE:
+				return PMMLFunctions.DIVIDE;
 			case MODULO:
 				return PMMLFunctions.MODULO;
 			default:
@@ -931,7 +933,13 @@ private Expression MultiplicativeExpression():
 	Expression right;
 }
 {
-	left = UnaryExpression() ((operator = <MULTIPLY> | operator = <DIVIDE> | operator = <MODULO> ) right = UnaryExpression() { left = ExpressionUtil.createApply(translateArithmeticOperator(operator), left, right); } )*
+	left = UnaryExpression() ((operator = <MULTIPLY> | operator = <DIVIDE> | operator = <FLOOR_DIVIDE> | operator = <MODULO> ) right = UnaryExpression() {
+		left = ExpressionUtil.createApply(translateArithmeticOperator(operator), left, right);
+
+		if(operator.kind == FLOOR_DIVIDE){
+			left = ExpressionUtil.createApply(PMMLFunctions.FLOOR, left);
+		}
+	} )*
 
 	{
 		return left;

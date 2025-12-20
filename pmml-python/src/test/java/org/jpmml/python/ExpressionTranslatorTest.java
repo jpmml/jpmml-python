@@ -632,6 +632,28 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 	}
 
 	@Test
+	public void translateFloorDivideExpression(){
+		ExpressionTranslator expressionTranslator = new ExpressionTranslator(new DataFrameScope(doubleFeatures));
+
+		Expression expected = ExpressionUtil.createApply(PMMLFunctions.FLOOR,
+			ExpressionUtil.createApply(PMMLFunctions.DIVIDE,
+				fieldRefs.get("a"), fieldRefs.get("b")
+			)
+		);
+
+		assertEquals(DataType.INTEGER, ExpressionUtil.getDataType(expected, expressionTranslator));
+
+		String string = "a // b";
+
+		checkExpression(expected, translateExpression(expressionTranslator, string));
+
+		assertEquals(3, evaluateExpression(expressionTranslator, string, Map.of("a", 7d, "b", 2d)));
+		assertEquals(-4, evaluateExpression(expressionTranslator, string, Map.of("a", 7d, "b", -2d)));
+		assertEquals(-4, evaluateExpression(expressionTranslator, string, Map.of("a", -7d, "b", 2d)));
+		assertEquals(3, evaluateExpression(expressionTranslator, string, Map.of("a", -7d, "b", -2d)));
+	}
+
+	@Test
 	public void translateStringConcatenationExpression(){
 		ExpressionTranslator expressionTranslator = new ExpressionTranslator(new DataFrameScope(stringFeatures));
 
