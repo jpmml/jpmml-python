@@ -675,7 +675,17 @@ private Expression CompoundStatement():
 	Expression statement;
 }
 {
-	statement = IfStatement()
+	(
+		statement = IfStatement()
+		|
+		statement = WhileStatement()
+		|
+		statement = ForStatement()
+		|
+		statement = TryStatement()
+		|
+		statement = WithStatement()
+	)
 
 	{
 		return statement;
@@ -760,6 +770,46 @@ private Block ElseBlock():
 	}
 }
 
+private Expression WhileStatement():
+{}
+{
+	<WHILE>
+
+	{
+		throw new ParseException("While statements are not supported");
+	}
+}
+
+private Expression ForStatement():
+{}
+{
+	<FOR>
+
+	{
+		throw new ParseException("For statements are not supported");
+	}
+}
+
+private Expression TryStatement():
+{}
+{
+	<TRY>
+
+	{
+		throw new ParseException("Try statements are not supported");
+	}
+}
+
+private Expression WithStatement():
+{}
+{
+	<WITH>
+
+	{
+		throw new ParseException("With statements are not supported");
+	}
+}
+	
 private Expression Assignment():
 {
 	Token name;

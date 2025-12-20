@@ -113,6 +113,10 @@ TOKEN:
 	|
 	< ELSE: "else" >
 	|
+	< FINALLY: "finally" >
+	|
+	< FOR: "for" >
+	|
 	< IF: "if" >
 	|
 	< IMPORT: "import" >
@@ -124,6 +128,12 @@ TOKEN:
 	< RAISE: "raise" >
 	|
 	< RETURN: "return" >
+	|
+	< TRY: "try" >
+	|
+	< WHILE: "while" >
+	|
+	< WITH: "with" >
 }
 
 TOKEN:
