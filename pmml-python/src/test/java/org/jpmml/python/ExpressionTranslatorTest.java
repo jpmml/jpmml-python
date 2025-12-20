@@ -703,6 +703,8 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 
 		String string =
 			"def safe_divide(x1, x2):" + newline +
+			"	assert (x1 is not None and not math.isnan(x1)), 'Numerator is missing'" + newline +
+			"	assert pandas.notna(x2), 'Denominator is missing'" + newline +
 			"	if x2 == 0.0:" + newline +
 			"		raise builtins.ValueError('Denominator is zero')" + newline +
 			"	return x1 / x2" + newline;

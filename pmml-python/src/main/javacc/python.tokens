@@ -105,6 +105,8 @@ TOKEN:
 {
 	< AS : "as" >
 	|
+	< ASSERT: "assert" >
+	|
 	< DEF: "def" >
 	|
 	< ELIF: "elif" >

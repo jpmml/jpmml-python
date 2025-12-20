@@ -708,6 +708,8 @@ private Expression SimpleStatement():
 		expression = RaiseStatement()
 		|
 		expression = ImportStatement()
+		|
+		expression = AssertStatement()
 	)
 	
 	{
@@ -816,6 +818,16 @@ private Expression ImportStatement():
 {}
 {
 	<IMPORT> DottedAsName() ( <COMMA> DottedAsName() )*
+
+	{
+		return null;
+	}
+}
+
+private Expression AssertStatement():
+{}
+{
+	<ASSERT> Expression() ( <COMMA> Expression() )?
 
 	{
 		return null;
