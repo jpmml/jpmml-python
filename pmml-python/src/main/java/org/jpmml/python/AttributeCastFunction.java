@@ -33,7 +33,7 @@ public class AttributeCastFunction<E> extends CastFunction<E> {
 	}
 
 	@Override
-	public InvalidAttributeException createPythonException(String message, ClassCastException cause){
+	protected InvalidAttributeException createConversionException(String message, ClassCastException cause){
 		Attribute attribute = getAttribute();
 
 		return new InvalidAttributeException(message, attribute, cause);

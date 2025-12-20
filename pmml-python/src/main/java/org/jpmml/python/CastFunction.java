@@ -21,6 +21,7 @@ package org.jpmml.python;
 import java.util.Objects;
 
 import com.google.common.base.Function;
+import org.jpmml.converter.ConversionException;
 
 abstract
 public class CastFunction<E> implements Function<Object, E> {
@@ -44,12 +45,12 @@ public class CastFunction<E> implements Function<Object, E> {
 
 			return clazz.cast(object);
 		} catch(ClassCastException cce){
-			throw createPythonException(formatMessage(object), cce)
+			throw createConversionException(formatMessage(object), cce)
 				.fillInStackTrace();
 		}
 	}
 
-	public PythonException createPythonException(String message, ClassCastException cause){
+	protected ConversionException createConversionException(String message, ClassCastException cause){
 		return new PythonException(message, cause);
 	}
 
