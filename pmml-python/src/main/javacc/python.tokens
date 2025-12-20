@@ -119,6 +119,8 @@ TOKEN:
 	|
 	< IS: "is" >
 	|
+	< RAISE: "raise" >
+	|
 	< RETURN: "return" >
 }
 

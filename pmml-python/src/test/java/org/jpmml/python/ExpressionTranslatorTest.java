@@ -29,7 +29,9 @@ import org.dmg.pmml.DataField;
 import org.dmg.pmml.DataType;
 import org.dmg.pmml.DefineFunction;
 import org.dmg.pmml.DerivedField;
+import org.dmg.pmml.Error;
 import org.dmg.pmml.Expression;
+import org.dmg.pmml.Extension;
 import org.dmg.pmml.FieldRef;
 import org.dmg.pmml.OpType;
 import org.dmg.pmml.PMMLFunctions;
@@ -684,6 +686,47 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 		assertEquals(-4, evaluateExpression(expressionTranslator, string, Map.of("a", 7d, "b", -2d)));
 		assertEquals(-4, evaluateExpression(expressionTranslator, string, Map.of("a", -7d, "b", 2d)));
 		assertEquals(3, evaluateExpression(expressionTranslator, string, Map.of("a", -7d, "b", -2d)));
+	}
+
+	@Test
+	public void translateSafeDivideDef(){
+		PMMLEncoder encoder = new PMMLEncoder();
+
+		List<Feature> variables = Arrays.asList(
+			new ContinuousFeature(encoder, "x1", DataType.DOUBLE),
+			new ContinuousFeature(encoder, "x2", DataType.DOUBLE)
+		);
+
+		ExpressionTranslator expressionTranslator = new ExpressionTranslator(new BlockScope(variables, encoder));
+
+		String newline = "\n";
+
+		String string =
+			"def safe_divide(x1, x2):" + newline +
+			"	if x2 == 0.0:" + newline +
+			"		raise builtins.ValueError('Denominator is zero')" + newline +
+			"	return x1 / x2" + newline;
+
+		DefineFunction defineFunction = expressionTranslator.translateDef(string);
+
+		assertEquals("safe_divide", defineFunction.requireName());
+		assertEquals(OpType.CONTINUOUS, defineFunction.requireOpType());
+		assertEquals(DataType.DOUBLE, defineFunction.requireDataType());
+
+		Expression expected = ExpressionUtil.createApply(PMMLFunctions.IF,
+			ExpressionUtil.createApply(PMMLFunctions.EQUAL,
+				new FieldRef("x2"), ExpressionUtil.createConstant(0d)
+			),
+			new Error()
+				.setMessage("Denominator is zero")
+				.addExtensions(new Extension("class", "builtins.ValueError"))
+			,
+			ExpressionUtil.createApply(PMMLFunctions.DIVIDE,
+				new FieldRef("x1"), new FieldRef("x2")
+			)
+		);
+
+		checkExpression(expected, defineFunction.requireExpression());
 	}
 
 	@Test

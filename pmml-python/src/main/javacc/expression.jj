@@ -45,7 +45,9 @@ import org.dmg.pmml.Constant;
 import org.dmg.pmml.DataType;
 import org.dmg.pmml.DefineFunction;
 import org.dmg.pmml.DerivedField;
+import org.dmg.pmml.Error;
 import org.dmg.pmml.Expression;
+import org.dmg.pmml.Extension;
 import org.dmg.pmml.FieldRef;
 import org.dmg.pmml.ParameterField;
 import org.dmg.pmml.PMMLFunctions;
@@ -703,6 +705,8 @@ private Expression SimpleStatement():
 		|
 		expression = ReturnStatement()
 		|
+		expression = RaiseStatement()
+		|
 		expression = ImportStatement()
 	)
 	
@@ -790,6 +794,21 @@ private Expression ReturnStatement():
 	
 	{
 		return expression;
+	}
+}
+
+private Expression RaiseStatement():
+{
+	String dottedName;
+	Token message = null;
+}
+{
+	<RAISE> dottedName = CanonicalizedDottedName() ( <LPAREN> ( message = String() )? <RPAREN> )?
+
+	{
+		return new Error()
+			.setMessage(message != null ? (String)PythonParserUtil.parseValue(message) : null)
+			.addExtensions(new Extension("class", dottedName));
 	}
 }
 
