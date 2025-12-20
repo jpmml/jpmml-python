@@ -224,7 +224,7 @@ public class ExpressionTranslator extends AbstractTranslator {
 	}
 
 	static
-	private String translateRelationalOperator(Token operator) throws ParseException {
+	private String translateRelationalOperator(Token operator){
 
 		switch(operator.kind){
 			case EQUAL:
@@ -240,7 +240,7 @@ public class ExpressionTranslator extends AbstractTranslator {
 			case GREATER_OR_EQUAL:
 				return PMMLFunctions.GREATEROREQUAL;
 			default:
-				throw new ParseException();
+				throw new IllegalArgumentException();
 		}
 	}
 
