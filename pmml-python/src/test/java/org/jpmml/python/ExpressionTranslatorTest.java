@@ -528,6 +528,39 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 	}
 
 	@Test
+	public void translateChainedComparisonExpression(){
+		ExpressionTranslator expressionTranslator = new ExpressionTranslator(new DataFrameScope(doubleFeatures));
+
+		Expression expected = ExpressionUtil.createApply(PMMLFunctions.AND,
+			ExpressionUtil.createApply(PMMLFunctions.LESSOREQUAL, ExpressionUtil.createConstant(0d), fieldRefs.get(0)),
+			ExpressionUtil.createApply(PMMLFunctions.LESSTHAN, fieldRefs.get(0), ExpressionUtil.createConstant(3d))
+		);
+
+		String string = "0. <= a < 3.";
+
+		checkExpression(expected, translateExpression(expressionTranslator, string));
+
+		expected = ExpressionUtil.createApply(PMMLFunctions.AND,
+			ExpressionUtil.createApply(PMMLFunctions.LESSTHAN, fieldRefs.get(0), fieldRefs.get(1)),
+			ExpressionUtil.createApply(PMMLFunctions.LESSTHAN, fieldRefs.get(1), fieldRefs.get(2))
+		);
+
+		string = "a < b < c";
+
+		checkExpression(expected, translateExpression(expressionTranslator, string));
+
+		expected = ExpressionUtil.createApply(PMMLFunctions.AND,
+			ExpressionUtil.createApply(PMMLFunctions.EQUAL, fieldRefs.get(0), fieldRefs.get(1)),
+			ExpressionUtil.createApply(PMMLFunctions.EQUAL, fieldRefs.get(1), fieldRefs.get(2)),
+			ExpressionUtil.createApply(PMMLFunctions.EQUAL, fieldRefs.get(2), ExpressionUtil.createConstant(0d))
+		);
+
+		string = "a == b == c == 0.";
+
+		checkExpression(expected, translateExpression(expressionTranslator, string));
+	}
+
+	@Test
 	public void translateIdentityComparisonExpression(){
 		ExpressionTranslator expressionTranslator = new ExpressionTranslator(new DataFrameScope(doubleFeatures));
 

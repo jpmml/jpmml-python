@@ -212,6 +212,16 @@ public class ExpressionTranslator extends AbstractTranslator {
 	}
 
 	static
+	private Expression ensureOperand(Expression expression){
+		
+		if(expression == null){
+			throw new OperationException("Operand is not defined");
+		}
+
+		return expression;
+	}
+
+	static
 	private String translateRelationalOperator(Token operator) throws ParseException {
 
 		switch(operator.kind){
@@ -882,24 +892,38 @@ private Expression ComparisonExpression():
 	Expression left;
 	Token operator;
 	Object right;
+	Expression prevRight;
+	List<Expression> expressions = new ArrayList<>();
 }
 {
-	left = AdditiveExpression()
+	left = AdditiveExpression() { prevRight = left; }
 	(
-		LOOKAHEAD(<IS> <NONE>)
-		<IS> <NONE> { left = ExpressionUtil.createApply(PMMLFunctions.ISMISSING, left); }
-		|
-		<IS> <NOT> <NONE> { left = ExpressionUtil.createApply(PMMLFunctions.ISNOTMISSING, left); }
-		|
-		<IN> right = ListMakerExpression() { left = ExpressionUtil.createApply(PMMLFunctions.ISIN, left).addExpressions((Expression[])right); }
-		|
-		<NOT> <IN> right = ListMakerExpression() { left = ExpressionUtil.createApply(PMMLFunctions.ISNOTIN, left).addExpressions((Expression[])right); }
-		|
-		((operator = <EQUAL> | operator = <NOT_EQUAL> | operator = <LESS_THAN> | operator = <LESS_OR_EQUAL> | operator = <GREATER_THAN> | operator = <GREATER_OR_EQUAL>) right = AdditiveExpression() { left = ExpressionUtil.createApply(translateRelationalOperator(operator), left, (Expression)right); } )?
-	)
+		(
+			LOOKAHEAD(<IS> <NONE>)
+			<IS> <NONE> { left = ExpressionUtil.createApply(PMMLFunctions.ISMISSING, ensureOperand(prevRight)); right = null; }
+			|
+			<IS> <NOT> <NONE> { left = ExpressionUtil.createApply(PMMLFunctions.ISNOTMISSING, ensureOperand(prevRight)); right = null; }
+			|
+			<IN> right = ListMakerExpression() { left = ExpressionUtil.createApply(PMMLFunctions.ISIN, ensureOperand(prevRight)).addExpressions((Expression[])right); right = null; }
+			|
+			<NOT> <IN> right = ListMakerExpression() { left = ExpressionUtil.createApply(PMMLFunctions.ISNOTIN, prevRight).addExpressions((Expression[])right); right = null; }
+			|
+			(operator = <EQUAL> | operator = <NOT_EQUAL> | operator = <LESS_THAN> | operator = <LESS_OR_EQUAL> | operator = <GREATER_THAN> | operator = <GREATER_OR_EQUAL>) right = AdditiveExpression() { left = ExpressionUtil.createApply(translateRelationalOperator(operator), prevRight, (Expression)right); }
+		)
+		{
+			expressions.add(left);
+			prevRight = (Expression)right;
+		}
+	)*
 
 	{
-		return left;
+		if(expressions.size() <= 1){
+			return left;
+		} else
+
+		{
+			return ExpressionUtil.createApply(PMMLFunctions.AND, expressions.toArray(new Expression[expressions.size()]));
+		}
 	}
 }
 
