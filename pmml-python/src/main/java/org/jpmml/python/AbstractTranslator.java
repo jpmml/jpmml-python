@@ -43,7 +43,6 @@ import org.jpmml.converter.Feature;
 import org.jpmml.converter.FeatureResolver;
 import org.jpmml.converter.FeatureUtil;
 import org.jpmml.converter.ObjectFeature;
-import org.jpmml.converter.OperationException;
 import org.jpmml.converter.PMMLEncoder;
 import org.jpmml.converter.ResolutionException;
 import org.jpmml.converter.TypeUtil;
@@ -162,11 +161,11 @@ public class AbstractTranslator implements FeatureResolver {
 		if(functionDef != null){
 			List<FunctionDef.Parameter> parameters = functionDef.getParameters();
 			if(arguments.size() != parameters.size()){
-				String nameAndSignature = parameters.stream()
+				List<String> parameterNames = parameters.stream()
 					.map(FunctionDef.Parameter::getName)
-					.collect(Collectors.joining(", ", name + "(", ")"));
+					.collect(Collectors.toList());
 
-				throw new OperationException("Function \'" + nameAndSignature + "\' expects " + parameters.size() + " argument(s), got " + arguments.size() + " argument(s)");
+				throw new InvalidFunctionCallException(name, parameterNames, arguments);
 			}
 
 			List<Feature> features = arguments.stream()
