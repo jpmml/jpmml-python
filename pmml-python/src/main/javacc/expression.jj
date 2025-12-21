@@ -29,6 +29,7 @@ package org.jpmml.python;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
@@ -187,6 +188,14 @@ public class ExpressionTranslator extends AbstractTranslator {
 	}
 
 	static
+	private void checkMethodCall(String dottedName, List<String> parameters, List<Expression> expressions){
+		
+		if(expressions.size() != parameters.size()){
+			throw new InvalidMethodCallException(dottedName, parameters, expressions);
+		}
+	}
+
+	static
 	private String translateRelationalOperator(Token operator){
 
 		switch(operator.kind){
@@ -224,7 +233,7 @@ public class ExpressionTranslator extends AbstractTranslator {
 	private Apply translateTrailerFunction(Expression expression, String name, List<Expression> arguments){
 
 		if(("startswith").equals(name) || ("endswith").equals(name)){
-			ClassDictUtil.checkSize(1, arguments);
+			checkMethodCall("str" + "." + name, Arrays.asList(("startswith").equals(name) ? "prefix" : "suffix"), arguments);
 
 			Expression argument = arguments.get(0);
 			if(!(argument instanceof Constant)){
@@ -255,7 +264,7 @@ public class ExpressionTranslator extends AbstractTranslator {
 		} else
 
 		if(("lower").equals(name) || ("upper").equals(name)){
-			ClassDictUtil.checkSize(0, arguments);
+			checkMethodCall("str" + "." + name, Collections.emptyList(), arguments);
 
 			switch(name){
 				case "lower":
@@ -268,7 +277,7 @@ public class ExpressionTranslator extends AbstractTranslator {
 		} else
 
 		if(("strip").equals(name)){
-			ClassDictUtil.checkSize(0, arguments);
+			checkMethodCall("str" + "." + name, Collections.emptyList(), arguments);
 
 			switch(name){
 				case "strip":
