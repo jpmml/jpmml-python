@@ -16,43 +16,39 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with JPMML-Python.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jpmml.python;
+package org.jpmml.python.functions;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 import org.dmg.pmml.Apply;
 import org.dmg.pmml.Expression;
+import org.dmg.pmml.PMMLFunctions;
 import org.jpmml.converter.ExpressionUtil;
 import org.jpmml.converter.PMMLEncoder;
+import org.jpmml.python.FunctionUtil;
+import org.jpmml.python.RegExFlavour;
 
-public class BinaryFunction implements PythonFunction {
+public class SubFunction extends RegExFunction {
 
-	private String function = null;
-
-
-	public BinaryFunction(String function){
-		setFunction(function);
+	public SubFunction(RegExFlavour reFlavour){
+		super(reFlavour);
 	}
 
 	@Override
 	public List<String> getParameters(){
-		return Arrays.asList("x1", "x2");
+		return Arrays.asList("pattern", "repl", "string");
 	}
 
 	@Override
 	public Apply encode(List<Expression> expressions, PMMLEncoder encoder){
-		String function = getFunction();
+		RegExFlavour reFlavour = getFlavour();
 
-		return ExpressionUtil.createApply(function, expressions.get(0), expressions.get(1));
-	}
-
-	public String getFunction(){
-		return this.function;
-	}
-
-	private void setFunction(String function){
-		this.function = Objects.requireNonNull(function);
+		return ExpressionUtil.createApply(PMMLFunctions.REPLACE,
+			expressions.get(2),
+			FunctionUtil.updateConstant(expressions.get(0), reFlavour::translatePattern),
+			FunctionUtil.updateConstant(expressions.get(1), reFlavour::translateReplacement)
+		)
+			.addExtensions(reFlavour.createExtension());
 	}
 }

@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with JPMML-Python.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jpmml.python;
+package org.jpmml.python.functions;
 
 public interface Functions {
 }

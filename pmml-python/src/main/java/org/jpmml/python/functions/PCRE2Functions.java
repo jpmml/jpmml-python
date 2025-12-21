@@ -16,25 +16,18 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with JPMML-Python.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jpmml.python;
+package org.jpmml.python.functions;
 
-import java.util.Objects;
+import java.util.Map;
 
-abstract
-public class RegExFunction implements PythonFunction {
+import org.jpmml.python.PythonFunction;
+import org.jpmml.python.RegExFlavour;
 
-	private RegExFlavour reFlavour = null;
+public interface PCRE2Functions extends Functions {
 
+	PythonFunction SUBSTITUTE = new SubFunction(RegExFlavour.PCRE2);
 
-	public RegExFunction(RegExFlavour reFlavour){
-		setFlavour(reFlavour);
-	}
-
-	public RegExFlavour getFlavour(){
-		return this.reFlavour;
-	}
-
-	private void setFlavour(RegExFlavour reFlavour){
-		this.reFlavour = Objects.requireNonNull(reFlavour);
-	}
+	Map<String, PythonFunction> REGISTRY = Map.ofEntries(
+		Map.entry("substitute", PCRE2Functions.SUBSTITUTE)
+	);
 }

@@ -16,36 +16,44 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with JPMML-Python.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jpmml.python;
+package org.jpmml.python.functions;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import org.dmg.pmml.Apply;
 import org.dmg.pmml.Expression;
-import org.dmg.pmml.PMMLFunctions;
 import org.jpmml.converter.ExpressionUtil;
 import org.jpmml.converter.PMMLEncoder;
+import org.jpmml.python.PythonFunction;
 
-public class SearchFunction extends RegExFunction {
+public class BinaryFunction implements PythonFunction {
 
-	public SearchFunction(RegExFlavour reFlavour){
-		super(reFlavour);
+	private String function = null;
+
+
+	public BinaryFunction(String function){
+		setFunction(function);
 	}
 
 	@Override
 	public List<String> getParameters(){
-		return Arrays.asList("pattern", "string");
+		return Arrays.asList("x1", "x2");
 	}
 
 	@Override
 	public Apply encode(List<Expression> expressions, PMMLEncoder encoder){
-		RegExFlavour reFlavour = getFlavour();
+		String function = getFunction();
 
-		return ExpressionUtil.createApply(PMMLFunctions.MATCHES,
-			expressions.get(1),
-			FunctionUtil.updateConstant(expressions.get(0), reFlavour::translatePattern)
-		)
-			.addExtensions(reFlavour.createExtension());
+		return ExpressionUtil.createApply(function, expressions.get(0), expressions.get(1));
+	}
+
+	public String getFunction(){
+		return this.function;
+	}
+
+	private void setFunction(String function){
+		this.function = Objects.requireNonNull(function);
 	}
 }

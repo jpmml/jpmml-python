@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with JPMML-Python.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jpmml.python;
+package org.jpmml.python.functions;
 
 import java.util.Arrays;
 import java.util.List;
@@ -34,6 +34,8 @@ import org.dmg.pmml.ParameterField;
 import org.jpmml.converter.ExpressionUtil;
 import org.jpmml.converter.FeatureResolver;
 import org.jpmml.converter.PMMLEncoder;
+import org.jpmml.python.FunctionUtil;
+import org.jpmml.python.PythonFunction;
 
 public interface BuiltinFunctions extends Functions {
 

@@ -16,15 +16,21 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with JPMML-Python.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jpmml.python;
+package org.jpmml.python.functions;
 
 import java.util.Map;
 
-public interface PCRE2Functions extends Functions {
+import org.jpmml.python.PythonFunction;
+import org.jpmml.python.RegExFlavour;
 
-	PythonFunction SUBSTITUTE = new SubFunction(RegExFlavour.PCRE2);
+public interface REFunctions extends Functions {
+
+	PythonFunction SEARCH = new SearchFunction(RegExFlavour.RE);
+
+	PythonFunction SUB = new SubFunction(RegExFlavour.RE);
 
 	Map<String, PythonFunction> REGISTRY = Map.ofEntries(
-		Map.entry("substitute", PCRE2Functions.SUBSTITUTE)
+		Map.entry("search", REFunctions.SEARCH),
+		Map.entry("sub", REFunctions.SUB)
 	);
 }

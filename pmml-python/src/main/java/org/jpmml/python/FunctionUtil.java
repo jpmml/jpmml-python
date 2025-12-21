@@ -33,6 +33,14 @@ import org.dmg.pmml.PMMLFunctions;
 import org.dmg.pmml.ParameterField;
 import org.jpmml.converter.ExpressionUtil;
 import org.jpmml.converter.PMMLEncoder;
+import org.jpmml.python.functions.BuiltinFunctions;
+import org.jpmml.python.functions.MathFunctions;
+import org.jpmml.python.functions.NumPyFunctions;
+import org.jpmml.python.functions.PCRE2Functions;
+import org.jpmml.python.functions.PCREFunctions;
+import org.jpmml.python.functions.PandasFunctions;
+import org.jpmml.python.functions.REFunctions;
+import org.jpmml.python.functions.SciPySpecialFunctions;
 
 public class FunctionUtil {
 

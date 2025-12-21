@@ -16,18 +16,23 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with JPMML-Python.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jpmml.python;
+package org.jpmml.python.functions;
 
 import java.util.Map;
 
-public interface PCREFunctions extends Functions {
+import org.dmg.pmml.PMMLFunctions;
+import org.jpmml.python.PythonFunction;
 
-	PythonFunction SEARCH = new SearchFunction(RegExFlavour.PCRE);
+public interface PandasFunctions extends Functions {
 
-	PythonFunction SUB = new SubFunction(RegExFlavour.PCRE);
+	PythonFunction ISNA = new UnaryFunction(PMMLFunctions.ISMISSING);
+
+	PythonFunction NOTNA = new UnaryFunction(PMMLFunctions.ISNOTMISSING);
 
 	Map<String, PythonFunction> REGISTRY = Map.ofEntries(
-		Map.entry("search", PCREFunctions.SEARCH),
-		Map.entry("sub", PCREFunctions.SUB)
+		Map.entry("isna", PandasFunctions.ISNA),
+		Map.entry("isnull", PandasFunctions.ISNA),
+		Map.entry("notna", PandasFunctions.NOTNA),
+		Map.entry("notnull", PandasFunctions.NOTNA)
 	);
 }

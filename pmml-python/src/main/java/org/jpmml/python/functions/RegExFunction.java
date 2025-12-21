@@ -16,43 +16,28 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with JPMML-Python.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jpmml.python;
+package org.jpmml.python.functions;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 
-import org.dmg.pmml.Apply;
-import org.dmg.pmml.Expression;
-import org.jpmml.converter.ExpressionUtil;
-import org.jpmml.converter.PMMLEncoder;
+import org.jpmml.python.PythonFunction;
+import org.jpmml.python.RegExFlavour;
 
-public class UnaryFunction implements PythonFunction {
+abstract
+public class RegExFunction implements PythonFunction {
 
-	private String function = null;
+	private RegExFlavour reFlavour = null;
 
 
-	public UnaryFunction(String function){
-		setFunction(function);
+	public RegExFunction(RegExFlavour reFlavour){
+		setFlavour(reFlavour);
 	}
 
-	@Override
-	public List<String> getParameters(){
-		return Arrays.asList("x");
+	public RegExFlavour getFlavour(){
+		return this.reFlavour;
 	}
 
-	@Override
-	public Apply encode(List<Expression> expressions, PMMLEncoder encoder){
-		String function = getFunction();
-
-		return ExpressionUtil.createApply(function, expressions.get(0));
-	}
-
-	public String getFunction(){
-		return this.function;
-	}
-
-	private void setFunction(String function){
-		this.function = Objects.requireNonNull(function);
+	private void setFlavour(RegExFlavour reFlavour){
+		this.reFlavour = Objects.requireNonNull(reFlavour);
 	}
 }

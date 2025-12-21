@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with JPMML-Python.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jpmml.python;
+package org.jpmml.python.functions;
 
 import java.util.Arrays;
 import java.util.List;
@@ -25,6 +25,8 @@ import java.util.Map;
 import org.dmg.pmml.Apply;
 import org.dmg.pmml.Expression;
 import org.jpmml.converter.PMMLEncoder;
+import org.jpmml.python.FunctionUtil;
+import org.jpmml.python.PythonFunction;
 
 public interface SciPySpecialFunctions extends Functions {
 
