@@ -82,7 +82,29 @@ public class FunctionUtilTest {
 	}
 
 	@Test
-	public void evaluatePCREFunction(){
+	public void evaluateNumPyFunction(){
+		assertEquals(3d, evaluateExpression("numpy", "absolute", -3d));
+
+		assertEquals(-2, evaluateExpression("numpy", "ceil", -2.75d));
+		assertEquals(3, evaluateExpression("numpy", "ceil", 2.75d));
+
+		assertEquals(-3, evaluateExpression("numpy", "floor", -2.75d));
+		assertEquals(2, evaluateExpression("numpy", "floor", 2.75d));
+
+		assertEquals(-3, evaluateExpression("numpy", "negative", 3));
+		assertEquals(-3f, evaluateExpression("numpy", "negative", 3f));
+		assertEquals(-3d, evaluateExpression("numpy", "negative", 3d));
+
+		assertEquals(1f / 3f, (Float)evaluateExpression("numpy", "reciprocal", 3f), 1e-5);
+		assertEquals(1d / 3d, (Double)evaluateExpression("numpy", "reciprocal", 3d), 1e-8);
+
+		assertEquals(-1, evaluateExpression("numpy", "sign", -3d));
+		assertEquals(0, evaluateExpression("numpy", "sign", 0d));
+		assertEquals(+1, evaluateExpression("numpy", "sign", +3d));
+	}
+
+	@Test
+	public void evaluateRegExFunction(){
 		Map<String, String> arguments = new LinkedHashMap<>();
 		arguments.put("pattern", "ar?y");
 
@@ -106,29 +128,7 @@ public class FunctionUtilTest {
 	}
 
 	@Test
-	public void evaluateNumpyFunction(){
-		assertEquals(3d, evaluateExpression("numpy", "absolute", -3d));
-
-		assertEquals(-2, evaluateExpression("numpy", "ceil", -2.75d));
-		assertEquals(3, evaluateExpression("numpy", "ceil", 2.75d));
-
-		assertEquals(-3, evaluateExpression("numpy", "floor", -2.75d));
-		assertEquals(2, evaluateExpression("numpy", "floor", 2.75d));
-
-		assertEquals(-3, evaluateExpression("numpy", "negative", 3));
-		assertEquals(-3f, evaluateExpression("numpy", "negative", 3f));
-		assertEquals(-3d, evaluateExpression("numpy", "negative", 3d));
-
-		assertEquals(1f / 3f, (Float)evaluateExpression("numpy", "reciprocal", 3f), 1e-5);
-		assertEquals(1d / 3d, (Double)evaluateExpression("numpy", "reciprocal", 3d), 1e-8);
-
-		assertEquals(-1, evaluateExpression("numpy", "sign", -3d));
-		assertEquals(0, evaluateExpression("numpy", "sign", 0d));
-		assertEquals(+1, evaluateExpression("numpy", "sign", +3d));
-	}
-
-	@Test
-	public void evaluateScipyFunction(){
+	public void evaluateSciPyFunction(){
 		assertEquals(0.18242552d, (Double)evaluateExpression("scipy.special", "expit", -1.5d), 1e-8);
 		assertEquals(0.5d, (Double)evaluateExpression("scipy.special", "expit", 0d), 1e-8);
 		assertEquals(0.81757448d, (Double)evaluateExpression("scipy.special", "expit", 1.5d), 1e-8);

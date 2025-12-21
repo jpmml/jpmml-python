@@ -18,24 +18,41 @@
  */
 package org.jpmml.python;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
-import org.jpmml.converter.OperationException;
+import org.dmg.pmml.Apply;
+import org.dmg.pmml.Expression;
+import org.jpmml.converter.ExpressionUtil;
+import org.jpmml.converter.PMMLEncoder;
 
-public class InvalidFunctionCallException extends OperationException {
+public class UnaryFunction implements PythonFunction {
 
-	public InvalidFunctionCallException(String module, String name, List<String> parameters, List<?> arguments){
-		super(formatMessage(module + "." + name, parameters, arguments));
+	private String function = null;
+
+
+	public UnaryFunction(String function){
+		setFunction(function);
 	}
 
-	public InvalidFunctionCallException(String dottedName, List<String> parameters, List<?> arguments){
-		super(formatMessage(dottedName, parameters, arguments));
+	@Override
+	public List<String> getParameters(){
+		return Arrays.asList("x");
 	}
 
-	static
-	private String formatMessage(String dottedName, List<String> parameters, List<?> arguments){
-		String nameAndSignature = dottedName + "(" + String.join(", ", parameters) + ")";
+	@Override
+	public Apply encode(List<Expression> expressions, PMMLEncoder encoder){
+		String function = getFunction();
 
-		return "Function \'" + nameAndSignature + "\' expects " + parameters.size() + " argument(s), got " + arguments.size() + " argument(s)";
+		return ExpressionUtil.createApply(function, expressions.get(0));
+	}
+
+	public String getFunction(){
+		return this.function;
+	}
+
+	private void setFunction(String function){
+		this.function = Objects.requireNonNull(function);
 	}
 }

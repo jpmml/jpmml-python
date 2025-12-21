@@ -18,24 +18,34 @@
  */
 package org.jpmml.python;
 
+import java.util.Arrays;
 import java.util.List;
 
-import org.jpmml.converter.OperationException;
+import org.dmg.pmml.Apply;
+import org.dmg.pmml.Expression;
+import org.dmg.pmml.PMMLFunctions;
+import org.jpmml.converter.ExpressionUtil;
+import org.jpmml.converter.PMMLEncoder;
 
-public class InvalidFunctionCallException extends OperationException {
+public class SearchFunction extends RegExFunction {
 
-	public InvalidFunctionCallException(String module, String name, List<String> parameters, List<?> arguments){
-		super(formatMessage(module + "." + name, parameters, arguments));
+	public SearchFunction(RegExFlavour reFlavour){
+		super(reFlavour);
 	}
 
-	public InvalidFunctionCallException(String dottedName, List<String> parameters, List<?> arguments){
-		super(formatMessage(dottedName, parameters, arguments));
+	@Override
+	public List<String> getParameters(){
+		return Arrays.asList("pattern", "string");
 	}
 
-	static
-	private String formatMessage(String dottedName, List<String> parameters, List<?> arguments){
-		String nameAndSignature = dottedName + "(" + String.join(", ", parameters) + ")";
+	@Override
+	public Apply encode(List<Expression> expressions, PMMLEncoder encoder){
+		RegExFlavour reFlavour = getFlavour();
 
-		return "Function \'" + nameAndSignature + "\' expects " + parameters.size() + " argument(s), got " + arguments.size() + " argument(s)";
+		return ExpressionUtil.createApply(PMMLFunctions.MATCHES,
+			expressions.get(1),
+			FunctionUtil.updateConstant(expressions.get(0), reFlavour::translatePattern)
+		)
+			.addExtensions(reFlavour.createExtension());
 	}
 }

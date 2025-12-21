@@ -20,22 +20,13 @@ package org.jpmml.python;
 
 import java.util.List;
 
-import org.jpmml.converter.OperationException;
+import org.dmg.pmml.Apply;
+import org.dmg.pmml.Expression;
+import org.jpmml.converter.PMMLEncoder;
 
-public class InvalidFunctionCallException extends OperationException {
+public interface PythonFunction {
 
-	public InvalidFunctionCallException(String module, String name, List<String> parameters, List<?> arguments){
-		super(formatMessage(module + "." + name, parameters, arguments));
-	}
+	List<String> getParameters();
 
-	public InvalidFunctionCallException(String dottedName, List<String> parameters, List<?> arguments){
-		super(formatMessage(dottedName, parameters, arguments));
-	}
-
-	static
-	private String formatMessage(String dottedName, List<String> parameters, List<?> arguments){
-		String nameAndSignature = dottedName + "(" + String.join(", ", parameters) + ")";
-
-		return "Function \'" + nameAndSignature + "\' expects " + parameters.size() + " argument(s), got " + arguments.size() + " argument(s)";
-	}
+	Apply encode(List<Expression> arguments, PMMLEncoder encoder);
 }

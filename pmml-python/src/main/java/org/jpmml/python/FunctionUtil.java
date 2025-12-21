@@ -19,6 +19,7 @@
 package org.jpmml.python;
 
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 import org.dmg.pmml.Apply;
@@ -31,7 +32,6 @@ import org.dmg.pmml.OpType;
 import org.dmg.pmml.PMMLFunctions;
 import org.dmg.pmml.ParameterField;
 import org.jpmml.converter.ExpressionUtil;
-import org.jpmml.converter.FeatureResolver;
 import org.jpmml.converter.PMMLEncoder;
 
 public class FunctionUtil {
@@ -46,347 +46,86 @@ public class FunctionUtil {
 
 	static
 	public Apply encodeFunction(String module, String name, List<Expression> expressions, PMMLEncoder encoder){
+		PythonFunction function = resolveFunction(module, name);
+
+		List<String> parameters = function.getParameters();
+		if(parameters != null && expressions.size() != parameters.size()){
+			throw new InvalidFunctionCallException(module, name, parameters, expressions);
+		}
+
+		return function.encode(expressions, encoder);
+	}
+
+	static
+	private PythonFunction resolveFunction(String module, String name){
+		Map<String, PythonFunction> registry = getRegistry(module);
+
+		if(registry != null){
+			PythonFunction function = registry.get(name);
+
+			if(function != null){
+				return function;
+			}
+		}
+
+		throw new FunctionResolutionException(module + "." + name);
+	}
+
+	static
+	private Map<String, PythonFunction> getRegistry(String module){
 
 		if(checkModulePrefix(module, "builtins")){
-			return encodeBuiltinFunction(module, name, expressions, encoder);
+			return BuiltinFunctions.REGISTRY;
 		} else
 
 		if(checkModulePrefix(module, "math")){
-			return encodeMathFunction(module, name, expressions, encoder);
-		} else
-
-		if(checkModulePrefix(module, "pcre") || checkModulePrefix(module, "pcre2") || checkModulePrefix(module, "re")){
-			return encodeRegExFunction(module, name, expressions, encoder);
+			return MathFunctions.REGISTRY;
 		} else
 
 		if(checkModulePrefix(module, "numpy")){
-			return encodeNumpyFunction(module, name, expressions, encoder);
+			return NumPyFunctions.REGISTRY;
 		} else
 
 		if(checkModulePrefix(module, "pandas")){
-			return encodePandasFunction(module, name, expressions, encoder);
+			return PandasFunctions.REGISTRY;
 		} else
 
-		if(checkModulePrefix(module, "scipy")){
-			return encodeScipyFunction(module, name, expressions, encoder);
-		}
-
-		throw new FunctionResolutionException(module, name);
-	}
-
-	static
-	public Apply encodeBuiltinFunction(String module, String name, List<Expression> expressions, PMMLEncoder encoder){
-
-		if(("builtins").equals(module)){
-
-			switch(name){
-				case "abs":
-					return encodeUnaryFunction(PMMLFunctions.ABS, expressions);
-				case "bool":
-					return tobool(expressions, encoder);
-				case "float":
-					return tofloat(expressions, encoder);
-				case "int":
-					return toint(expressions, encoder);
-				case "len":
-					return encodeUnaryFunction(PMMLFunctions.STRINGLENGTH, expressions);
-				case "max":
-					return encodeAggregateFunction(PMMLFunctions.MAX, expressions);
-				case "min":
-					return encodeAggregateFunction(PMMLFunctions.MIN, expressions);
-				case "str":
-					return tostr(expressions, encoder);
-				default:
-					break;
-			}
-		}
-
-		throw new FunctionResolutionException(module, name);
-	}
-
-	static
-	public Apply encodeMathFunction(String module, String name, List<Expression> expressions, PMMLEncoder encoder){
-
-		if(("math").equals(module)){
-
-			switch(name){
-				case "acos":
-					return encodeUnaryFunction(PMMLFunctions.ACOS, expressions);
-				case "asin":
-					return encodeUnaryFunction(PMMLFunctions.ASIN, expressions);
-				case "atan":
-					return encodeUnaryFunction(PMMLFunctions.ATAN, expressions);
-				case "atan2":
-					return encodeBinaryFunction(PMMLFunctions.ATAN2, expressions);
-				case "ceil":
-					return encodeUnaryFunction(PMMLFunctions.CEIL, expressions);
-				case "cos":
-					return encodeUnaryFunction(PMMLFunctions.COS, expressions);
-				case "cosh":
-					return encodeUnaryFunction(PMMLFunctions.COSH, expressions);
-				case "degrees":
-					return rad2deg(expressions);
-				case "exp":
-					return encodeUnaryFunction(PMMLFunctions.EXP, expressions);
-				case "expm1":
-					return encodeUnaryFunction(PMMLFunctions.EXPM1, expressions);
-				case "fabs":
-					return encodeUnaryFunction(PMMLFunctions.ABS, expressions);
-				case "floor":
-					return encodeUnaryFunction(PMMLFunctions.FLOOR, expressions);
-				case "hypot":
-					return encodeUnaryFunction(PMMLFunctions.HYPOT, expressions);
-				case "isnan":
-					return encodeUnaryFunction(PMMLFunctions.ISMISSING, expressions);
-				case "log":
-					return encodeUnaryFunction(PMMLFunctions.LN, expressions);
-				case "logp1":
-					return encodeUnaryFunction(PMMLFunctions.LN1P, expressions);
-				case "log10":
-					return encodeUnaryFunction(PMMLFunctions.LOG10, expressions);
-				case "pow":
-					return encodeBinaryFunction(PMMLFunctions.POW, expressions);
-				case "radians":
-					return deg2rad(expressions);
-				case "sin":
-					return encodeUnaryFunction(PMMLFunctions.SIN, expressions);
-				case "sinh":
-					return encodeUnaryFunction(PMMLFunctions.SINH, expressions);
-				case "sqrt":
-					return encodeUnaryFunction(PMMLFunctions.SQRT, expressions);
-				case "tan":
-					return encodeUnaryFunction(PMMLFunctions.TAN, expressions);
-				case "tanh":
-					return encodeUnaryFunction(PMMLFunctions.TANH, expressions);
-				case "trunc":
-					return trunc(expressions, encoder);
-				default:
-					break;
-			}
-		}
-
-		throw new FunctionResolutionException(module, name);
-	}
-
-	static
-	public Apply encodeRegExFunction(String module, String name, List<Expression> expressions, PMMLEncoder encoder){
-
-		if(("pcre").equals(module)){
-
-			switch(name){
-				case "search":
-					return search(expressions, RegExFlavour.PCRE);
-				case "sub":
-					return sub(expressions, RegExFlavour.PCRE);
-				default:
-					break;
-			}
+		if(checkModulePrefix(module, "pcre")){
+			return PCREFunctions.REGISTRY;
 		} else
 
-		if(("pcre2").equals(module)){
-
-			switch(name){
-				case "substitute":
-					return sub(expressions, RegExFlavour.PCRE2);
-				default:
-					break;
-			}
+		if(checkModulePrefix(module, "pcre2")){
+			return PCRE2Functions.REGISTRY;
 		} else
 
-		if(("re").equals(module)){
+		if(checkModulePrefix(module, "re")){
+			return REFunctions.REGISTRY;
+		} else
 
-			switch(name){
-				case "search":
-					return search(expressions, RegExFlavour.RE);
-				case "sub":
-					return sub(expressions, RegExFlavour.RE);
-				default:
-					break;
-			}
+		if(checkModulePrefix(module, "scipy.special")){
+			return SciPySpecialFunctions.REGISTRY;
 		}
 
-		throw new FunctionResolutionException(module, name);
+		return null;
 	}
 
 	static
-	public Apply encodeNumpyFunction(String module, String name, List<Expression> expressions, PMMLEncoder encoder){
-
-		// Use fuzzy matching
-		if(checkModulePrefix(module, "numpy")){
-
-			switch(name){
-				case "absolute":
-					return encodeUnaryFunction(PMMLFunctions.ABS, expressions);
-				case "arccos":
-					return encodeUnaryFunction(PMMLFunctions.ACOS, expressions);
-				case "arcsin":
-					return encodeUnaryFunction(PMMLFunctions.ASIN, expressions);
-				case "arctan":
-					return encodeUnaryFunction(PMMLFunctions.ATAN, expressions);
-				case "arctan2":
-					return encodeBinaryFunction(PMMLFunctions.ATAN2, expressions);
-				case "ceil":
-					return encodeUnaryFunction(PMMLFunctions.CEIL, expressions);
-				case "clip":
-					return clip(expressions);
-				case "cos":
-					return encodeUnaryFunction(PMMLFunctions.COS, expressions);
-				case "cosh":
-					return encodeUnaryFunction(PMMLFunctions.COSH, expressions);
-				case "degrees":
-				case "rad2deg":
-					return rad2deg(expressions);
-				case "exp":
-					return encodeUnaryFunction(PMMLFunctions.EXP, expressions);
-				case "expm1":
-					return encodeUnaryFunction(PMMLFunctions.EXPM1, expressions);
-				case "floor":
-					return encodeUnaryFunction(PMMLFunctions.FLOOR, expressions);
-				case "fmax":
-					return encodeBinaryFunction(PMMLFunctions.MAX, expressions);
-				case "fmin":
-					return encodeBinaryFunction(PMMLFunctions.MIN, expressions);
-				case "hypot":
-					return encodeUnaryFunction(PMMLFunctions.HYPOT, expressions);
-				case "isnan":
-					return encodeUnaryFunction(PMMLFunctions.ISMISSING, expressions);
-				case "log":
-					return encodeUnaryFunction(PMMLFunctions.LN, expressions);
-				case "logical_and":
-					return encodeBinaryFunction(PMMLFunctions.AND, expressions);
-				case "logical_not":
-					return encodeUnaryFunction(PMMLFunctions.NOT, expressions);
-				case "logical_or":
-					return encodeBinaryFunction(PMMLFunctions.OR, expressions);
-				case "log1p":
-					return encodeUnaryFunction(PMMLFunctions.LN1P, expressions);
-				case "log10":
-					return encodeUnaryFunction(PMMLFunctions.LOG10, expressions);
-				case "negative":
-					return negative(expressions);
-				case "power":
-					return encodeBinaryFunction(PMMLFunctions.POW, expressions);
-				case "radians":
-				case "deg2rad":
-					return deg2rad(expressions);
-				case "reciprocal":
-					return reciprocal(expressions);
-				case "rint":
-					return encodeUnaryFunction(PMMLFunctions.RINT, expressions);
-				case "sign":
-					return sign(expressions, encoder);
-				case "sin":
-					return encodeUnaryFunction(PMMLFunctions.SIN, expressions);
-				case "sinh":
-					return encodeUnaryFunction(PMMLFunctions.SINH, expressions);
-				case "sqrt":
-					return encodeUnaryFunction(PMMLFunctions.SQRT, expressions);
-				case "square":
-					return square(expressions);
-				case "tan":
-					return encodeUnaryFunction(PMMLFunctions.TAN, expressions);
-				case "tanh":
-					return encodeUnaryFunction(PMMLFunctions.TANH, expressions);
-				case "where":
-					return where(expressions);
-				default:
-					break;
-			}
-		}
-
-		throw new FunctionResolutionException(module, name);
-	}
-
-	static
-	public Apply encodePandasFunction(String module, String name, List<Expression> expressions, PMMLEncoder encoder){
-
-		if(("pandas").equals(module)){
-
-			switch(name){
-				case "isna":
-				case "isnull":
-					return encodeUnaryFunction(PMMLFunctions.ISMISSING, expressions);
-				case "notna":
-				case "notnull":
-					return encodeUnaryFunction(PMMLFunctions.ISNOTMISSING, expressions);
-				default:
-					break;
-			}
-		}
-
-		throw new FunctionResolutionException(module, name);
-	}
-
-	static
-	public Apply encodeScipyFunction(String module, String name, List<Expression> expressions, PMMLEncoder encoder){
-
-		if(("scipy.special").equals(module)){
-
-			switch(name){
-				case "expit":
-					return expit(expressions);
-				case "logit":
-					return logit(expressions, encoder);
-				default:
-					break;
-			}
-		}
-
-		throw new FunctionResolutionException(module, name);
-	}
-
-	static
-	public Apply encodeUnaryFunction(String function, List<Expression> expressions){
-		return ExpressionUtil.createApply(function, getElement(expressions, 1, 0));
-	}
-
-	static
-	public Apply encodeBinaryFunction(String function, List<Expression> expressions){
-		return ExpressionUtil.createApply(function, getElement(expressions, 2, 0), getElement(expressions, 2, 1));
-	}
-
-	static
-	public Apply encodeAggregateFunction(String function, List<Expression> expressions){
-		Apply apply = ExpressionUtil.createApply(function);
-
-		if(expressions.size() < 2){
-			throw new IllegalArgumentException();
-		}
-
-		(apply.getExpressions()).addAll(expressions);
-
-		return apply;
-	}
-
-	static
-	private Apply clip(List<Expression> expressions){
-		return ExpressionUtil.createApply(PMMLFunctions.MIN,
-			ExpressionUtil.createApply(PMMLFunctions.MAX,
-				getElement(expressions, 3, 0),
-				getElement(expressions, 3, 1)
-			),
-			getElement(expressions, 3, 2)
-		);
-	}
-
-	static
-	private Apply deg2rad(List<Expression> expressions){
-		return ExpressionUtil.createApply(PMMLFunctions.MULTIPLY, getOnlyElement(expressions), ExpressionUtil.createConstant(Math.PI / 180d));
-	}
-
-	static
-	private Apply expit(List<Expression> expressions){
-		return ExpressionUtil.createApply(PMMLFunctions.DIVIDE,
-			ExpressionUtil.createConstant(1),
-			ExpressionUtil.createApply(PMMLFunctions.ADD,
+	public Apply expit(List<Expression> expressions, PMMLEncoder encoder){
+		Function<Expression, Apply> applyGenerator = (expression) -> {
+			return ExpressionUtil.createApply(PMMLFunctions.DIVIDE,
 				ExpressionUtil.createConstant(1),
-				ExpressionUtil.createApply(PMMLFunctions.EXP, ExpressionUtil.createApply(PMMLFunctions.MULTIPLY, ExpressionUtil.createConstant(-1), getOnlyElement(expressions)))
-			)
-		);
+				ExpressionUtil.createApply(PMMLFunctions.ADD,
+					ExpressionUtil.createConstant(1),
+					ExpressionUtil.createApply(PMMLFunctions.EXP, ExpressionUtil.createApply(PMMLFunctions.MULTIPLY, ExpressionUtil.createConstant(-1), expression))
+				)
+			);
+		};
+
+		return ensureApply("expit", OpType.CONTINUOUS, DataType.DOUBLE, expressions.get(0), applyGenerator, encoder);
 	}
 
 	static
-	private Apply logit(List<Expression> expressions, PMMLEncoder encoder){
+	public Apply logit(List<Expression> expressions, PMMLEncoder encoder){
 		Function<Expression, Apply> applyGenerator = (expression) -> {
 			return ExpressionUtil.createApply(PMMLFunctions.LN,
 				ExpressionUtil.createApply(PMMLFunctions.DIVIDE,
@@ -396,35 +135,11 @@ public class FunctionUtil {
 			);
 		};
 
-		return ensureApply("logit", OpType.CONTINUOUS, DataType.DOUBLE, getOnlyElement(expressions), applyGenerator, encoder);
+		return ensureApply("logit", OpType.CONTINUOUS, DataType.DOUBLE, expressions.get(0), applyGenerator, encoder);
 	}
 
 	static
-	private Apply negative(List<Expression> expressions){
-		return ExpressionUtil.createApply(PMMLFunctions.MULTIPLY, ExpressionUtil.createConstant(-1), getOnlyElement(expressions));
-	}
-
-	static
-	private Apply rad2deg(List<Expression> expressions){
-		return ExpressionUtil.createApply(PMMLFunctions.MULTIPLY, getOnlyElement(expressions), ExpressionUtil.createConstant(180d / Math.PI));
-	}
-
-	static
-	private Apply reciprocal(List<Expression> expressions){
-		return ExpressionUtil.createApply(PMMLFunctions.DIVIDE, ExpressionUtil.createConstant(1), getOnlyElement(expressions));
-	}
-
-	static
-	private Apply search(List<Expression> expressions, RegExFlavour reFlavour){
-		return ExpressionUtil.createApply(PMMLFunctions.MATCHES,
-			getElement(expressions, 2, 1),
-			updateConstant(getElement(expressions, 2, 0), reFlavour::translatePattern)
-		)
-			.addExtensions(reFlavour.createExtension());
-	}
-
-	static
-	private Apply sign(List<Expression> expressions, PMMLEncoder encoder){
+	public Apply sign(List<Expression> expressions, PMMLEncoder encoder){
 		Function<Expression, Apply> applyGenerator = (expression) -> {
 			return ExpressionUtil.createApply(PMMLFunctions.IF, ExpressionUtil.createApply(PMMLFunctions.LESSTHAN, expression, ExpressionUtil.createConstant(0)),
 				ExpressionUtil.createConstant(-1), // x < 0
@@ -435,105 +150,11 @@ public class FunctionUtil {
 			);
 		};
 
-		return ensureApply("sign", OpType.CATEGORICAL, DataType.INTEGER, getOnlyElement(expressions), applyGenerator, encoder);
+		return ensureApply("sign", OpType.CATEGORICAL, DataType.INTEGER, expressions.get(0), applyGenerator, encoder);
 	}
 
 	static
-	private Apply square(List<Expression> expressions){
-		return ExpressionUtil.createApply(PMMLFunctions.POW, getOnlyElement(expressions), ExpressionUtil.createConstant(2));
-	}
-
-	static
-	private Apply sub(List<Expression> expressions, RegExFlavour reFlavour){
-		return ExpressionUtil.createApply(PMMLFunctions.REPLACE,
-			getElement(expressions, 3, 2),
-			updateConstant(getElement(expressions, 3, 0), reFlavour::translatePattern),
-			updateConstant(getElement(expressions, 3, 1), reFlavour::translateReplacement)
-		)
-			.addExtensions(reFlavour.createExtension());
-	}
-
-	static
-	private Apply tobool(List<Expression> expressions, PMMLEncoder encoder){
-		Expression expression = getOnlyElement(expressions);
-
-		DataType dataType = ExpressionUtil.getDataType(expression, (FeatureResolver)encoder);
-		if(dataType != null){
-
-			switch(dataType){
-				case STRING:
-					return ExpressionUtil.createApply(PMMLFunctions.GREATERTHAN,
-						ExpressionUtil.createApply(PMMLFunctions.STRINGLENGTH, expression), ExpressionUtil.createConstant(0)
-					);
-				case INTEGER:
-				case FLOAT:
-				case DOUBLE:
-					return ExpressionUtil.createApply(PMMLFunctions.NOTEQUAL,
-						expression, ExpressionUtil.createConstant(dataType, 0)
-					);
-				default:
-					break;
-			}
-		}
-
-		Function<ParameterField, FieldRef> expressionGenerator = (valueField) -> {
-			return new FieldRef(valueField);
-		};
-
-		DefineFunction defineFunction = ensureDefineFunction("bool", OpType.CATEGORICAL, DataType.BOOLEAN, expressionGenerator, encoder);
-
-		return ExpressionUtil.createApply(defineFunction, expression);
-	}
-
-	static
-	private Apply tofloat(List<Expression> expressions, PMMLEncoder encoder){
-		Function<ParameterField, FieldRef> expressionGenerator = (valueField) -> {
-			return new FieldRef(valueField);
-		};
-
-		DefineFunction defineFunction = ensureDefineFunction("float", OpType.CONTINUOUS, DataType.DOUBLE, expressionGenerator, encoder);
-
-		return ExpressionUtil.createApply(defineFunction, getOnlyElement(expressions));
-	}
-
-	static
-	private Apply toint(List<Expression> expressions, PMMLEncoder encoder){
-		Expression expression = getOnlyElement(expressions);
-
-		DataType dataType = ExpressionUtil.getDataType(expression, (FeatureResolver)encoder);
-		if(dataType != null){
-
-			switch(dataType){
-				case FLOAT:
-				case DOUBLE:
-					return trunc(expressions, encoder);
-				default:
-					break;
-			}
-		}
-
-		Function<ParameterField, FieldRef> expressionGenerator = (valueField) -> {
-			return new FieldRef(valueField);
-		};
-
-		DefineFunction defineFunction = ensureDefineFunction("int", OpType.CONTINUOUS, DataType.INTEGER, expressionGenerator, encoder);
-
-		return ExpressionUtil.createApply(defineFunction, expression);
-	}
-
-	static
-	private Apply tostr(List<Expression> expressions, PMMLEncoder encoder){
-		Function<ParameterField, FieldRef> expressionGenerator = (valueField) -> {
-			return new FieldRef(valueField);
-		};
-
-		DefineFunction defineFunction = ensureDefineFunction("str", OpType.CATEGORICAL, DataType.STRING, expressionGenerator, encoder);
-
-		return ExpressionUtil.createApply(defineFunction, getOnlyElement(expressions));
-	}
-
-	static
-	private Apply trunc(List<Expression> expressions, PMMLEncoder encoder){
+	public Apply trunc(List<Expression> expressions, PMMLEncoder encoder){
 		Function<Expression, Apply> applyGenerator = (expression) -> {
 			return ExpressionUtil.createApply(PMMLFunctions.IF, ExpressionUtil.createApply(PMMLFunctions.LESSTHAN, expression, ExpressionUtil.createConstant(0)),
 				ExpressionUtil.createApply(PMMLFunctions.CEIL, expression), // x < 0
@@ -541,19 +162,11 @@ public class FunctionUtil {
 			);
 		};
 
-		return ensureApply("trunc", OpType.CONTINUOUS, DataType.INTEGER, getOnlyElement(expressions), applyGenerator, encoder);
+		return ensureApply("trunc", OpType.CONTINUOUS, DataType.INTEGER, expressions.get(0), applyGenerator, encoder);
 	}
 
 	static
-	private Apply where(List<Expression> expressions){
-		return ExpressionUtil.createApply(PMMLFunctions.IF, getElement(expressions, 3, 0),
-			getElement(expressions, 3, 1),
-			getElement(expressions, 3, 2)
-		);
-	}
-
-	static
-	private Apply ensureApply(String name, OpType opType, DataType dataType, Expression expression, Function<Expression, Apply> applyGenerator, PMMLEncoder encoder){
+	public Apply ensureApply(String name, OpType opType, DataType dataType, Expression expression, Function<Expression, Apply> applyGenerator, PMMLEncoder encoder){
 
 		if(expression instanceof FieldRef){
 			FieldRef fieldRef = (FieldRef)expression;
@@ -571,7 +184,7 @@ public class FunctionUtil {
 	}
 
 	static
-	private DefineFunction ensureDefineFunction(String name, OpType opType, DataType dataType, Function<ParameterField, ? extends Expression> expressionGenerator, PMMLEncoder encoder){
+	public DefineFunction ensureDefineFunction(String name, OpType opType, DataType dataType, Function<ParameterField, ? extends Expression> expressionGenerator, PMMLEncoder encoder){
 		DefineFunction defineFunction = encoder.getDefineFunction(name);
 
 		if(defineFunction == null){
@@ -589,7 +202,7 @@ public class FunctionUtil {
 	}
 
 	static
-	private Expression updateConstant(Expression expression, Function<String, String> function){
+	public Expression updateConstant(Expression expression, Function<String, String> function){
 
 		if(expression instanceof Constant){
 			Constant constant = (Constant)expression;
@@ -605,19 +218,5 @@ public class FunctionUtil {
 	static
 	private boolean checkModulePrefix(String module, String prefix){
 		return (prefix).equals(module) || (module != null && module.startsWith(prefix + "."));
-	}
-
-	static
-	private Expression getOnlyElement(List<Expression> expressions){
-		ClassDictUtil.checkSize(1, expressions);
-
-		return expressions.get(0);
-	}
-
-	static
-	private Expression getElement(List<Expression> expressions, int expectedSize, int index){
-		ClassDictUtil.checkSize(expectedSize, expressions);
-
-		return expressions.get(index);
 	}
 }
