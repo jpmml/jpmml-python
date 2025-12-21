@@ -128,43 +128,6 @@ public class ExpressionTranslator extends AbstractTranslator {
 		return expression;
 	}
 
-	public Constant encodeConstant(String dottedName){
-
-		switch(dottedName){
-			case "math.e":
-			case "numpy.e":
-				return ExpressionUtil.createConstant(DataType.DOUBLE, Math.E);
-			case "numpy.NZERO":
-				return ExpressionUtil.createConstant(DataType.DOUBLE, -0.0d);
-			case "math.pi":
-			case "numpy.pi":
-				return ExpressionUtil.createConstant(DataType.DOUBLE, Math.PI);
-			case "numpy.PZERO":
-				return ExpressionUtil.createConstant(DataType.DOUBLE, 0.0);
-			case "math.tau":
-				return ExpressionUtil.createConstant(DataType.DOUBLE, 2 * Math.PI);
-			default:
-				break;
-		}
-
-		switch(dottedName){
-			// Math
-			case "math.nan":
-			// Numpy
-			case "numpy.nan":
-			case "numpy.NaN":
-			case "numpy.NAN":
-			// Pandas
-			case "pandas.NA":
-			case "pandas.NaT":
-				return ExpressionUtil.createMissingConstant();
-			default:
-				break;
-		}
-
-		throw new ConstantResolutionException(dottedName);
-	}
-
 	private String getIndent() throws ParseException {
 		Token nextToken = getToken(1);
 		
@@ -1215,7 +1178,7 @@ private Expression NameInvocationExpression(String dottedName):
 	{
 		int dot = dottedName.indexOf('.');
 		if(dot > -1){
-			return encodeConstant(dottedName);
+			return ConstantUtil.encodeConstant(dottedName);
 		}
 
 		FieldRef fieldRef = getVariable(dottedName);

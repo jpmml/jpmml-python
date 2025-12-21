@@ -22,6 +22,10 @@ import org.jpmml.converter.ResolutionException;
 
 public class ConstantResolutionException extends ResolutionException {
 
+	public ConstantResolutionException(String module, String name){
+		super(formatMessage(module + "." + name));
+	}
+
 	public ConstantResolutionException(String dottedName){
 		super(formatMessage(dottedName));
 	}
