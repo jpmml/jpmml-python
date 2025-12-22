@@ -84,6 +84,21 @@ public interface NumPyFunctions extends Functions {
 
 	PythonFunction EXPM1 = new UnaryFunction(PMMLFunctions.EXPM1);
 
+	PythonFunction EXP2 = new PythonFunction(){
+
+		@Override
+		public List<String> getParameters(){
+			return Arrays.asList("x");
+		}
+
+		@Override
+		public Apply encode(List<Expression> expressions, PMMLEncoder encoder){
+			return ExpressionUtil.createApply(PMMLFunctions.POW,
+				ExpressionUtil.createConstant(2), expressions.get(0)
+			);
+		}
+	};
+
 	PythonFunction FLOOR = new UnaryFunction(PMMLFunctions.FLOOR);
 
 	PythonFunction FMAX = new BinaryFunction(PMMLFunctions.MAX);
@@ -215,6 +230,7 @@ public interface NumPyFunctions extends Functions {
 		Map.entry("deg2rad", NumPyFunctions.DEG2RAD),
 		Map.entry("exp", NumPyFunctions.EXP),
 		Map.entry("expm1", NumPyFunctions.EXPM1),
+		Map.entry("exp2", NumPyFunctions.EXP2),
 		Map.entry("floor", NumPyFunctions.FLOOR),
 		Map.entry("fmax", NumPyFunctions.FMAX),
 		Map.entry("fmin", NumPyFunctions.FMIN),
