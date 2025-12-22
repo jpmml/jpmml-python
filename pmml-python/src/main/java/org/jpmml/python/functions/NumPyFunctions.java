@@ -217,6 +217,7 @@ public interface NumPyFunctions extends Functions {
 	};
 
 	Map<String, PythonFunction> REGISTRY = Map.ofEntries(
+		Map.entry("abs", NumPyFunctions.ABSOLUTE),
 		Map.entry("absolute", NumPyFunctions.ABSOLUTE),
 		Map.entry("arccos", NumPyFunctions.ARCCOS),
 		Map.entry("arcsin", NumPyFunctions.ARCSIN),
