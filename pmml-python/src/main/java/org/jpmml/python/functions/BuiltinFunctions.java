@@ -145,6 +145,14 @@ public interface BuiltinFunctions extends Functions {
 
 	PythonFunction MIN = new AggregateFunction(PMMLFunctions.MIN);
 
+	PythonFunction POW = new BinaryFunction(PMMLFunctions.POW){
+
+		@Override
+		public List<String> getParameters(){
+			return Arrays.asList("base", "exp");
+		}
+	};
+
 	PythonFunction STR = new PythonFunction(){
 
 		@Override
@@ -172,6 +180,7 @@ public interface BuiltinFunctions extends Functions {
 		Map.entry("len", BuiltinFunctions.LEN),
 		Map.entry("max", BuiltinFunctions.MAX),
 		Map.entry("min", BuiltinFunctions.MIN),
+		Map.entry("pow", BuiltinFunctions.POW),
 		Map.entry("str", BuiltinFunctions.STR)
 	);
 }
