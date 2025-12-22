@@ -146,7 +146,7 @@ public class ClassDictUtil {
 
 		Class<?> clazz = object.getClass();
 
-		return "Java class " + clazz.getName();
+		return "Java class " + clazz.getTypeName();
 	}
 
 	static
@@ -176,7 +176,7 @@ public class ClassDictUtil {
 			String key = entry.getKey();
 			Object value = entry.getValue();
 
-			sb.append("\t" + key + "=" + value + (" // " + (value != null ? (value.getClass()).getName() : "N/A")));
+			sb.append("\t" + key + "=" + value + (" // " + (value != null ? (value.getClass()).getTypeName() : "N/A")));
 		}
 
 		sb.append("\n}\n");
