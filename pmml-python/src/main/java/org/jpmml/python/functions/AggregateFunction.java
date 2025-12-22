@@ -27,7 +27,7 @@ import org.jpmml.converter.ExpressionUtil;
 import org.jpmml.converter.PMMLEncoder;
 import org.jpmml.python.PythonFunction;
 
-public class AggregateFunction implements PythonFunction {
+public class AggregateFunction extends PythonFunction {
 
 	private String function = null;
 

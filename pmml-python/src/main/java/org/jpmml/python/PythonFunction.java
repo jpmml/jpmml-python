@@ -24,11 +24,15 @@ import org.dmg.pmml.Apply;
 import org.dmg.pmml.Expression;
 import org.jpmml.converter.PMMLEncoder;
 
-public interface PythonFunction {
+abstract
+public class PythonFunction {
 
-	List<String> getParameters();
+	abstract
+	public List<String> getParameters();
 
-	default
+	abstract
+	public Apply encode(List<Expression> arguments, PMMLEncoder encoder);
+
 	public boolean checkCall(List<Expression> expressions){
 		List<String> parameters = getParameters();
 
@@ -38,6 +42,4 @@ public interface PythonFunction {
 
 		return true;
 	}
-
-	Apply encode(List<Expression> arguments, PMMLEncoder encoder);
 }

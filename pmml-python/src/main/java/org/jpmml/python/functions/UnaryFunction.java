@@ -28,7 +28,7 @@ import org.jpmml.converter.ExpressionUtil;
 import org.jpmml.converter.PMMLEncoder;
 import org.jpmml.python.PythonFunction;
 
-public class UnaryFunction implements PythonFunction {
+public class UnaryFunction extends PythonFunction {
 
 	private String function = null;
 

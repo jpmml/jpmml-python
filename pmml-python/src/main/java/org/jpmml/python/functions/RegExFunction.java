@@ -24,7 +24,7 @@ import org.jpmml.python.PythonFunction;
 import org.jpmml.python.RegExFlavour;
 
 abstract
-public class RegExFunction implements PythonFunction {
+public class RegExFunction extends PythonFunction {
 
 	private RegExFlavour reFlavour = null;
 
