@@ -56,8 +56,10 @@ public class FunctionUtil {
 	public Apply encodeFunction(String module, String name, List<Expression> expressions, PMMLEncoder encoder){
 		PythonFunction function = resolveFunction(module, name);
 
-		List<String> parameters = function.getParameters();
-		if(parameters != null && expressions.size() != parameters.size()){
+		boolean correct = function.checkCall(expressions);
+		if(!correct){
+			List<String> parameters = function.getParameters();
+
 			throw new InvalidFunctionCallException(module, name, parameters, expressions);
 		}
 

@@ -42,6 +42,11 @@ public class AggregateFunction implements PythonFunction {
 	}
 
 	@Override
+	public boolean checkCall(List<Expression> expressions){
+		return !expressions.isEmpty();
+	}
+
+	@Override
 	public Apply encode(List<Expression> expressions, PMMLEncoder encoder){
 		String function = getFunction();
 

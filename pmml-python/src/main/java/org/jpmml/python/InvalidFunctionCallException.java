@@ -18,6 +18,7 @@
  */
 package org.jpmml.python;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.jpmml.converter.OperationException;
@@ -34,6 +35,11 @@ public class InvalidFunctionCallException extends OperationException {
 
 	static
 	private String formatMessage(String dottedName, List<String> parameters, List<?> arguments){
+
+		if(parameters == null){
+			parameters = Arrays.asList("...");
+		}
+
 		String nameAndSignature = dottedName + "(" + String.join(", ", parameters) + ")";
 
 		return "Function \'" + nameAndSignature + "\' expects " + parameters.size() + " argument(s), got " + arguments.size();

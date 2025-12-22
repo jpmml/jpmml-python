@@ -28,5 +28,16 @@ public interface PythonFunction {
 
 	List<String> getParameters();
 
+	default
+	public boolean checkCall(List<Expression> expressions){
+		List<String> parameters = getParameters();
+
+		if(parameters != null && expressions.size() != parameters.size()){
+			return false;
+		}
+
+		return true;
+	}
+
 	Apply encode(List<Expression> arguments, PMMLEncoder encoder);
 }
