@@ -36,6 +36,6 @@ public class InvalidFunctionCallException extends OperationException {
 	private String formatMessage(String dottedName, List<String> parameters, List<?> arguments){
 		String nameAndSignature = dottedName + "(" + String.join(", ", parameters) + ")";
 
-		return "Function \'" + nameAndSignature + "\' expects " + parameters.size() + " argument(s), got " + arguments.size() + " argument(s)";
+		return "Function \'" + nameAndSignature + "\' expects " + parameters.size() + " argument(s), got " + arguments.size();
 	}
 }

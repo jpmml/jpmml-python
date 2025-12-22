@@ -61,7 +61,7 @@ public class ClassDictUtil {
 			} // End if
 
 			if(collection.size() != size){
-				throw new IllegalArgumentException("Expected " + size + " element(s), got " + collection.size() + " element(s)");
+				throw new IllegalArgumentException("Expected " + size + " element(s), got " + collection.size());
 			}
 		}
 	}
@@ -86,7 +86,7 @@ public class ClassDictUtil {
 		for(int[] shape : shapes){
 
 			if(shape[axis] != size){
-				throw new IllegalArgumentException("Expected " + size + " element(s), got " + shape[axis] + " element(s)");
+				throw new IllegalArgumentException("Expected " + size + " element(s), got " + shape[axis]);
 			}
 		}
 	}

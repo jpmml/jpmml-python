@@ -123,7 +123,7 @@ public class CompressedInputStreamStorage extends InputStreamStorage {
 				super.close();
 
 				if(size != expectedSize){
-					throw new IOException("Expected " + expectedSize + " byte(s) of uncompressed data, got " + size + " byte(s)");
+					throw new IOException("Expected " + expectedSize + " byte(s) of uncompressed data, got " + size);
 				}
 			}
 		};

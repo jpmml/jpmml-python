@@ -32,6 +32,6 @@ public class InvalidMethodCallException extends OperationException {
 	private String formatMessage(String dottedName, List<String> parameters, List<?> arguments){
 		String nameAndSignature = dottedName + "(" + String.join(", ", parameters) + ")";
 
-		return "Method \'" + nameAndSignature + "\' expects " + parameters.size() + " argument(s), got " + arguments.size() + " argument(s)";
+		return "Method \'" + nameAndSignature + "\' expects " + parameters.size() + " argument(s), got " + arguments.size();
 	}
 }
