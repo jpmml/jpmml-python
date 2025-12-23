@@ -953,6 +953,20 @@ public class ExpressionTranslatorTest extends TranslatorTest {
 	}
 
 	@Test
+	public void translateConstantFunctionInvocationExpression(){
+		PMMLEncoder encoder = new PMMLEncoder(){
+		};
+
+		ExpressionTranslator expressionTranslator = new ExpressionTranslator(new DataFrameScope(doubleFeatures, encoder));
+
+		Expression expected = ExpressionUtil.createMissingConstant();
+
+		String string = "float(\"NaN\")";
+
+		checkExpression(expected, translateExpression(expressionTranslator, string));
+	}
+
+	@Test
 	public void translateStringTrailerFunctionExpression(){
 		Feature feature = new StringFeature(encoder, "x");
 

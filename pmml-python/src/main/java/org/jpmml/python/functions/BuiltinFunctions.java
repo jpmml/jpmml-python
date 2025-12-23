@@ -25,6 +25,7 @@ import java.util.function.Function;
 
 import com.google.common.collect.Iterables;
 import org.dmg.pmml.Apply;
+import org.dmg.pmml.Constant;
 import org.dmg.pmml.DataType;
 import org.dmg.pmml.DefineFunction;
 import org.dmg.pmml.Expression;
@@ -90,14 +91,32 @@ public interface BuiltinFunctions extends Functions {
 		}
 
 		@Override
-		public Apply encode(List<Expression> expressions, PMMLEncoder encoder){
+		public Expression encode(List<Expression> expressions, PMMLEncoder encoder){
+			Expression expression = expressions.get(0);
+
+			if(expression instanceof Constant){
+				Constant constant = (Constant)expression;
+
+				if(constant.getDataType() == DataType.STRING){
+					String value = (String)constant.getValue();
+
+					if(value.startsWith("+") || value.startsWith("-")){
+						value = value.substring(1);
+					} // End if
+
+					if(value.equalsIgnoreCase("NaN")){
+						return ExpressionUtil.createMissingConstant();
+					}
+				}
+			}
+
 			Function<List<ParameterField>, FieldRef> expressionGenerator = (parameterFields) -> {
 				return new FieldRef(Iterables.getOnlyElement(parameterFields));
 			};
 
 			DefineFunction defineFunction = FunctionUtil.ensureDefineFunction("float", OpType.CONTINUOUS, DataType.DOUBLE, expressionGenerator, getParameters(), encoder);
 
-			return ExpressionUtil.createApply(defineFunction, expressions.get(0));
+			return ExpressionUtil.createApply(defineFunction, expression);
 		}
 	};
 
