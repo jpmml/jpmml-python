@@ -164,6 +164,30 @@ public interface NumPyFunctions extends Functions {
 
 	PythonFunction RINT = new UnaryFunction(PMMLFunctions.RINT);
 
+	PythonFunction ROUND = new PythonFunction(){
+
+		@Override
+		public List<String> getParameters(){
+			return Arrays.asList("x", "decimals?");
+		}
+
+		@Override
+		public boolean checkCall(List<Expression> expressions){
+			return expressions.size() >= 1 && expressions.size() <= 2;
+		}
+
+		@Override
+		public Apply encode(List<Expression> expressions, PMMLEncoder encoder){
+
+			// XXX: Should preserve the input data type
+			if(expressions.size() == 1){
+				return ExpressionUtil.createApply(PMMLFunctions.ROUND, expressions.get(0));
+			}
+
+			return FunctionUtil.roundToDecimals(expressions, encoder);
+		}
+	};
+
 	PythonFunction SIGN = new PythonFunction(){
 
 		@Override
@@ -249,6 +273,7 @@ public interface NumPyFunctions extends Functions {
 		Map.entry("rad2deg", NumPyFunctions.RAD2DEG),
 		Map.entry("reciprocal", NumPyFunctions.RECIPROCAL),
 		Map.entry("rint", NumPyFunctions.RINT),
+		Map.entry("round", NumPyFunctions.ROUND),
 		Map.entry("sign", NumPyFunctions.SIGN),
 		Map.entry("sin", NumPyFunctions.SIN),
 		Map.entry("sinh", NumPyFunctions.SINH),

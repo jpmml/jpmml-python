@@ -111,6 +111,8 @@ public class FunctionUtilTest {
 		assertEquals(1f / 3f, (Float)evaluateExpression("numpy", "reciprocal", 3f), 1e-5);
 		assertEquals(1d / 3d, (Double)evaluateExpression("numpy", "reciprocal", 3d), 1e-8);
 
+		assertEquals(3, evaluateExpression("numpy", "round", Math.PI));
+
 		assertEquals(-1, evaluateExpression("numpy", "sign", -3d));
 		assertEquals(0, evaluateExpression("numpy", "sign", 0d));
 		assertEquals(+1, evaluateExpression("numpy", "sign", +3d));
