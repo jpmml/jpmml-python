@@ -154,6 +154,29 @@ public interface BuiltinFunctions extends Functions {
 		}
 	};
 
+	PythonFunction ROUND = new PythonFunction(){
+
+		@Override
+		public List<String> getParameters(){
+			return Arrays.asList("x", "decimals?");
+		}
+
+		@Override
+		public boolean checkCall(List<Expression> expressions){
+			return expressions.size() >= 1 && expressions.size() <= 2;
+		}
+
+		@Override
+		public Apply encode(List<Expression> expressions, PMMLEncoder encoder){
+
+			if(expressions.size() == 1){
+				return ExpressionUtil.createApply(PMMLFunctions.ROUND, expressions.get(0));
+			}
+
+			return FunctionUtil.roundToDecimals(expressions, encoder);
+		}
+	};
+
 	PythonFunction STR = new PythonFunction(){
 
 		@Override
@@ -182,6 +205,7 @@ public interface BuiltinFunctions extends Functions {
 		Map.entry("max", BuiltinFunctions.MAX),
 		Map.entry("min", BuiltinFunctions.MIN),
 		Map.entry("pow", BuiltinFunctions.POW),
+		Map.entry("round", BuiltinFunctions.ROUND),
 		Map.entry("str", BuiltinFunctions.STR)
 	);
 }

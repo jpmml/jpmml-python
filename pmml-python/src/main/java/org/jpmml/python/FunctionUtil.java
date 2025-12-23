@@ -156,6 +156,27 @@ public class FunctionUtil {
 	}
 
 	static
+	public Apply roundToDecimals(List<Expression> expressions, PMMLEncoder encoder){
+		Function<List<FieldRef>, Apply> applyGenerator = (fieldRefs) -> {
+			return ExpressionUtil.createApply(PMMLFunctions.DIVIDE,
+				ExpressionUtil.createApply(PMMLFunctions.ROUND,
+					ExpressionUtil.createApply(PMMLFunctions.MULTIPLY,
+						fieldRefs.get(0),
+						ExpressionUtil.createApply(PMMLFunctions.POW,
+							ExpressionUtil.createConstant(10d), fieldRefs.get(1)
+						)
+					)
+				),
+				ExpressionUtil.createApply(PMMLFunctions.POW,
+					ExpressionUtil.createConstant(10d), fieldRefs.get(1)
+				)
+			);
+		};
+
+		return ensureApply("roundToDecimals", OpType.CONTINUOUS, DataType.DOUBLE, applyGenerator, Arrays.asList("x", "decimals"), expressions, encoder);
+	}
+
+	static
 	public Apply sign(List<Expression> expressions, PMMLEncoder encoder){
 		Function<List<FieldRef>, Apply> applyGenerator = (fieldRefs) -> {
 			FieldRef fieldRef = Iterables.getOnlyElement(fieldRefs);

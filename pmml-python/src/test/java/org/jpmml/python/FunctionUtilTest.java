@@ -73,6 +73,19 @@ public class FunctionUtilTest {
 
 		assertEquals(13, evaluateExpression("builtins", "max", arguments));
 		assertEquals(1, evaluateExpression("builtins", "min", arguments));
+
+		arguments = new LinkedHashMap<>();
+		arguments.put("x", Math.PI);
+
+		assertEquals(3, evaluateExpression("builtins", "round", arguments));
+
+		arguments.put("decimals", 0);
+
+		assertEquals(3d, evaluateExpression("builtins", "round", arguments));
+
+		arguments.put("decimals", 2);
+
+		assertEquals(3.14, evaluateExpression("builtins", "round", arguments));
 	}
 
 	@Test
