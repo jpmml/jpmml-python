@@ -278,7 +278,8 @@ public class PythonObject extends ClassDict {
 		if(!enumValues.contains(value)){
 			Attribute attribute = new Attribute(this, name);
 
-			throw new InvalidAttributeException("Attribute \'" + attribute.format() + "\' has an unsupported value " + PythonFormatterUtil.formatValue(value) + ". Supported values are " + PythonFormatterUtil.formatCollection(enumValues), attribute);
+			throw new InvalidAttributeException("Attribute \'" + attribute.format() + "\' has an unsupported value " + PythonFormatterUtil.formatValue(value), attribute)
+				.setSolution("Use one of the supported values " + PythonFormatterUtil.formatCollection(enumValues));
 		}
 
 		return value;
@@ -290,7 +291,8 @@ public class PythonObject extends ClassDict {
 		if((value != null)  && (!enumValues.contains(value))){
 			Attribute attribute = new Attribute(this, name);
 
-			throw new InvalidAttributeException("Attribute \'" + attribute.format() + "\' has an unsupported value " + PythonFormatterUtil.formatValue(value) + ". Supported values are " + PythonFormatterUtil.formatCollection(enumValues), attribute);
+			throw new InvalidAttributeException("Attribute \'" + attribute.format() + "\' has an unsupported value " + PythonFormatterUtil.formatValue(value), attribute)
+				.setSolution("Use one of the supported values " + PythonFormatterUtil.formatCollection(enumValues));
 		}
 
 		return value;
@@ -482,7 +484,8 @@ public class PythonObject extends ClassDict {
 				if(!enumValues.contains(value)){
 					Attribute attribute = new Attribute(PythonObject.this, name);
 
-					throw new InvalidAttributeException("List attribute \'" + attribute.format() + "\' contains an unsupported value " + PythonFormatterUtil.formatValue(value) + ". Supported values are " + PythonFormatterUtil.formatCollection(enumValues), attribute);
+					throw new InvalidAttributeException("List attribute \'" + attribute.format() + "\' contains an unsupported value " + PythonFormatterUtil.formatValue(value), attribute)
+						.setSolution("Use one of the supported values " + PythonFormatterUtil.formatCollection(enumValues));
 				}
 
 				return value;

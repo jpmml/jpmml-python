@@ -58,7 +58,8 @@ public class DataFrameScope extends Scope {
 		String variableName = getVariableName();
 
 		if((variableName).equals(name)){
-			throw new OperationException("Name \'" + variableName + "\' refers to a row vector. Use an array indexing expression " + variableName + "[<column index>] or " + variableName + "[<column name>] to refer to a specific row vector element");
+			throw new OperationException("Name \'" + variableName + "\' refers to a row vector")
+				.setSolution("Use an array indexing expression " + variableName + "[<column index>] or " + variableName + "[<column name>] to refer to a specific row vector element");
 		}
 
 		Feature feature = resolveFeature(name);
