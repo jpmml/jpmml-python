@@ -18,10 +18,13 @@
  */
 package org.jpmml.python;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
+import com.google.common.collect.Iterables;
 import org.dmg.pmml.Apply;
 import org.dmg.pmml.Constant;
 import org.dmg.pmml.DataType;
@@ -121,89 +124,104 @@ public class FunctionUtil {
 
 	static
 	public Apply expit(List<Expression> expressions, PMMLEncoder encoder){
-		Function<Expression, Apply> applyGenerator = (expression) -> {
+		Function<List<FieldRef>, Apply> applyGenerator = (fieldRefs) -> {
+			FieldRef fieldRef = Iterables.getOnlyElement(fieldRefs);
+
 			return ExpressionUtil.createApply(PMMLFunctions.DIVIDE,
 				ExpressionUtil.createConstant(1),
 				ExpressionUtil.createApply(PMMLFunctions.ADD,
 					ExpressionUtil.createConstant(1),
-					ExpressionUtil.createApply(PMMLFunctions.EXP, ExpressionUtil.createApply(PMMLFunctions.MULTIPLY, ExpressionUtil.createConstant(-1), expression))
+					ExpressionUtil.createApply(PMMLFunctions.EXP, ExpressionUtil.createApply(PMMLFunctions.MULTIPLY, ExpressionUtil.createConstant(-1), fieldRef))
 				)
 			);
 		};
 
-		return ensureApply("expit", OpType.CONTINUOUS, DataType.DOUBLE, expressions.get(0), applyGenerator, encoder);
+		return ensureApply("expit", OpType.CONTINUOUS, DataType.DOUBLE, applyGenerator, Arrays.asList("x"), expressions, encoder);
 	}
 
 	static
 	public Apply logit(List<Expression> expressions, PMMLEncoder encoder){
-		Function<Expression, Apply> applyGenerator = (expression) -> {
+		Function<List<FieldRef>, Apply> applyGenerator = (fieldRefs) -> {
+			FieldRef fieldRef = Iterables.getOnlyElement(fieldRefs);
+
 			return ExpressionUtil.createApply(PMMLFunctions.LN,
 				ExpressionUtil.createApply(PMMLFunctions.DIVIDE,
-					expression,
-					ExpressionUtil.createApply(PMMLFunctions.SUBTRACT, ExpressionUtil.createConstant(1), expression)
+					fieldRef,
+					ExpressionUtil.createApply(PMMLFunctions.SUBTRACT, ExpressionUtil.createConstant(1), fieldRef)
 				)
 			);
 		};
 
-		return ensureApply("logit", OpType.CONTINUOUS, DataType.DOUBLE, expressions.get(0), applyGenerator, encoder);
+		return ensureApply("logit", OpType.CONTINUOUS, DataType.DOUBLE, applyGenerator, Arrays.asList("x"), expressions, encoder);
 	}
 
 	static
 	public Apply sign(List<Expression> expressions, PMMLEncoder encoder){
-		Function<Expression, Apply> applyGenerator = (expression) -> {
-			return ExpressionUtil.createApply(PMMLFunctions.IF, ExpressionUtil.createApply(PMMLFunctions.LESSTHAN, expression, ExpressionUtil.createConstant(0)),
+		Function<List<FieldRef>, Apply> applyGenerator = (fieldRefs) -> {
+			FieldRef fieldRef = Iterables.getOnlyElement(fieldRefs);
+
+			return ExpressionUtil.createApply(PMMLFunctions.IF, ExpressionUtil.createApply(PMMLFunctions.LESSTHAN, fieldRef, ExpressionUtil.createConstant(0)),
 				ExpressionUtil.createConstant(-1), // x < 0
-				ExpressionUtil.createApply(PMMLFunctions.IF, ExpressionUtil.createApply(PMMLFunctions.GREATERTHAN, expression, ExpressionUtil.createConstant(0)),
+				ExpressionUtil.createApply(PMMLFunctions.IF, ExpressionUtil.createApply(PMMLFunctions.GREATERTHAN, fieldRef, ExpressionUtil.createConstant(0)),
 					ExpressionUtil.createConstant(+1), // x > 0
 					ExpressionUtil.createConstant(0) // x == 0
 				)
 			);
 		};
 
-		return ensureApply("sign", OpType.CATEGORICAL, DataType.INTEGER, expressions.get(0), applyGenerator, encoder);
+		return ensureApply("sign", OpType.CATEGORICAL, DataType.INTEGER, applyGenerator, Arrays.asList("x"), expressions, encoder);
 	}
 
 	static
 	public Apply trunc(List<Expression> expressions, PMMLEncoder encoder){
-		Function<Expression, Apply> applyGenerator = (expression) -> {
-			return ExpressionUtil.createApply(PMMLFunctions.IF, ExpressionUtil.createApply(PMMLFunctions.LESSTHAN, expression, ExpressionUtil.createConstant(0)),
-				ExpressionUtil.createApply(PMMLFunctions.CEIL, expression), // x < 0
-				ExpressionUtil.createApply(PMMLFunctions.FLOOR, expression) // x >= 0
+		Function<List<FieldRef>, Apply> applyGenerator = (fieldRefs) -> {
+			FieldRef fieldRef = Iterables.getOnlyElement(fieldRefs);
+
+			return ExpressionUtil.createApply(PMMLFunctions.IF, ExpressionUtil.createApply(PMMLFunctions.LESSTHAN, fieldRef, ExpressionUtil.createConstant(0)),
+				ExpressionUtil.createApply(PMMLFunctions.CEIL, fieldRef), // x < 0
+				ExpressionUtil.createApply(PMMLFunctions.FLOOR, fieldRef) // x >= 0
 			);
 		};
 
-		return ensureApply("trunc", OpType.CONTINUOUS, DataType.INTEGER, expressions.get(0), applyGenerator, encoder);
+		return ensureApply("trunc", OpType.CONTINUOUS, DataType.INTEGER, applyGenerator, Arrays.asList("x"), expressions, encoder);
 	}
 
 	static
-	public Apply ensureApply(String name, OpType opType, DataType dataType, Expression expression, Function<Expression, Apply> applyGenerator, PMMLEncoder encoder){
+	public Apply ensureApply(String name, OpType opType, DataType dataType, Function<List<FieldRef>, Apply> applyGenerator, List<String> parameters, List<Expression> expressions, PMMLEncoder encoder){
 
-		if(expression instanceof FieldRef){
-			FieldRef fieldRef = (FieldRef)expression;
-
-			return applyGenerator.apply(fieldRef);
+		if(allFieldRefs(expressions)){
+			return applyGenerator.apply((List)expressions);
 		}
 
-		Function<ParameterField, Expression> applySupplier = (valueField) -> {
-			return applyGenerator.apply(new FieldRef(valueField));
+		Function<List<ParameterField>, Expression> applySupplier = (parameterFields) -> {
+			List<FieldRef> fieldRefs = parameterFields.stream()
+				.map(parameterField -> new FieldRef(parameterField))
+				.collect(Collectors.toList());
+
+			return applyGenerator.apply(fieldRefs);
 		};
 
-		DefineFunction defineFunction = ensureDefineFunction(name, opType, dataType, applySupplier, encoder);
+		DefineFunction defineFunction = ensureDefineFunction(name, opType, dataType, applySupplier, parameters, encoder);
 
-		return ExpressionUtil.createApply(defineFunction, expression);
+		return ExpressionUtil.createApply(defineFunction, expressions.toArray(new Expression[expressions.size()]));
 	}
 
 	static
-	public DefineFunction ensureDefineFunction(String name, OpType opType, DataType dataType, Function<ParameterField, ? extends Expression> expressionGenerator, PMMLEncoder encoder){
+	public DefineFunction ensureDefineFunction(String name, OpType opType, DataType dataType, Function<List<ParameterField>, ? extends Expression> expressionGenerator, List<String> parameters, PMMLEncoder encoder){
 		DefineFunction defineFunction = encoder.getDefineFunction(name);
 
 		if(defineFunction == null){
-			ParameterField valueField = new ParameterField("x");
+			defineFunction = new DefineFunction(name, opType, dataType, null, null);
 
-			Expression expression = expressionGenerator.apply(valueField);
+			for(String parameter : parameters){
+				ParameterField parameterField = new ParameterField(parameter);
 
-			defineFunction = new DefineFunction(name, opType, dataType, null, expression)
-				.addParameterFields(valueField);
+				defineFunction.addParameterFields(parameterField);
+			}
+
+			Expression expression = expressionGenerator.apply(defineFunction.getParameterFields());
+
+			defineFunction.setExpression(expression);
 
 			encoder.addDefineFunction(defineFunction);
 		}
@@ -228,5 +246,18 @@ public class FunctionUtil {
 	static
 	private boolean checkModulePrefix(String module, String prefix){
 		return (prefix).equals(module) || (module != null && module.startsWith(prefix + "."));
+	}
+
+	static
+	private boolean allFieldRefs(List<Expression> expressions){
+
+		for(Expression expression : expressions){
+
+			if(!(expression instanceof FieldRef)){
+				return false;
+			}
+		}
+
+		return true;
 	}
 }

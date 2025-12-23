@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
+import com.google.common.collect.Iterables;
 import org.dmg.pmml.Apply;
 import org.dmg.pmml.DataType;
 import org.dmg.pmml.DefineFunction;
@@ -71,11 +72,11 @@ public interface BuiltinFunctions extends Functions {
 				}
 			}
 
-			Function<ParameterField, FieldRef> expressionGenerator = (valueField) -> {
-				return new FieldRef(valueField);
+			Function<List<ParameterField>, FieldRef> expressionGenerator = (parameterFields) -> {
+				return new FieldRef(Iterables.getOnlyElement(parameterFields));
 			};
 
-			DefineFunction defineFunction = FunctionUtil.ensureDefineFunction("bool", OpType.CATEGORICAL, DataType.BOOLEAN, expressionGenerator, encoder);
+			DefineFunction defineFunction = FunctionUtil.ensureDefineFunction("bool", OpType.CATEGORICAL, DataType.BOOLEAN, expressionGenerator, getParameters(), encoder);
 
 			return ExpressionUtil.createApply(defineFunction, expression);
 		}
@@ -90,11 +91,11 @@ public interface BuiltinFunctions extends Functions {
 
 		@Override
 		public Apply encode(List<Expression> expressions, PMMLEncoder encoder){
-			Function<ParameterField, FieldRef> expressionGenerator = (valueField) -> {
-				return new FieldRef(valueField);
+			Function<List<ParameterField>, FieldRef> expressionGenerator = (parameterFields) -> {
+				return new FieldRef(Iterables.getOnlyElement(parameterFields));
 			};
 
-			DefineFunction defineFunction = FunctionUtil.ensureDefineFunction("float", OpType.CONTINUOUS, DataType.DOUBLE, expressionGenerator, encoder);
+			DefineFunction defineFunction = FunctionUtil.ensureDefineFunction("float", OpType.CONTINUOUS, DataType.DOUBLE, expressionGenerator, getParameters(), encoder);
 
 			return ExpressionUtil.createApply(defineFunction, expressions.get(0));
 		}
@@ -123,11 +124,11 @@ public interface BuiltinFunctions extends Functions {
 				}
 			}
 
-			Function<ParameterField, FieldRef> expressionGenerator = (valueField) -> {
-				return new FieldRef(valueField);
+			Function<List<ParameterField>, FieldRef> expressionGenerator = (parameterFields) -> {
+				return new FieldRef(Iterables.getOnlyElement(parameterFields));
 			};
 
-			DefineFunction defineFunction = FunctionUtil.ensureDefineFunction("int", OpType.CONTINUOUS, DataType.INTEGER, expressionGenerator, encoder);
+			DefineFunction defineFunction = FunctionUtil.ensureDefineFunction("int", OpType.CONTINUOUS, DataType.INTEGER, expressionGenerator, getParameters(), encoder);
 
 			return ExpressionUtil.createApply(defineFunction, expression);
 		}
@@ -162,11 +163,11 @@ public interface BuiltinFunctions extends Functions {
 
 		@Override
 		public Apply encode(List<Expression> expressions, PMMLEncoder encoder){
-			Function<ParameterField, FieldRef> expressionGenerator = (valueField) -> {
-				return new FieldRef(valueField);
+			Function<List<ParameterField>, FieldRef> expressionGenerator = (parameterFields) -> {
+				return new FieldRef(Iterables.getOnlyElement(parameterFields));
 			};
 
-			DefineFunction defineFunction = FunctionUtil.ensureDefineFunction("str", OpType.CATEGORICAL, DataType.STRING, expressionGenerator, encoder);
+			DefineFunction defineFunction = FunctionUtil.ensureDefineFunction("str", OpType.CATEGORICAL, DataType.STRING, expressionGenerator, getParameters(), encoder);
 
 			return ExpressionUtil.createApply(defineFunction, expressions.get(0));
 		}
