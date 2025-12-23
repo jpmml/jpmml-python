@@ -87,6 +87,16 @@ public class PredicateTranslator extends AbstractTranslator {
 	}
 
 	static
+	private Object ensureOperand(Object object){
+		
+		if(object == null){
+			throw new OperationException("Operand is not defined");
+		}
+		
+		return object;
+	}
+	
+	static
 	private SimplePredicate.Operator translateRelationalOperator(Token operator) throws ParseException {
 
 		switch(operator.kind){
@@ -104,6 +114,26 @@ public class PredicateTranslator extends AbstractTranslator {
 				return SimplePredicate.Operator.GREATER_OR_EQUAL;
 			default:
 				throw new ParseException();
+		}
+	}
+
+	static
+	private SimplePredicate.Operator flipRelationalOperator(SimplePredicate.Operator operator){
+
+		switch(operator){
+			case EQUAL:
+			case NOT_EQUAL:
+				return operator;
+			case LESS_THAN:
+				return SimplePredicate.Operator.GREATER_THAN;
+			case LESS_OR_EQUAL:
+				return SimplePredicate.Operator.GREATER_OR_EQUAL;
+			case GREATER_THAN:
+				return SimplePredicate.Operator.LESS_THAN;
+			case GREATER_OR_EQUAL:
+				return SimplePredicate.Operator.LESS_OR_EQUAL;
+			default:
+				throw new IllegalArgumentException();
 		}
 	}
 
@@ -161,6 +191,32 @@ public class PredicateTranslator extends AbstractTranslator {
 	}
 
 	static
+	private SimplePredicate createComparisonPredicate(Object left, SimplePredicate.Operator operator, Object right){
+	
+		if(isFieldName(left) && isValue(right)){
+			return createSimplePredicate(left, operator, right);
+		} else
+			
+		if(isValue(left) && isFieldName(right)){
+			return createSimplePredicate(right, flipRelationalOperator(operator), left);
+		}
+
+		throw new OperationException("Comparison requires a field name side and a value side");
+	}
+
+	static
+	private boolean isFieldName(Object object){
+
+		try {
+			asFieldName(object);
+
+			return true;
+		} catch(OperationException oe){
+			return false;
+		}
+	}
+
+	static
 	private String asFieldName(Object object){
 
 		if(object instanceof Feature){
@@ -184,6 +240,18 @@ public class PredicateTranslator extends AbstractTranslator {
 		} // End if
 
 		throw new OperationException("The left-hand side of the predicate (" + object + ") is not a feature reference");
+	}
+
+	static
+	private boolean isValue(Object object){
+
+		try {
+			asValue(object);
+
+			return true;
+		} catch(OperationException oe){
+			return false;
+		}
 	}
 
 	static
@@ -340,26 +408,39 @@ private Predicate ComparisonExpression():
 	Object left;
 	Token operator = null;
 	Object right;
+	Object prevRight;
+	List<Predicate> predicates = new ArrayList<>();
 }
 {
-	left = PrimaryExpression()
+	left = PrimaryExpression() { prevRight = left; }
 	(
-		LOOKAHEAD(<IS> <NONE>)
-		<IS> <NONE> { left = createSimplePredicate(left, SimplePredicate.Operator.IS_MISSING, null); }
-		|
-		<IS> <NOT> <NONE> { left = createSimplePredicate(left, SimplePredicate.Operator.IS_NOT_MISSING, null); }
-		|
-		<IN> right = ListMakerExpression() { left = createSimpleSetPredicate(left, SimpleSetPredicate.BooleanOperator.IS_IN, right); }
-		|
-		<NOT> <IN> right = ListMakerExpression() { left = createSimpleSetPredicate(left, SimpleSetPredicate.BooleanOperator.IS_NOT_IN, right); }
-		|
-		(operator = <EQUAL> | operator = <NOT_EQUAL> | operator = <LESS_THAN> | operator = <LESS_OR_EQUAL> | operator = <GREATER_THAN> | operator = <GREATER_OR_EQUAL>) right = UnaryExpression() { left = createSimplePredicate(left, translateRelationalOperator(operator), right); }
-		|
-		{ left = asPredicate(left); }
-	)
+		(
+			LOOKAHEAD(<IS> <NONE>)
+			<IS> <NONE> { left = createSimplePredicate(ensureOperand(prevRight), SimplePredicate.Operator.IS_MISSING, null); right = null; }
+			|
+			<IS> <NOT> <NONE> { left = createSimplePredicate(ensureOperand(prevRight), SimplePredicate.Operator.IS_NOT_MISSING, null); right = null; }
+			|
+			<IN> right = ListMakerExpression() { left = createSimpleSetPredicate(ensureOperand(prevRight), SimpleSetPredicate.BooleanOperator.IS_IN, right); right = null; }
+			|
+			<NOT> <IN> right = ListMakerExpression() { left = createSimpleSetPredicate(ensureOperand(prevRight), SimpleSetPredicate.BooleanOperator.IS_NOT_IN, right); right = null; }
+			|
+			(operator = <EQUAL> | operator = <NOT_EQUAL> | operator = <LESS_THAN> | operator = <LESS_OR_EQUAL> | operator = <GREATER_THAN> | operator = <GREATER_OR_EQUAL>) right = UnaryExpression() { left = createComparisonPredicate(ensureOperand(prevRight), translateRelationalOperator(operator), right); }
+		)
+		{
+			left = asPredicate(left);
+			predicates.add((Predicate)left);
+			prevRight = right;
+		}
+	)*
 
 	{
-		return (Predicate)left;
+		if(predicates.size() <= 1){
+			return asPredicate(left);
+		} else
+
+		{
+			return new CompoundPredicate(CompoundPredicate.BooleanOperator.AND, (List)predicates);
+		}
 	}
 }
 

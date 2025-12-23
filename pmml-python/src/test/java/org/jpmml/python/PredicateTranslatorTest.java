@@ -110,6 +110,19 @@ public class PredicateTranslatorTest extends TranslatorTest {
 	}
 
 	@Test
+	public void translateChainedDoubleComparisonPredicate(){
+		PredicateTranslator predicateTranslator = new PredicateTranslator(new DataFrameScope(doubleFeatures));
+
+		Predicate expected = new CompoundPredicate(CompoundPredicate.BooleanOperator.AND, null)
+			.addPredicates(new SimplePredicate("a", SimplePredicate.Operator.GREATER_THAN, 0d))
+			.addPredicates(new SimplePredicate("a", SimplePredicate.Operator.LESS_OR_EQUAL, 3d));
+
+		String string = "0. < a <= 3.";
+
+		checkPredicate(expected, translatePredicate(predicateTranslator, string));
+	}
+
+	@Test
 	public void translateStringComparisonPredicates(){
 		PredicateTranslator predicateTranslator = new PredicateTranslator(new DataFrameScope(stringFeatures));
 
