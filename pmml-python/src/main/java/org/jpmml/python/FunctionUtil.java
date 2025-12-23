@@ -51,12 +51,12 @@ public class FunctionUtil {
 	}
 
 	static
-	public Apply encodeFunction(Identifiable identifiable, List<Expression> expressions, PMMLEncoder encoder){
+	public Expression encodeFunction(Identifiable identifiable, List<Expression> expressions, PMMLEncoder encoder){
 		return encodeFunction(identifiable.getModule(), identifiable.getName(), expressions, null);
 	}
 
 	static
-	public Apply encodeFunction(String module, String name, List<Expression> expressions, PMMLEncoder encoder){
+	public Expression encodeFunction(String module, String name, List<Expression> expressions, PMMLEncoder encoder){
 		PythonFunction function = resolveFunction(module, name);
 
 		boolean correct = function.checkCall(expressions);

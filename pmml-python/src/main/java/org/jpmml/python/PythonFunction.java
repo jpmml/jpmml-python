@@ -20,7 +20,6 @@ package org.jpmml.python;
 
 import java.util.List;
 
-import org.dmg.pmml.Apply;
 import org.dmg.pmml.Expression;
 import org.jpmml.converter.PMMLEncoder;
 
@@ -31,7 +30,7 @@ public class PythonFunction {
 	public List<String> getParameters();
 
 	abstract
-	public Apply encode(List<Expression> arguments, PMMLEncoder encoder);
+	public Expression encode(List<Expression> arguments, PMMLEncoder encoder);
 
 	public boolean checkCall(List<Expression> expressions){
 		List<String> parameters = getParameters();
