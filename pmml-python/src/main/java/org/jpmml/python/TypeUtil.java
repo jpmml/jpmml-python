@@ -38,7 +38,7 @@ public class TypeUtil {
 		} else
 
 		if(("numpy").equals(module)){
-			return parseNumpyType(module, name);
+			return parseNumPyType(module, name);
 		}
 
 		throw new TypeResolutionException(module, name);
@@ -64,7 +64,7 @@ public class TypeUtil {
 	}
 
 	static
-	private DataType parseNumpyType(String module, String name){
+	private DataType parseNumPyType(String module, String name){
 
 		switch(name){
 			case "bool_":

@@ -29,63 +29,63 @@ public class FunctionTest extends UnpicklerTest {
 
 	@Test
 	public void python27() throws IOException {
-		unpickleNumpyFunctions("python-2.7_numpy-1.16.6");
+		unpickleNumPyFunctions("python-2.7_numpy-1.16.6");
 	}
 
 	@Test
 	public void python34() throws IOException {
-		unpickleNumpyFunctions("python-3.4_numpy-1.13.3");
+		unpickleNumPyFunctions("python-3.4_numpy-1.13.3");
 	}
 
 	@Test
 	public void python37() throws IOException {
-		unpickleNumpyFunctions("python-3.7_numpy-1.20.0");
+		unpickleNumPyFunctions("python-3.7_numpy-1.20.0");
 	}
 
 	@Test
 	public void python38() throws IOException {
-		unpickleNumpyFunctions("python-3.8_numpy-1.20.1");
+		unpickleNumPyFunctions("python-3.8_numpy-1.20.1");
 	}
 
 	@Test
 	public void python39() throws IOException {
 		unpickleMathFunctions("python-3.9_math");
 
-		unpickleNumpyFunctions("python-3.9_numpy-1.20.2");
-		unpickleNumpyFunctions("python-3.9_numpy-1.22.1");
-		unpickleNumpyFunctions("python-3.9_numpy-1.23.4");
-		unpickleNumpyFunctions("python-3.9_numpy-1.24.1");
-		unpickleNumpyFunctions("python-3.9_numpy-1.26.2");
-		unpickleNumpyFunctions("python-3.9_numpy-2.0.0");
+		unpickleNumPyFunctions("python-3.9_numpy-1.20.2");
+		unpickleNumPyFunctions("python-3.9_numpy-1.22.1");
+		unpickleNumPyFunctions("python-3.9_numpy-1.23.4");
+		unpickleNumPyFunctions("python-3.9_numpy-1.24.1");
+		unpickleNumPyFunctions("python-3.9_numpy-1.26.2");
+		unpickleNumPyFunctions("python-3.9_numpy-2.0.0");
 	}
 
 	@Test
 	public void python311() throws IOException {
 		unpickleMathFunctions("python-3.11_math");
 
-		unpickleNumpyFunctions("python-3.11_numpy-1.23.4");
-		unpickleNumpyFunctions("python-3.11_numpy-1.24.1");
-		unpickleNumpyFunctions("python-3.11_numpy-1.26.2");
-		unpickleNumpyFunctions("python-3.11_numpy-2.0.0");
-		unpickleNumpyFunctions("python-3.11_numpy-2.1.2");
-		unpickleNumpyFunctions("python-3.11_numpy-2.2.3");
+		unpickleNumPyFunctions("python-3.11_numpy-1.23.4");
+		unpickleNumPyFunctions("python-3.11_numpy-1.24.1");
+		unpickleNumPyFunctions("python-3.11_numpy-1.26.2");
+		unpickleNumPyFunctions("python-3.11_numpy-2.0.0");
+		unpickleNumPyFunctions("python-3.11_numpy-2.1.2");
+		unpickleNumPyFunctions("python-3.11_numpy-2.2.3");
 	}
 
 	@Test
 	public void python312() throws Exception {
 		unpickleMathFunctions("python-3.12_math");
 
-		unpickleNumpyFunctions("python-3.12_numpy-1.26.2");
-		unpickleNumpyFunctions("python-3.12_numpy-2.0.0");
-		unpickleNumpyFunctions("python-3.12_numpy-2.1.2");
-		unpickleNumpyFunctions("python-3.12_numpy-2.2.3");
+		unpickleNumPyFunctions("python-3.12_numpy-1.26.2");
+		unpickleNumPyFunctions("python-3.12_numpy-2.0.0");
+		unpickleNumPyFunctions("python-3.12_numpy-2.1.2");
+		unpickleNumPyFunctions("python-3.12_numpy-2.2.3");
 	}
 
 	@Test
 	public void python313() throws Exception {
 		unpickleMathFunctions("python-3.13_math");
 
-		unpickleNumpyFunctions("python-3.13_numpy-1.26.2");
+		unpickleNumPyFunctions("python-3.13_numpy-1.26.2");
 	}
 
 	static
@@ -102,7 +102,7 @@ public class FunctionTest extends UnpicklerTest {
 	}
 
 	static
-	private void unpickleNumpyFunctions(String prefix) throws IOException {
+	private void unpickleNumPyFunctions(String prefix) throws IOException {
 		String[] names = {"absolute", "arccos", "arcsin", "arctan", "arctan2", "ceil", "clip", "cos", "cosh", "degrees", "rad2deg", "exp", "expm1", "floor", "fmax", "fmin", "hypot", "log", "log1p", "log10", "negative", "power", "radians", "deg2rad", "reciprocal", "rint", "sign", "sin", "sinh", "sqrt", "square", "tan", "tanh"};
 
 		for(String name : names){

@@ -40,7 +40,7 @@ public class ConstantUtil {
 		} else
 
 		if(("numpy").equals(module)){
-			return encodeNumpyConstant(module, name);
+			return encodeNumPyConstant(module, name);
 		} else
 
 		if(("pandas").equals(module)){
@@ -70,7 +70,7 @@ public class ConstantUtil {
 	}
 
 	static
-	private Constant encodeNumpyConstant(String module, String name){
+	private Constant encodeNumPyConstant(String module, String name){
 
 		switch(name){
 			case "e":
