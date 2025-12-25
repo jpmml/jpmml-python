@@ -32,7 +32,6 @@ import joblib.NDArrayWrapper;
 import net.razorvine.pickle.objects.ClassDict;
 import numpy.core.NDArray;
 import numpy.core.NDArrayUtil;
-import numpy.core.ScalarUtil;
 import org.jpmml.converter.ValueUtil;
 import org.jpmml.model.ReflectionUtil;
 
@@ -190,18 +189,6 @@ public class PythonObject extends ClassDict {
 
 	public Object getOptionalObject(String name){
 		return getOptional(name, Object.class);
-	}
-
-	public Object getScalar(String name){
-		Object object = getObject(name);
-
-		return ScalarUtil.decode(object);
-	}
-
-	public Object getOptionalScalar(String name){
-		Object object = getOptionalObject(name);
-
-		return ScalarUtil.decode(object);
 	}
 
 	public Boolean getBoolean(String name){
