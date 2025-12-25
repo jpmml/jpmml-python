@@ -22,6 +22,10 @@ import org.jpmml.converter.ResolutionException;
 
 public class TypeResolutionException extends ResolutionException {
 
+	public TypeResolutionException(String module, String name){
+		super(formatMessage(module + "." + name));
+	}
+
 	public TypeResolutionException(String dottedName){
 		super(formatMessage(dottedName));
 	}

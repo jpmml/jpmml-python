@@ -21,7 +21,7 @@ package builtins;
 import org.dmg.pmml.DataType;
 import org.jpmml.python.PythonObject;
 import org.jpmml.python.TypeInfo;
-import org.jpmml.python.TypeResolutionException;
+import org.jpmml.python.TypeUtil;
 
 public class Type extends PythonObject implements TypeInfo {
 
@@ -33,38 +33,7 @@ public class Type extends PythonObject implements TypeInfo {
 	public DataType getDataType(){
 		String className = getClassName();
 
-		switch(className){
-			case "builtins.bool":
-				return DataType.BOOLEAN;
-			case "builtins.float":
-				return DataType.DOUBLE;
-			case "builtins.int":
-				return DataType.INTEGER;
-			case "builtins.str":
-				return DataType.STRING;
-			case "numpy.bool_":
-				return DataType.BOOLEAN;
-			case "numpy.float32":
-				return DataType.FLOAT;
-			case "numpy.float_":
-			case "numpy.float64":
-				return DataType.DOUBLE;
-			case "numpy.int_":
-			case "numpy.int8":
-			case "numpy.int16":
-			case "numpy.int32":
-			case "numpy.int64":
-				return DataType.INTEGER;
-			case "numpy.str_":
-				return DataType.STRING;
-			case "numpy.uint8":
-			case "numpy.uint16":
-			case "numpy.uint32":
-			case "numpy.uint64":
-				return DataType.INTEGER;
-			default:
-				throw new TypeResolutionException(className);
-		}
+		return TypeUtil.parseDataType(className);
 	}
 
 	static
