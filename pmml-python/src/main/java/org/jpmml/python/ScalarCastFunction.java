@@ -18,19 +18,10 @@
  */
 package org.jpmml.python;
 
-import numpy.core.ScalarUtil;
-
 abstract
 public class ScalarCastFunction<E> extends CastFunction<E> {
 
 	public ScalarCastFunction(Class<? extends E> clazz){
 		super(clazz);
-	}
-
-	@Override
-	public E apply(Object object){
-		object = ScalarUtil.decode(object);
-
-		return super.apply(object);
 	}
 }

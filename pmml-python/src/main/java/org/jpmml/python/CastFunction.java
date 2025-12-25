@@ -19,8 +19,10 @@
 package org.jpmml.python;
 
 import java.util.Objects;
+import java.util.Set;
 
 import com.google.common.base.Function;
+import numpy.core.ScalarUtil;
 import org.jpmml.converter.ConversionException;
 
 abstract
@@ -43,6 +45,10 @@ public class CastFunction<E> implements Function<Object, E> {
 		try {
 			object = CastUtil.deepCastTo(object, clazz);
 
+			if(CastFunction.SCALAR_CLASSES.contains(clazz)){
+				object = ScalarUtil.decode(object);
+			}
+
 			return clazz.cast(object);
 		} catch(ClassCastException cce){
 			throw createConversionException(formatMessage(object), cce)
@@ -61,4 +67,21 @@ public class CastFunction<E> implements Function<Object, E> {
 	private void setClazz(Class<? extends E> clazz){
 		this.clazz = Objects.requireNonNull(clazz);
 	}
+
+	private static final Set<Class> SCALAR_CLASSES = Set.of(
+		Object.class,
+		// Boolean
+		Boolean.class,
+		// Primitive numbers
+		Number.class,
+		Byte.class,
+		Short.class,
+		Character.class, // XXX
+		Integer.class,
+		Long.class,
+		Float.class,
+		Double.class,
+		// String
+		String.class
+	);
 }

@@ -32,7 +32,6 @@ import joblib.NDArrayWrapper;
 import net.razorvine.pickle.objects.ClassDict;
 import numpy.core.NDArray;
 import numpy.core.NDArrayUtil;
-import numpy.core.Scalar;
 import numpy.core.ScalarUtil;
 import org.jpmml.converter.ValueUtil;
 import org.jpmml.model.ReflectionUtil;
@@ -146,15 +145,6 @@ public class PythonObject extends ClassDict {
 
 			throw new InvalidAttributeException("Attribute \'" +attribute.format() + "\' has a missing (None) value", attribute);
 		} // End if
-
-		if(Objects.equals(Boolean.class, clazz) || (Number.class).isAssignableFrom(clazz) || Objects.equals(String.class, clazz)){
-
-			if(value instanceof Scalar){
-				Scalar scalar = (Scalar)value;
-
-				value = scalar.getOnlyElement();
-			}
-		} else
 
 		if(Objects.equals(Identifiable.class, clazz)){
 
@@ -400,11 +390,6 @@ public class PythonObject extends ClassDict {
 		Attribute attribute = new Attribute(this, name);
 
 		CastFunction<Number> castFunction = new AttributeCastFunction<Number>(attribute, Number.class){
-
-			@Override
-			public Number apply(Object object){
-				return super.apply(ScalarUtil.decode(object));
-			}
 
 			@Override
 			protected String formatMessage(Object object){
