@@ -45,24 +45,6 @@ public class ClassDictConstructorUtil {
 	}
 
 	static
-	public Identifiable toIdentifiable(ClassDictConstructor dictConstructor){
-		Identifiable result = new Identifiable(){
-
-			@Override
-			public String getModule(){
-				return ClassDictConstructorUtil.getModule(dictConstructor);
-			}
-
-			@Override
-			public String getName(){
-				return ClassDictConstructorUtil.getName(dictConstructor);
-			}
-		};
-
-		return result;
-	}
-
-	static
 	public String getClassName(ClassDictConstructor dictConstructor){
 		return getModule(dictConstructor) + "." + getName(dictConstructor);
 	}

@@ -26,9 +26,9 @@ import net.razorvine.pickle.IObjectConstructor;
 import net.razorvine.pickle.PickleException;
 import net.razorvine.pickle.objects.ClassDict;
 import net.razorvine.pickle.objects.ClassDictConstructor;
-import org.jpmml.python.ClassDictConstructorUtil;
 import org.jpmml.python.CythonObject;
 import org.jpmml.python.Identifiable;
+import org.jpmml.python.IdentifiableUtil;
 
 public class Partial extends CythonObject implements IObjectConstructor {
 
@@ -64,7 +64,7 @@ public class Partial extends CythonObject implements IObjectConstructor {
 	public Identifiable toIdentifiable(){
 		ClassDictConstructor func = getFunc();
 
-		return ClassDictConstructorUtil.toIdentifiable(func);
+		return IdentifiableUtil.toIdentifiable(func);
 	}
 
 	public ClassDictConstructor getFunc(){

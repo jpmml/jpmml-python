@@ -26,16 +26,8 @@ public class TypeUtil {
 	}
 
 	static
-	public DataType parseDataType(String dottedName){
-		int dot = dottedName.lastIndexOf('.');
-		if(dot < 0){
-			throw new IllegalArgumentException(dottedName);
-		}
-
-		String module = dottedName.substring(0, dot);
-		String name = dottedName.substring(dot + 1);
-
-		return parseDataType(module, name);
+	public DataType parseDataType(Identifiable identifiabe){
+		return parseDataType(identifiabe.getModule(), identifiabe.getName());
 	}
 
 	static

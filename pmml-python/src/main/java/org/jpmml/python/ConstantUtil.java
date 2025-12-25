@@ -28,16 +28,8 @@ public class ConstantUtil {
 	}
 
 	static
-	public Constant encodeConstant(String dottedName){
-		int dot = dottedName.lastIndexOf('.');
-		if(dot < 0){
-			throw new IllegalArgumentException(dottedName);
-		}
-
-		String module = dottedName.substring(0, dot);
-		String name = dottedName.substring(dot + 1);
-
-		return encodeConstant(module, name);
+	public Constant encodeConstant(Identifiable identifiable){
+		return encodeConstant(identifiable.getModule(), identifiable.getName());
 	}
 
 	static

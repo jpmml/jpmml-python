@@ -1187,7 +1187,9 @@ private Expression NameInvocationExpression(String dottedName):
 	{
 		int dot = dottedName.indexOf('.');
 		if(dot > -1){
-			return ConstantUtil.encodeConstant(dottedName);
+			Identifiable identifiable = IdentifiableUtil.toIdentifiable(dottedName);
+
+			return ConstantUtil.encodeConstant(identifiable);
 		}
 
 		FieldRef fieldRef = getVariable(dottedName);
