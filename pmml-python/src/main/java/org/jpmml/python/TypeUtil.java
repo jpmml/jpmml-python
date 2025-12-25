@@ -26,6 +26,20 @@ public class TypeUtil {
 	}
 
 	static
+	public String getModule(String name){
+
+		switch(name){
+			case "bool":
+			case "float":
+			case "int":
+			case "str":
+				return "builtins";
+			default:
+				return "numpy";
+		}
+	}
+
+	static
 	public DataType parseDataType(Identifiable identifiabe){
 		return parseDataType(identifiabe.getModule(), identifiabe.getName());
 	}

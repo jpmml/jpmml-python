@@ -50,7 +50,7 @@ public class Type extends PythonObject implements TypeInfo {
 		} else
 
 		{
-			module = "builtins";
+			module = TypeUtil.getModule(className);
 			name = className;
 		}
 
