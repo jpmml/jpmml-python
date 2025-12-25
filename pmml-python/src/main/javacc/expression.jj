@@ -129,7 +129,7 @@ public class ExpressionTranslator extends AbstractTranslator {
 		return expression;
 	}
 
-	private String getIndent() throws ParseException {
+	private String getIndent(){
 		Token nextToken = getToken(1);
 		
 		return PythonParserUtil.getWhitespace(nextToken);
@@ -528,7 +528,7 @@ private DefineFunction Def():
 private List<Token> Parameters():
 {
 	Token name;
-	List<Token> names = new ArrayList();
+	List<Token> names = new ArrayList<>();
 }
 {
 	(

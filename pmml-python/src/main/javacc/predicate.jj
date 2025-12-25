@@ -439,7 +439,7 @@ private Predicate ComparisonExpression():
 		} else
 
 		{
-			return new CompoundPredicate(CompoundPredicate.BooleanOperator.AND, (List)predicates);
+			return new CompoundPredicate(CompoundPredicate.BooleanOperator.AND, predicates);
 		}
 	}
 }
@@ -597,7 +597,7 @@ private Array ListMakerExpression():
 {
 	Object predicate;
 	
-	List<Object> values = new ArrayList<Object>();
+	List<Object> values = new ArrayList<>();
 }
 {
 	<LBRACKET> predicate = UnaryExpression() { values.add(asValue(predicate)); } ( <COMMA> predicate = UnaryExpression() { values.add(asValue(predicate)); } )* <RBRACKET>

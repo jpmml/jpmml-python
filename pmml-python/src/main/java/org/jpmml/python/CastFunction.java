@@ -68,7 +68,7 @@ public class CastFunction<E> implements Function<Object, E> {
 		this.clazz = Objects.requireNonNull(clazz);
 	}
 
-	private static final Set<Class> SCALAR_CLASSES = Set.of(
+	private static final Set<Class<?>> SCALAR_CLASSES = Set.of(
 		Object.class,
 		// Boolean
 		Boolean.class,

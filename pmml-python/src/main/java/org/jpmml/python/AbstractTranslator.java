@@ -174,7 +174,7 @@ public class AbstractTranslator implements FeatureResolver {
 					if(argument instanceof FieldRef){
 						FieldRef fieldRef = (FieldRef)argument;
 
-						Field field;
+						Field<?> field;
 
 						try {
 							field = encoder.getField(fieldRef.requireField());

@@ -101,6 +101,8 @@ public class TypeDescriptor {
 			case '|':
 				i++;
 				break;
+			default:
+				break;
 		}
 
 		setByteOrder(byteOrder);
