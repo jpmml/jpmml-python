@@ -233,6 +233,7 @@ public class DumpTest extends UnpicklerTest {
 		unpickle("python-3.11_joblib-1.3.1.pkl.z");
 		unpickle("python-3.11_joblib-1.3.2.pkl.z");
 		unpickle("python-3.11_joblib-1.4.2.pkl.z");
+		unpickle("python-3.11_joblib-1.5.3.pkl.z");
 
 		unpickle("python-3.11_pickle-p2.pkl");
 		unpickle("python-3.11_pickle-p3.pkl");
@@ -330,6 +331,7 @@ public class DumpTest extends UnpicklerTest {
 
 		unpickle("python-3.12_joblib-1.3.2.pkl.z");
 		unpickle("python-3.12_joblib-1.4.2.pkl.z");
+		unpickle("python-3.12_joblib-1.5.3.pkl.z");
 
 		unpickle("python-3.12_pickle-p2.pkl");
 		unpickle("python-3.12_pickle-p3.pkl");
@@ -397,6 +399,7 @@ public class DumpTest extends UnpicklerTest {
 		unpickle("python-3.13_dill-0.3.9.pkl");
 
 		unpickle("python-3.13_joblib-1.4.2.pkl.z");
+		unpickle("python-3.13_joblib-1.5.3.pkl.z");
 
 		unpickle("python-3.13_pickle-p2.pkl");
 		unpickle("python-3.13_pickle-p3.pkl");
