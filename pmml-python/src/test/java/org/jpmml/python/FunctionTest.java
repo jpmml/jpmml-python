@@ -69,6 +69,7 @@ public class FunctionTest extends UnpicklerTest {
 		unpickleNumPyFunctions("python-3.11_numpy-2.0.0");
 		unpickleNumPyFunctions("python-3.11_numpy-2.1.2");
 		unpickleNumPyFunctions("python-3.11_numpy-2.2.3");
+		unpickleNumPyFunctions("python-3.11_numpy-2.3.5");
 	}
 
 	@Test
@@ -79,6 +80,7 @@ public class FunctionTest extends UnpicklerTest {
 		unpickleNumPyFunctions("python-3.12_numpy-2.0.0");
 		unpickleNumPyFunctions("python-3.12_numpy-2.1.2");
 		unpickleNumPyFunctions("python-3.12_numpy-2.2.3");
+		unpickleNumPyFunctions("python-3.12_numpy-2.3.5");
 	}
 
 	@Test
@@ -89,6 +91,7 @@ public class FunctionTest extends UnpicklerTest {
 		unpickleNumPyFunctions("python-3.13_numpy-2.0.0");
 		unpickleNumPyFunctions("python-3.13_numpy-2.1.2");
 		unpickleNumPyFunctions("python-3.13_numpy-2.2.3");
+		unpickleNumPyFunctions("python-3.13_numpy-2.3.5");
 	}
 
 	static

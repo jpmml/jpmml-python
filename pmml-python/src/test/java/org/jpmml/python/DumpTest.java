@@ -249,16 +249,19 @@ public class DumpTest extends UnpicklerTest {
 		unpickleNumPyArrays("python-3.11_numpy-2.0.0");
 		unpickleNumPyArrays("python-3.11_numpy-2.1.2");
 		unpickleNumPyArrays("python-3.11_numpy-2.2.3");
+		unpickleNumPyArrays("python-3.11_numpy-2.3.5");
 
 		unpickleNumPyComplexArrays("python-3.11_numpy-1.26.2");
 		unpickleNumPyComplexArrays("python-3.11_numpy-2.0.0");
 		unpickleNumPyComplexArrays("python-3.11_numpy-2.1.2");
 		unpickleNumPyComplexArrays("python-3.11_numpy-2.2.3");
+		unpickleNumPyComplexArrays("python-3.11_numpy-2.3.5");
 
 		unpickleNumPyDatetimeArrays("python-3.11_numpy-1.26.2");
 		unpickleNumPyDatetimeArrays("python-3.11_numpy-2.0.0");
 		unpickleNumPyDatetimeArrays("python-3.11_numpy-2.1.2");
 		unpickleNumPyDatetimeArrays("python-3.11_numpy-2.2.3");
+		unpickleNumPyDatetimeArrays("python-3.11_numpy-2.3.5");
 
 		unpickleNumPyDtypes("python-3.11_numpy-1.23.4");
 		unpickleNumPyDtypes("python-3.11_numpy-1.24.1");
@@ -266,12 +269,14 @@ public class DumpTest extends UnpicklerTest {
 		unpickleNumPyDtypes("python-3.11_numpy-2.0.0");
 		unpickleNumPyDtypes("python-3.11_numpy-2.1.2");
 		unpickleNumPyDtypes("python-3.11_numpy-2.2.3");
+		unpickleNumPyDtypes("python-3.11_numpy-2.3.5");
 
 		unpickleNumPyDatetimeDtypes("python-3.11_numpy-1.24.1");
 		unpickleNumPyDatetimeDtypes("python-3.11_numpy-1.26.2");
 		unpickleNumPyDatetimeDtypes("python-3.11_numpy-2.0.0");
 		unpickleNumPyDatetimeDtypes("python-3.11_numpy-2.1.2");
 		unpickleNumPyDatetimeDtypes("python-3.11_numpy-2.2.3");
+		unpickleNumPyDatetimeDtypes("python-3.11_numpy-2.3.5");
 
 		unpickleNumPyRNGs("python-3.11_numpy-1.23.4");
 		unpickleNumPyRNGs("python-3.11_numpy-1.24.1");
@@ -279,6 +284,7 @@ public class DumpTest extends UnpicklerTest {
 		unpickleNumPyRNGs("python-3.11_numpy-2.0.0");
 		unpickleNumPyRNGs("python-3.11_numpy-2.1.2");
 		unpickleNumPyRNGs("python-3.11_numpy-2.2.3");
+		unpickleNumPyRNGs("python-3.11_numpy-2.3.5");
 
 		unpicklePandasSeries("python-3.11_pandas-1.5.1");
 		unpicklePandasSeries("python-3.11_pandas-1.5.2");
@@ -333,31 +339,37 @@ public class DumpTest extends UnpicklerTest {
 		unpickleNumPyArrays("python-3.12_numpy-2.0.0");
 		unpickleNumPyArrays("python-3.12_numpy-2.1.2");
 		unpickleNumPyArrays("python-3.12_numpy-2.2.3");
+		unpickleNumPyArrays("python-3.12_numpy-2.3.5");
 
 		unpickleNumPyComplexArrays("python-3.12_numpy-1.26.2");
 		unpickleNumPyComplexArrays("python-3.12_numpy-2.0.0");
 		unpickleNumPyComplexArrays("python-3.12_numpy-2.1.2");
 		unpickleNumPyComplexArrays("python-3.12_numpy-2.2.3");
+		unpickleNumPyComplexArrays("python-3.12_numpy-2.3.5");
 
 		unpickleNumPyDatetimeArrays("python-3.12_numpy-1.26.2");
 		unpickleNumPyDatetimeArrays("python-3.12_numpy-2.0.0");
 		unpickleNumPyDatetimeArrays("python-3.12_numpy-2.1.2");
 		unpickleNumPyDatetimeArrays("python-3.12_numpy-2.2.3");
+		unpickleNumPyDatetimeArrays("python-3.12_numpy-2.3.5");
 
 		unpickleNumPyDtypes("python-3.12_numpy-1.26.2");
 		unpickleNumPyDtypes("python-3.12_numpy-2.0.0");
 		unpickleNumPyDtypes("python-3.12_numpy-2.1.2");
 		unpickleNumPyDtypes("python-3.12_numpy-2.2.3");
+		unpickleNumPyDtypes("python-3.12_numpy-2.3.5");
 
 		unpickleNumPyDatetimeDtypes("python-3.12_numpy-1.26.2");
 		unpickleNumPyDatetimeDtypes("python-3.12_numpy-2.0.0");
 		unpickleNumPyDatetimeDtypes("python-3.12_numpy-2.1.2");
 		unpickleNumPyDatetimeDtypes("python-3.12_numpy-2.2.3");
+		unpickleNumPyDatetimeDtypes("python-3.12_numpy-2.3.5");
 
 		unpickleNumPyRNGs("python-3.12_numpy-1.26.2");
 		unpickleNumPyRNGs("python-3.12_numpy-2.0.0");
 		unpickleNumPyRNGs("python-3.12_numpy-2.1.2");
 		unpickleNumPyRNGs("python-3.12_numpy-2.2.3");
+		unpickleNumPyRNGs("python-3.12_numpy-2.3.5");
 
 		unpicklePandasSeries("python-3.12_pandas-2.2.3");
 
@@ -389,31 +401,37 @@ public class DumpTest extends UnpicklerTest {
 		unpickleNumPyArrays("python-3.13_numpy-2.0.0");
 		unpickleNumPyArrays("python-3.13_numpy-2.1.2");
 		unpickleNumPyArrays("python-3.13_numpy-2.2.3");
+		unpickleNumPyArrays("python-3.13_numpy-2.3.5");
 
 		unpickleNumPyComplexArrays("python-3.13_numpy-1.26.2");
 		unpickleNumPyComplexArrays("python-3.13_numpy-2.0.0");
 		unpickleNumPyComplexArrays("python-3.13_numpy-2.1.2");
 		unpickleNumPyComplexArrays("python-3.13_numpy-2.2.3");
+		unpickleNumPyComplexArrays("python-3.13_numpy-2.3.5");
 
 		unpickleNumPyDatetimeArrays("python-3.13_numpy-1.26.2");
 		unpickleNumPyDatetimeArrays("python-3.13_numpy-2.0.0");
 		unpickleNumPyDatetimeArrays("python-3.13_numpy-2.1.2");
 		unpickleNumPyDatetimeArrays("python-3.13_numpy-2.2.3");
+		unpickleNumPyDatetimeArrays("python-3.13_numpy-2.3.5");
 
 		unpickleNumPyDtypes("python-3.13_numpy-1.26.2");
 		unpickleNumPyDtypes("python-3.13_numpy-2.0.0");
 		unpickleNumPyDtypes("python-3.13_numpy-2.1.2");
 		unpickleNumPyDtypes("python-3.13_numpy-2.2.3");
+		unpickleNumPyDtypes("python-3.13_numpy-2.3.5");
 
 		unpickleNumPyDatetimeDtypes("python-3.13_numpy-1.26.2");
 		unpickleNumPyDatetimeDtypes("python-3.13_numpy-2.0.0");
 		unpickleNumPyDatetimeDtypes("python-3.13_numpy-2.1.2");
 		unpickleNumPyDatetimeDtypes("python-3.13_numpy-2.2.3");
+		unpickleNumPyDatetimeDtypes("python-3.13_numpy-2.3.5");
 
 		unpickleNumPyRNGs("python-3.13_numpy-1.26.2");
 		unpickleNumPyRNGs("python-3.13_numpy-2.0.0");
 		unpickleNumPyRNGs("python-3.13_numpy-2.1.2");
 		unpickleNumPyRNGs("python-3.13_numpy-2.2.3");
+		unpickleNumPyRNGs("python-3.13_numpy-2.3.5");
 
 		unpicklePandasSeries("python-3.13_pandas-2.2.3");
 
