@@ -106,7 +106,7 @@ public class DataFrameScope extends Scope {
 			return feature;
 		}
 
-		throw new OperationException("Column name \'" + columnName + "\' is not in " + FeatureUtil.formatNames(columns, '\''));
+		throw new OperationException("Column name \'" + columnName + "\' not in " + FeatureUtil.formatNames(columns, '\''));
 	}
 
 	@Override
