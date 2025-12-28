@@ -291,30 +291,35 @@ public class DumpTest extends UnpicklerTest {
 		unpicklePandasSeries("python-3.11_pandas-2.0.2");
 		unpicklePandasSeries("python-3.11_pandas-2.1.3");
 		unpicklePandasSeries("python-3.11_pandas-2.2.3");
+		unpicklePandasSeries("python-3.11_pandas-2.3.3");
 
 		unpicklePandasSeriesNA("python-3.11_pandas-1.5.1");
 		unpicklePandasSeriesNA("python-3.11_pandas-1.5.2");
 		unpicklePandasSeriesNA("python-3.11_pandas-2.0.2");
 		unpicklePandasSeriesNA("python-3.11_pandas-2.1.3");
 		unpicklePandasSeriesNA("python-3.11_pandas-2.2.3");
+		unpicklePandasSeriesNA("python-3.11_pandas-2.3.3");
 
 		unpicklePandasCategorical("python-3.11_pandas-1.5.1");
 		unpicklePandasCategorical("python-3.11_pandas-1.5.2");
 		unpicklePandasCategorical("python-3.11_pandas-2.0.2");
 		unpicklePandasCategorical("python-3.11_pandas-2.1.3");
 		unpicklePandasCategorical("python-3.11_pandas-2.2.3");
+		unpicklePandasCategorical("python-3.11_pandas-2.3.3");
 
 		unpicklePandasDataFrame("python-3.11_pandas-1.5.1");
 		unpicklePandasDataFrame("python-3.11_pandas-1.5.2");
 		unpicklePandasDataFrame("python-3.11_pandas-2.0.2");
 		unpicklePandasDataFrame("python-3.11_pandas-2.1.3");
 		unpicklePandasDataFrame("python-3.11_pandas-2.2.3");
+		unpicklePandasDataFrame("python-3.11_pandas-2.3.3");
 
 		unpicklePandasDtypes("python-3.11_pandas-1.5.1");
 		unpicklePandasDtypes("python-3.11_pandas-1.5.2");
 		unpicklePandasDtypes("python-3.11_pandas-2.0.2");
 		unpicklePandasDtypes("python-3.11_pandas-2.1.3");
 		unpicklePandasDtypes("python-3.11_pandas-2.2.3");
+		unpicklePandasDtypes("python-3.11_pandas-2.3.3");
 	}
 
 	@Test
@@ -372,14 +377,19 @@ public class DumpTest extends UnpicklerTest {
 		unpickleNumPyRNGs("python-3.12_numpy-2.3.5");
 
 		unpicklePandasSeries("python-3.12_pandas-2.2.3");
+		unpicklePandasSeries("python-3.12_pandas-2.3.3");
 
 		unpicklePandasSeriesNA("python-3.12_pandas-2.2.3");
+		unpicklePandasSeriesNA("python-3.12_pandas-2.3.3");
 
 		unpicklePandasCategorical("python-3.12_pandas-2.2.3");
+		unpicklePandasCategorical("python-3.12_pandas-2.3.3");
 
 		unpicklePandasDataFrame("python-3.12_pandas-2.2.3");
+		unpicklePandasDataFrame("python-3.12_pandas-2.3.3");
 
 		unpicklePandasDtypes("python-3.12_pandas-2.2.3");
+		unpicklePandasDtypes("python-3.12_pandas-2.3.3");
 	}
 
 	@Test
@@ -434,14 +444,18 @@ public class DumpTest extends UnpicklerTest {
 		unpickleNumPyRNGs("python-3.13_numpy-2.3.5");
 
 		unpicklePandasSeries("python-3.13_pandas-2.2.3");
+		unpicklePandasSeries("python-3.13_pandas-2.3.3");
 
 		unpicklePandasSeriesNA("python-3.13_pandas-2.2.3");
+		unpicklePandasSeriesNA("python-3.13_pandas-2.3.3");
 
 		unpicklePandasCategorical("python-3.13_pandas-2.2.3");
+		unpicklePandasCategorical("python-3.13_pandas-2.3.3");
 
-		unpicklePandasDataFrame("python-3.13_pandas-2.2.3");
+		unpicklePandasDataFrame("python-3.13_pandas-2.3.3");
 
 		unpicklePandasDtypes("python-3.13_pandas-2.2.3");
+		unpicklePandasDtypes("python-3.13_pandas-2.3.3");
 	}
 
 	private void unpickleBuiltinDtypes(String prefix) throws IOException {
