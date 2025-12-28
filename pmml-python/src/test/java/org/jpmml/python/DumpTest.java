@@ -386,16 +386,34 @@ public class DumpTest extends UnpicklerTest {
 		unpickleEnums("python-3.13");
 
 		unpickleNumPyArrays("python-3.13_numpy-1.26.2");
+		unpickleNumPyArrays("python-3.13_numpy-2.0.0");
+		unpickleNumPyArrays("python-3.13_numpy-2.1.2");
+		unpickleNumPyArrays("python-3.13_numpy-2.2.3");
 
 		unpickleNumPyComplexArrays("python-3.13_numpy-1.26.2");
+		unpickleNumPyComplexArrays("python-3.13_numpy-2.0.0");
+		unpickleNumPyComplexArrays("python-3.13_numpy-2.1.2");
+		unpickleNumPyComplexArrays("python-3.13_numpy-2.2.3");
 
 		unpickleNumPyDatetimeArrays("python-3.13_numpy-1.26.2");
+		unpickleNumPyDatetimeArrays("python-3.13_numpy-2.0.0");
+		unpickleNumPyDatetimeArrays("python-3.13_numpy-2.1.2");
+		unpickleNumPyDatetimeArrays("python-3.13_numpy-2.2.3");
 
 		unpickleNumPyDtypes("python-3.13_numpy-1.26.2");
+		unpickleNumPyDtypes("python-3.13_numpy-2.0.0");
+		unpickleNumPyDtypes("python-3.13_numpy-2.1.2");
+		unpickleNumPyDtypes("python-3.13_numpy-2.2.3");
 
 		unpickleNumPyDatetimeDtypes("python-3.13_numpy-1.26.2");
+		unpickleNumPyDatetimeDtypes("python-3.13_numpy-2.0.0");
+		unpickleNumPyDatetimeDtypes("python-3.13_numpy-2.1.2");
+		unpickleNumPyDatetimeDtypes("python-3.13_numpy-2.2.3");
 
 		unpickleNumPyRNGs("python-3.13_numpy-1.26.2");
+		unpickleNumPyRNGs("python-3.13_numpy-2.0.0");
+		unpickleNumPyRNGs("python-3.13_numpy-2.1.2");
+		unpickleNumPyRNGs("python-3.13_numpy-2.2.3");
 
 		unpicklePandasSeries("python-3.13_pandas-2.2.3");
 

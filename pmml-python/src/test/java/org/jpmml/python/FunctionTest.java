@@ -86,6 +86,9 @@ public class FunctionTest extends UnpicklerTest {
 		unpickleMathFunctions("python-3.13_math");
 
 		unpickleNumPyFunctions("python-3.13_numpy-1.26.2");
+		unpickleNumPyFunctions("python-3.13_numpy-2.0.0");
+		unpickleNumPyFunctions("python-3.13_numpy-2.1.2");
+		unpickleNumPyFunctions("python-3.13_numpy-2.2.3");
 	}
 
 	static
