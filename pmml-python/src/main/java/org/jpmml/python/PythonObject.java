@@ -23,7 +23,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
@@ -136,28 +135,10 @@ public class PythonObject extends ClassDict {
 	}
 
 	public <E> E get(String name, Class<? extends E> clazz){
-		Object value = getattr(name);
-
-		if(value == null){
-			Attribute attribute = new Attribute(this, name);
-
-			throw new InvalidAttributeException("Attribute \'" + attribute.format() + "\' has a missing (None) value", attribute);
-		}
-
-		Attribute attribute = new Attribute(this, name);
-
-		CastFunction<E> castFunction = new AttributeCastFunction<E>(attribute, clazz){
-
-			@Override
-			protected String formatMessage(Object object){
-				return "Attribute \'" + attribute.format() + "\' has an unsupported value (" + ClassDictUtil.formatClass(object) + ")";
-			}
-		};
-
-		return castFunction.apply(value);
+		return get(name, clazz::cast);
 	}
 
-	public <E> E get(String name, CastFunction<E> castFunction){
+	public <E> E get(String name, java.util.function.Function<Object, E> castFunction){
 		Object value = getattr(name);
 
 		if(value == null){
@@ -176,16 +157,10 @@ public class PythonObject extends ClassDict {
 	}
 
 	public <E> E getOptional(String name, Class<? extends E> clazz){
-		Object value = getattr(name, null);
-
-		if(value == null){
-			return null;
-		}
-
-		return get(name, clazz);
+		return getOptional(name, clazz::cast);
 	}
 
-	public <E> E getOptional(String name, CastFunction<E> castFunction){
+	public <E> E getOptional(String name, java.util.function.Function<Object, E> castFunction){
 		Object value = getattr(name, null);
 
 		if(value == null){
@@ -261,7 +236,7 @@ public class PythonObject extends ClassDict {
 		return getOptional(name, new IdentifiableCastFunction<>(Identifiable.class));
 	}
 
-	public <E> E getEnum(String name, Function<String, E> function, Collection<E> enumValues){
+	public <E> E getEnum(String name, java.util.function.Function<String, E> function, Collection<E> enumValues){
 		E value = function.apply(name);
 
 		if(!enumValues.contains(value)){
@@ -274,7 +249,7 @@ public class PythonObject extends ClassDict {
 		return value;
 	}
 
-	public <E> E getOptionalEnum(String name, Function< String, E> function, Collection<E> enumValues){
+	public <E> E getOptionalEnum(String name, java.util.function.Function< String, E> function, Collection<E> enumValues){
 		E value = function.apply(name);
 
 		if((value != null)  && (!enumValues.contains(value))){
@@ -306,7 +281,7 @@ public class PythonObject extends ClassDict {
 	}
 
 	public HasArray getArray(String name){
-		Object object = getObject(name);
+		Object object = get(name, Object.class);
 
 		if(object instanceof HasArray){
 			HasArray hasArray = (HasArray)object;
@@ -320,34 +295,43 @@ public class PythonObject extends ClassDict {
 	}
 
 	public <E> List<E> getArray(String name, Class<? extends E> clazz){
+		return getArray(name, clazz::cast);
+	}
+
+	public <E> List<E> getArray(String name, java.util.function.Function<Object, E> castFunction){
 		HasArray hasArray = getArray(name);
 
 		List<?> values = hasArray.getArrayContent();
 
 		Attribute attribute = new Attribute(this, name);
 
-		CastFunction<E> castFunction = new AttributeCastFunction<E>(attribute, clazz){
+		Function<Object, E> function = new Function<Object, E>(){
 
 			@Override
-			protected String formatMessage(Object object){
-				return "Array attribute \'" + attribute.format() + "\' contains an unsupported value (" + ClassDictUtil.formatClass(object) + ")";
+			public E apply(Object object){
+
+				try {
+					return castFunction.apply(object);
+				} catch(ClassCastException cce){
+					throw new InvalidAttributeException("Array attribute \'" + attribute.format() + "\' contains an unsupported value (" + ClassDictUtil.formatClass(object) + ")", attribute);
+				}
 			}
 		};
 
-		return Lists.transform(values, castFunction);
+		return Lists.transform(values, function);
 	}
 
 	public int[] getArrayShape(String name){
 		Object object = getObject(name);
 
+		if(object instanceof Number){
+			return new int[]{1};
+		} // End if
+
 		if(object instanceof HasArray){
 			HasArray hasArray = (HasArray)object;
 
 			return hasArray.getArrayShape();
-		} // End if
-
-		if(object instanceof Number){
-			return new int[]{1};
 		}
 
 		Attribute attribute = new Attribute(this, name);
@@ -368,11 +352,11 @@ public class PythonObject extends ClassDict {
 	}
 
 	public List<Object> getObjectArray(String name){
-		return getArray(name, Object.class);
+		return getArray(name, new ScalarCastFunction<>(Object.class));
 	}
 
 	public List<Boolean> getBooleanArray(String name){
-		return getArray(name, Boolean.class);
+		return getArray(name, new ScalarCastFunction<>(Boolean.class));
 	}
 
 	public List<Number> getNumberArray(String name){
@@ -382,21 +366,7 @@ public class PythonObject extends ClassDict {
 			return Collections.singletonList((Number)object);
 		}
 
-		HasArray hasArray = getArray(name);
-
-		List<?> values = hasArray.getArrayContent();
-
-		Attribute attribute = new Attribute(this, name);
-
-		CastFunction<Number> castFunction = new AttributeCastFunction<Number>(attribute, Number.class){
-
-			@Override
-			protected String formatMessage(Object object){
-				return "Array attribute \'" + attribute.format() + "\' contains an unsupported value (" + ClassDictUtil.formatClass(object) + ")";
-			}
-		};
-
-		return Lists.transform(values, castFunction);
+		return getArray(name, new ScalarCastFunction<>(Number.class));
 	}
 
 	public List<Integer> getIntegerArray(String name){
@@ -406,11 +376,11 @@ public class PythonObject extends ClassDict {
 	}
 
 	public List<String> getStringArray(String name){
-		return getArray(name, String.class);
+		return getArray(name, new ScalarCastFunction<>(String.class));
 	}
 
 	public List<?> getArray(String name, String key){
-		Object object = getObject(name);
+		Object object = get(name, Object.class);
 
 		if(object instanceof NDArrayWrapper){
 			NDArrayWrapper arrayWrapper = (NDArrayWrapper)object;
@@ -434,30 +404,39 @@ public class PythonObject extends ClassDict {
 	}
 
 	public <E> List<E> getList(String name, Class<? extends E> clazz){
+		return getList(name, clazz::cast);
+	}
+
+	public <E> List<E> getList(String name, java.util.function.Function<Object, E> castFunction){
 		List<?> values = getList(name);
 
 		Attribute attribute = new Attribute(this, name);
 
-		CastFunction<E> castFunction = new AttributeCastFunction<E>(attribute, clazz){
+		Function<Object, E> function = new Function<Object, E>(){
 
 			@Override
-			protected String formatMessage(Object object){
-				return "List attribute \'" + attribute.format() + "\' contains an unsupported value (" + ClassDictUtil.formatClass(object) + ")";
+			public E apply(Object object){
+
+				try {
+					return castFunction.apply(object);
+				} catch(ClassCastException cce){
+					throw new InvalidAttributeException("List attribute \'" + attribute.format() + "\' contains an unsupported value (" + ClassDictUtil.formatClass(object) + ")", attribute);
+				}
 			}
 		};
 
-		return Lists.transform(values, castFunction);
+		return Lists.transform(values, function);
 	}
 
 	public List<Object> getObjectList(String name){
-		return getList(name, Object.class);
+		return getList(name, new ScalarCastFunction<>(Object.class));
 	}
 
 	public List<String> getStringList(String name){
-		return getList(name, String.class);
+		return getList(name, new ScalarCastFunction<>(String.class));
 	}
 
-	public <E> List<E> getEnumList(String name, Function<String, List<E>> function, Collection<E> enumValues){
+	public <E> List<E> getEnumList(String name, java.util.function.Function<String, List<E>> function, Collection<E> enumValues){
 		List<E> values = function.apply(name);
 
 		Function<E, E> enumFunction = new Function<E, E>(){
@@ -488,19 +467,28 @@ public class PythonObject extends ClassDict {
 	}
 
 	public <E> List<List<E>> getArrayList(String name, Class<? extends E> clazz){
+		return getArrayList(name, clazz::cast);
+	}
+
+	public <E> List<List<E>> getArrayList(String name, java.util.function.Function<Object, E> castFunction){
 		List<HasArray> values = getArrayList(name);
 
 		Attribute attribute = new Attribute(this, name);
 
-		CastFunction<E> castFunction = new AttributeCastFunction<E>(attribute, clazz){
+		Function<Object, E> arrayFunction = new Function<Object, E>(){
 
 			@Override
-			protected String formatMessage(Object object){
-				return "List of arrays attribute \'" + attribute.format() + "\' contains an unsupported value (" + ClassDictUtil.formatClass(object) + ")";
+			public E apply(Object object){
+
+				try {
+					return castFunction.apply(object);
+				} catch(ClassCastException cce){
+					throw new InvalidAttributeException("List of arrays attribute \'" + attribute.format() + "\' contains an unsupported value (" + ClassDictUtil.formatClass(object) + ")", attribute);
+				}
 			}
 		};
 
-		Function<HasArray, List<E>> function = new Function<HasArray, List<E>>(){
+		Function<HasArray, List<E>> listFunction = new Function<HasArray, List<E>>(){
 
 			@Override
 			public List<E> apply(HasArray hasArray){
@@ -512,15 +500,19 @@ public class PythonObject extends ClassDict {
 
 				List<?> values = hasArray.getArrayContent();
 
-				return Lists.transform(values, castFunction);
+				return Lists.transform(values, arrayFunction);
 			}
 		};
 
-		return Lists.transform(values, function);
+		return Lists.transform(values, listFunction);
 	}
 
 	public List<?> getListLike(String name){
-		Object object = getObject(name);
+		Object object = get(name, Object.class);
+
+		if(object != null && ScalarCastFunction.isScalar(object.getClass())){
+			return Collections.singletonList(object);
+		} // End if
 
 		if(object instanceof HasArray){
 			HasArray hasArray = getArray(name);
@@ -534,29 +526,33 @@ public class PythonObject extends ClassDict {
 	}
 
 	public <E> List<E> getListLike(String name, Class<? extends E> clazz){
-		Object object = getObject(name);
+		return getListLike(name, clazz::cast);
+	}
 
-		if(Objects.equals(Object.class, clazz)){
-			throw new IllegalArgumentException();
+	public <E> List<E> getListLike(String name, java.util.function.Function<Object, E> castFunction){
+		Object object = get(name, Object.class);
+
+		if(object != null && ScalarCastFunction.isScalar(object.getClass())){
+			return Collections.singletonList((E)object);
 		} // End if
 
-		if(clazz.isInstance(object)){
-			return Collections.singletonList(clazz.cast(object));
+		if(object instanceof HasArray){
+			HasArray hasArray = (HasArray)object;
+
+			return getArray(name, castFunction);
+		} else
+
+		{
+			return getList(name, castFunction);
 		}
+	}
 
-		List<?> values = getListLike(name);
+	public List<String> getStringListLike(String name){
+		return getListLike(name, new ScalarCastFunction<>(String.class));
+	}
 
-		Attribute attribute = new Attribute(this, name);
-
-		CastFunction<E> castFunction = new AttributeCastFunction<E>(attribute, clazz){
-
-			@Override
-			protected String formatMessage(Object object){
-				return "Array or list attribute \'" + attribute.format() + "\' contains an unsupported value (" + ClassDictUtil.formatClass(object) + ")";
-			}
-		};
-
-		return Lists.transform(values, castFunction);
+	public List<Number> getNumberListLike(String name){
+		return getListLike(name, new ScalarCastFunction<>(Number.class));
 	}
 
 	private static final Field FIELD_CLASSNAME = ReflectionUtil.getField(ClassDict.class, "classname");
