@@ -196,19 +196,19 @@ public class PythonObject extends ClassDict {
 	}
 
 	public Object getObject(String name){
-		return get(name, Object.class);
+		return get(name, new ScalarCastFunction<>(Object.class));
 	}
 
 	public Object getOptionalObject(String name){
-		return getOptional(name, Object.class);
+		return getOptional(name, new ScalarCastFunction<>(Object.class));
 	}
 
 	public Boolean getBoolean(String name){
-		return get(name, Boolean.class);
+		return get(name, new ScalarCastFunction<>(Boolean.class));
 	}
 
 	public Boolean getOptionalBoolean(String name){
-		return getOptional(name, Boolean.class);
+		return getOptional(name, new ScalarCastFunction<>(Boolean.class));
 	}
 
 	public Boolean getOptionalBoolean(String name, Boolean defaultValue){
@@ -222,11 +222,11 @@ public class PythonObject extends ClassDict {
 	}
 
 	public Number getNumber(String name){
-		return get(name, Number.class);
+		return get(name, new ScalarCastFunction<>(Number.class));
 	}
 
 	public Number getOptionalNumber(String name){
-		return getOptional(name, Number.class);
+		return getOptional(name, new ScalarCastFunction<>(Number.class));
 	}
 
 	public Integer getInteger(String name){
@@ -246,11 +246,11 @@ public class PythonObject extends ClassDict {
 	}
 
 	public String getString(String name){
-		return get(name, String.class);
+		return get(name, new ScalarCastFunction<>(String.class));
 	}
 
 	public String getOptionalString(String name){
-		return getOptional(name, String.class);
+		return getOptional(name, new ScalarCastFunction<>(String.class));
 	}
 
 	public Identifiable getIdentifiable(String name){
