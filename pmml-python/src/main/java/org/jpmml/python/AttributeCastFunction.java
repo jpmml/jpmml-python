@@ -32,8 +32,21 @@ public class AttributeCastFunction<E> extends CastFunction<E> {
 		setAttribute(attribute);
 	}
 
+	abstract
+	protected String formatMessage(Object object);
+
 	@Override
-	protected InvalidAttributeException createConversionException(String message, ClassCastException cause){
+	public E apply(Object object){
+
+		try {
+			return super.apply(object);
+		} catch(ClassCastException cce){
+			throw createException(formatMessage(object), cce)
+				.fillInStackTrace();
+		}
+	}
+
+	protected InvalidAttributeException createException(String message, ClassCastException cause){
 		Attribute attribute = getAttribute();
 
 		return new InvalidAttributeException(message, attribute, cause);

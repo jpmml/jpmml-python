@@ -40,8 +40,13 @@ public class TupleUtil {
 		CastFunction<E> castFunction = new CastFunction<E>(clazz){
 
 			@Override
-			protected String formatMessage(Object object){
-				return "Tuple contains an unsupported value (" + ClassDictUtil.formatClass(object) + ")";
+			public E apply(Object object){
+
+				try {
+					return super.apply(object);
+				} catch(ClassCastException cce){
+					throw new PythonException("Tuple contains an unsupported value (" + ClassDictUtil.formatClass(object) + ")", cce);
+				}
 			}
 		};
 
@@ -68,8 +73,13 @@ public class TupleUtil {
 		CastFunction<E> castFunction = new CastFunction<E>(clazz){
 
 			@Override
-			protected String formatMessage(Object object){
-				return "Tuple contains an unsupported value (" + ClassDictUtil.formatClass(object) +")";
+			public E apply(Object object){
+
+				try {
+					return super.apply(object);
+				} catch(ClassCastException cce){
+					throw new PythonException("Tuple contains an unsupported value (" + ClassDictUtil.formatClass(object) +")", cce);
+				}
 			}
 		};
 

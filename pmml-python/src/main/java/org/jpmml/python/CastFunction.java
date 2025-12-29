@@ -23,9 +23,7 @@ import java.util.Set;
 
 import com.google.common.base.Function;
 import numpy.core.ScalarUtil;
-import org.jpmml.converter.ConversionException;
 
-abstract
 public class CastFunction<E> implements Function<Object, E> {
 
 	private Class<? extends E> clazz = null;
@@ -35,29 +33,17 @@ public class CastFunction<E> implements Function<Object, E> {
 		setClazz(clazz);
 	}
 
-	abstract
-	protected String formatMessage(Object object);
-
 	@Override
 	public E apply(Object object){
 		Class<? extends E> clazz = getClazz();
 
-		try {
-			object = CastUtil.deepCastTo(object, clazz);
+		object = CastUtil.deepCastTo(object, clazz);
 
-			if(CastFunction.SCALAR_CLASSES.contains(clazz)){
-				object = ScalarUtil.decode(object);
-			}
-
-			return clazz.cast(object);
-		} catch(ClassCastException cce){
-			throw createConversionException(formatMessage(object), cce)
-				.fillInStackTrace();
+		if(CastFunction.SCALAR_CLASSES.contains(clazz)){
+			object = ScalarUtil.decode(object);
 		}
-	}
 
-	protected ConversionException createConversionException(String message, ClassCastException cause){
-		return new PythonException(message, cause);
+		return clazz.cast(object);
 	}
 
 	public Class<? extends E> getClazz(){
