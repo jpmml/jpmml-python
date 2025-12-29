@@ -27,7 +27,6 @@ import java.util.Objects;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
-import functools.Partial;
 import joblib.NDArrayWrapper;
 import net.razorvine.pickle.objects.ClassDict;
 import numpy.core.NDArray;
@@ -143,21 +142,6 @@ public class PythonObject extends ClassDict {
 			Attribute attribute = new Attribute(this, name);
 
 			throw new InvalidAttributeException("Attribute \'" + attribute.format() + "\' has a missing (None) value", attribute);
-		} // End if
-
-		if(Objects.equals(Identifiable.class, clazz)){
-
-			if(value instanceof Partial){
-				Partial partial = (Partial)value;
-
-				value = partial.toIdentifiable();
-			} else
-
-			if(value instanceof PythonObjectConstructor){
-				PythonObjectConstructor dictConstructor = (PythonObjectConstructor)value;
-
-				value = dictConstructor.newObject();
-			}
 		}
 
 		Attribute attribute = new Attribute(this, name);
@@ -270,11 +254,11 @@ public class PythonObject extends ClassDict {
 	}
 
 	public Identifiable getIdentifiable(String name){
-		return get(name, Identifiable.class);
+		return get(name, new IdentifiableCastFunction<>(Identifiable.class));
 	}
 
 	public Identifiable getOptionalIdentifiable(String name){
-		return getOptional(name, Identifiable.class);
+		return getOptional(name, new IdentifiableCastFunction<>(Identifiable.class));
 	}
 
 	public <E> E getEnum(String name, Function<String, E> function, Collection<E> enumValues){
