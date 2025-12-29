@@ -33,10 +33,16 @@ class ColorCode(Enum):
 def _format_dtype(dtype):
 	return (dtype if type(dtype) == str else dtype.__name__)
 
+class CustomClassifier(LogisticRegressionCV):
+
+	def __reduce__(self):
+		dummy_obj = object()
+		return (builtins.setattr, (dummy_obj, "is_custom_", True))
+
 if with_sklearn:
 	iris = load_iris()
 
-	iris_classifier = LogisticRegressionCV()
+	iris_classifier = CustomClassifier()
 	iris_classifier.fit(iris.data, iris.target)
 
 	_dill(iris_classifier, "dump/" + _platform_module("dill", dill.__version__) + ".pkl")
