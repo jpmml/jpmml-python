@@ -49,61 +49,76 @@ public class FunctionTest extends UnpicklerTest {
 
 	@Test
 	public void python39() throws IOException {
-		unpickleMathFunctions("python-3.9_math");
+		unpickleMathFunctions("3.9");
 
-		unpickleNumPyFunctions("python-3.9_numpy-1.20.2");
-		unpickleNumPyFunctions("python-3.9_numpy-1.22.1");
-		unpickleNumPyFunctions("python-3.9_numpy-1.23.4");
-		unpickleNumPyFunctions("python-3.9_numpy-1.24.1");
-		unpickleNumPyFunctions("python-3.9_numpy-1.26.2");
-		unpickleNumPyFunctions("python-3.9_numpy-2.0.0");
+		String[] numpyVersions = {
+			"1.20.2", "1.22.1",
+			"1.23.4", "1.24.1",
+			"1.26.2", "2.0.0",
+		};
+
+		unpickleNumPyFunctions("3.9", numpyVersions);
 	}
 
 	@Test
 	public void python311() throws IOException {
-		unpickleMathFunctions("python-3.11_math");
+		unpickleMathFunctions("3.11");
 
-		unpickleNumPyFunctions("python-3.11_numpy-1.23.4");
-		unpickleNumPyFunctions("python-3.11_numpy-1.24.1");
-		unpickleNumPyFunctions("python-3.11_numpy-1.26.2");
-		unpickleNumPyFunctions("python-3.11_numpy-2.0.0");
-		unpickleNumPyFunctions("python-3.11_numpy-2.1.2");
-		unpickleNumPyFunctions("python-3.11_numpy-2.2.3");
-		unpickleNumPyFunctions("python-3.11_numpy-2.3.5");
+		String[] numpyVersions = {
+			"1.23.4", "1.24.1",
+			"1.26.2", "2.0.0",
+			"2.1.2", "2.2.3", "2.3.5"
+		};
+
+		unpickleNumPyFunctions("3.11", numpyVersions);
 	}
 
 	@Test
 	public void python312() throws Exception {
-		unpickleMathFunctions("python-3.12_math");
+		unpickleMathFunctions("3.12");
 
-		unpickleNumPyFunctions("python-3.12_numpy-1.26.2");
-		unpickleNumPyFunctions("python-3.12_numpy-2.0.0");
-		unpickleNumPyFunctions("python-3.12_numpy-2.1.2");
-		unpickleNumPyFunctions("python-3.12_numpy-2.2.3");
-		unpickleNumPyFunctions("python-3.12_numpy-2.3.5");
+		String[] numpyVersions = {
+			"1.26.2", "2.0.0",
+			"2.1.2", "2.2.3", "2.3.5"
+		};
+
+		unpickleNumPyFunctions("3.12", numpyVersions);
 	}
 
 	@Test
 	public void python313() throws Exception {
-		unpickleMathFunctions("python-3.13_math");
+		unpickleMathFunctions("3.13");
 
-		unpickleNumPyFunctions("python-3.13_numpy-1.26.2");
-		unpickleNumPyFunctions("python-3.13_numpy-2.0.0");
-		unpickleNumPyFunctions("python-3.13_numpy-2.1.2");
-		unpickleNumPyFunctions("python-3.13_numpy-2.2.3");
-		unpickleNumPyFunctions("python-3.13_numpy-2.3.5");
+		String[] numpyVersions = {
+			"1.26.2", "2.0.0",
+			"2.1.2", "2.2.3", "2.3.5"
+		};
+
+		unpickleNumPyFunctions("3.13", numpyVersions);
 	}
 
 	static
-	private void unpickleMathFunctions(String prefix) throws IOException {
+	private void unpickleMathFunctions(String pythonVersion) throws IOException {
 		String[] names = {"acos", "asin", "atan", "atan2", "ceil", "cos", "cosh", "degrees", "exp", "expm1", "fabs", "floor", "hypot", "isnan", "log", "log1p", "log10", "pow", "radians", "sin", "sinh", "sqrt", "tan", "tanh", "trunc"};
 
 		for(String name : names){
+			String prefix = "python-" + pythonVersion + "_" + "math";
+
 			Object object = unpickle("func", prefix + "_" + name + ".pkl");
 
 			Identifiable identifiable = (Identifiable)toClassDict(object);
 
 			assertEquals(name, identifiable.getName());
+		}
+	}
+
+	static
+	private void unpickleNumPyFunctions(String pythonVersion, String... numpyVersions) throws IOException {
+
+		for(String numpyVersion : numpyVersions){
+			String prefix = "python-" + pythonVersion + "_" + "numpy-" + numpyVersion;
+
+			unpickleNumPyFunctions(prefix);
 		}
 	}
 

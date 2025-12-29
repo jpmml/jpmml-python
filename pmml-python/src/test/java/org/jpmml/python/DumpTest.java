@@ -54,47 +54,67 @@ public class DumpTest extends UnpicklerTest {
 
 	@Test
 	public void python27() throws IOException {
-		unpickle("python-2.7_joblib-0.9.4.pkl.z");
+		String[] pickleVersions = {
+			"p2"
+		};
 
-		unpickle("python-2.7_pickle-p2.pkl");
+		unpicklePickle("2.7", pickleVersions);
 
-		unpickle("python-2.7_sklearn-joblib-0.9.4.pkl.z");
-		unpickle("python-2.7_sklearn-joblib-0.10.2.pkl.z");
-		unpickle("python-2.7_sklearn-joblib-0.13.0.pkl.z");
+		String[] joblibVersions = {
+			"0.9.4"
+		};
+
+		unpickleJoblib("2.7", joblibVersions);
+
+		String[] sklearnJoblibVersions = {
+			"0.9.4", "0.10.2", "0.13.0"
+		};
+
+		unpickleSkLearnJoblib("2.7", sklearnJoblibVersions);
 
 		unpickleNumPyArrays("python-2.7_numpy-1.11.2");
 	}
 
 	@Test
 	public void python34() throws IOException {
-		unpickle("python-3.4_joblib-0.9.3.pkl.z");
-		unpickle("python-3.4_joblib-0.9.4.pkl.z");
-		unpickle("python-3.4_joblib-0.10.0.pkl.z");
-		unpickle("python-3.4_joblib-0.13.2.pkl.z");
+		String[] pickleVersions = {
+			"p2", "p3", "p4"
+		};
 
-		unpickle("python-3.4_pickle-p2.pkl");
-		unpickle("python-3.4_pickle-p3.pkl");
-		unpickle("python-3.4_pickle-p4.pkl");
+		unpicklePickle("3.4", pickleVersions);
 
-		unpickle("python-3.4_sklearn-joblib-0.9.4.pkl.z");
-		unpickle("python-3.4_sklearn-joblib-0.11.pkl.z");
-		unpickle("python-3.4_sklearn-joblib-0.13.0.pkl.z");
+		String[] joblibVersions = {
+			"0.9.3", "0.9.4", "0.10.0", "0.13.2"
+		};
+
+		unpickleJoblib("3.4", joblibVersions);
+
+		String[] sklearnJoblibVersions = {
+			"0.9.4", "0.11", "0.13.0"
+		};
+
+		unpickleSkLearnJoblib("3.4", sklearnJoblibVersions);
 
 		unpickleNumPyArrays("python-3.4_numpy-1.13.3");
 	}
 
 	@Test
 	public void python37() throws IOException {
-		unpickle("python-3.7_joblib-1.0.1.pkl.z");
-		unpickle("python-3.7_joblib-1.1.0.pkl.z");
+		unpickleBuiltinDtypes("3.7");
 
-		unpickle("python-3.7_pickle-p2.pkl");
-		unpickle("python-3.7_pickle-p3.pkl");
-		unpickle("python-3.7_pickle-p4.pkl");
+		unpickleEnums("3.7");
 
-		unpickleBuiltinDtypes("python-3.7");
+		String[] pickleVersions = {
+			"p2", "p3", "p4"
+		};
 
-		unpickleEnums("python-3.7");
+		unpicklePickle("3.7", pickleVersions);
+
+		String[] joblibVersions = {
+			"1.0.1", "1.1.0"
+		};
+
+		unpickleJoblib("3.7", joblibVersions);
 
 		unpickleNumPyArrays("python-3.7_numpy-1.19.5");
 		unpickleNumPyArrays("python-3.7_numpy-1.20.0");
@@ -108,42 +128,42 @@ public class DumpTest extends UnpicklerTest {
 		unpicklePandasSeries("python-3.7_pandas-1.2.3");
 		unpicklePandasSeries("python-3.7_pandas-1.3.1");
 		unpicklePandasSeries("python-3.7_pandas-1.3.4");
-		unpicklePandasSeries("python-3.7_pandas-1.3.5");
-
-		unpicklePandasSeriesNA("python-3.7_pandas-1.3.5");
-
-		unpicklePandasCategorical("python-3.7_pandas-1.3.5");
 
 		unpicklePandasDataFrame("python-3.7_pandas-1.1.3");
 		unpicklePandasDataFrame("python-3.7_pandas-1.2.3");
 		unpicklePandasDataFrame("python-3.7_pandas-1.3.1");
 		unpicklePandasDataFrame("python-3.7_pandas-1.3.4");
-		unpicklePandasDataFrame("python-3.7_pandas-1.3.5");
 
-		unpicklePandasDtypes("python-3.7_pandas-1.3.5");
+		String[] pandasVersions = {
+			"1.3.5"
+		};
+
+		unpicklePandasAll("3.7", pandasVersions);
 	}
 
 	@Test
 	public void python39() throws Exception {
-		unpickle("python-3.9_dill-0.3.6.pkl");
-		unpickle("python-3.9_dill-0.3.8.pkl");
-		unpickle("python-3.9_dill-0.3.9.pkl");
+		unpickleBuiltinDtypes("3.9");
 
-		unpickle("python-3.9_joblib-1.0.1.pkl.z");
-		unpickle("python-3.9_joblib-1.1.0.pkl.z");
-		unpickle("python-3.9_joblib-1.2.0.pkl.z");
-		unpickle("python-3.9_joblib-1.3.1.pkl.z");
-		unpickle("python-3.9_joblib-1.3.2.pkl.z");
-		unpickle("python-3.9_joblib-1.4.2.pkl.z");
+		unpickleEnums("3.9");
 
-		unpickle("python-3.9_pickle-p2.pkl");
-		unpickle("python-3.9_pickle-p3.pkl");
-		unpickle("python-3.9_pickle-p4.pkl");
-		unpickle("python-3.9_pickle-p5.pkl");
+		String[] pickleVersions = {
+			"p2", "p3", "p4", "p5"
+		};
 
-		unpickleBuiltinDtypes("python-3.9");
+		unpicklePickle("3.9", pickleVersions);
 
-		unpickleEnums("python-3.9");
+		String[] dillVersions = {
+			"0.3.6", "0.3.8", "0.3.9"
+		};
+
+		unpickleDill("3.9", dillVersions);
+
+		String[] joblibVersions = {
+			"1.0.1", "1.1.0", "1.2.0", "1.3.1", "1.3.2", "1.4.2"
+		};
+
+		unpickleJoblib("3.9", joblibVersions);
 
 		unpickleNumPyArrays("python-3.9_numpy-1.20.2");
 		unpickleNumPyArrays("python-3.9_numpy-1.21.4");
@@ -151,321 +171,170 @@ public class DumpTest extends UnpicklerTest {
 		unpickleNumPyArrays("python-3.9_numpy-1.22.3");
 		unpickleNumPyArrays("python-3.9_numpy-1.23.4");
 		unpickleNumPyArrays("python-3.9_numpy-1.24.1");
-		unpickleNumPyArrays("python-3.9_numpy-1.26.2");
-		unpickleNumPyArrays("python-3.9_numpy-2.0.0");
-
-		unpickleNumPyComplexArrays("python-3.9_numpy-1.26.2");
-		unpickleNumPyComplexArrays("python-3.9_numpy-2.0.0");
-
-		unpickleNumPyDatetimeArrays("python-3.9_numpy-1.26.2");
-		unpickleNumPyDatetimeArrays("python-3.9_numpy-2.0.0");
 
 		unpickleNumPyDtypes("python-3.9_numpy-1.22.3");
 		unpickleNumPyDtypes("python-3.9_numpy-1.23.4");
 		unpickleNumPyDtypes("python-3.9_numpy-1.24.1");
-		unpickleNumPyDtypes("python-3.9_numpy-1.26.2");
-		unpickleNumPyDtypes("python-3.9_numpy-2.0.0");
 
 		unpickleNumPyDatetimeDtypes("python-3.9_numpy-1.24.1");
-		unpickleNumPyDatetimeDtypes("python-3.9_numpy-1.26.2");
-		unpickleNumPyDatetimeDtypes("python-3.9_numpy-2.0.0");
 
 		unpickleNumPyRNGs("python-3.9_numpy-1.23.4");
 		unpickleNumPyRNGs("python-3.9_numpy-1.24.1");
-		unpickleNumPyRNGs("python-3.9_numpy-1.26.2");
-		unpickleNumPyRNGs("python-3.9_numpy-2.0.0");
+
+		String[] numpyVersions = {
+			"1.26.2", "2.0.0"
+		};
+
+		unpickleNumPyAll("3.9", numpyVersions);
 
 		unpicklePandasSeries("python-3.9_pandas-1.2.3");
 		unpicklePandasSeries("python-3.9_pandas-1.3.1");
 		unpicklePandasSeries("python-3.9_pandas-1.3.4");
-		unpicklePandasSeries("python-3.9_pandas-1.4.1");
-		unpicklePandasSeries("python-3.9_pandas-1.4.3");
-		unpicklePandasSeries("python-3.9_pandas-1.5.1");
-		unpicklePandasSeries("python-3.9_pandas-1.5.2");
-		unpicklePandasSeries("python-3.9_pandas-2.0.2");
-		unpicklePandasSeries("python-3.9_pandas-2.1.3");
-		unpicklePandasSeries("python-3.9_pandas-2.2.0");
-
-		unpicklePandasSeriesNA("python-3.9_pandas-1.4.1");
-		unpicklePandasSeriesNA("python-3.9_pandas-1.4.3");
-		unpicklePandasSeriesNA("python-3.9_pandas-1.5.1");
-		unpicklePandasSeriesNA("python-3.9_pandas-1.5.2");
-		unpicklePandasSeriesNA("python-3.9_pandas-2.0.2");
-		unpicklePandasSeriesNA("python-3.9_pandas-2.1.3");
-		unpicklePandasSeriesNA("python-3.9_pandas-2.2.0");
-
-		unpicklePandasCategorical("python-3.9_pandas-1.4.1");
-		unpicklePandasCategorical("python-3.9_pandas-1.4.3");
-		unpicklePandasCategorical("python-3.9_pandas-1.5.1");
-		unpicklePandasCategorical("python-3.9_pandas-1.5.2");
-		unpicklePandasCategorical("python-3.9_pandas-2.0.2");
-		unpicklePandasCategorical("python-3.9_pandas-2.1.3");
-		unpicklePandasCategorical("python-3.9_pandas-2.2.0");
 
 		unpicklePandasDataFrame("python-3.9_pandas-1.1.3");
 		unpicklePandasDataFrame("python-3.9_pandas-1.2.3");
 		unpicklePandasDataFrame("python-3.9_pandas-1.3.1");
 		unpicklePandasDataFrame("python-3.9_pandas-1.3.4");
-		unpicklePandasDataFrame("python-3.9_pandas-1.4.1");
-		unpicklePandasDataFrame("python-3.9_pandas-1.4.3");
-		unpicklePandasDataFrame("python-3.9_pandas-1.5.1");
-		unpicklePandasDataFrame("python-3.9_pandas-1.5.2");
-		unpicklePandasDataFrame("python-3.9_pandas-2.0.2");
-		unpicklePandasDataFrame("python-3.9_pandas-2.1.3");
-		unpicklePandasDataFrame("python-3.9_pandas-2.2.0");
 
-		unpicklePandasDtypes("python-3.9_pandas-1.4.1");
-		unpicklePandasDtypes("python-3.9_pandas-1.4.3");
-		unpicklePandasDtypes("python-3.9_pandas-1.5.1");
-		unpicklePandasDtypes("python-3.9_pandas-1.5.2");
-		unpicklePandasDtypes("python-3.9_pandas-2.0.2");
-		unpicklePandasDtypes("python-3.9_pandas-2.1.3");
-		unpicklePandasDtypes("python-3.9_pandas-2.2.0");
+		String[] pandasVersions = {
+			"1.4.1", "1.4.3",
+			"1.5.1", "1.5.2",
+			"2.0.2", "2.1.3",
+			"2.2.0"
+		};
+
+		unpicklePandasAll("3.9", pandasVersions);
 	}
 
 	@Test
 	public void python311() throws Exception {
-		unpickle("python-3.11_dill-0.3.6.pkl");
-		unpickle("python-3.11_dill-0.3.8.pkl");
-		unpickle("python-3.11_dill-0.3.9.pkl");
-		unpickle("python-3.11_dill-0.4.0.pkl");
+		unpickleBuiltinDtypes("3.11");
 
-		unpickle("python-3.11_joblib-1.2.0.pkl.z");
-		unpickle("python-3.11_joblib-1.3.1.pkl.z");
-		unpickle("python-3.11_joblib-1.3.2.pkl.z");
-		unpickle("python-3.11_joblib-1.4.2.pkl.z");
-		unpickle("python-3.11_joblib-1.5.3.pkl.z");
+		unpickleEnums("3.11");
 
-		unpickle("python-3.11_pickle-p2.pkl");
-		unpickle("python-3.11_pickle-p3.pkl");
-		unpickle("python-3.11_pickle-p4.pkl");
-		unpickle("python-3.11_pickle-p5.pkl");
+		String[] pickleVersions = {
+			"p2", "p3", "p4", "p5"
+		};
 
-		unpickleBuiltinDtypes("python-3.11");
+		unpicklePickle("3.11", pickleVersions);
 
-		unpickleEnums("python-3.11");
+		String[] dillVersions = {
+			"0.3.6", "0.3.8", "0.3.9", "0.4.0"
+		};
+
+		unpickleDill("3.11", dillVersions);
+
+		String[] joblibVersions = {
+			"1.2.0", "1.3.1", "1.3.2", "1.4.2", "1.5.3"
+		};
+
+		unpickleJoblib("3.11", joblibVersions);
 
 		unpickleNumPyArrays("python-3.11_numpy-1.23.4");
 		unpickleNumPyArrays("python-3.11_numpy-1.24.1");
-		unpickleNumPyArrays("python-3.11_numpy-1.26.2");
-		unpickleNumPyArrays("python-3.11_numpy-2.0.0");
-		unpickleNumPyArrays("python-3.11_numpy-2.1.2");
-		unpickleNumPyArrays("python-3.11_numpy-2.2.3");
-		unpickleNumPyArrays("python-3.11_numpy-2.3.5");
-
-		unpickleNumPyComplexArrays("python-3.11_numpy-1.26.2");
-		unpickleNumPyComplexArrays("python-3.11_numpy-2.0.0");
-		unpickleNumPyComplexArrays("python-3.11_numpy-2.1.2");
-		unpickleNumPyComplexArrays("python-3.11_numpy-2.2.3");
-		unpickleNumPyComplexArrays("python-3.11_numpy-2.3.5");
-
-		unpickleNumPyDatetimeArrays("python-3.11_numpy-1.26.2");
-		unpickleNumPyDatetimeArrays("python-3.11_numpy-2.0.0");
-		unpickleNumPyDatetimeArrays("python-3.11_numpy-2.1.2");
-		unpickleNumPyDatetimeArrays("python-3.11_numpy-2.2.3");
-		unpickleNumPyDatetimeArrays("python-3.11_numpy-2.3.5");
 
 		unpickleNumPyDtypes("python-3.11_numpy-1.23.4");
 		unpickleNumPyDtypes("python-3.11_numpy-1.24.1");
-		unpickleNumPyDtypes("python-3.11_numpy-1.26.2");
-		unpickleNumPyDtypes("python-3.11_numpy-2.0.0");
-		unpickleNumPyDtypes("python-3.11_numpy-2.1.2");
-		unpickleNumPyDtypes("python-3.11_numpy-2.2.3");
-		unpickleNumPyDtypes("python-3.11_numpy-2.3.5");
 
 		unpickleNumPyDatetimeDtypes("python-3.11_numpy-1.24.1");
-		unpickleNumPyDatetimeDtypes("python-3.11_numpy-1.26.2");
-		unpickleNumPyDatetimeDtypes("python-3.11_numpy-2.0.0");
-		unpickleNumPyDatetimeDtypes("python-3.11_numpy-2.1.2");
-		unpickleNumPyDatetimeDtypes("python-3.11_numpy-2.2.3");
-		unpickleNumPyDatetimeDtypes("python-3.11_numpy-2.3.5");
 
 		unpickleNumPyRNGs("python-3.11_numpy-1.23.4");
 		unpickleNumPyRNGs("python-3.11_numpy-1.24.1");
-		unpickleNumPyRNGs("python-3.11_numpy-1.26.2");
-		unpickleNumPyRNGs("python-3.11_numpy-2.0.0");
-		unpickleNumPyRNGs("python-3.11_numpy-2.1.2");
-		unpickleNumPyRNGs("python-3.11_numpy-2.2.3");
-		unpickleNumPyRNGs("python-3.11_numpy-2.3.5");
 
-		unpicklePandasSeries("python-3.11_pandas-1.5.1");
-		unpicklePandasSeries("python-3.11_pandas-1.5.2");
-		unpicklePandasSeries("python-3.11_pandas-2.0.2");
-		unpicklePandasSeries("python-3.11_pandas-2.1.3");
-		unpicklePandasSeries("python-3.11_pandas-2.2.3");
-		unpicklePandasSeries("python-3.11_pandas-2.3.3");
+		String[] numpyVersions = {
+			"1.26.2", "2.0.0",
+			"2.1.2", "2.2.3", "2.3.5"
+		};
 
-		unpicklePandasSeriesNA("python-3.11_pandas-1.5.1");
-		unpicklePandasSeriesNA("python-3.11_pandas-1.5.2");
-		unpicklePandasSeriesNA("python-3.11_pandas-2.0.2");
-		unpicklePandasSeriesNA("python-3.11_pandas-2.1.3");
-		unpicklePandasSeriesNA("python-3.11_pandas-2.2.3");
-		unpicklePandasSeriesNA("python-3.11_pandas-2.3.3");
+		unpickleNumPyAll("3.11", numpyVersions);
 
-		unpicklePandasCategorical("python-3.11_pandas-1.5.1");
-		unpicklePandasCategorical("python-3.11_pandas-1.5.2");
-		unpicklePandasCategorical("python-3.11_pandas-2.0.2");
-		unpicklePandasCategorical("python-3.11_pandas-2.1.3");
-		unpicklePandasCategorical("python-3.11_pandas-2.2.3");
-		unpicklePandasCategorical("python-3.11_pandas-2.3.3");
+		String[] pandasVersions = {
+			"1.5.1", "1.5.2",
+			"2.0.2", "2.1.3",
+			"2.2.3", "2.3.3"
+		};
 
-		unpicklePandasDataFrame("python-3.11_pandas-1.5.1");
-		unpicklePandasDataFrame("python-3.11_pandas-1.5.2");
-		unpicklePandasDataFrame("python-3.11_pandas-2.0.2");
-		unpicklePandasDataFrame("python-3.11_pandas-2.1.3");
-		unpicklePandasDataFrame("python-3.11_pandas-2.2.3");
-		unpicklePandasDataFrame("python-3.11_pandas-2.3.3");
-
-		unpicklePandasDtypes("python-3.11_pandas-1.5.1");
-		unpicklePandasDtypes("python-3.11_pandas-1.5.2");
-		unpicklePandasDtypes("python-3.11_pandas-2.0.2");
-		unpicklePandasDtypes("python-3.11_pandas-2.1.3");
-		unpicklePandasDtypes("python-3.11_pandas-2.2.3");
-		unpicklePandasDtypes("python-3.11_pandas-2.3.3");
+		unpicklePandasAll("3.11", pandasVersions);
 	}
 
 	@Test
 	public void python312() throws Exception {
-		unpickle("python-3.12_dill-0.3.6.pkl");
-		unpickle("python-3.12_dill-0.3.8.pkl");
-		unpickle("python-3.12_dill-0.3.9.pkl");
-		unpickle("python-3.12_dill-0.4.0.pkl");
+		unpickleBuiltinDtypes("3.12");
 
-		unpickle("python-3.12_joblib-1.3.2.pkl.z");
-		unpickle("python-3.12_joblib-1.4.2.pkl.z");
-		unpickle("python-3.12_joblib-1.5.3.pkl.z");
+		unpickleEnums("3.12");
 
-		unpickle("python-3.12_pickle-p2.pkl");
-		unpickle("python-3.12_pickle-p3.pkl");
-		unpickle("python-3.12_pickle-p4.pkl");
-		unpickle("python-3.12_pickle-p5.pkl");
+		String[] pickleVersions = {
+			"p2", "p3", "p4", "p5"
+		};
 
-		unpickleBuiltinDtypes("python-3.12");
+		unpicklePickle("3.12", pickleVersions);
 
-		unpickleEnums("python-3.12");
+		String[] dillVersions = {
+			"0.3.6", "0.3.8", "0.3.9", "0.4.0"
+		};
 
-		unpickleNumPyArrays("python-3.12_numpy-1.26.2");
-		unpickleNumPyArrays("python-3.12_numpy-2.0.0");
-		unpickleNumPyArrays("python-3.12_numpy-2.1.2");
-		unpickleNumPyArrays("python-3.12_numpy-2.2.3");
-		unpickleNumPyArrays("python-3.12_numpy-2.3.5");
+		unpickleDill("3.12", dillVersions);
 
-		unpickleNumPyComplexArrays("python-3.12_numpy-1.26.2");
-		unpickleNumPyComplexArrays("python-3.12_numpy-2.0.0");
-		unpickleNumPyComplexArrays("python-3.12_numpy-2.1.2");
-		unpickleNumPyComplexArrays("python-3.12_numpy-2.2.3");
-		unpickleNumPyComplexArrays("python-3.12_numpy-2.3.5");
+		String[] joblibVersions = {
+			"1.3.2", "1.4.2", "1.5.3"
+		};
 
-		unpickleNumPyDatetimeArrays("python-3.12_numpy-1.26.2");
-		unpickleNumPyDatetimeArrays("python-3.12_numpy-2.0.0");
-		unpickleNumPyDatetimeArrays("python-3.12_numpy-2.1.2");
-		unpickleNumPyDatetimeArrays("python-3.12_numpy-2.2.3");
-		unpickleNumPyDatetimeArrays("python-3.12_numpy-2.3.5");
+		unpickleJoblib("3.12", joblibVersions);
 
-		unpickleNumPyDtypes("python-3.12_numpy-1.26.2");
-		unpickleNumPyDtypes("python-3.12_numpy-2.0.0");
-		unpickleNumPyDtypes("python-3.12_numpy-2.1.2");
-		unpickleNumPyDtypes("python-3.12_numpy-2.2.3");
-		unpickleNumPyDtypes("python-3.12_numpy-2.3.5");
+		String[] numpyVersions = {
+			"1.26.2", "2.0.0",
+			"2.1.2", "2.2.3", "2.3.5"
+		};
 
-		unpickleNumPyDatetimeDtypes("python-3.12_numpy-1.26.2");
-		unpickleNumPyDatetimeDtypes("python-3.12_numpy-2.0.0");
-		unpickleNumPyDatetimeDtypes("python-3.12_numpy-2.1.2");
-		unpickleNumPyDatetimeDtypes("python-3.12_numpy-2.2.3");
-		unpickleNumPyDatetimeDtypes("python-3.12_numpy-2.3.5");
+		unpickleNumPyAll("3.12", numpyVersions);
 
-		unpickleNumPyRNGs("python-3.12_numpy-1.26.2");
-		unpickleNumPyRNGs("python-3.12_numpy-2.0.0");
-		unpickleNumPyRNGs("python-3.12_numpy-2.1.2");
-		unpickleNumPyRNGs("python-3.12_numpy-2.2.3");
-		unpickleNumPyRNGs("python-3.12_numpy-2.3.5");
+		String[] pandasVersions = {
+			"2.2.3", "2.3.3"
+		};
 
-		unpicklePandasSeries("python-3.12_pandas-2.2.3");
-		unpicklePandasSeries("python-3.12_pandas-2.3.3");
-
-		unpicklePandasSeriesNA("python-3.12_pandas-2.2.3");
-		unpicklePandasSeriesNA("python-3.12_pandas-2.3.3");
-
-		unpicklePandasCategorical("python-3.12_pandas-2.2.3");
-		unpicklePandasCategorical("python-3.12_pandas-2.3.3");
-
-		unpicklePandasDataFrame("python-3.12_pandas-2.2.3");
-		unpicklePandasDataFrame("python-3.12_pandas-2.3.3");
-
-		unpicklePandasDtypes("python-3.12_pandas-2.2.3");
-		unpicklePandasDtypes("python-3.12_pandas-2.3.3");
+		unpicklePandasAll("3.12", pandasVersions);
 	}
 
 	@Test
 	public void python313() throws Exception {
-		unpickle("python-3.13_dill-0.3.9.pkl");
-		unpickle("python-3.13_dill-0.4.0.pkl");
+		unpickleBuiltinDtypes("3.13");
 
-		unpickle("python-3.13_joblib-1.4.2.pkl.z");
-		unpickle("python-3.13_joblib-1.5.3.pkl.z");
+		unpickleEnums("3.13");
 
-		unpickle("python-3.13_pickle-p2.pkl");
-		unpickle("python-3.13_pickle-p3.pkl");
-		unpickle("python-3.13_pickle-p4.pkl");
-		unpickle("python-3.13_pickle-p5.pkl");
+		String[] pickleVersions = {
+			"p2", "p3", "p4", "p5"
+		};
 
-		unpickleBuiltinDtypes("python-3.13");
+		unpicklePickle("3.13", pickleVersions);
 
-		unpickleEnums("python-3.13");
+		String[] dillVersions = {
+			"0.3.9", "0.4.0"
+		};
 
-		unpickleNumPyArrays("python-3.13_numpy-1.26.2");
-		unpickleNumPyArrays("python-3.13_numpy-2.0.0");
-		unpickleNumPyArrays("python-3.13_numpy-2.1.2");
-		unpickleNumPyArrays("python-3.13_numpy-2.2.3");
-		unpickleNumPyArrays("python-3.13_numpy-2.3.5");
+		unpickleDill("3.13", dillVersions);
 
-		unpickleNumPyComplexArrays("python-3.13_numpy-1.26.2");
-		unpickleNumPyComplexArrays("python-3.13_numpy-2.0.0");
-		unpickleNumPyComplexArrays("python-3.13_numpy-2.1.2");
-		unpickleNumPyComplexArrays("python-3.13_numpy-2.2.3");
-		unpickleNumPyComplexArrays("python-3.13_numpy-2.3.5");
+		String[] joblibVersions = {
+			"1.4.2", "1.5.3"
+		};
 
-		unpickleNumPyDatetimeArrays("python-3.13_numpy-1.26.2");
-		unpickleNumPyDatetimeArrays("python-3.13_numpy-2.0.0");
-		unpickleNumPyDatetimeArrays("python-3.13_numpy-2.1.2");
-		unpickleNumPyDatetimeArrays("python-3.13_numpy-2.2.3");
-		unpickleNumPyDatetimeArrays("python-3.13_numpy-2.3.5");
+		unpickleJoblib("3.13", joblibVersions);
 
-		unpickleNumPyDtypes("python-3.13_numpy-1.26.2");
-		unpickleNumPyDtypes("python-3.13_numpy-2.0.0");
-		unpickleNumPyDtypes("python-3.13_numpy-2.1.2");
-		unpickleNumPyDtypes("python-3.13_numpy-2.2.3");
-		unpickleNumPyDtypes("python-3.13_numpy-2.3.5");
+		String[] numpyVersions = {
+			"1.26.2", "2.0.0",
+			"2.1.2", "2.2.3", "2.3.5"
+		};
 
-		unpickleNumPyDatetimeDtypes("python-3.13_numpy-1.26.2");
-		unpickleNumPyDatetimeDtypes("python-3.13_numpy-2.0.0");
-		unpickleNumPyDatetimeDtypes("python-3.13_numpy-2.1.2");
-		unpickleNumPyDatetimeDtypes("python-3.13_numpy-2.2.3");
-		unpickleNumPyDatetimeDtypes("python-3.13_numpy-2.3.5");
+		unpickleNumPyAll("3.13", numpyVersions);
 
-		unpickleNumPyRNGs("python-3.13_numpy-1.26.2");
-		unpickleNumPyRNGs("python-3.13_numpy-2.0.0");
-		unpickleNumPyRNGs("python-3.13_numpy-2.1.2");
-		unpickleNumPyRNGs("python-3.13_numpy-2.2.3");
-		unpickleNumPyRNGs("python-3.13_numpy-2.3.5");
+		String[] pandasVersions = {
+			"2.2.3", "2.3.3"
+		};
 
-		unpicklePandasSeries("python-3.13_pandas-2.2.3");
-		unpicklePandasSeries("python-3.13_pandas-2.3.3");
-
-		unpicklePandasSeriesNA("python-3.13_pandas-2.2.3");
-		unpicklePandasSeriesNA("python-3.13_pandas-2.3.3");
-
-		unpicklePandasCategorical("python-3.13_pandas-2.2.3");
-		unpicklePandasCategorical("python-3.13_pandas-2.3.3");
-
-		unpicklePandasDataFrame("python-3.13_pandas-2.3.3");
-
-		unpicklePandasDtypes("python-3.13_pandas-2.2.3");
-		unpicklePandasDtypes("python-3.13_pandas-2.3.3");
+		unpicklePandasAll("3.13", pandasVersions);
 	}
 
-	private void unpickleBuiltinDtypes(String prefix) throws IOException {
-		List<?> dtypes = (List<?>)unpickle(prefix + "_dtypes.pkl");
+	private void unpickleBuiltinDtypes(String pythonVersion) throws IOException {
+		List<?> dtypes = (List<?>)unpickle("python-" + pythonVersion + "_dtypes.pkl");
 
 		for(Object dtype : dtypes){
 			Type type = (Type)dtype;
@@ -474,13 +343,63 @@ public class DumpTest extends UnpicklerTest {
 		}
 	}
 
-	private void unpickleEnums(String prefix) throws IOException {
-		List<?> enums = (List<?>)unpickle(prefix + "_enums.pkl");
+	private void unpickleEnums(String pythonVersion) throws IOException {
+		List<?> enums = (List<?>)unpickle("python-" + pythonVersion + "_enums.pkl");
 
 		for(Object _enum : enums){
 			PythonEnum pythonEnum = (PythonEnum)_enum;
 
 			assertNotNull(pythonEnum.getValue());
+		}
+	}
+
+	private void unpicklePickle(String pythonVersion, String... pickleVersions) throws IOException {
+
+		for(String pickleVersion : pickleVersions){
+			String prefix = "python-" + pythonVersion + "_" + "pickle-" + pickleVersion;
+
+			unpickle(prefix + ".pkl");
+		}
+	}
+
+	private void unpickleDill(String pythonVersion, String... dillVersions) throws IOException {
+
+		for(String dillVersion : dillVersions){
+			String prefix = "python-" + pythonVersion + "_" + "dill-" + dillVersion;
+
+			unpickle(prefix + ".pkl");
+		}
+	}
+
+	private void unpickleJoblib(String pythonVersion, String... joblibVersions) throws IOException {
+
+		for(String joblibVersion : joblibVersions){
+			String prefix = "python-" + pythonVersion + "_" + "joblib-" + joblibVersion;
+
+			unpickle(prefix + ".pkl.z");
+		}
+	}
+
+	private void unpickleSkLearnJoblib(String pythonVersion, String... sklearnJoblibVersions) throws IOException {
+
+		for(String sklearnJoblibVersion : sklearnJoblibVersions){
+			String prefix = "python-" + pythonVersion + "_" + "sklearn-joblib-" + sklearnJoblibVersion;
+
+			unpickle(prefix + ".pkl.z");
+		}
+	}
+
+	private void unpickleNumPyAll(String pythonVersion, String... numpyVersions) throws IOException {
+
+		for(String numpyVersion : numpyVersions){
+			String prefix = "python-" + pythonVersion + "_" + "numpy-" + numpyVersion;
+
+			unpickleNumPyArrays(prefix);
+			unpickleNumPyComplexArrays(prefix);
+			unpickleNumPyDatetimeArrays(prefix);
+			unpickleNumPyDtypes(prefix);
+			unpickleNumPyDatetimeDtypes(prefix);
+			unpickleNumPyRNGs(prefix);
 		}
 	}
 
@@ -614,6 +533,19 @@ public class DumpTest extends UnpicklerTest {
 
 		assertNotNull(legacyRandomState);
 		assertNotNull(generator);
+	}
+
+	private void unpicklePandasAll(String pythonVersion, String... pandasVersions) throws IOException {
+
+		for(String pandasVersion : pandasVersions){
+			String prefix = "python-" + pythonVersion + "_" + "pandas-" + pandasVersion;
+
+			unpicklePandasSeries(prefix);
+			unpicklePandasSeriesNA(prefix);
+			unpicklePandasCategorical(prefix);
+			unpicklePandasDataFrame(prefix);
+			unpicklePandasDtypes(prefix);
+		}
 	}
 
 	private void unpicklePandasSeries(String prefix) throws IOException {
