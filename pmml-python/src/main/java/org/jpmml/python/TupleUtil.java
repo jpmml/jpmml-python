@@ -34,23 +34,24 @@ public class TupleUtil {
 	}
 
 	static
-	public <E> E extractElement(Object[] tuple, int i, Class<? extends E> clazz){
+	public <E> E extractElement(Object[] tuple, int i, Function<Object, E> castFunction){
 		Object value = extractElement(tuple, i);
 
-		CastFunction<E> castFunction = new CastFunction<E>(clazz){
+		try {
+			return castFunction.apply(value);
+		} catch(ClassCastException cce){
+			throw new PythonException("Tuple contains an unsupported value (" + ClassDictUtil.formatClass(value) + ")", cce);
+		}
+	}
 
-			@Override
-			public E apply(Object object){
+	static
+	public String extractStringElement(Object[] tuple, int i){
+		return extractElement(tuple, i, new ScalarCastFunction<>(String.class));
+	}
 
-				try {
-					return super.apply(object);
-				} catch(ClassCastException cce){
-					throw new PythonException("Tuple contains an unsupported value (" + ClassDictUtil.formatClass(object) + ")", cce);
-				}
-			}
-		};
-
-		return castFunction.apply(value);
+	static
+	public Object extractObjectElement(Object[] tuple, int i){
+		return extractElement(tuple, i, new ScalarCastFunction<>(Object.class));
 	}
 
 	static
@@ -67,22 +68,22 @@ public class TupleUtil {
 	}
 
 	static
-	public <E> List<? extends E> extractElementList(List<Object[]> tuples, int i, Class<? extends E> clazz){
+	public <E> List<? extends E> extractElementList(List<Object[]> tuples, int i, Function<Object, E> castFunction){
 		List<?> values = extractElementList(tuples, i);
 
-		CastFunction<E> castFunction = new CastFunction<E>(clazz){
+		Function<Object, E> function = new Function<Object, E>(){
 
 			@Override
-			public E apply(Object object){
+			public E apply(Object value){
 
 				try {
-					return super.apply(object);
+					 return castFunction.apply(value);
 				} catch(ClassCastException cce){
-					throw new PythonException("Tuple contains an unsupported value (" + ClassDictUtil.formatClass(object) +")", cce);
+					throw new PythonException("Tuple contains an unsupported value (" + ClassDictUtil.formatClass(value) +")", cce);
 				}
 			}
 		};
 
-		return Lists.transform(values, castFunction);
+		return Lists.transform(values, function);
 	}
 }
