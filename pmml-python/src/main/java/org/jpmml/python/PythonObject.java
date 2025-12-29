@@ -142,7 +142,7 @@ public class PythonObject extends ClassDict {
 		if(value == null){
 			Attribute attribute = new Attribute(this, name);
 
-			throw new InvalidAttributeException("Attribute \'" +attribute.format() + "\' has a missing (None) value", attribute);
+			throw new InvalidAttributeException("Attribute \'" + attribute.format() + "\' has a missing (None) value", attribute);
 		} // End if
 
 		if(Objects.equals(Identifiable.class, clazz)){
@@ -173,6 +173,24 @@ public class PythonObject extends ClassDict {
 		return castFunction.apply(value);
 	}
 
+	public <E> E get(String name, CastFunction<E> castFunction){
+		Object value = getattr(name);
+
+		if(value == null){
+			Attribute attribute = new Attribute(this, name);
+
+			throw new InvalidAttributeException("Attribute \'" + attribute.format() + "\' has a missing (None) value", attribute);
+		}
+
+		try {
+			return castFunction.apply(value);
+		} catch(ClassCastException cce){
+			Attribute attribute = new Attribute(this, name);
+
+			throw new InvalidAttributeException("Attribute \'" + attribute.format() + "\' has an unsupported value (" + ClassDictUtil.formatClass(value) + ")", attribute);
+		}
+	}
+
 	public <E> E getOptional(String name, Class<? extends E> clazz){
 		Object value = getattr(name, null);
 
@@ -181,6 +199,16 @@ public class PythonObject extends ClassDict {
 		}
 
 		return get(name, clazz);
+	}
+
+	public <E> E getOptional(String name, CastFunction<E> castFunction){
+		Object value = getattr(name, null);
+
+		if(value == null){
+			return null;
+		}
+
+		return get(name, castFunction);
 	}
 
 	public Object getObject(String name){
