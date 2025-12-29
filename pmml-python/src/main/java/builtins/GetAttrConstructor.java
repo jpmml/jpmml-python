@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Villu Ruusmann
+ * Copyright (c) 2018 Villu Ruusmann
  *
  * This file is part of JPMML-Python
  *
@@ -20,24 +20,39 @@ package builtins;
 
 import net.razorvine.pickle.objects.ClassDict;
 import net.razorvine.pickle.objects.ClassDictConstructor;
+import org.jpmml.python.PythonEnumConstructor;
 
-public class SetAttrConstructor extends ClassDictConstructor {
+public class GetAttrConstructor extends ClassDictConstructor {
 
-	public SetAttrConstructor(String module, String name){
+	public GetAttrConstructor(String module, String name){
 		super(module, name);
 	}
 
 	@Override
 	public Object construct(Object[] args){
 
+		if(args.length == 2){
+
+			// Python 3.11+
+			if(args[0] instanceof PythonEnumConstructor){
+				PythonEnumConstructor enumConstructor = (PythonEnumConstructor)args[0];
+				String name = (String)args[1];
+
+				return enumConstructor.construct(new Object[]{name});
+			}
+
+			ClassDict dict = (ClassDict)args[0];
+			String name = (String)args[1];
+
+			return dict.get(name);
+		} else
+
 		if(args.length == 3){
 			ClassDict dict = (ClassDict)args[0];
 			String name = (String)args[1];
-			Object value = args[2];
+			Object _default = args[2];
 
-			dict.put(name, value);
-
-			return null;
+			return dict.getOrDefault(name, _default);
 		}
 
 		return super.construct(args);

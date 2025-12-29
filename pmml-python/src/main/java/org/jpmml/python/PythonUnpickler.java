@@ -21,7 +21,6 @@ package org.jpmml.python;
 import java.io.IOException;
 import java.io.InputStream;
 
-import builtins.GetAttr;
 import net.razorvine.pickle.Opcodes;
 import net.razorvine.pickle.PickleException;
 import net.razorvine.pickle.Unpickler;
@@ -48,26 +47,6 @@ public class PythonUnpickler extends Unpickler {
 				Object value = constantConstructor.construct();
 
 				replaceHead(value);
-			}
-		} else
-
-		// Python 3.11+
-		if(key == Opcodes.REDUCE){
-			Object head = peekHead();
-
-			if(head instanceof GetAttr){
-				GetAttr getAttr = (GetAttr)head;
-
-				Object obj = getAttr.getObj();
-				String name = getAttr.getName();
-
-				if(obj instanceof PythonEnumConstructor){
-					PythonEnumConstructor enumConstructor = (PythonEnumConstructor)obj;
-
-					PythonEnum _enum = enumConstructor.construct(new Object[]{name});
-
-					replaceHead(_enum);
-				}
 			}
 		}
 
