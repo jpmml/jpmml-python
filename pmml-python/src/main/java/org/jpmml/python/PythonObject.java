@@ -152,7 +152,7 @@ public class PythonObject extends ClassDict {
 		} catch(ClassCastException cce){
 			Attribute attribute = new Attribute(this, name);
 
-			throw new InvalidAttributeException("Attribute \'" + attribute.format() + "\' has an unsupported value (" + ClassDictUtil.formatClass(value) + ")", attribute);
+			throw new InvalidAttributeException("Attribute \'" + attribute.format() + "\' has an unsupported value (" + ClassDictUtil.formatClass(value) + ")", attribute, cce);
 		}
 	}
 
@@ -313,7 +313,7 @@ public class PythonObject extends ClassDict {
 				try {
 					return castFunction.apply(object);
 				} catch(ClassCastException cce){
-					throw new InvalidAttributeException("Array attribute \'" + attribute.format() + "\' contains an unsupported value (" + ClassDictUtil.formatClass(object) + ")", attribute);
+					throw new InvalidAttributeException("Array attribute \'" + attribute.format() + "\' contains an unsupported value (" + ClassDictUtil.formatClass(object) + ")", attribute, cce);
 				}
 			}
 		};
@@ -420,7 +420,7 @@ public class PythonObject extends ClassDict {
 				try {
 					return castFunction.apply(object);
 				} catch(ClassCastException cce){
-					throw new InvalidAttributeException("List attribute \'" + attribute.format() + "\' contains an unsupported value (" + ClassDictUtil.formatClass(object) + ")", attribute);
+					throw new InvalidAttributeException("List attribute \'" + attribute.format() + "\' contains an unsupported value (" + ClassDictUtil.formatClass(object) + ")", attribute, cce);
 				}
 			}
 		};
@@ -483,7 +483,7 @@ public class PythonObject extends ClassDict {
 				try {
 					return castFunction.apply(object);
 				} catch(ClassCastException cce){
-					throw new InvalidAttributeException("List of arrays attribute \'" + attribute.format() + "\' contains an unsupported value (" + ClassDictUtil.formatClass(object) + ")", attribute);
+					throw new InvalidAttributeException("List of arrays attribute \'" + attribute.format() + "\' contains an unsupported value (" + ClassDictUtil.formatClass(object) + ")", attribute, cce);
 				}
 			}
 		};
