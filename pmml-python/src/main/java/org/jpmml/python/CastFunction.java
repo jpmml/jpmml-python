@@ -22,6 +22,7 @@ import java.util.Objects;
 
 import com.google.common.base.Function;
 
+abstract
 public class CastFunction<E> implements Function<Object, E> {
 
 	private Class<? extends E> clazz = null;
@@ -34,8 +35,6 @@ public class CastFunction<E> implements Function<Object, E> {
 	@Override
 	public E apply(Object object){
 		Class<? extends E> clazz = getClazz();
-
-		object = CastUtil.deepCastTo(object, clazz);
 
 		return clazz.cast(object);
 	}
