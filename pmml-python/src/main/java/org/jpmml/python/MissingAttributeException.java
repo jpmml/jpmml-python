@@ -23,6 +23,6 @@ import org.jpmml.converter.ExceptionUtil;
 public class MissingAttributeException extends AttributeException {
 
 	public MissingAttributeException(Attribute attribute){
-		super("Attribute " + ExceptionUtil.formatName(attribute.format()) + " not set", attribute);
+		super("Attribute " + ExceptionUtil.formatName(attribute.getName()) + " not set", attribute);
 	}
 }

@@ -30,12 +30,14 @@ public class AttributeException extends PythonException {
 		super(message);
 
 		setAttribute(attribute);
+		setContext(attribute.getClassDict());
 	}
 
 	public AttributeException(String message, Attribute attribute, Throwable cause){
 		super(message, cause);
 
 		setAttribute(attribute);
+		setContext(attribute.getClassDict());
 	}
 
 	public Attribute getAttribute(){
