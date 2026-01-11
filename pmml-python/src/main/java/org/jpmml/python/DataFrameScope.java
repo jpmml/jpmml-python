@@ -22,9 +22,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+import org.jpmml.converter.ExceptionUtil;
 import org.jpmml.converter.Feature;
 import org.jpmml.converter.FeatureUtil;
-import org.jpmml.converter.OperationException;
 import org.jpmml.converter.PMMLEncoder;
 
 public class DataFrameScope extends Scope {
@@ -58,7 +58,7 @@ public class DataFrameScope extends Scope {
 		String variableName = getVariableName();
 
 		if((variableName).equals(name)){
-			throw new OperationException("Name \'" + variableName + "\' refers to a row vector")
+			throw new OperationException("Name " + ExceptionUtil.formatName(variableName) + " refers to a row vector")
 				.setSolution("Use an array indexing expression " + variableName + "[<column index>] or " + variableName + "[<column name>] to refer to a specific row vector element");
 		}
 
@@ -106,7 +106,7 @@ public class DataFrameScope extends Scope {
 			return feature;
 		}
 
-		throw new OperationException("Column name \'" + columnName + "\' not in " + FeatureUtil.formatNames(columns, '\''));
+		throw new OperationException("Column name " + ExceptionUtil.formatName(columnName) + " not in " + ExceptionUtil.formatNameList(columns));
 	}
 
 	@Override

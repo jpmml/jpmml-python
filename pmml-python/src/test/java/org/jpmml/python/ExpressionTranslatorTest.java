@@ -38,7 +38,6 @@ import org.dmg.pmml.PMMLFunctions;
 import org.jpmml.converter.ContinuousFeature;
 import org.jpmml.converter.ExpressionUtil;
 import org.jpmml.converter.Feature;
-import org.jpmml.converter.OperationException;
 import org.jpmml.converter.PMMLEncoder;
 import org.jpmml.converter.StringFeature;
 import org.jpmml.evaluator.FieldValue;

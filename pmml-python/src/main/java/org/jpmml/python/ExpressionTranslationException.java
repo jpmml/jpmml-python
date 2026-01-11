@@ -18,7 +18,7 @@
  */
 package org.jpmml.python;
 
-import org.jpmml.converter.TranslationException;
+import org.jpmml.converter.ExceptionUtil;
 
 public class ExpressionTranslationException extends TranslationException {
 
@@ -28,6 +28,6 @@ public class ExpressionTranslationException extends TranslationException {
 
 	static
 	private String formatMessage(String expression){
-		return "Python expression \'" + AbstractTranslator.toSingleLine(expression) + "\' is invalid or not supported";
+		return "Python expression " + ExceptionUtil.formatLiteral(AbstractTranslator.toSingleLine(expression)) + " is invalid or not supported";
 	}
 }

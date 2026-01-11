@@ -23,7 +23,7 @@ import org.jpmml.converter.Feature;
 import org.jpmml.converter.FeatureResolver;
 import org.jpmml.converter.FeatureUtil;
 import org.jpmml.converter.PMMLEncoder;
-import org.jpmml.converter.ResolutionException;
+import org.jpmml.converter.SchemaException;
 
 abstract
 public class Scope implements FeatureResolver {
@@ -56,7 +56,7 @@ public class Scope implements FeatureResolver {
 
 			try {
 				field = encoder.getField(name);
-			} catch(ResolutionException re){
+			} catch(SchemaException se){
 				return null;
 			}
 

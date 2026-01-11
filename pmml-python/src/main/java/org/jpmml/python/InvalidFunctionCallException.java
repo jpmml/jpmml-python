@@ -21,7 +21,7 @@ package org.jpmml.python;
 import java.util.Arrays;
 import java.util.List;
 
-import org.jpmml.converter.OperationException;
+import org.jpmml.converter.ExceptionUtil;
 
 public class InvalidFunctionCallException extends OperationException {
 
@@ -42,6 +42,6 @@ public class InvalidFunctionCallException extends OperationException {
 
 		String nameAndSignature = dottedName + "(" + String.join(", ", parameters) + ")";
 
-		return "Function \'" + nameAndSignature + "\' expects " + parameters.size() + " argument(s), got " + arguments.size();
+		return "Function " + ExceptionUtil.formatName(nameAndSignature) + " expects " + ExceptionUtil.formatCount(parameters.size(), "argument") + ", got " + arguments.size();
 	}
 }

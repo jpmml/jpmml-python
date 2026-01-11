@@ -23,6 +23,7 @@ import java.util.Map;
 
 import net.razorvine.pickle.objects.ClassDictConstructor;
 import numpy.core.NDArray;
+import org.jpmml.converter.ExceptionUtil;
 import org.jpmml.python.Attribute;
 import org.jpmml.python.ClassDictConstructorUtil;
 import org.jpmml.python.ClassDictUtil;
@@ -100,7 +101,7 @@ public class Index extends CythonObject implements HasArray {
 		if(dict.containsKey("__class__")){
 			Attribute attribute = new Attribute(this, name);
 
-			throw new InvalidAttributeException("Dict attribute \'" + attribute.format() + "\' has an unsupported value (" + ClassDictUtil.formatClass(dict) + ")", attribute);
+			throw new InvalidAttributeException("Dict attribute " + ExceptionUtil.formatName(attribute.format()) + " has an unsupported value (" + ClassDictUtil.formatClass(dict) + ")", attribute);
 		}
 
 		object.update(dict);

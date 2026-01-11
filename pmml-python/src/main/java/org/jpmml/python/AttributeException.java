@@ -18,37 +18,31 @@
  */
 package org.jpmml.python;
 
+import java.util.Objects;
+
 abstract
 public class AttributeException extends PythonException {
+
+	private Attribute attribute = null;
+
 
 	public AttributeException(String message, Attribute attribute){
 		super(message);
 
-		setContext(attribute);
+		setAttribute(attribute);
 	}
 
 	public AttributeException(String message, Attribute attribute, Throwable cause){
 		super(message, cause);
 
-		setContext(attribute);
+		setAttribute(attribute);
 	}
 
-	@Override
-	protected String getLocalizedContext(){
-		Attribute context = getContext();
-
-		return ClassDictUtil.formatClass(context.getClassDict());
+	public Attribute getAttribute(){
+		return this.attribute;
 	}
 
-	@Override
-	public Attribute getContext(){
-		return (Attribute)super.getContext();
-	}
-
-	@Override
-	public AttributeException setContext(Object context){
-		Attribute attribute = (Attribute)context;
-
-		return (AttributeException)super.setContext(attribute);
+	private void setAttribute(Attribute attribute){
+		this.attribute = Objects.requireNonNull(attribute);
 	}
 }

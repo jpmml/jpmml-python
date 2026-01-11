@@ -20,7 +20,7 @@ package org.jpmml.python;
 
 import java.util.List;
 
-import org.jpmml.converter.OperationException;
+import org.jpmml.converter.ExceptionUtil;
 
 public class InvalidMethodCallException extends OperationException {
 
@@ -32,6 +32,6 @@ public class InvalidMethodCallException extends OperationException {
 	private String formatMessage(String dottedName, List<String> parameters, List<?> arguments){
 		String nameAndSignature = dottedName + "(" + String.join(", ", parameters) + ")";
 
-		return "Method \'" + nameAndSignature + "\' expects " + parameters.size() + " argument(s), got " + arguments.size();
+		return "Method " + ExceptionUtil.formatName(nameAndSignature) + " expects " + ExceptionUtil.formatCount(parameters.size(), "argument") + ", got " + arguments.size();
 	}
 }

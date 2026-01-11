@@ -18,7 +18,7 @@
  */
 package org.jpmml.python;
 
-import org.jpmml.converter.ResolutionException;
+import org.jpmml.converter.ExceptionUtil;
 
 public class NameResolutionException extends ResolutionException {
 
@@ -28,6 +28,6 @@ public class NameResolutionException extends ResolutionException {
 
 	static
 	private String formatMessage(String name){
-		return "Name \'" + name + "\' is not defined";
+		return "Name " + ExceptionUtil.formatName(name) + " is not defined";
 	}
 }

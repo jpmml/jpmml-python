@@ -22,9 +22,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import org.jpmml.converter.ExceptionUtil;
 import org.jpmml.converter.Feature;
 import org.jpmml.converter.FeatureUtil;
-import org.jpmml.converter.OperationException;
 import org.jpmml.converter.PMMLEncoder;
 
 public class BlockScope extends Scope {
@@ -57,14 +57,14 @@ public class BlockScope extends Scope {
 	public Feature getFeature(String name, int columnIndex){
 		getFeature(name);
 
-		throw new OperationException("Name \'" + name + "\' is not subscriptable");
+		throw new OperationException("Name " + ExceptionUtil.formatName(name) + " is not subscriptable");
 	}
 
 	@Override
 	public Feature getFeature(String name, String columnName){
 		getFeature(name);
 
-		throw new OperationException("Name \'" + name + "\' is not subscriptable");
+		throw new OperationException("Name " + ExceptionUtil.formatName(name) + " is not subscriptable");
 	}
 
 	@Override

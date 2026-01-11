@@ -18,9 +18,11 @@
  */
 package org.jpmml.python;
 
+import org.jpmml.converter.ExceptionUtil;
+
 public class MissingAttributeException extends AttributeException {
 
 	public MissingAttributeException(Attribute attribute){
-		super("Attribute \'" + attribute.format() + "\' not set", attribute);
+		super("Attribute " + ExceptionUtil.formatName(attribute.format()) + " not set", attribute);
 	}
 }

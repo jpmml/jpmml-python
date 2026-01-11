@@ -18,7 +18,7 @@
  */
 package org.jpmml.python;
 
-import org.jpmml.converter.TranslationException;
+import org.jpmml.converter.ExceptionUtil;
 
 public class FunctionDefTranslationException extends TranslationException {
 
@@ -28,6 +28,6 @@ public class FunctionDefTranslationException extends TranslationException {
 
 	static
 	private String formatMessage(String functionDef){
-		return "Python function definition \'" + AbstractTranslator.toSingleLine(functionDef) + "\' is invalid or not supported";
+		return "Python function definition " + ExceptionUtil.formatLiteral(AbstractTranslator.toSingleLine(functionDef)) + " is invalid or not supported";
 	}
 }

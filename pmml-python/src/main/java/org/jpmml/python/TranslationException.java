@@ -18,16 +18,13 @@
  */
 package org.jpmml.python;
 
-import org.jpmml.converter.ExceptionUtil;
+public class TranslationException extends PythonException {
 
-public class MethodResolutionException extends ResolutionException {
-
-	public MethodResolutionException(String dottedName){
-		super(formatMessage(dottedName));
+	public TranslationException(String message){
+		super(message);
 	}
 
-	static
-	private String formatMessage(String dottedName){
-		return "Method " + ExceptionUtil.formatName(dottedName) + " is not defined or not supported";
+	public TranslationException(String message, Throwable cause){
+		super(message, cause);
 	}
 }

@@ -18,7 +18,7 @@
  */
 package org.jpmml.python;
 
-import org.jpmml.converter.TranslationException;
+import org.jpmml.converter.ExceptionUtil;
 
 public class PredicateTranslationException extends TranslationException {
 
@@ -28,6 +28,6 @@ public class PredicateTranslationException extends TranslationException {
 
 	static
 	private String formatMessage(String predicate){
-		return "Python predicate \'" + AbstractTranslator.toSingleLine(predicate) + "\' is invalid or not supported";
+		return "Python predicate " + ExceptionUtil.formatLiteral(AbstractTranslator.toSingleLine(predicate)) + " is invalid or not supported";
 	}
 }

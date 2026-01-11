@@ -27,6 +27,8 @@ import java.util.Map;
 
 import net.razorvine.pickle.objects.ClassDict;
 import net.razorvine.pickle.objects.ClassDictConstructor;
+import org.jpmml.converter.ConversionException;
+import org.jpmml.converter.ExceptionUtil;
 
 public class ClassDictUtil {
 
@@ -44,7 +46,7 @@ public class ClassDictUtil {
 			} // End if
 
 			if(prevCollection != null && collection.size() != prevCollection.size()){
-				throw new IllegalArgumentException("Expected the same number of elements, got a different numbers of elements");
+				throw new ConversionException("Expected the same number of elements, got a different numbers of elements");
 			}
 
 			prevCollection = collection;
@@ -61,7 +63,7 @@ public class ClassDictUtil {
 			} // End if
 
 			if(collection.size() != size){
-				throw new IllegalArgumentException("Expected " + size + " element(s), got " + collection.size());
+				throw new ConversionException("Expected " + ExceptionUtil.formatCount(size, "element") + ", got " + collection.size());
 			}
 		}
 	}
@@ -73,7 +75,7 @@ public class ClassDictUtil {
 		for(int[] shape : shapes){
 
 			if(prevShape != null && prevShape[axis] != shape[axis]){
-				throw new IllegalArgumentException("Expected the same number of elements, got a different number of elements");
+				throw new ConversionException("Expected the same number of elements, got a different number of elements");
 			}
 
 			prevShape = shape;
@@ -86,7 +88,7 @@ public class ClassDictUtil {
 		for(int[] shape : shapes){
 
 			if(shape[axis] != size){
-				throw new IllegalArgumentException("Expected " + size + " element(s), got " + shape[axis]);
+				throw new ConversionException("Expected " + ExceptionUtil.formatCount(size, "element") + ", got " + shape[axis]);
 			}
 		}
 	}

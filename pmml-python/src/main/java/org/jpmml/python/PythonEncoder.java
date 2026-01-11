@@ -23,7 +23,7 @@ import org.jpmml.converter.Feature;
 import org.jpmml.converter.FeatureResolver;
 import org.jpmml.converter.FeatureUtil;
 import org.jpmml.converter.ModelEncoder;
-import org.jpmml.converter.ResolutionException;
+import org.jpmml.converter.SchemaException;
 
 abstract
 public class PythonEncoder extends ModelEncoder implements FeatureResolver {
@@ -34,7 +34,7 @@ public class PythonEncoder extends ModelEncoder implements FeatureResolver {
 
 		try {
 			field = getField(name);
-		} catch(ResolutionException re){
+		} catch(SchemaException se){
 			return null;
 		}
 

@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import numpy.core.NDArray;
+import org.jpmml.converter.ConversionException;
 import org.jpmml.python.HasArray;
 import org.jpmml.python.PythonObject;
 
@@ -72,7 +73,7 @@ public class MaskedArray extends PythonObject implements HasArray {
 
 		// XXX
 		if(!Arrays.equals(dataShape, maskShape)){
-			throw new IllegalArgumentException("Expected matching array shapes, got " + Arrays.toString(dataShape) + " and " + Arrays.toString(maskShape));
+			throw new ConversionException("Expected the same array shapes, got " + Arrays.toString(dataShape) + " and " + Arrays.toString(maskShape));
 		}
 
 		return dataShape;

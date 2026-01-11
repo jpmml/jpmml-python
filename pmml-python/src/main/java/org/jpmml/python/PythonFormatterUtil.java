@@ -22,6 +22,8 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.jpmml.converter.ConversionException;
+
 public class PythonFormatterUtil {
 
 	private PythonFormatterUtil(){
@@ -46,7 +48,7 @@ public class PythonFormatterUtil {
 			return formatString((String)value);
 		}
 
-		throw new IllegalArgumentException("Expected Java primitive wrapper class, got " + ClassDictUtil.formatClass(value));
+		throw new ConversionException("Expected Java primitive wrapper class, got " + ClassDictUtil.formatClass(value));
 	}
 
 	static

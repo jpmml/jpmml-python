@@ -18,7 +18,7 @@
  */
 package org.jpmml.python;
 
-import org.jpmml.converter.ResolutionException;
+import org.jpmml.converter.ExceptionUtil;
 
 public class FunctionResolutionException extends ResolutionException {
 
@@ -32,6 +32,6 @@ public class FunctionResolutionException extends ResolutionException {
 
 	static
 	private String formatMessage(String dottedName){
-		return "Function \'" + dottedName + "\' is not defined or not supported";
+		return "Function " + ExceptionUtil.formatName(dottedName) + " is not defined or not supported";
 	}
 }

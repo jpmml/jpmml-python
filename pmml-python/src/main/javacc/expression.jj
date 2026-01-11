@@ -52,9 +52,9 @@ import org.dmg.pmml.Extension;
 import org.dmg.pmml.FieldRef;
 import org.dmg.pmml.ParameterField;
 import org.dmg.pmml.PMMLFunctions;
+import org.jpmml.converter.ExceptionUtil;
 import org.jpmml.converter.ExpressionUtil;
 import org.jpmml.converter.Feature;
-import org.jpmml.converter.OperationException;
 import org.jpmml.converter.PMMLEncoder;
 import org.jpmml.converter.visitors.ExpressionCompactor;
 
@@ -157,7 +157,7 @@ public class ExpressionTranslator extends AbstractTranslator {
 		PMMLEncoder encoder = ensureEncoder();
 
 		if(this.variableMap.containsKey(name)){
-			throw new OperationException("Python variable \'" + name + "\' re-assigned in function body");
+			throw new OperationException("Python variable " + ExceptionUtil.formatName(name) + " re-assigned in function body");
 		}
 
 		DerivedField derivedField = ensureDerivedField(name, type, expression);

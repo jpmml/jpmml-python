@@ -18,7 +18,7 @@
  */
 package org.jpmml.python;
 
-import org.jpmml.converter.ResolutionException;
+import org.jpmml.converter.ExceptionUtil;
 
 public class ConstantResolutionException extends ResolutionException {
 
@@ -32,6 +32,6 @@ public class ConstantResolutionException extends ResolutionException {
 
 	static
 	private String formatMessage(String dottedName){
-		return "Constant \'" + dottedName + "\' is not defined or not supported";
+		return "Constant " + ExceptionUtil.formatName(dottedName) + " is not defined or not supported";
 	}
 }
