@@ -31,14 +31,20 @@ import net.razorvine.pickle.objects.ClassDict;
 import numpy.core.NDArray;
 import numpy.core.NDArrayUtil;
 import org.jpmml.converter.ExceptionUtil;
+import org.jpmml.converter.Formattable;
 import org.jpmml.converter.ValueUtil;
 import org.jpmml.model.ReflectionUtil;
 
 abstract
-public class PythonObject extends ClassDict {
+public class PythonObject extends ClassDict implements Formattable {
 
 	public PythonObject(String module, String name){
 		super(module, name);
+	}
+
+	@Override
+	public String format(){
+		return getClassName();
 	}
 
 	public String getPythonModule(){
