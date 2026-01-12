@@ -244,7 +244,7 @@ public class PythonObject extends ClassDict implements Formattable {
 
 		if(!enumValues.contains(value)){
 			throw new InvalidAttributeException("Attribute " + ExceptionUtil.formatName(name) + " has an unsupported value " + PythonFormatterUtil.formatValue(value), new Attribute(this, name))
-				.setSolution("Use one of the supported values " + PythonFormatterUtil.formatCollection(enumValues));
+				.setSolution("Use one of the supported values " + PythonFormatterUtil.formatValues(enumValues));
 		}
 
 		return value;
@@ -255,7 +255,7 @@ public class PythonObject extends ClassDict implements Formattable {
 
 		if((value != null)  && (!enumValues.contains(value))){
 			throw new InvalidAttributeException("Attribute " + ExceptionUtil.formatName(name) + " has an unsupported value " + PythonFormatterUtil.formatValue(value), new Attribute(this, name))
-				.setSolution("Use one of the supported values " + PythonFormatterUtil.formatCollection(enumValues));
+				.setSolution("Use one of the supported values " + PythonFormatterUtil.formatValues(enumValues));
 		}
 
 		return value;
@@ -433,7 +433,7 @@ public class PythonObject extends ClassDict implements Formattable {
 
 				if(!enumValues.contains(value)){
 					throw new InvalidAttributeException("List attribute " + ExceptionUtil.formatName(name) + " contains an unsupported value " + PythonFormatterUtil.formatValue(value), new Attribute(PythonObject.this, name))
-						.setSolution("Use one of the supported values " + PythonFormatterUtil.formatCollection(enumValues));
+						.setSolution("Use one of the supported values " + PythonFormatterUtil.formatValues(enumValues));
 				}
 
 				return value;

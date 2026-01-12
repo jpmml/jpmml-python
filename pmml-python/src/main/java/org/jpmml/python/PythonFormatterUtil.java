@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2027 Villu Ruusmann
+ * Copyright (c) 2026 Villu Ruusmann
  *
  * This file is part of JPMML-Python
  *
@@ -19,8 +19,7 @@
 package org.jpmml.python;
 
 import java.util.Collection;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.Iterator;
 
 import org.jpmml.converter.ConversionException;
 
@@ -74,22 +73,32 @@ public class PythonFormatterUtil {
 	}
 
 	static
-	public String formatCollection(Collection<?> values){
-		String startChar;
-		String endChar;
+	public String formatValues(Collection<?> values){
+		return formatValues(values, "or");
+	}
 
-		if(values instanceof Set){
-			startChar = "(";
-			endChar = ")";
-		} else
+	static
+	public String formatValues(Collection<?> values, String finalSeparator){
+		StringBuilder sb = new StringBuilder();
 
-		{
-			startChar = "[";
-			endChar = "]";
+		for(Iterator<?> it = values.iterator(); it.hasNext(); ){
+			Object value = it.next();
+
+			if(sb.length() > 0){
+				boolean isFinal = !it.hasNext();
+
+				if(isFinal){
+					sb.append(" ").append(finalSeparator).append(" ");
+				} else
+
+				{
+					sb.append(", ");
+				}
+			}
+
+			sb.append(formatValue(value));
 		}
 
-		return values.stream()
-			.map(value -> PythonFormatterUtil.formatValue(value))
-			.collect(Collectors.joining(", ", startChar, endChar));
+		return sb.toString();
 	}
 }
