@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.common.base.Function;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import joblib.NDArrayWrapper;
 import net.razorvine.pickle.objects.ClassDict;
@@ -244,7 +245,7 @@ public class PythonObject extends ClassDict implements Formattable {
 
 		if(!enumValues.contains(value)){
 			throw new InvalidAttributeException("Attribute " + ExceptionUtil.formatName(name) + " has an unsupported value " + PythonFormatterUtil.formatValue(value), new Attribute(this, name))
-				.setSolution("Use one of the supported values " + PythonFormatterUtil.formatValues(enumValues));
+				.setSolution(formatEnumChoice(enumValues));
 		}
 
 		return value;
@@ -255,7 +256,7 @@ public class PythonObject extends ClassDict implements Formattable {
 
 		if((value != null)  && (!enumValues.contains(value))){
 			throw new InvalidAttributeException("Attribute " + ExceptionUtil.formatName(name) + " has an unsupported value " + PythonFormatterUtil.formatValue(value), new Attribute(this, name))
-				.setSolution("Use one of the supported values " + PythonFormatterUtil.formatValues(enumValues));
+				.setSolution(formatEnumChoice(enumValues));
 		}
 
 		return value;
@@ -433,7 +434,7 @@ public class PythonObject extends ClassDict implements Formattable {
 
 				if(!enumValues.contains(value)){
 					throw new InvalidAttributeException("List attribute " + ExceptionUtil.formatName(name) + " contains an unsupported value " + PythonFormatterUtil.formatValue(value), new Attribute(PythonObject.this, name))
-						.setSolution("Use one of the supported values " + PythonFormatterUtil.formatValues(enumValues));
+						.setSolution(formatEnumChoice(enumValues));
 				}
 
 				return value;
@@ -536,6 +537,24 @@ public class PythonObject extends ClassDict implements Formattable {
 
 	public List<Number> getNumberListLike(String name){
 		return getListLike(name, new ScalarCastFunction<>(Number.class));
+	}
+
+	static
+	protected String formatEnumChoice(Collection<?> enumValues){
+
+		if(enumValues.isEmpty()){
+			return null;
+		} // End if
+
+		if(enumValues.size() == 1){
+			Object enumValue = Iterables.getOnlyElement(enumValues);
+
+			return "Use a supported value " + PythonFormatterUtil.formatValue(enumValue);
+		} else
+
+		{
+			return "Use one of the supported values " + PythonFormatterUtil.formatValues(enumValues);
+		}
 	}
 
 	private static final Field FIELD_CLASSNAME = ReflectionUtil.getField(ClassDict.class, "classname");
