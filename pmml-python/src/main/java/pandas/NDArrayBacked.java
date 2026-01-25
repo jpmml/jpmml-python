@@ -43,6 +43,11 @@ public class NDArrayBacked extends CythonObject implements HasArray {
 			super.__setstate__(state);
 		} else
 
+		// Pandas 3.0.0+
+		if(args.length == 2){
+			super.__setstate__(SETSTATE_V3_ATTRIBUTES, args);
+		} else
+
 		if(args.length == 3){
 			Object[] stateArgs;
 
@@ -105,5 +110,10 @@ public class NDArrayBacked extends CythonObject implements HasArray {
 	private static final String[] SETSTATE_ATTRIBUTES = {
 		"_ndarray",
 		"_dtype"
+	};
+
+	private static final String[] SETSTATE_V3_ATTRIBUTES = {
+		SETSTATE_ATTRIBUTES[1],
+		SETSTATE_ATTRIBUTES[0]
 	};
 }

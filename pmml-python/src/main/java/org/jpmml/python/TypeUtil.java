@@ -53,6 +53,10 @@ public class TypeUtil {
 
 		if(("numpy").equals(module)){
 			return parseNumPyType(module, name);
+		} else
+
+		if(("pyarrow").equals(module)){
+			return parsePyArrowType(module, name);
 		}
 
 		throw new TypeResolutionException(module, name);
@@ -105,6 +109,19 @@ public class TypeUtil {
 			case "uint32":
 			case "uint64":
 				return DataType.INTEGER;
+			default:
+				break;
+		}
+
+		throw new TypeResolutionException(module, name);
+	}
+
+	static
+	private DataType parsePyArrowType(String module, String name){
+
+		switch(name){
+			case "large_string":
+				return DataType.STRING;
 			default:
 				break;
 		}

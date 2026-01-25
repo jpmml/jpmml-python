@@ -87,6 +87,7 @@ public class Index extends CythonObject implements HasArray {
 		String cls = getCls();
 
 		switch(cls){
+			case "pandas.RangeIndex":
 			case "pandas.core.indexes.range.RangeIndex":
 				return getPythonObject("data", this.new RangeData());
 			default:
@@ -104,6 +105,20 @@ public class Index extends CythonObject implements HasArray {
 		object.update(dict);
 
 		return object;
+	}
+
+	abstract
+	public class Data extends PythonObject {
+
+		public Data(String module, String name){
+			super(module, name);
+		}
+
+		abstract
+		public Object getDescr();
+
+		abstract
+		public List<?> getValues();
 	}
 
 	public class RangeData extends Data {
@@ -149,7 +164,7 @@ public class Index extends CythonObject implements HasArray {
 		public Object getDescr(){
 			HasArray data = getData();
 
-			return data.getDescr();
+			return data.getArrayType();
 		}
 
 		@Override
@@ -162,20 +177,6 @@ public class Index extends CythonObject implements HasArray {
 		public HasArray getData(){
 			return getArray("data");
 		}
-	}
-
-	abstract
-	public class Data extends PythonObject {
-
-		public Data(String module, String name){
-			super(module, name);
-		}
-
-		abstract
-		public Object getDescr();
-
-		abstract
-		public List<?> getValues();
 	}
 
 	private static final String[] INIT_ATTRIBUTES = {
