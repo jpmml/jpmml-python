@@ -243,7 +243,7 @@ public class DumpTest extends UnpicklerTest {
 
 		String[] numpyVersions = {
 			"1.26.2", "2.0.0",
-			"2.1.2", "2.2.3", "2.3.5"
+			"2.1.2", "2.2.3", "2.3.5", "2.4.1"
 		};
 
 		unpickleNumPyAll("3.11", numpyVersions);
@@ -283,7 +283,7 @@ public class DumpTest extends UnpicklerTest {
 
 		String[] numpyVersions = {
 			"1.26.2", "2.0.0",
-			"2.1.2", "2.2.3", "2.3.5"
+			"2.1.2", "2.2.3", "2.3.5", "2.4.1"
 		};
 
 		unpickleNumPyAll("3.12", numpyVersions);
@@ -321,7 +321,7 @@ public class DumpTest extends UnpicklerTest {
 
 		String[] numpyVersions = {
 			"1.26.2", "2.0.0",
-			"2.1.2", "2.2.3", "2.3.5"
+			"2.1.2", "2.2.3", "2.3.5", "2.4.1"
 		};
 
 		unpickleNumPyAll("3.13", numpyVersions);

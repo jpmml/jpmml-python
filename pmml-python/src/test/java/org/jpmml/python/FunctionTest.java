@@ -67,7 +67,7 @@ public class FunctionTest extends UnpicklerTest {
 		String[] numpyVersions = {
 			"1.23.4", "1.24.1",
 			"1.26.2", "2.0.0",
-			"2.1.2", "2.2.3", "2.3.5"
+			"2.1.2", "2.2.3", "2.3.5", "2.4.1"
 		};
 
 		unpickleNumPyFunctions("3.11", numpyVersions);
@@ -79,7 +79,7 @@ public class FunctionTest extends UnpicklerTest {
 
 		String[] numpyVersions = {
 			"1.26.2", "2.0.0",
-			"2.1.2", "2.2.3", "2.3.5"
+			"2.1.2", "2.2.3", "2.3.5", "2.4.1"
 		};
 
 		unpickleNumPyFunctions("3.12", numpyVersions);
@@ -91,7 +91,7 @@ public class FunctionTest extends UnpicklerTest {
 
 		String[] numpyVersions = {
 			"1.26.2", "2.0.0",
-			"2.1.2", "2.2.3", "2.3.5"
+			"2.1.2", "2.2.3", "2.3.5", "2.4.1"
 		};
 
 		unpickleNumPyFunctions("3.13", numpyVersions);
