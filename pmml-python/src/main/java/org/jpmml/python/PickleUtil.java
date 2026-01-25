@@ -51,7 +51,7 @@ public class PickleUtil {
 
 		try {
 			Field objectConstructorsField = Unpickler.class.getDeclaredField("objectConstructors");
-			if(!objectConstructorsField.isAccessible()){
+			if(!objectConstructorsField.canAccess(null)){
 				objectConstructorsField.setAccessible(true);
 			}
 
