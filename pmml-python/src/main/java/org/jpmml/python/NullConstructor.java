@@ -28,7 +28,7 @@ public class NullConstructor implements IConstantConstructor {
 	public Object construct(Object[] args){
 
 		if(args.length != 0){
-			throw new PickleException(Arrays.toString(args));
+			throw new PickleException(Arrays.deepToString(args));
 		}
 
 		return null;

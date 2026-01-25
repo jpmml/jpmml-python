@@ -38,7 +38,7 @@ public class NDArrayBackedConstructor extends CythonObjectConstructor {
 	public NDArrayBacked construct(Object[] args){
 
 		if(args.length != 3){
-			throw new PickleException(Arrays.toString(args));
+			throw new PickleException(Arrays.deepToString(args));
 		}
 
 		NDArrayBackedConstructor dictConstructor = (NDArrayBackedConstructor)args[0];

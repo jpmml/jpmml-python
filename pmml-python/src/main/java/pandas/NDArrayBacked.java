@@ -60,7 +60,7 @@ public class NDArrayBacked extends CythonObject implements HasArray {
 			} else
 
 			{
-				throw new PickleException(Arrays.toString(args));
+				throw new PickleException(Arrays.deepToString(args));
 			}
 
 			super.__setstate__(SETSTATE_ATTRIBUTES, stateArgs);
@@ -72,7 +72,7 @@ public class NDArrayBacked extends CythonObject implements HasArray {
 		} else
 
 		{
-			throw new PickleException(Arrays.toString(args));
+			throw new PickleException(Arrays.deepToString(args));
 		}
 	}
 
