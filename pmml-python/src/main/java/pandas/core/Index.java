@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 
 import net.razorvine.pickle.objects.ClassDictConstructor;
-import numpy.core.NDArray;
 import org.jpmml.converter.ExceptionUtil;
 import org.jpmml.python.Attribute;
 import org.jpmml.python.ClassDictConstructorUtil;
@@ -91,7 +90,7 @@ public class Index extends CythonObject implements HasArray {
 			case "pandas.core.indexes.range.RangeIndex":
 				return getPythonObject("data", this.new RangeData());
 			default:
-				return getPythonObject("data", this.new NDArrayData(getPythonModule(), "data"));
+				return getPythonObject("data", this.new ArrayData(getPythonModule(), "data"));
 		}
 	}
 
@@ -140,28 +139,28 @@ public class Index extends CythonObject implements HasArray {
 		}
 	}
 
-	public class NDArrayData extends Data {
+	public class ArrayData extends Data {
 
-		public NDArrayData(String module, String name){
+		public ArrayData(String module, String name){
 			super(module, name);
 		}
 
 		@Override
 		public Object getDescr(){
-			NDArray data = getData();
+			HasArray data = getData();
 
 			return data.getDescr();
 		}
 
 		@Override
 		public List<?> getValues(){
-			NDArray data = getData();
+			HasArray data = getData();
 
 			return data.getArrayContent();
 		}
 
-		public NDArray getData(){
-			return get("data", NDArray.class);
+		public HasArray getData(){
+			return getArray("data");
 		}
 	}
 
