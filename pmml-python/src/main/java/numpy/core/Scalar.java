@@ -21,9 +21,9 @@ package numpy.core;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-import com.google.common.base.Charsets;
 import com.google.common.collect.Iterables;
 import numpy.DType;
 import org.jpmml.python.CythonObject;
@@ -105,7 +105,7 @@ public class Scalar extends CythonObject implements HasArray, HasContent<List<?>
 		if(obj instanceof String){
 			String string = (String)obj;
 
-			return string.getBytes(Charsets.ISO_8859_1);
+			return string.getBytes(StandardCharsets.ISO_8859_1);
 		}
 
 		return (byte[])obj;

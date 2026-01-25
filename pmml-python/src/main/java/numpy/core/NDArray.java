@@ -21,10 +21,10 @@ package numpy.core;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 
-import com.google.common.base.Charsets;
 import net.razorvine.pickle.objects.ClassDictConstructor;
 import org.jpmml.python.CythonObject;
 import org.jpmml.python.HasArray;
@@ -125,7 +125,7 @@ public class NDArray extends CythonObject implements HasArray, HasContent<Object
 		if(data instanceof String){
 			String string = (String)data;
 
-			return string.getBytes(Charsets.ISO_8859_1);
+			return string.getBytes(StandardCharsets.ISO_8859_1);
 		}
 
 		return data;

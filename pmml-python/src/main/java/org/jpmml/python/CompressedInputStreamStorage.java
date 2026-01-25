@@ -24,7 +24,6 @@ import java.io.InputStream;
 import java.io.PushbackInputStream;
 import java.util.zip.InflaterInputStream;
 
-import com.google.common.io.ByteStreams;
 import com.google.common.io.CountingInputStream;
 
 public class CompressedInputStreamStorage extends InputStreamStorage {
@@ -39,9 +38,7 @@ public class CompressedInputStreamStorage extends InputStreamStorage {
 
 	static
 	public Type detectType(PushbackInputStream is) throws IOException {
-		byte[] magic = new byte[2];
-
-		ByteStreams.readFully(is, magic);
+		byte[] magic = is.readNBytes(2);
 
 		is.unread(magic);
 
@@ -76,9 +73,7 @@ public class CompressedInputStreamStorage extends InputStreamStorage {
 
 	static
 	private InputStream initCompat(PushbackInputStream is) throws IOException {
-		byte[] headerBytes = new byte[2 + 19];
-
-		ByteStreams.readFully(is, headerBytes);
+		byte[] headerBytes = is.readNBytes(2 + 19);
 
 		String header = new String(headerBytes);
 

@@ -20,8 +20,8 @@ package functools;
 
 import java.util.Arrays;
 import java.util.Map;
+import java.util.stream.Stream;
 
-import com.google.common.collect.Streams;
 import net.razorvine.pickle.IObjectConstructor;
 import net.razorvine.pickle.PickleException;
 import net.razorvine.pickle.objects.ClassDict;
@@ -52,7 +52,7 @@ public class Partial extends CythonObject implements IObjectConstructor {
 		Object[] funcArgs = getArgs();
 		Map<String, ?> funcKeywords = getKeywords();
 
-		funcArgs = Streams.concat(Arrays.stream(funcArgs), Arrays.stream(args))
+		funcArgs = Stream.concat(Arrays.stream(funcArgs), Arrays.stream(args))
 			.toArray(Object[]::new);
 
 		ClassDict result = (ClassDict)func.construct(funcArgs);

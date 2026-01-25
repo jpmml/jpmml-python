@@ -28,7 +28,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.google.common.io.ByteStreams;
 import com.google.common.primitives.Ints;
 import com.google.common.primitives.Longs;
 import net.razorvine.pickle.Unpickler;
@@ -137,9 +136,7 @@ public class NDArrayUtil {
 	 */
 	static
 	public NDArray parseNpy(InputStream is) throws IOException {
-		byte[] magicBytes = new byte[MAGIC_STRING.length];
-
-		ByteStreams.readFully(is, magicBytes);
+		byte[] magicBytes = is.readNBytes(MAGIC_STRING.length);
 
 		if(!Arrays.equals(magicBytes, MAGIC_STRING)){
 			throw new IOException();
@@ -158,9 +155,7 @@ public class NDArrayUtil {
 			throw new IOException();
 		}
 
-		byte[] headerBytes = new byte[headerLength];
-
-		ByteStreams.readFully(is, headerBytes);
+		byte[] headerBytes = is.readNBytes(headerLength);
 
 		String header = new String(headerBytes);
 
@@ -173,7 +168,7 @@ public class NDArrayUtil {
 		Boolean fortranOrder = (Boolean)headerDict.get("fortran_order");
 		Object[] shape = (Object[])headerDict.get("shape");
 
-		byte[] data = ByteStreams.toByteArray(is);
+		byte[] data = is.readAllBytes();
 
 		NDArray array = new NDArray();
 		array.__setstate__(new Object[]{Arrays.asList(majorVersion, minorVersion), shape, descr, fortranOrder, data});
@@ -452,18 +447,14 @@ public class NDArrayUtil {
 
 	static
 	public String readString(InputStream is, int size) throws IOException {
-		byte[] buffer = new byte[size];
-
-		ByteStreams.readFully(is, buffer);
+		byte[] buffer = is.readNBytes(size);
 
 		return toString(buffer, "UTF-8");
 	}
 
 	static
 	public String readUnicode(InputStream is, ByteOrder byteOrder, int size) throws IOException {
-		byte[] buffer = new byte[size * 4];
-
-		ByteStreams.readFully(is, buffer);
+		byte[] buffer = is.readNBytes(size * 4);
 
 		if((ByteOrder.BIG_ENDIAN).equals(byteOrder)){
 			return toString(buffer, "UTF-32BE");

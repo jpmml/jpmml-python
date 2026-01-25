@@ -25,8 +25,6 @@ import java.util.Calendar;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
-import com.google.common.io.ByteStreams;
-import com.google.common.primitives.UnsignedInts;
 import numpy.DType;
 import org.dmg.pmml.DataType;
 import org.jpmml.python.CalendarUtil;
@@ -224,7 +222,7 @@ public class TypeDescriptor {
 						case 2:
 							return NDArrayUtil.readUnsignedShort(is, byteOrder);
 						case 4:
-							return UnsignedInts.toLong(NDArrayUtil.readInt(is, byteOrder));
+							return Integer.toUnsignedLong(NDArrayUtil.readInt(is, byteOrder));
 						case 8:
 							String string = Long.toUnsignedString(NDArrayUtil.readLong(is, byteOrder));
 
@@ -358,9 +356,7 @@ public class TypeDescriptor {
 				}
 			case VOID:
 				{
-					byte[] buffer = new byte[size];
-
-					ByteStreams.readFully(is, buffer);
+					byte[] buffer = is.readNBytes(size);
 
 					return buffer;
 				}

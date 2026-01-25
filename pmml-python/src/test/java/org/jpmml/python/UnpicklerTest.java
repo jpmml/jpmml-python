@@ -22,8 +22,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import com.google.common.io.ByteStreams;
-
 abstract
 public class UnpicklerTest {
 
@@ -34,7 +32,7 @@ public class UnpicklerTest {
 		InputStream is = (UnpicklerTest.class).getResourceAsStream(("/" + dir + "/") + name);
 
 		try {
-			bytes = ByteStreams.toByteArray(is);
+			bytes = is.readAllBytes();
 		} finally {
 			is.close();
 		}
