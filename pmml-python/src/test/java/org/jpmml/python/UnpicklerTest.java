@@ -19,6 +19,7 @@
 package org.jpmml.python;
 
 import java.io.ByteArrayInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -27,9 +28,14 @@ public class UnpicklerTest {
 
 	static
 	protected Object unpickle(String dir, String name) throws IOException {
+		String path = ("/" + dir + "/") + name;
+
 		byte[] bytes;
 
-		InputStream is = (UnpicklerTest.class).getResourceAsStream(("/" + dir + "/") + name);
+		InputStream is = (UnpicklerTest.class).getResourceAsStream(path);
+		if(is == null){
+			throw new FileNotFoundException(path);
+		}
 
 		try {
 			bytes = is.readAllBytes();

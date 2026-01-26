@@ -85,6 +85,9 @@ def _pickle_pandas_categorical(values, dtype):
 def _pickle_pandas_dataframe(df):
 	_pickle(df, "dump/" + _platform_module("pandas", pandas.__version__) + "_df.pkl")
 
+def _pickle_pandas_dt_dataframe(df):
+	_pickle(df, "dump/" + _platform_module("pandas", pandas.__version__) + "_dt_df.pkl")
+
 def _pickle_pandas_dtypes(dtypes):
 	_pickle(dtypes, "dump/" + _platform_module("pandas", pandas.__version__) + "_dtypes.pkl")
 
@@ -159,7 +162,17 @@ values = numpy.asarray(["1957-10-04T19:28:34Z", "1961-04-12T06:07:00Z", "1969-07
 
 datetime_units = ["s", "m", "h", "D", "M", "Y"]
 for datetime_unit in datetime_units:
-	_pickle_numpy_array(values, "datetime64[{}]".format(datetime_unit))
+	dtype = "datetime64[{}]".format(datetime_unit)
+	_pickle_numpy_array(values, dtype)
+
+if with_pandas:
+	dt_index = pandas.to_datetime(values).tz_localize(None).values.astype("datetime64[s]")
+	data = {}
+	for datetime_unit in datetime_units:
+		dtype = "datetime64[{}]".format(datetime_unit)
+		data[datetime_unit] = values.astype(dtype)
+	df = pandas.DataFrame(index = dt_index, data = data)
+	_pickle_pandas_dt_dataframe(df)
 
 if with_pandas:
 	df = pandas.DataFrame(data = {

@@ -18,9 +18,12 @@
  */
 package org.jpmml.python;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,6 +39,7 @@ import numpy.core.Complex;
 import numpy.core.NDArray;
 import numpy.random.Generator;
 import numpy.random.LegacyRandomState;
+import org.jpmml.converter.FortranMatrixUtil;
 import org.junit.jupiter.api.Test;
 import pandas.core.BlockManager;
 import pandas.core.Categorical;
@@ -546,6 +550,7 @@ public class DumpTest extends UnpicklerTest {
 			unpicklePandasSeries(prefix);
 			unpicklePandasSeriesNA(prefix);
 			unpicklePandasCategorical(prefix);
+			unpicklePandasDateTimeDataFrame(prefix);
 			unpicklePandasDataFrame(prefix);
 			unpicklePandasDtypes(prefix);
 		}
@@ -625,16 +630,70 @@ public class DumpTest extends UnpicklerTest {
 		assertNotNull(dtype.getDescr());
 	}
 
+	private void unpicklePandasDateTimeDataFrame(String prefix) throws IOException {
+		DataFrame dataFrame;
+
+		try {
+			dataFrame = (DataFrame)unpickle(prefix + "_dt_df.pkl");
+		} catch(FileNotFoundException fnfe){
+			return;
+		}
+
+		BlockManager data = dataFrame.getData();
+
+		List<LocalDateTime> rows = (Arrays.asList("1957-10-04T19:28:34Z", "1961-04-12T06:07:00Z", "1969-07-20T20:17:00Z")).stream()
+			.map(rowIndex -> ZonedDateTime.parse((String)rowIndex, DateTimeFormatter.ISO_DATE_TIME).toLocalDateTime())
+			.collect(Collectors.toList());
+
+		List<String> columns = Arrays.asList("s", "m", "h", "D", "M", "Y");
+
+		IntFunction<?> columnFunction = createColumnFunction(data, rows, columns, 1);
+
+		assertEquals(truncateToUnit(rows, ChronoUnit.SECONDS), columnFunction.apply(0));
+		assertEquals(truncateToUnit(rows, ChronoUnit.MINUTES), columnFunction.apply(1));
+		assertEquals(truncateToUnit(rows, ChronoUnit.HOURS), columnFunction.apply(2));
+		assertEquals(truncateToUnit(rows, ChronoUnit.DAYS), columnFunction.apply(3));
+		assertEquals(truncateToMonth(rows), columnFunction.apply(4));
+		assertEquals(truncateToYear(rows), columnFunction.apply(5));
+	}
+
 	private void unpicklePandasDataFrame(String prefix) throws IOException {
 		DataFrame dataFrame = (DataFrame)unpickle(prefix + "_df.pkl");
 
 		BlockManager data = dataFrame.getData();
 
-		Index columnAxis = data.getColumnAxis();
-		Index rowAxis = data.getRowAxis();
+		List<Integer> rows = Arrays.asList(0, 1, 2);
+		List<String> columns = Arrays.asList("bool", "int", "float", "str");
 
-		assertEquals(Arrays.asList("bool", "int", "float", "str"), columnAxis.getValues());
-		assertEquals(Arrays.asList(0, 1, 2), rowAxis.getValues());
+		IntFunction<?> columnFunction = createColumnFunction(data, rows, columns, 4);
+
+		assertEquals(Arrays.asList(false, false, true), columnFunction.apply(0));
+		assertEquals(Arrays.asList(0L, 1L, 2L), columnFunction.apply(1));
+		assertEquals(Arrays.asList(0d, 1d, 2d), columnFunction.apply(2));
+		assertEquals(Arrays.asList("zero", "one", "two"), columnFunction.apply(3));
+	}
+
+	private void unpicklePandasDtypes(String prefix) throws IOException {
+		List<?> dtypes = (List<?>)unpickle(prefix + "_dtypes.pkl");
+
+		for(Object dtype : dtypes){
+			ExtensionDtype extensionDtype = (ExtensionDtype)dtype;
+
+			assertNotNull(extensionDtype.getDataType());
+		}
+	}
+
+	static
+	private IntFunction<List<?>> createColumnFunction(BlockManager data, List<?> rows, List<?> columns, int numberOfBlocks){
+		Index rowAxis = data.getRowAxis();
+		Index columnAxis = data.getColumnAxis();
+
+		assertEquals(rows, rowAxis.getValues());
+		assertEquals(columns, columnAxis.getValues());
+
+		List<HasArray> blocks = data.getBlockValues();
+
+		assertEquals(numberOfBlocks, blocks.size());
 
 		final
 		List<Object> columnIndex = new ArrayList<>();
@@ -651,40 +710,51 @@ public class DumpTest extends UnpicklerTest {
 			// Ignored
 		}
 
-		List<HasArray> blocks = data.getBlockValues();
-
-		assertEquals(4, blocks.size());
-
-		IntFunction<List<?>> blockValuesFunction = new IntFunction<List<?>>(){
-
-			private List<?> columns = columnAxis.getValues();
-
+		IntFunction<List<?>> function = new IntFunction<List<?>>(){
 
 			@Override
 			public List<?> apply(int index){
 
 				if(!columnIndex.isEmpty()){
-					index = this.columns.indexOf(columnIndex.get(index));
-				}
+					index = columns.indexOf(columnIndex.get(index));
+				} // End if
 
-				return (blocks.get(index)).getArrayContent();
+				if(numberOfBlocks == 1){
+					HasArray block = blocks.get(0);
+
+					return FortranMatrixUtil.getColumn(block.getArrayContent(), rows.size(), columns.size(), index);
+				} else
+
+				{
+					HasArray block = blocks.get(index);
+
+					return block.getArrayContent();
+				}
 			}
 		};
 
-		assertEquals(Arrays.asList(false, false, true), blockValuesFunction.apply(0));
-		assertEquals(Arrays.asList(0L, 1L, 2L), blockValuesFunction.apply(1));
-		assertEquals(Arrays.asList(0d, 1d, 2d), blockValuesFunction.apply(2));
-		assertEquals(Arrays.asList("zero", "one", "two"), blockValuesFunction.apply(3));
+		return function;
 	}
 
-	private void unpicklePandasDtypes(String prefix) throws IOException {
-		List<?> dtypes = (List<?>)unpickle(prefix + "_dtypes.pkl");
+	static
+	private List<LocalDateTime> truncateToUnit(List<LocalDateTime> localDateTimes, ChronoUnit chronoUnit){
+		return localDateTimes.stream()
+			.map(localDateTime -> localDateTime.truncatedTo(chronoUnit))
+			.collect(Collectors.toList());
+	}
 
-		for(Object dtype : dtypes){
-			ExtensionDtype extensionDtype = (ExtensionDtype)dtype;
+	static
+	private List<LocalDateTime> truncateToMonth(List<LocalDateTime> localDateTimes){
+		return localDateTimes.stream()
+			.map(localDateTime -> localDateTime.withDayOfMonth(1).truncatedTo(ChronoUnit.DAYS))
+			.collect(Collectors.toList());
+	}
 
-			assertNotNull(extensionDtype.getDataType());
-		}
+	static
+	private List<LocalDateTime> truncateToYear(List<LocalDateTime> localDateTimes){
+		return localDateTimes.stream()
+			.map(localDateTime -> localDateTime.withDayOfYear(1).truncatedTo(ChronoUnit.DAYS))
+			.collect(Collectors.toList());
 	}
 
 	static
