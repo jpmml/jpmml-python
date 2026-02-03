@@ -39,6 +39,7 @@ import org.jpmml.evaluator.VirtualEvaluationContext;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class FunctionUtilTest {
@@ -103,6 +104,23 @@ public class FunctionUtilTest {
 
 		assertEquals(-3, evaluateExpression("numpy", "floor", -2.75d));
 		assertEquals(2, evaluateExpression("numpy", "floor", 2.75d));
+
+		Map<String, Object> arguments = new LinkedHashMap<>();
+		arguments.put("x1", 1);
+		arguments.put("x2", 2);
+
+		assertEquals(2, evaluateExpression("numpy", "fmax", arguments));
+		assertEquals(1, evaluateExpression("numpy", "fmin", arguments));
+
+		arguments.put("x2", null);
+
+		assertEquals(1, evaluateExpression("numpy", "fmax", arguments));
+		assertEquals(1, evaluateExpression("numpy", "fmin", arguments));
+
+		arguments.put("x1", null);
+
+		assertNull(evaluateExpression("numpy", "fmax", arguments));
+		assertNull(evaluateExpression("numpy", "fmin", arguments));
 
 		assertEquals(-3, evaluateExpression("numpy", "negative", 3));
 		assertEquals(-3f, evaluateExpression("numpy", "negative", 3f));
@@ -181,10 +199,18 @@ public class FunctionUtilTest {
 				String key = entry.getKey();
 				Object value = entry.getValue();
 
-				DataType dataType = TypeUtil.getDataType(value);
-				OpType opType = TypeUtil.getOpType(dataType);
+				DataField dataField;
 
-				DataField dataField = new DataField(key, opType, dataType);
+				if(value != null){
+					DataType dataType = TypeUtil.getDataType(value);
+					OpType opType = TypeUtil.getOpType(dataType);
+
+					dataField = new DataField(key, opType, dataType);
+				} else
+
+				{
+					dataField = new DataField(key, OpType.CONTINUOUS, DataType.DOUBLE);
+				}
 
 				encoder.addDataField(dataField);
 

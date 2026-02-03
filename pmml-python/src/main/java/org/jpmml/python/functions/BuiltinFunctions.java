@@ -161,9 +161,9 @@ public interface BuiltinFunctions extends Functions {
 		}
 	};
 
-	PythonFunction MAX = new AggregateFunction(PMMLFunctions.MAX);
+	PythonFunction MAX = new AggregateFunction("max");
 
-	PythonFunction MIN = new AggregateFunction(PMMLFunctions.MIN);
+	PythonFunction MIN = new AggregateFunction("min");
 
 	PythonFunction POW = new BinaryFunction(PMMLFunctions.POW){
 
