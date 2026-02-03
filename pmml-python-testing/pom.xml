@@ -8,9 +8,7 @@
 		<version>1.3-SNAPSHOT</version>
 	</parent>
 
-	<groupId>org.jpmml</groupId>
 	<artifactId>pmml-python-testing</artifactId>
-	<packaging>jar</packaging>
 
 	<name>JPMML Python converter batch testing harness</name>
 	<description>JPMML Python to PMML converter batch testing harness</description>
