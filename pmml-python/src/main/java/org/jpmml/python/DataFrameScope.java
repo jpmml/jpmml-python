@@ -57,7 +57,7 @@ public class DataFrameScope extends Scope {
 	public Feature getFeature(String name){
 		String variableName = getVariableName();
 
-		if((variableName).equals(name)){
+		if(Objects.equals(variableName, name)){
 			throw new OperationException("Name " + ExceptionUtil.formatName(variableName) + " refers to a row vector")
 				.setSolution("Use an array indexing expression " + variableName + "[<column index>] or " + variableName + "[<column name>] to refer to a specific row vector element");
 		}
@@ -124,7 +124,7 @@ public class DataFrameScope extends Scope {
 	private void checkIsDataFrame(String name){
 		String variableName = getVariableName();
 
-		if(!(variableName).equals(name)){
+		if(!Objects.equals(variableName, name)){
 			throw new NameResolutionException(name);
 		}
 	}

@@ -27,6 +27,7 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import com.google.common.primitives.Ints;
 import com.google.common.primitives.Longs;
@@ -361,11 +362,11 @@ public class NDArrayUtil {
 		byte b1 = readByte(is);
 		byte b2 = readByte(is);
 
-		if((ByteOrder.BIG_ENDIAN).equals(byteOrder)){
+		if(Objects.equals(ByteOrder.BIG_ENDIAN, byteOrder)){
 			return (short)toShortInt(b1, b2);
 		} else
 
-		if((ByteOrder.LITTLE_ENDIAN).equals(byteOrder)){
+		if(Objects.equals(ByteOrder.LITTLE_ENDIAN, byteOrder)){
 			return (short)toShortInt(b2, b1);
 		}
 
@@ -377,11 +378,11 @@ public class NDArrayUtil {
 		byte b1 = readByte(is);
 		byte b2 = readByte(is);
 
-		if((ByteOrder.BIG_ENDIAN).equals(byteOrder)){
+		if(Objects.equals(ByteOrder.BIG_ENDIAN, byteOrder)){
 			return toShortInt(b1, b2);
 		} else
 
-		if((ByteOrder.LITTLE_ENDIAN).equals(byteOrder)){
+		if(Objects.equals(ByteOrder.LITTLE_ENDIAN, byteOrder)){
 			return toShortInt(b2, b1);
 		}
 
@@ -395,11 +396,11 @@ public class NDArrayUtil {
 		byte b3 = readByte(is);
 		byte b4 = readByte(is);
 
-		if((ByteOrder.BIG_ENDIAN).equals(byteOrder)){
+		if(Objects.equals(ByteOrder.BIG_ENDIAN, byteOrder)){
 			return Ints.fromBytes(b1, b2, b3, b4);
 		} else
 
-		if((ByteOrder.LITTLE_ENDIAN).equals(byteOrder)){
+		if(Objects.equals(ByteOrder.LITTLE_ENDIAN, byteOrder)){
 			return Ints.fromBytes(b4, b3, b2, b1);
 		}
 
@@ -417,11 +418,11 @@ public class NDArrayUtil {
 		byte b7 = readByte(is);
 		byte b8 = readByte(is);
 
-		if((ByteOrder.BIG_ENDIAN).equals(byteOrder)){
+		if(Objects.equals(ByteOrder.BIG_ENDIAN, byteOrder)){
 			return Longs.fromBytes(b1, b2, b3, b4, b5, b6, b7, b8);
 		} else
 
-		if((ByteOrder.LITTLE_ENDIAN).equals(byteOrder)){
+		if(Objects.equals(ByteOrder.LITTLE_ENDIAN, byteOrder)){
 			return Longs.fromBytes(b8, b7, b6, b5, b4, b3, b2, b1);
 		}
 
@@ -456,11 +457,11 @@ public class NDArrayUtil {
 	public String readUnicode(InputStream is, ByteOrder byteOrder, int size) throws IOException {
 		byte[] buffer = is.readNBytes(size * 4);
 
-		if((ByteOrder.BIG_ENDIAN).equals(byteOrder)){
+		if(Objects.equals(ByteOrder.BIG_ENDIAN, byteOrder)){
 			return toString(buffer, "UTF-32BE");
 		} else
 
-		if((ByteOrder.LITTLE_ENDIAN).equals(byteOrder)){
+		if(Objects.equals(ByteOrder.LITTLE_ENDIAN, byteOrder)){
 			return toString(buffer, "UTF-32LE");
 		}
 

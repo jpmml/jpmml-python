@@ -138,7 +138,7 @@ public class ExpressionTranslator extends AbstractTranslator {
 	private void checkIndent(String indent) throws ParseException {
 		String expectedIndent = this.indents.peek();
 
-		if(!(indent).equals(expectedIndent)){
+		if(!Objects.equals(indent, expectedIndent)){
 			throw new ParseException("Unexpected indent");
 		}
 	}
@@ -232,8 +232,8 @@ public class ExpressionTranslator extends AbstractTranslator {
 	static
 	private Apply translateTrailerFunction(Expression expression, String name, List<Expression> arguments){
 
-		if(("startswith").equals(name) || ("endswith").equals(name)){
-			checkMethodCall("str" + "." + name, Arrays.asList(("startswith").equals(name) ? "prefix" : "suffix"), arguments);
+		if(Objects.equals("startswith", name) || Objects.equals("endswith", name)){
+			checkMethodCall("str" + "." + name, Arrays.asList(Objects.equals("startswith", name) ? "prefix" : "suffix"), arguments);
 
 			Expression argument = arguments.get(0);
 			if(!(argument instanceof Constant)){
@@ -263,7 +263,7 @@ public class ExpressionTranslator extends AbstractTranslator {
 			}
 		} else
 
-		if(("lower").equals(name) || ("upper").equals(name)){
+		if(Objects.equals("lower", name) || Objects.equals("upper", name)){
 			checkMethodCall("str" + "." + name, Collections.emptyList(), arguments);
 
 			switch(name){
@@ -276,7 +276,7 @@ public class ExpressionTranslator extends AbstractTranslator {
 			}
 		} else
 
-		if(("strip").equals(name)){
+		if(Objects.equals("strip", name)){
 			checkMethodCall("str" + "." + name, Collections.emptyList(), arguments);
 
 			switch(name){
@@ -587,7 +587,7 @@ private boolean BlockContinuation(){
 
 	String indent = getIndent();
 
-	if((indent).equals(expectedIndent)){
+	if(Objects.equals(indent, expectedIndent)){
 		return true;
 	}
 

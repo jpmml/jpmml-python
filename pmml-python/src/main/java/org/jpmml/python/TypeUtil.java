@@ -18,6 +18,8 @@
  */
 package org.jpmml.python;
 
+import java.util.Objects;
+
 import org.dmg.pmml.DataType;
 
 public class TypeUtil {
@@ -47,15 +49,15 @@ public class TypeUtil {
 	static
 	public DataType parseDataType(String module, String name){
 
-		if(("builtins").equals(module)){
+		if(Objects.equals("builtins", module)){
 			return parseBuiltinType(module, name);
 		} else
 
-		if(("numpy").equals(module)){
+		if(Objects.equals("numpy", module)){
 			return parseNumPyType(module, name);
 		} else
 
-		if(("pyarrow").equals(module)){
+		if(Objects.equals("pyarrow", module)){
 			return parsePyArrowType(module, name);
 		}
 

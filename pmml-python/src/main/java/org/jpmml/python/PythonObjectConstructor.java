@@ -111,6 +111,6 @@ public class PythonObjectConstructor extends ClassDictConstructor {
 
 	static
 	private boolean isObject(ClassDict dict){
-		return ("__builtin__.object").equals(dict.getClassName());
+		return Objects.equals("__builtin__.object", dict.getClassName());
 	}
 }

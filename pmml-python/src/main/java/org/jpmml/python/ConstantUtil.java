@@ -18,6 +18,8 @@
  */
 package org.jpmml.python;
 
+import java.util.Objects;
+
 import org.dmg.pmml.Constant;
 import org.dmg.pmml.DataType;
 import org.jpmml.converter.ExpressionUtil;
@@ -35,15 +37,15 @@ public class ConstantUtil {
 	static
 	public Constant encodeConstant(String module, String name){
 
-		if(("math").equals(module)){
+		if(Objects.equals("math", module)){
 			return encodeMathConstant(module, name);
 		} else
 
-		if(("numpy").equals(module)){
+		if(Objects.equals("numpy", module)){
 			return encodeNumPyConstant(module, name);
 		} else
 
-		if(("pandas").equals(module)){
+		if(Objects.equals("pandas", module)){
 			return encodePandasConstant(module, name);
 		}
 

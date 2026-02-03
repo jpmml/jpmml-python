@@ -29,6 +29,7 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.Set;
 
@@ -110,7 +111,7 @@ public class PickleUtil {
 	static
 	private void init(ClassLoader classLoader, String key, String value){
 
-		if(("null").equals(value)){
+		if(Objects.equals("null", value)){
 			registerNullConstructor(key);
 		} else
 
@@ -139,7 +140,7 @@ public class PickleUtil {
 	static
 	private void registerClassDictConstructor(ClassLoader classLoader, String key, String value){
 
-		if(value == null || ("").equals(value)){
+		if(value == null || Objects.equals("", value)){
 			value = key;
 		}
 

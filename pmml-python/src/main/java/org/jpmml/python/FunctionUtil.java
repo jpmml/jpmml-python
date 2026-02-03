@@ -21,6 +21,7 @@ package org.jpmml.python;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -266,7 +267,7 @@ public class FunctionUtil {
 
 	static
 	private boolean checkModulePrefix(String module, String prefix){
-		return (prefix).equals(module) || (module != null && module.startsWith(prefix + "."));
+		return Objects.equals(module, prefix) || (module != null && module.startsWith(prefix + "."));
 	}
 
 	static

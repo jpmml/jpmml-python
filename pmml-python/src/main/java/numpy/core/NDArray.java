@@ -24,6 +24,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import net.razorvine.pickle.objects.ClassDictConstructor;
 import org.jpmml.python.CythonObject;
@@ -143,7 +144,7 @@ public class NDArray extends CythonObject implements HasArray, HasContent<Object
 			if((args[1] instanceof Object[] && Arrays.equals((Object[])args[1], new Object[]{0}))){
 
 				// Python 2(.7)
-				if((args[2] instanceof String) && ("b").equals((String)args[2])){
+				if((args[2] instanceof String) && Objects.equals("b", (String)args[2])){
 					return true;
 				} // End if
 

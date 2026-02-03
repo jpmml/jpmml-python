@@ -59,7 +59,7 @@ public class FunctionDefScope extends BlockScope {
 		for(int i = 0; i < parameters.size(); i++){
 			FunctionDef.Parameter parameter = parameters.get(i);
 
-			if((parameter.getName()).equals(name)){
+			if(Objects.equals(parameter.getName(), name)){
 				return i;
 			}
 		}
