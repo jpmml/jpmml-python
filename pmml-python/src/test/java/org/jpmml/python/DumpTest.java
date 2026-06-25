@@ -52,6 +52,7 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class DumpTest extends UnpicklerTest {
 
@@ -712,10 +713,21 @@ public class DumpTest extends UnpicklerTest {
 	private void unpicklePolarsDtypes(String prefix) throws IOException {
 		List<?> dtypes = (List<?>)unpickle(prefix + "_dtypes.pkl");
 
-		for(Object dtype : dtypes){
+		assertEquals(16, dtypes.size());
+
+		List<?> validDtypes = dtypes.subList(0, 15);
+		List<?> invalidDtypes = dtypes.subList(15, 16);
+
+		for(Object dtype : validDtypes){
 			TypeInfo typeInfo = (TypeInfo)dtype;
 
 			assertNotNull(typeInfo.getDataType());
+		} // End for
+
+		for(Object dtype : invalidDtypes){
+			TypeInfo typeInfo = (TypeInfo)dtype;
+
+			assertThrows(InvalidAttributeException.class, () -> typeInfo.getDataType());
 		}
 	}
 

@@ -240,7 +240,10 @@ if with_polars:
 		polars.Int8(), polars.Int16(), polars.Int32(), polars.Int64(),
 		polars.UInt8(), polars.UInt16(), polars.UInt32(), polars.UInt64(),
 		polars.Float32(), polars.Float64(),
-		polars.String()
+		polars.String(),
+		polars.Date(), polars.Time(),
+		polars.Datetime(),
+		polars.Datetime(time_zone = "UTC")
 	]
 	_pickle_polars_dtypes(dtypes)
 
