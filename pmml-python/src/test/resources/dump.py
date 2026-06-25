@@ -11,9 +11,13 @@ import pickle
 
 with_pandas = True
 with_sklearn = True
+with_polars = True
 
 if with_pandas:
 	import pandas
+
+if with_polars:
+	import polars
 
 if with_sklearn:
 	from sklearn.datasets import load_iris
@@ -90,6 +94,9 @@ def _pickle_pandas_dt_dataframe(df):
 
 def _pickle_pandas_dtypes(dtypes):
 	_pickle(dtypes, "dump/" + _platform_module("pandas", pandas.__version__) + "_dtypes.pkl")
+
+def _pickle_polars_dtypes(dtypes):
+	_pickle(dtypes, "dump/" + _platform_module("polars", polars.__version__) + "_dtypes.pkl")
 
 values = numpy.asarray([0, 1], dtype = numpy.int8)
 _pickle_numpy_array(values, bool)
@@ -226,6 +233,16 @@ if with_pandas:
 		pandas.StringDtype()
 	]
 	_pickle_pandas_dtypes(dtypes)
+
+if with_polars:
+	dtypes = [
+		polars.Boolean(),
+		polars.Int8(), polars.Int16(), polars.Int32(), polars.Int64(),
+		polars.UInt8(), polars.UInt16(), polars.UInt32(), polars.UInt64(),
+		polars.Float32(), polars.Float64(),
+		polars.String()
+	]
+	_pickle_polars_dtypes(dtypes)
 
 def legacy_rng(seed):
 	return RandomState(seed = seed)

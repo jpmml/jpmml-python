@@ -45,7 +45,6 @@ import pandas.core.BlockManager;
 import pandas.core.Categorical;
 import pandas.core.CategoricalDtype;
 import pandas.core.DataFrame;
-import pandas.core.ExtensionDtype;
 import pandas.core.Index;
 import pandas.core.Series;
 
@@ -260,6 +259,12 @@ public class DumpTest extends UnpicklerTest {
 		};
 
 		unpicklePandasAll("3.11", pandasVersions);
+
+		String[] polarsVersions = {
+			"1.8.0", "1.36.1", "1.42.0"
+		};
+
+		unpicklePolarsAll("3.11", polarsVersions);
 	}
 
 	@Test
@@ -299,6 +304,12 @@ public class DumpTest extends UnpicklerTest {
 		};
 
 		unpicklePandasAll("3.12", pandasVersions);
+
+		String[] polarsVersions = {
+			"1.8.0", "1.36.1", "1.42.0"
+		};
+
+		unpicklePolarsAll("3.12", polarsVersions);
 	}
 
 	@Test
@@ -338,6 +349,12 @@ public class DumpTest extends UnpicklerTest {
 		};
 
 		unpicklePandasAll("3.13", pandasVersions);
+
+		String[] polarsVersions = {
+			"1.8.0", "1.36.1", "1.42.0"
+		};
+
+		unpicklePolarsAll("3.13", polarsVersions);
 	}
 
 	private void unpickleBuiltinDtypes(String pythonVersion) throws IOException {
@@ -677,9 +694,28 @@ public class DumpTest extends UnpicklerTest {
 		List<?> dtypes = (List<?>)unpickle(prefix + "_dtypes.pkl");
 
 		for(Object dtype : dtypes){
-			ExtensionDtype extensionDtype = (ExtensionDtype)dtype;
+			TypeInfo typeInfo = (TypeInfo)dtype;
 
-			assertNotNull(extensionDtype.getDataType());
+			assertNotNull(typeInfo.getDataType());
+		}
+	}
+
+	private void unpicklePolarsAll(String pythonVersion, String[] polarsVersions) throws IOException {
+
+		for(String polarsVersion : polarsVersions){
+			String prefix = "python-" + pythonVersion + "_" + "polars-" + polarsVersion;
+
+			unpicklePolarsDtypes(prefix);
+		}
+	}
+
+	private void unpicklePolarsDtypes(String prefix) throws IOException {
+		List<?> dtypes = (List<?>)unpickle(prefix + "_dtypes.pkl");
+
+		for(Object dtype : dtypes){
+			TypeInfo typeInfo = (TypeInfo)dtype;
+
+			assertNotNull(typeInfo.getDataType());
 		}
 	}
 
