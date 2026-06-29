@@ -194,6 +194,13 @@ if with_polars:
 	series[1] = None
 	_pickle_polars_series(series, "str-na")
 
+if with_polars:
+	values = ["a", "b", "c", "d", "e"]
+	series = polars.Series(name = "y", values = values, dtype = polars.Categorical)
+	_pickle_polars_series(series, "categorical_str")
+	series = polars.Series(name = "y", values = values, dtype = polars.Enum(categories = ["a", "e", "b", "d", "c"]))
+	_pickle_polars_series(series, "enum_str")
+
 values = numpy.asarray(["1957-10-04T19:28:34Z", "1961-04-12T06:07:00Z", "1969-07-20T20:17:00Z"], dtype = str)
 
 datetime_units = ["s", "m", "h", "D", "M", "Y"]

@@ -22,6 +22,10 @@ import org.jpmml.python.HasArray;
 
 public class Enum extends DataType {
 
+	public Enum(){
+		this("polars.datatypes.classes", "Enum");
+	}
+
 	public Enum(java.lang.String module, java.lang.String name){
 		super(module, name);
 	}
@@ -33,5 +37,11 @@ public class Enum extends DataType {
 
 	public HasArray getCategories(){
 		return getArray("categories");
+	}
+
+	public Enum setCategories(HasArray categories){
+		setattr("categories", categories);
+
+		return this;
 	}
 }

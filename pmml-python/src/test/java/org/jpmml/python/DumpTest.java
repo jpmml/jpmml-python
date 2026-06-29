@@ -682,6 +682,7 @@ public class DumpTest extends UnpicklerTest {
 
 			unpicklePolarsSeries(prefix);
 			unpicklePolarsSeriesNA(prefix);
+			unpicklePolarsCategorical(prefix);
 			unpicklePolarsDtypes(prefix);
 		}
 	}
@@ -715,6 +716,22 @@ public class DumpTest extends UnpicklerTest {
 		HasArray series = (HasArray)unpickle(name);
 
 		checkSeriesNA(series, expectedSize);
+	}
+
+	private void unpicklePolarsCategorical(String prefix) throws IOException {
+		List<String> expectedValues =  Arrays.asList("a", "b", "c", "d", "e");
+
+		polars.series.Series categoricalSeries = (polars.series.Series)unpickle(prefix + "_categorical_str.pkl");
+		checkSeries(categoricalSeries, expectedValues);
+
+		polars.datatypes.Categorical categoricalDtype = (polars.datatypes.Categorical)categoricalSeries.getDType();
+		assertNotNull(categoricalDtype);
+
+		polars.series.Series enumSeries = (polars.series.Series)unpickle(prefix + "_enum_str.pkl");
+		checkSeries(enumSeries, expectedValues);
+
+		polars.datatypes.Enum enumDtype = (polars.datatypes.Enum)enumSeries.getDType();
+		assertEquals(Arrays.asList("a", "e", "b", "d", "c"), (enumDtype.getCategories()).getArrayContent());
 	}
 
 	private void unpicklePolarsDtypes(String prefix) throws IOException {

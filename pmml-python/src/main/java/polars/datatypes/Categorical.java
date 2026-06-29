@@ -20,6 +20,10 @@ package polars.datatypes;
 
 public class Categorical extends DataType {
 
+	public Categorical(){
+		this("polars.datatypes.classes", "Categorical");
+	}
+
 	public Categorical(java.lang.String module, java.lang.String name){
 		super(module, name);
 	}

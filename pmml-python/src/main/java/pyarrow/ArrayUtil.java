@@ -34,6 +34,19 @@ public class ArrayUtil {
 	}
 
 	static
+	public <E> List<E> decodeDictionary(List<E> values, List<Number> indices){
+		List<E> result = new ArrayList<>(indices.size());
+
+		for(int i = 0; i < indices.size(); i++){
+			Number index = indices.get(i);
+
+			result.add(index != null ? values.get(index.intValue()) : null);
+		}
+
+		return result;
+	}
+
+	static
 	public List<Boolean> decodeBooleans(byte[] validityBuffer, int nullCount, byte[] dataBuffer, int offset, int length){
 		List<Boolean> result = new ArrayList<>(length);
 

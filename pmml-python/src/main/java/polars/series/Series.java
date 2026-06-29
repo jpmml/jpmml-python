@@ -30,6 +30,10 @@ import pyarrow.IPCUtil;
 
 public class Series extends PythonObject implements HasArray {
 
+	public Series(){
+		this("polars.series.series", "Series");
+	}
+
 	public Series(String module, String name){
 		super(module, name);
 	}
@@ -37,11 +41,19 @@ public class Series extends PythonObject implements HasArray {
 	@Override
 	public List<?> getArrayContent(){
 		List<byte[]> buffers = getBuffers();
+		Series categories = getCategories();
 		int length = getLength();
 		List<long[]> nodes = getNodes();
 		int typeType = getTypeType();
 
 		int nullCount = (int)(nodes.get(0))[1];
+
+		if(categories != null){
+			List<?> categoryValues = categories.getArrayContent();
+			List<Number> indices = ArrayUtil.decodeInts(buffers.get(0), nullCount, buffers.get(1), 0, length, getBitWidth(), isSigned());
+
+			return ArrayUtil.decodeDictionary(categoryValues, indices);
+		}
 
 		switch(typeType){
 			case Type.Bool:
@@ -64,7 +76,12 @@ public class Series extends PythonObject implements HasArray {
 
 	@Override
 	public DataType getArrayType(){
+		DataType dtype = getDType();
 		int typeType = getTypeType();
+
+		if(dtype != null){
+			return dtype;
+		}
 
 		String name;
 
@@ -100,6 +117,14 @@ public class Series extends PythonObject implements HasArray {
 		return getOptionalInteger("bitWidth");
 	}
 
+	public Series getCategories(){
+		return getOptional("categories", Series.class);
+	}
+
+	public DataType getDType(){
+		return getOptional("dtype", DataType.class);
+	}
+
 	public Integer getLength(){
 		return getInteger("length");
 	}
@@ -122,6 +147,12 @@ public class Series extends PythonObject implements HasArray {
 
 	public Integer getTypeType(){
 		return getInteger("typeType");
+	}
+
+	public Series setTypeType(int typeType){
+		setattr("typeType", typeType);
+
+		return this;
 	}
 
 	static
