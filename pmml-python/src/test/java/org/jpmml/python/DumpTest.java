@@ -50,6 +50,7 @@ import pandas.core.Series;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -719,10 +720,10 @@ public class DumpTest extends UnpicklerTest {
 	private void unpicklePolarsDtypes(String prefix) throws IOException {
 		List<?> dtypes = (List<?>)unpickle(prefix + "_dtypes.pkl");
 
-		assertEquals(16, dtypes.size());
+		assertEquals(18, dtypes.size());
 
-		List<?> validDtypes = dtypes.subList(0, 15);
-		List<?> invalidDtypes = dtypes.subList(15, 16);
+		List<?> validDtypes = dtypes.subList(0, 17);
+		List<?> invalidDtypes = dtypes.subList(17, 18);
 
 		for(Object dtype : validDtypes){
 			TypeInfo typeInfo = (TypeInfo)dtype;
@@ -735,6 +736,18 @@ public class DumpTest extends UnpicklerTest {
 
 			assertThrows(InvalidAttributeException.class, () -> typeInfo.getDataType());
 		}
+
+		@SuppressWarnings("unused")
+		polars.datatypes.Categorical categorical = (polars.datatypes.Categorical)dtypes.get(12);
+
+		polars.datatypes.Enum _enum = (polars.datatypes.Enum)dtypes.get(13);
+
+		HasArray enumCategories = _enum.getCategories();
+
+		assertInstanceOf(polars.series.Series.class, enumCategories);
+
+		assertEquals(Arrays.asList("c", "b", "a"), enumCategories.getArrayContent());
+		assertArrayEquals(new int[]{3}, enumCategories.getArrayShape());
 	}
 
 	static

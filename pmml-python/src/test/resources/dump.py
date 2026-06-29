@@ -270,6 +270,7 @@ if with_polars:
 		polars.UInt8(), polars.UInt16(), polars.UInt32(), polars.UInt64(),
 		polars.Float32(), polars.Float64(),
 		polars.String(),
+		polars.Categorical(), polars.Enum(categories = ["c", "b", "a"]),
 		polars.Date(), polars.Time(),
 		polars.Datetime(),
 		polars.Datetime(time_zone = "UTC")
