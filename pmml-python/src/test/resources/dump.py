@@ -95,6 +95,9 @@ def _pickle_pandas_dt_dataframe(df):
 def _pickle_pandas_dtypes(dtypes):
 	_pickle(dtypes, "dump/" + _platform_module("pandas", pandas.__version__) + "_dtypes.pkl")
 
+def _pickle_polars_series(values, dtype):
+	_pickle(values, "dump/" + _platform_module("polars", polars.__version__) + "_" + _format_dtype(dtype) + ".pkl")
+
 def _pickle_polars_dtypes(dtypes):
 	_pickle(dtypes, "dump/" + _platform_module("polars", polars.__version__) + "_dtypes.pkl")
 
@@ -112,6 +115,12 @@ if with_pandas:
 	series[1] = pandas.NA
 	_pickle_pandas_series(series, "bool-na")
 
+if with_polars:
+	series = polars.Series(name = "y", values = values, dtype = polars.Boolean)
+	_pickle_polars_series(series, "bool")
+	series[1] = None
+	_pickle_polars_series(series, "bool-na")
+
 values = numpy.asarray([x for x in range(-128, 127, 1)], dtype = numpy.int8)
 _pickle_numpy_array(values, numpy.int8)
 
@@ -122,6 +131,12 @@ if with_pandas:
 	series[1] = pandas.NA
 	_pickle_pandas_series(series, "int8-na")
 
+if with_polars:
+	series = polars.Series(name = "y", values = values, dtype = polars.Int8)
+	_pickle_polars_series(series, "int8")
+	series[1] = None
+	_pickle_polars_series(series, "int8-na")
+
 values = numpy.asarray([x for x in range(0, 255, 1)], dtype = numpy.uint8)
 _pickle_numpy_array(values, numpy.uint8)
 
@@ -129,6 +144,11 @@ if with_pandas:
 	series = pandas.Series(values, name = "y", dtype = pandas.UInt8Dtype())
 	series[1] = pandas.NA
 	_pickle_pandas_series(series, "uint8-na")
+
+if with_polars:
+	series = polars.Series(name = "y", values = values, dtype = polars.UInt8)
+	series[1] = None
+	_pickle_polars_series(series, "uint8-na")
 
 values = numpy.asarray([x for x in range(-32768, 32767, 127)], dtype = numpy.int16)
 _pickle_numpy_array(values, numpy.int16)
@@ -147,6 +167,10 @@ if with_pandas:
 	series = pandas.Series(values, name = "y", dtype = int)
 	_pickle_pandas_series(series, int)
 
+if with_polars:
+	series = polars.Series(name = "y", values = values, dtype = polars.Int32)
+	_pickle_polars_series(series, int)
+
 values = numpy.asarray([x for x in range(0, 4294967295, 64 * 32767)], dtype = numpy.uint32)
 _pickle_numpy_array(values, numpy.uint32)
 _pickle_numpy_array(values, numpy.uint64)
@@ -164,6 +188,11 @@ if with_pandas:
 if with_pandas:
 	categorical = pandas.Categorical(values = ["a", "b", "c", "d", "e"], dtype = pandas.CategoricalDtype(categories = ["a", "e", "b", "d", "c"], ordered = True))
 	_pickle_pandas_categorical(categorical, str)
+
+if with_polars:
+	series = polars.Series(name = "y", values = values, dtype = polars.String)
+	series[1] = None
+	_pickle_polars_series(series, "str-na")
 
 values = numpy.asarray(["1957-10-04T19:28:34Z", "1961-04-12T06:07:00Z", "1969-07-20T20:17:00Z"], dtype = str)
 

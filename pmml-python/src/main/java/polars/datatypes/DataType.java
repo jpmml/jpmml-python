@@ -18,6 +18,10 @@
  */
 package polars.datatypes;
 
+import java.util.Map;
+
+import net.razorvine.pickle.IObjectConstructor;
+import org.jpmml.python.PickleUtil;
 import org.jpmml.python.PythonObject;
 import org.jpmml.python.TypeInfo;
 
@@ -26,5 +30,19 @@ public class DataType extends PythonObject implements TypeInfo {
 
 	public DataType(java.lang.String module, java.lang.String name){
 		super(module, name);
+	}
+
+	static
+	public DataType forName(java.lang.String name){
+		Map<java.lang.String, IObjectConstructor> objectConstructors = PickleUtil.getObjectConstructors();
+
+		java.lang.String className = "polars.datatypes.classes." + name;
+
+		IObjectConstructor objectConstructor = objectConstructors.get(className);
+		if(objectConstructor == null){
+			throw new IllegalArgumentException();
+		}
+
+		return (DataType)objectConstructor.construct(new Object[0]);
 	}
 }

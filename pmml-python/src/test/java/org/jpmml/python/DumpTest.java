@@ -583,31 +583,13 @@ public class DumpTest extends UnpicklerTest {
 	private void unpicklePandasSeries(String name, List<?> expectedValues) throws IOException {
 		Series series = (Series)unpickle(name);
 
-		List<?> values = series.getArrayContent();
-		int[] shape = series.getArrayShape();
-		Object dtype = series.getArrayType();
-
-		assertEquals(expectedValues, values);
-		assertArrayEquals(new int[]{expectedValues.size()}, shape);
-
-		assertNotNull(dtype);
+		checkSeries(series, expectedValues);
 	}
 
 	private void unpicklePandasSeries(String name, long min, long max, long step) throws IOException {
 		Series series = (Series)unpickle(name);
 
-		List<?> values = series.getArrayContent();
-		int[] shape = series.getArrayShape();
-		Object dtype = series.getArrayType();
-
-		for(int i = 0; i < values.size(); i++){
-			Number expectedValue = min + (i * step);
-			Number value = (Number)values.get(i);
-
-			assertEquals(expectedValue.longValue(), value.longValue());
-		}
-
-		assertNotNull(dtype);
+		checkSeries(series, min, max, step);
 	}
 
 	private void unpicklePandasSeriesNA(String prefix) throws IOException {
@@ -620,16 +602,7 @@ public class DumpTest extends UnpicklerTest {
 	private void unpicklePandasSeriesNA(String name, int expectedSize) throws IOException {
 		Series series = (Series)unpickle(name);
 
-		List<?> values = series.getArrayContent();
-		int[] shape = series.getArrayShape();
-		Object dtype = series.getArrayType();
-
-		assertNotNull(values.get(0));
-		assertNull(values.get(1));
-
-		assertArrayEquals(new int[]{expectedSize}, shape);
-
-		assertNotNull(dtype);
+		checkSeriesNA(series, expectedSize);
 	}
 
 	private void unpicklePandasCategorical(String prefix) throws IOException {
@@ -706,8 +679,41 @@ public class DumpTest extends UnpicklerTest {
 		for(String polarsVersion : polarsVersions){
 			String prefix = "python-" + pythonVersion + "_" + "polars-" + polarsVersion;
 
+			unpicklePolarsSeries(prefix);
+			unpicklePolarsSeriesNA(prefix);
 			unpicklePolarsDtypes(prefix);
 		}
+	}
+
+	private void unpicklePolarsSeries(String prefix) throws IOException {
+		unpicklePolarsSeries(prefix + "_bool.pkl", Arrays.asList(false, true));
+		unpicklePolarsSeries(prefix + "_int8.pkl", Byte.MIN_VALUE, Byte.MAX_VALUE, 1);
+		unpicklePolarsSeries(prefix + "_int.pkl", Integer.MIN_VALUE, Integer.MAX_VALUE, 64 * 32767);
+	}
+
+	private void unpicklePolarsSeries(String name, List<?> expectedValues) throws IOException {
+		HasArray series = (HasArray)unpickle(name);
+
+		checkSeries(series, expectedValues);
+	}
+
+	private void unpicklePolarsSeries(String name, long min, long max, long step) throws IOException {
+		HasArray series = (HasArray)unpickle(name);
+
+		checkSeries(series, min, max, step);
+	}
+
+	private void unpicklePolarsSeriesNA(String prefix) throws IOException {
+		unpicklePolarsSeriesNA(prefix + "_bool-na.pkl", 2);
+		unpicklePolarsSeriesNA(prefix + "_int8-na.pkl", 255);
+		unpicklePolarsSeriesNA(prefix + "_uint8-na.pkl", 255);
+		unpicklePolarsSeriesNA(prefix + "_str-na.pkl", 3);
+	}
+
+	private void unpicklePolarsSeriesNA(String name, int expectedSize) throws IOException {
+		HasArray series = (HasArray)unpickle(name);
+
+		checkSeriesNA(series, expectedSize);
 	}
 
 	private void unpicklePolarsDtypes(String prefix) throws IOException {
@@ -785,6 +791,11 @@ public class DumpTest extends UnpicklerTest {
 	}
 
 	static
+	protected Object unpickle(String name) throws IOException {
+		return unpickle("dump", name);
+	}
+
+	static
 	private List<LocalDateTime> truncateToUnit(List<LocalDateTime> localDateTimes, ChronoUnit chronoUnit){
 		return localDateTimes.stream()
 			.map(localDateTime -> localDateTime.truncatedTo(chronoUnit))
@@ -806,8 +817,45 @@ public class DumpTest extends UnpicklerTest {
 	}
 
 	static
-	protected Object unpickle(String name) throws IOException {
-		return unpickle("dump", name);
+	private void checkSeries(HasArray series, List<?> expectedValues){
+		List<?> values = series.getArrayContent();
+		int[] shape = series.getArrayShape();
+		Object dtype = series.getArrayType();
+
+		assertEquals(expectedValues, values);
+		assertArrayEquals(new int[]{expectedValues.size()}, shape);
+
+		assertNotNull(dtype);
+	}
+
+	static
+	private void checkSeries(HasArray series, long min, long max, long step){
+		List<?> values = series.getArrayContent();
+		int[] shape = series.getArrayShape();
+		Object dtype = series.getArrayType();
+
+		for(int i = 0; i < values.size(); i++){
+			Number expectedValue = min + (i * step);
+			Number value = (Number)values.get(i);
+
+			assertEquals(expectedValue.longValue(), value.longValue());
+		}
+
+		assertNotNull(dtype);
+	}
+
+	static
+	private void checkSeriesNA(HasArray series, int expectedSize){
+		List<?> values = series.getArrayContent();
+		int[] shape = series.getArrayShape();
+		Object dtype = series.getArrayType();
+
+		assertNotNull(values.get(0));
+		assertNull(values.get(1));
+
+		assertArrayEquals(new int[]{expectedSize}, shape);
+
+		assertNotNull(dtype);
 	}
 
 	static {

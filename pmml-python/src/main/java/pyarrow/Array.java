@@ -43,11 +43,15 @@ public class Array extends CythonObject {
 		return getList("buffers", Buffer.class);
 	}
 
-	public int getLength(){
+	public Integer getLength(){
 		return getInteger("length");
 	}
 
-	public int getOffset(){
+	public Integer getNullCount(){
+		return getInteger("null_count");
+	}
+
+	public Integer getOffset(){
 		return getInteger("offset");
 	}
 

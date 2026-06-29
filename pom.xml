@@ -42,6 +42,7 @@
 	<properties>
 		<jpmml-converter.version>1.6.10</jpmml-converter.version>
 		<jpmml-evaluator.version>1.7.7</jpmml-evaluator.version>
+		<arrow.version>19.0.0</arrow.version>
 		<pickle.version>1.5</pickle.version>
 		<serpent.version>1.43</serpent.version>
 		<project.build.outputTimestamp>2026-04-27T11:02:27Z</project.build.outputTimestamp>
@@ -80,6 +81,12 @@
 				<groupId>org.jpmml</groupId>
 				<artifactId>pmml-evaluator-testing</artifactId>
 				<version>${jpmml-evaluator.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.apache.arrow</groupId>
+				<artifactId>arrow-format</artifactId>
+				<version>${arrow.version}</version>
 			</dependency>
 
 			<dependency>

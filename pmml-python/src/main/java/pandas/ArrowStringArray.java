@@ -18,12 +18,6 @@
  */
 package pandas;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.BitSet;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -31,6 +25,7 @@ import builtins.Type;
 import org.jpmml.python.HasArray;
 import org.jpmml.python.PythonObject;
 import pyarrow.Array;
+import pyarrow.ArrayUtil;
 import pyarrow.Buffer;
 import pyarrow.Types;
 
@@ -47,55 +42,16 @@ public class ArrowStringArray extends PythonObject implements HasArray {
 		List<Buffer> buffers = paArray.getBuffers();
 		int length = paArray.getLength();
 		int offset = paArray.getOffset();
+		int nullCount = paArray.getNullCount();
 		Type type = paArray.getType();
 
-		Buffer validityBuffer = buffers.get(0);
-		Buffer offsetsBuffer = buffers.get(1);
-		Buffer dataBuffer = buffers.get(2);
+		byte[] validityBuffer = getBuffer(buffers.get(0));
+		byte[] offsetsBuffer = getBuffer(buffers.get(1));
+		byte[] dataBuffer = getBuffer(buffers.get(2));
 
-		BitSet validityMask = null;
+		boolean largeStrings = Objects.equals(Types.LARGE_STRING, type.getClassName());
 
-		if(validityBuffer != null){
-			validityMask = BitSet.valueOf(validityBuffer.getBuffer());
-		}
-
-		boolean hasLargeStrings = Objects.equals(Types.LARGE_STRING, type.getClassName());
-
-		ByteBuffer offsets = ByteBuffer.wrap(offsetsBuffer.getBuffer())
-			.order(ByteOrder.LITTLE_ENDIAN);
-
-		byte[] dataBytes = dataBuffer.getBuffer();
-
-		List<String> result = new ArrayList<>(length);
-
-		for(int i = 0; i < length; i++){
-			int index = offset + i;
-
-			if(validityMask != null && !validityMask.get(index)){
-				result.add(null);
-
-				continue;
-			}
-
-			int start;
-			int end;
-
-			if(hasLargeStrings){
-				start = (int)offsets.getLong(index * 8);
-				end = (int)offsets.getLong((index + 1) * 8);
-			} else
-
-			{
-				start = offsets.getInt(index * 4);
-				end = offsets.getInt((index + 1) * 4);
-			}
-
-			String string = new String(dataBytes, start, (end - start), StandardCharsets.UTF_8);
-
-			result.add(string);
-		}
-
-		return result;
+		return ArrayUtil.decodeStrings(validityBuffer, nullCount, offsetsBuffer, dataBuffer, offset, length, largeStrings);
 	}
 
 	@Override
@@ -112,16 +68,21 @@ public class ArrowStringArray extends PythonObject implements HasArray {
 		return getDType();
 	}
 
-	@Override
-	public void __setstate__(HashMap<String, Object> newState){
-		super.__setstate__(newState);
-	}
-
 	public Object getDType(){
 		return get("_dtype");
 	}
 
 	public Array getPAArray(){
 		return get("_pa_array", Array.class);
+	}
+
+	static
+	private byte[] getBuffer(Buffer buffer){
+
+		if(buffer != null){
+			return buffer.getBuffer();
+		}
+
+		return null;
 	}
 }
