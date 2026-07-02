@@ -8,4 +8,4 @@ numpy_module = __import__("numpy")
 
 for ufunc in ufuncs:
 	numpy_ufunc = getattr(numpy_module, ufunc)
-	_pickle(numpy_ufunc, "ufunc/" + _platform_module("numpy", numpy.__version__) + "_" + ufunc + ".pkl")
+	_pickle(numpy_ufunc, "ufunc/" + _platform_module("numpy", numpy.__version__) + "/" + ufunc + ".pkl")

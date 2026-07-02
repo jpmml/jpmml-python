@@ -10,7 +10,7 @@ def _module(name, version):
 	return (name + "-" + version)
 
 def _platform_module(name, version):
-	return (_platform() + "_" + _module(name, version))
+	return (_platform() + "/" + _module(name, version))
 
 def _dill(obj, path):
 	con = open(path, "wb")

@@ -77,7 +77,7 @@ public class DumpTest extends UnpicklerTest {
 
 		unpickleSkLearnJoblib("2.7", sklearnJoblibVersions);
 
-		unpickleNumPyArrays("python-2.7_numpy-1.11.2");
+		unpickleNumPyArrays("python-2.7/numpy-1.11.2");
 	}
 
 	@Test
@@ -100,7 +100,7 @@ public class DumpTest extends UnpicklerTest {
 
 		unpickleSkLearnJoblib("3.4", sklearnJoblibVersions);
 
-		unpickleNumPyArrays("python-3.4_numpy-1.13.3");
+		unpickleNumPyArrays("python-3.4/numpy-1.13.3");
 	}
 
 	@Test
@@ -121,23 +121,23 @@ public class DumpTest extends UnpicklerTest {
 
 		unpickleJoblib("3.7", joblibVersions);
 
-		unpickleNumPyArrays("python-3.7_numpy-1.19.5");
-		unpickleNumPyArrays("python-3.7_numpy-1.20.0");
-		unpickleNumPyArrays("python-3.7_numpy-1.21.4");
-		unpickleNumPyArrays("python-3.7_numpy-1.21.5");
+		unpickleNumPyArrays("python-3.7/numpy-1.19.5");
+		unpickleNumPyArrays("python-3.7/numpy-1.20.0");
+		unpickleNumPyArrays("python-3.7/numpy-1.21.4");
+		unpickleNumPyArrays("python-3.7/numpy-1.21.5");
 
-		unpickleNumPyDtypes("python-3.7_numpy-1.21.5");
+		unpickleNumPyDtypes("python-3.7/numpy-1.21.5");
 
-		unpicklePandasSeries("python-3.7_pandas-1.0.5");
-		unpicklePandasSeries("python-3.7_pandas-1.1.3");
-		unpicklePandasSeries("python-3.7_pandas-1.2.3");
-		unpicklePandasSeries("python-3.7_pandas-1.3.1");
-		unpicklePandasSeries("python-3.7_pandas-1.3.4");
+		unpicklePandasSeries("python-3.7/pandas-1.0.5");
+		unpicklePandasSeries("python-3.7/pandas-1.1.3");
+		unpicklePandasSeries("python-3.7/pandas-1.2.3");
+		unpicklePandasSeries("python-3.7/pandas-1.3.1");
+		unpicklePandasSeries("python-3.7/pandas-1.3.4");
 
-		unpicklePandasDataFrame("python-3.7_pandas-1.1.3");
-		unpicklePandasDataFrame("python-3.7_pandas-1.2.3");
-		unpicklePandasDataFrame("python-3.7_pandas-1.3.1");
-		unpicklePandasDataFrame("python-3.7_pandas-1.3.4");
+		unpicklePandasDataFrame("python-3.7/pandas-1.1.3");
+		unpicklePandasDataFrame("python-3.7/pandas-1.2.3");
+		unpicklePandasDataFrame("python-3.7/pandas-1.3.1");
+		unpicklePandasDataFrame("python-3.7/pandas-1.3.4");
 
 		String[] pandasVersions = {
 			"1.3.5"
@@ -170,21 +170,21 @@ public class DumpTest extends UnpicklerTest {
 
 		unpickleJoblib("3.9", joblibVersions);
 
-		unpickleNumPyArrays("python-3.9_numpy-1.20.2");
-		unpickleNumPyArrays("python-3.9_numpy-1.21.4");
-		unpickleNumPyArrays("python-3.9_numpy-1.22.1");
-		unpickleNumPyArrays("python-3.9_numpy-1.22.3");
-		unpickleNumPyArrays("python-3.9_numpy-1.23.4");
-		unpickleNumPyArrays("python-3.9_numpy-1.24.1");
+		unpickleNumPyArrays("python-3.9/numpy-1.20.2");
+		unpickleNumPyArrays("python-3.9/numpy-1.21.4");
+		unpickleNumPyArrays("python-3.9/numpy-1.22.1");
+		unpickleNumPyArrays("python-3.9/numpy-1.22.3");
+		unpickleNumPyArrays("python-3.9/numpy-1.23.4");
+		unpickleNumPyArrays("python-3.9/numpy-1.24.1");
 
-		unpickleNumPyDtypes("python-3.9_numpy-1.22.3");
-		unpickleNumPyDtypes("python-3.9_numpy-1.23.4");
-		unpickleNumPyDtypes("python-3.9_numpy-1.24.1");
+		unpickleNumPyDtypes("python-3.9/numpy-1.22.3");
+		unpickleNumPyDtypes("python-3.9/numpy-1.23.4");
+		unpickleNumPyDtypes("python-3.9/numpy-1.24.1");
 
-		unpickleNumPyDatetimeDtypes("python-3.9_numpy-1.24.1");
+		unpickleNumPyDatetimeDtypes("python-3.9/numpy-1.24.1");
 
-		unpickleNumPyRNGs("python-3.9_numpy-1.23.4");
-		unpickleNumPyRNGs("python-3.9_numpy-1.24.1");
+		unpickleNumPyRNGs("python-3.9/numpy-1.23.4");
+		unpickleNumPyRNGs("python-3.9/numpy-1.24.1");
 
 		String[] numpyVersions = {
 			"1.26.2", "2.0.0"
@@ -192,14 +192,14 @@ public class DumpTest extends UnpicklerTest {
 
 		unpickleNumPyAll("3.9", numpyVersions);
 
-		unpicklePandasSeries("python-3.9_pandas-1.2.3");
-		unpicklePandasSeries("python-3.9_pandas-1.3.1");
-		unpicklePandasSeries("python-3.9_pandas-1.3.4");
+		unpicklePandasSeries("python-3.9/pandas-1.2.3");
+		unpicklePandasSeries("python-3.9/pandas-1.3.1");
+		unpicklePandasSeries("python-3.9/pandas-1.3.4");
 
-		unpicklePandasDataFrame("python-3.9_pandas-1.1.3");
-		unpicklePandasDataFrame("python-3.9_pandas-1.2.3");
-		unpicklePandasDataFrame("python-3.9_pandas-1.3.1");
-		unpicklePandasDataFrame("python-3.9_pandas-1.3.4");
+		unpicklePandasDataFrame("python-3.9/pandas-1.1.3");
+		unpicklePandasDataFrame("python-3.9/pandas-1.2.3");
+		unpicklePandasDataFrame("python-3.9/pandas-1.3.1");
+		unpicklePandasDataFrame("python-3.9/pandas-1.3.4");
 
 		String[] pandasVersions = {
 			"1.4.1", "1.4.3",
@@ -235,16 +235,16 @@ public class DumpTest extends UnpicklerTest {
 
 		unpickleJoblib("3.11", joblibVersions);
 
-		unpickleNumPyArrays("python-3.11_numpy-1.23.4");
-		unpickleNumPyArrays("python-3.11_numpy-1.24.1");
+		unpickleNumPyArrays("python-3.11/numpy-1.23.4");
+		unpickleNumPyArrays("python-3.11/numpy-1.24.1");
 
-		unpickleNumPyDtypes("python-3.11_numpy-1.23.4");
-		unpickleNumPyDtypes("python-3.11_numpy-1.24.1");
+		unpickleNumPyDtypes("python-3.11/numpy-1.23.4");
+		unpickleNumPyDtypes("python-3.11/numpy-1.24.1");
 
-		unpickleNumPyDatetimeDtypes("python-3.11_numpy-1.24.1");
+		unpickleNumPyDatetimeDtypes("python-3.11/numpy-1.24.1");
 
-		unpickleNumPyRNGs("python-3.11_numpy-1.23.4");
-		unpickleNumPyRNGs("python-3.11_numpy-1.24.1");
+		unpickleNumPyRNGs("python-3.11/numpy-1.23.4");
+		unpickleNumPyRNGs("python-3.11/numpy-1.24.1");
 
 		String[] numpyVersions = {
 			"1.26.2", "2.0.0",
@@ -360,7 +360,7 @@ public class DumpTest extends UnpicklerTest {
 	}
 
 	private void unpickleBuiltinDtypes(String pythonVersion) throws IOException {
-		List<?> dtypes = (List<?>)unpickle("python-" + pythonVersion + "_dtypes.pkl");
+		List<?> dtypes = (List<?>)unpickle("python-" + pythonVersion + "/dtypes.pkl");
 
 		for(Object dtype : dtypes){
 			Type type = (Type)dtype;
@@ -370,7 +370,7 @@ public class DumpTest extends UnpicklerTest {
 	}
 
 	private void unpickleEnums(String pythonVersion) throws IOException {
-		List<?> enums = (List<?>)unpickle("python-" + pythonVersion + "_enums.pkl");
+		List<?> enums = (List<?>)unpickle("python-" + pythonVersion + "/enums.pkl");
 
 		for(Object _enum : enums){
 			PythonEnum pythonEnum = (PythonEnum)_enum;
@@ -382,43 +382,43 @@ public class DumpTest extends UnpicklerTest {
 	private void unpicklePickle(String pythonVersion, String... pickleVersions) throws IOException {
 
 		for(String pickleVersion : pickleVersions){
-			String prefix = "python-" + pythonVersion + "_" + "pickle-" + pickleVersion;
+			String prefix = "python-" + pythonVersion;
 
-			unpickle(prefix + ".pkl");
+			unpickle(prefix + "/" + "pickle-" + pickleVersion + ".pkl");
 		}
 	}
 
 	private void unpickleDill(String pythonVersion, String... dillVersions) throws IOException {
 
 		for(String dillVersion : dillVersions){
-			String prefix = "python-" + pythonVersion + "_" + "dill-" + dillVersion;
+			String prefix = "python-" + pythonVersion;
 
-			unpickle(prefix + ".pkl");
+			unpickle(prefix + "/" + "dill-" + dillVersion + ".pkl");
 		}
 	}
 
 	private void unpickleJoblib(String pythonVersion, String... joblibVersions) throws IOException {
 
 		for(String joblibVersion : joblibVersions){
-			String prefix = "python-" + pythonVersion + "_" + "joblib-" + joblibVersion;
+			String prefix = "python-" + pythonVersion;
 
-			unpickle(prefix + ".pkl.z");
+			unpickle(prefix + "/" + "joblib-" + joblibVersion + ".pkl.z");
 		}
 	}
 
 	private void unpickleSkLearnJoblib(String pythonVersion, String... sklearnJoblibVersions) throws IOException {
 
 		for(String sklearnJoblibVersion : sklearnJoblibVersions){
-			String prefix = "python-" + pythonVersion + "_" + "sklearn-joblib-" + sklearnJoblibVersion;
+			String prefix = "python-" + pythonVersion;
 
-			unpickle(prefix + ".pkl.z");
+			unpickle(prefix + "/" + "sklearn-joblib-" + sklearnJoblibVersion + ".pkl.z");
 		}
 	}
 
 	private void unpickleNumPyAll(String pythonVersion, String... numpyVersions) throws IOException {
 
 		for(String numpyVersion : numpyVersions){
-			String prefix = "python-" + pythonVersion + "_" + "numpy-" + numpyVersion;
+			String prefix = "python-" + pythonVersion + "/" + "numpy-" + numpyVersion;
 
 			unpickleNumPyArrays(prefix);
 			unpickleNumPyComplexArrays(prefix);
@@ -430,22 +430,22 @@ public class DumpTest extends UnpicklerTest {
 	}
 
 	private void unpickleNumPyArrays(String prefix) throws IOException {
-		unpickleNumPyArray(prefix + "_bool.pkl", Arrays.asList(false, true));
+		unpickleNumPyArray(prefix + "/bool.pkl", Arrays.asList(false, true));
 
-		unpickleNumPyArray(prefix + "_int8.pkl", Byte.MIN_VALUE, Byte.MAX_VALUE, 1);
-		unpickleNumPyArray(prefix + "_int16.pkl", Short.MIN_VALUE, Short.MAX_VALUE, 127);
+		unpickleNumPyArray(prefix + "/int8.pkl", Byte.MIN_VALUE, Byte.MAX_VALUE, 1);
+		unpickleNumPyArray(prefix + "/int16.pkl", Short.MIN_VALUE, Short.MAX_VALUE, 127);
 
-		unpickleNumPyArray(prefix + "_uint8.pkl", 0, 255, 1);
-		unpickleNumPyArray(prefix + "_uint16.pkl", 0, 65535, 127);
+		unpickleNumPyArray(prefix + "/uint8.pkl", 0, 255, 1);
+		unpickleNumPyArray(prefix + "/uint16.pkl", 0, 65535, 127);
 
 		String[] dtypes = new String[]{"int", "int32", "int64", "float32", "float64"};
 		for(String dtype : dtypes){
-			unpickleNumPyArray(prefix + "_" + dtype + ".pkl", Integer.MIN_VALUE, Integer.MAX_VALUE, 64 * 32767);
+			unpickleNumPyArray(prefix + "/" + dtype + ".pkl", Integer.MIN_VALUE, Integer.MAX_VALUE, 64 * 32767);
 		}
 
 		dtypes = new String[]{"uint32", "uint64"};
 		for(String dtype : dtypes){
-			unpickleNumPyArray(prefix + "_" + dtype + ".pkl", 0L, 4294967295L, 64 * 32767);
+			unpickleNumPyArray(prefix + "/" + dtype + ".pkl", 0L, 4294967295L, 64 * 32767);
 		}
 	}
 
@@ -455,7 +455,7 @@ public class DumpTest extends UnpicklerTest {
 			new Complex(3f, 4f)
 		);
 
-		unpickleNumPyArray(prefix + "_complex64.pkl", complexes);
+		unpickleNumPyArray(prefix + "/complex64.pkl", complexes);
 	}
 
 	private void unpickleNumPyDatetimeArrays(String prefix) throws IOException {
@@ -465,28 +465,28 @@ public class DumpTest extends UnpicklerTest {
 			LocalDateTime.of(1969, 7, 20, 20, 17, 0)
 		);
 
-		unpickle(prefix + "_datetime64Y.pkl");
-		unpickle(prefix + "_datetime64M.pkl");
+		unpickle(prefix + "/datetime64Y.pkl");
+		unpickle(prefix + "/datetime64M.pkl");
 
 		List<LocalDate> dayDates = datetimes.stream()
 			.map(datetime -> LocalDate.of(datetime.getYear(), datetime.getMonth(), datetime.getDayOfMonth()))
 			.collect(Collectors.toList());
 
-		unpickleNumPyArray(prefix + "_datetime64D.pkl", dayDates);
+		unpickleNumPyArray(prefix + "/datetime64D.pkl", dayDates);
 
 		List<LocalDateTime> hourDatetimes = datetimes.stream()
 			.map(datetime-> datetime.truncatedTo(ChronoUnit.HOURS))
 			.collect(Collectors.toList());
 
-		unpickleNumPyArray(prefix + "_datetime64h.pkl", hourDatetimes);
+		unpickleNumPyArray(prefix + "/datetime64h.pkl", hourDatetimes);
 
 		List<LocalDateTime> minuteDatetimes = datetimes.stream()
 			.map(datetime -> datetime.truncatedTo(ChronoUnit.MINUTES))
 			.collect(Collectors.toList());
 
-		unpickleNumPyArray(prefix + "_datetime64m.pkl", minuteDatetimes);
+		unpickleNumPyArray(prefix + "/datetime64m.pkl", minuteDatetimes);
 
-		unpickleNumPyArray(prefix + "_datetime64s.pkl", datetimes);
+		unpickleNumPyArray(prefix + "/datetime64s.pkl", datetimes);
 	}
 
 	private void unpickleNumPyArray(String name, List<?> expectedValues) throws IOException {
@@ -530,7 +530,7 @@ public class DumpTest extends UnpicklerTest {
 	}
 
 	private void unpickleNumPyDtypes(String prefix) throws IOException {
-		List<?> dtypes = (List<?>)unpickle(prefix + "_dtypes.pkl");
+		List<?> dtypes = (List<?>)unpickle(prefix + "/dtypes.pkl");
 
 		for(Object dtype : dtypes){
 			Type type = (Type)dtype;
@@ -540,7 +540,7 @@ public class DumpTest extends UnpicklerTest {
 	}
 
 	private void unpickleNumPyDatetimeDtypes(String prefix) throws IOException {
-		List<?> dtypes = (List<?>)unpickle(prefix + "_datetime_dtypes.pkl");
+		List<?> dtypes = (List<?>)unpickle(prefix + "/datetime_dtypes.pkl");
 
 		for(Object dtype : dtypes){
 			DType type = (DType)dtype;
@@ -550,7 +550,7 @@ public class DumpTest extends UnpicklerTest {
 	}
 
 	private void unpickleNumPyRNGs(String prefix) throws IOException {
-		List<?> rngs = (List<?>)unpickle(prefix + "_rngs.pkl");
+		List<?> rngs = (List<?>)unpickle(prefix + "/rngs.pkl");
 
 		assertEquals(2, rngs.size());
 
@@ -564,7 +564,7 @@ public class DumpTest extends UnpicklerTest {
 	private void unpicklePandasAll(String pythonVersion, String... pandasVersions) throws IOException {
 
 		for(String pandasVersion : pandasVersions){
-			String prefix = "python-" + pythonVersion + "_" + "pandas-" + pandasVersion;
+			String prefix = "python-" + pythonVersion + "/" + "pandas-" + pandasVersion;
 
 			unpicklePandasSeries(prefix);
 			unpicklePandasSeriesNA(prefix);
@@ -576,9 +576,9 @@ public class DumpTest extends UnpicklerTest {
 	}
 
 	private void unpicklePandasSeries(String prefix) throws IOException {
-		unpicklePandasSeries(prefix + "_bool.pkl", Arrays.asList(false, true));
-		unpicklePandasSeries(prefix + "_int8.pkl", Byte.MIN_VALUE, Byte.MAX_VALUE, 1);
-		unpicklePandasSeries(prefix + "_int.pkl", Integer.MIN_VALUE, Integer.MAX_VALUE, 64 * 32767);
+		unpicklePandasSeries(prefix + "/bool.pkl", Arrays.asList(false, true));
+		unpicklePandasSeries(prefix + "/int8.pkl", Byte.MIN_VALUE, Byte.MAX_VALUE, 1);
+		unpicklePandasSeries(prefix + "/int.pkl", Integer.MIN_VALUE, Integer.MAX_VALUE, 64 * 32767);
 	}
 
 	private void unpicklePandasSeries(String name, List<?> expectedValues) throws IOException {
@@ -594,10 +594,10 @@ public class DumpTest extends UnpicklerTest {
 	}
 
 	private void unpicklePandasSeriesNA(String prefix) throws IOException {
-		unpicklePandasSeriesNA(prefix + "_bool-na.pkl", 2);
-		unpicklePandasSeriesNA(prefix + "_int8-na.pkl", 255);
-		unpicklePandasSeriesNA(prefix + "_uint8-na.pkl", 255);
-		unpicklePandasSeriesNA(prefix + "_str-na.pkl", 3);
+		unpicklePandasSeriesNA(prefix + "/bool-na.pkl", 2);
+		unpicklePandasSeriesNA(prefix + "/int8-na.pkl", 255);
+		unpicklePandasSeriesNA(prefix + "/uint8-na.pkl", 255);
+		unpicklePandasSeriesNA(prefix + "/str-na.pkl", 3);
 	}
 
 	private void unpicklePandasSeriesNA(String name, int expectedSize) throws IOException {
@@ -607,8 +607,8 @@ public class DumpTest extends UnpicklerTest {
 	}
 
 	private void unpicklePandasCategorical(String prefix) throws IOException {
-		unpicklePandasCategorical(prefix + "_categorical_bool.pkl", Arrays.asList(false, true), true);
-		unpicklePandasCategorical(prefix + "_categorical_str.pkl", Arrays.asList("a", "e", "b", "d", "c"), true);
+		unpicklePandasCategorical(prefix + "/categorical_bool.pkl", Arrays.asList(false, true), true);
+		unpicklePandasCategorical(prefix + "/categorical_str.pkl", Arrays.asList("a", "e", "b", "d", "c"), true);
 	}
 
 	private void unpicklePandasCategorical(String name, List<?> expectedCategories, boolean expectedOrdered) throws IOException {
@@ -626,7 +626,7 @@ public class DumpTest extends UnpicklerTest {
 		DataFrame dataFrame;
 
 		try {
-			dataFrame = (DataFrame)unpickle(prefix + "_dt_df.pkl");
+			dataFrame = (DataFrame)unpickle(prefix + "/dt_df.pkl");
 		} catch(FileNotFoundException fnfe){
 			return;
 		}
@@ -650,7 +650,7 @@ public class DumpTest extends UnpicklerTest {
 	}
 
 	private void unpicklePandasDataFrame(String prefix) throws IOException {
-		DataFrame dataFrame = (DataFrame)unpickle(prefix + "_df.pkl");
+		DataFrame dataFrame = (DataFrame)unpickle(prefix + "/df.pkl");
 
 		BlockManager data = dataFrame.getData();
 
@@ -666,7 +666,7 @@ public class DumpTest extends UnpicklerTest {
 	}
 
 	private void unpicklePandasDtypes(String prefix) throws IOException {
-		List<?> dtypes = (List<?>)unpickle(prefix + "_dtypes.pkl");
+		List<?> dtypes = (List<?>)unpickle(prefix + "/dtypes.pkl");
 
 		for(Object dtype : dtypes){
 			TypeInfo typeInfo = (TypeInfo)dtype;
@@ -678,7 +678,7 @@ public class DumpTest extends UnpicklerTest {
 	private void unpicklePolarsAll(String pythonVersion, String[] polarsVersions) throws IOException {
 
 		for(String polarsVersion : polarsVersions){
-			String prefix = "python-" + pythonVersion + "_" + "polars-" + polarsVersion;
+			String prefix = "python-" + pythonVersion + "/" + "polars-" + polarsVersion;
 
 			unpicklePolarsSeries(prefix);
 			unpicklePolarsSeriesNA(prefix);
@@ -688,9 +688,9 @@ public class DumpTest extends UnpicklerTest {
 	}
 
 	private void unpicklePolarsSeries(String prefix) throws IOException {
-		unpicklePolarsSeries(prefix + "_bool.pkl", Arrays.asList(false, true));
-		unpicklePolarsSeries(prefix + "_int8.pkl", Byte.MIN_VALUE, Byte.MAX_VALUE, 1);
-		unpicklePolarsSeries(prefix + "_int.pkl", Integer.MIN_VALUE, Integer.MAX_VALUE, 64 * 32767);
+		unpicklePolarsSeries(prefix + "/bool.pkl", Arrays.asList(false, true));
+		unpicklePolarsSeries(prefix + "/int8.pkl", Byte.MIN_VALUE, Byte.MAX_VALUE, 1);
+		unpicklePolarsSeries(prefix + "/int.pkl", Integer.MIN_VALUE, Integer.MAX_VALUE, 64 * 32767);
 	}
 
 	private void unpicklePolarsSeries(String name, List<?> expectedValues) throws IOException {
@@ -706,10 +706,10 @@ public class DumpTest extends UnpicklerTest {
 	}
 
 	private void unpicklePolarsSeriesNA(String prefix) throws IOException {
-		unpicklePolarsSeriesNA(prefix + "_bool-na.pkl", 2);
-		unpicklePolarsSeriesNA(prefix + "_int8-na.pkl", 255);
-		unpicklePolarsSeriesNA(prefix + "_uint8-na.pkl", 255);
-		unpicklePolarsSeriesNA(prefix + "_str-na.pkl", 3);
+		unpicklePolarsSeriesNA(prefix + "/bool-na.pkl", 2);
+		unpicklePolarsSeriesNA(prefix + "/int8-na.pkl", 255);
+		unpicklePolarsSeriesNA(prefix + "/uint8-na.pkl", 255);
+		unpicklePolarsSeriesNA(prefix + "/str-na.pkl", 3);
 	}
 
 	private void unpicklePolarsSeriesNA(String name, int expectedSize) throws IOException {
@@ -721,13 +721,13 @@ public class DumpTest extends UnpicklerTest {
 	private void unpicklePolarsCategorical(String prefix) throws IOException {
 		List<String> expectedValues =  Arrays.asList("a", "b", "c", "d", "e");
 
-		polars.series.Series categoricalSeries = (polars.series.Series)unpickle(prefix + "_categorical_str.pkl");
+		polars.series.Series categoricalSeries = (polars.series.Series)unpickle(prefix + "/categorical_str.pkl");
 		checkSeries(categoricalSeries, expectedValues);
 
 		polars.datatypes.Categorical categoricalDtype = (polars.datatypes.Categorical)categoricalSeries.getDType();
 		assertNotNull(categoricalDtype);
 
-		polars.series.Series enumSeries = (polars.series.Series)unpickle(prefix + "_enum_str.pkl");
+		polars.series.Series enumSeries = (polars.series.Series)unpickle(prefix + "/enum_str.pkl");
 		checkSeries(enumSeries, expectedValues);
 
 		polars.datatypes.Enum enumDtype = (polars.datatypes.Enum)enumSeries.getDType();
@@ -735,7 +735,7 @@ public class DumpTest extends UnpicklerTest {
 	}
 
 	private void unpicklePolarsDtypes(String prefix) throws IOException {
-		List<?> dtypes = (List<?>)unpickle(prefix + "_dtypes.pkl");
+		List<?> dtypes = (List<?>)unpickle(prefix + "/dtypes.pkl");
 
 		assertEquals(18, dtypes.size());
 

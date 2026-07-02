@@ -6,4 +6,4 @@ math_module = __import__("math")
 
 for func in funcs:
 	math_func = getattr(math_module, func)
-	_pickle(math_func, "func/" + _platform() + "_math_" + func + ".pkl")
+	_pickle(math_func, "func/" + _platform() + "/math_" + func + ".pkl")

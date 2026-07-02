@@ -58,10 +58,10 @@ if with_sklearn:
 		_pickle(iris_classifier, "dump/" + _platform_module("pickle", "p" + str(protocol)) + ".pkl")
 
 def _pickle_builtin_dtypes(dtypes):
-	_pickle(dtypes, "dump/" + _platform() + "_dtypes.pkl")
+	_pickle(dtypes, "dump/" + _platform() + "/dtypes.pkl")
 
 def _pickle_enums(enums):
-	_pickle(enums, "dump/" + _platform() + "_enums.pkl")
+	_pickle(enums, "dump/" + _platform() + "/enums.pkl")
 
 def _pickle_numpy_array(values, dtype):
 	def dtype_suffix(dtype):
@@ -69,37 +69,37 @@ def _pickle_numpy_array(values, dtype):
 			return dtype.replace("[", "").replace("]", "")
 		return dtype.__name__
 
-	_pickle(values.astype(dtype), "dump/" + _platform_module("numpy", numpy.__version__) + "_" + dtype_suffix(dtype) + ".pkl")
+	_pickle(values.astype(dtype), "dump/" + _platform_module("numpy", numpy.__version__) + "/" + dtype_suffix(dtype) + ".pkl")
 
 def _pickle_numpy_dtypes(dtypes):
-	_pickle(dtypes, "dump/" + _platform_module("numpy", numpy.__version__) + "_dtypes.pkl")
+	_pickle(dtypes, "dump/" + _platform_module("numpy", numpy.__version__) + "/dtypes.pkl")
 
 def _pickle_numpy_datetime_dtypes(datetime_dtypes):
-	_pickle(datetime_dtypes, "dump/" + _platform_module("numpy", numpy.__version__) + "_datetime_dtypes.pkl")
+	_pickle(datetime_dtypes, "dump/" + _platform_module("numpy", numpy.__version__) + "/datetime_dtypes.pkl")
 
 def _pickle_numpy_rngs(rngs):
-	_pickle(rngs, "dump/" + _platform_module("numpy", numpy.__version__) + "_rngs.pkl")
+	_pickle(rngs, "dump/" + _platform_module("numpy", numpy.__version__) + "/rngs.pkl")
 
 def _pickle_pandas_series(values, dtype):
-	_pickle(values, "dump/" + _platform_module("pandas", pandas.__version__) + "_" + _format_dtype(dtype) + ".pkl")
+	_pickle(values, "dump/" + _platform_module("pandas", pandas.__version__) + "/" + _format_dtype(dtype) + ".pkl")
 
 def _pickle_pandas_categorical(values, dtype):
-	_pickle(values, "dump/" + _platform_module("pandas", pandas.__version__) + "_categorical_" + _format_dtype(dtype) + ".pkl")
+	_pickle(values, "dump/" + _platform_module("pandas", pandas.__version__) + "/categorical_" + _format_dtype(dtype) + ".pkl")
 
 def _pickle_pandas_dataframe(df):
-	_pickle(df, "dump/" + _platform_module("pandas", pandas.__version__) + "_df.pkl")
+	_pickle(df, "dump/" + _platform_module("pandas", pandas.__version__) + "/df.pkl")
 
 def _pickle_pandas_dt_dataframe(df):
-	_pickle(df, "dump/" + _platform_module("pandas", pandas.__version__) + "_dt_df.pkl")
+	_pickle(df, "dump/" + _platform_module("pandas", pandas.__version__) + "/dt_df.pkl")
 
 def _pickle_pandas_dtypes(dtypes):
-	_pickle(dtypes, "dump/" + _platform_module("pandas", pandas.__version__) + "_dtypes.pkl")
+	_pickle(dtypes, "dump/" + _platform_module("pandas", pandas.__version__) + "/dtypes.pkl")
 
 def _pickle_polars_series(values, dtype):
-	_pickle(values, "dump/" + _platform_module("polars", polars.__version__) + "_" + _format_dtype(dtype) + ".pkl")
+	_pickle(values, "dump/" + _platform_module("polars", polars.__version__) + "/" + _format_dtype(dtype) + ".pkl")
 
 def _pickle_polars_dtypes(dtypes):
-	_pickle(dtypes, "dump/" + _platform_module("polars", polars.__version__) + "_dtypes.pkl")
+	_pickle(dtypes, "dump/" + _platform_module("polars", polars.__version__) + "/dtypes.pkl")
 
 values = numpy.asarray([0, 1], dtype = numpy.int8)
 _pickle_numpy_array(values, bool)

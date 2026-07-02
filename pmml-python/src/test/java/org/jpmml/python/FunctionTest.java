@@ -29,22 +29,22 @@ public class FunctionTest extends UnpicklerTest {
 
 	@Test
 	public void python27() throws IOException {
-		unpickleNumPyFunctions("python-2.7_numpy-1.16.6");
+		unpickleNumPyFunctions("2.7", "1.16.6");
 	}
 
 	@Test
 	public void python34() throws IOException {
-		unpickleNumPyFunctions("python-3.4_numpy-1.13.3");
+		unpickleNumPyFunctions("3.4", "1.13.3");
 	}
 
 	@Test
 	public void python37() throws IOException {
-		unpickleNumPyFunctions("python-3.7_numpy-1.20.0");
+		unpickleNumPyFunctions("3.7", "1.20.0");
 	}
 
 	@Test
 	public void python38() throws IOException {
-		unpickleNumPyFunctions("python-3.8_numpy-1.20.1");
+		unpickleNumPyFunctions("3.8", "1.20.1");
 	}
 
 	@Test
@@ -102,9 +102,9 @@ public class FunctionTest extends UnpicklerTest {
 		String[] names = {"acos", "asin", "atan", "atan2", "ceil", "cos", "cosh", "degrees", "exp", "expm1", "fabs", "floor", "hypot", "isnan", "log", "log1p", "log10", "pow", "radians", "sin", "sinh", "sqrt", "tan", "tanh", "trunc"};
 
 		for(String name : names){
-			String prefix = "python-" + pythonVersion + "_" + "math";
+			String prefix = "python-" + pythonVersion;
 
-			Object object = unpickle("func", prefix + "_" + name + ".pkl");
+			Object object = unpickle("func", prefix + "/" + "math_" + name + ".pkl");
 
 			Identifiable identifiable = (Identifiable)toClassDict(object);
 
@@ -116,7 +116,7 @@ public class FunctionTest extends UnpicklerTest {
 	private void unpickleNumPyFunctions(String pythonVersion, String... numpyVersions) throws IOException {
 
 		for(String numpyVersion : numpyVersions){
-			String prefix = "python-" + pythonVersion + "_" + "numpy-" + numpyVersion;
+			String prefix = "python-" + pythonVersion + "/" + "numpy-" + numpyVersion;
 
 			unpickleNumPyFunctions(prefix);
 		}
@@ -127,7 +127,7 @@ public class FunctionTest extends UnpicklerTest {
 		String[] names = {"absolute", "arccos", "arcsin", "arctan", "arctan2", "ceil", "clip", "cos", "cosh", "degrees", "rad2deg", "exp", "expm1", "floor", "fmax", "fmin", "hypot", "log", "log1p", "log10", "negative", "power", "radians", "deg2rad", "reciprocal", "rint", "sign", "sin", "sinh", "sqrt", "square", "tan", "tanh"};
 
 		for(String name : names){
-			Object object = unpickle("ufunc", prefix + "_" + name + ".pkl");
+			Object object = unpickle("ufunc", prefix + "/" + name + ".pkl");
 
 			Identifiable identifiable = (Identifiable)toClassDict(object);
 
