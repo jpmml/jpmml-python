@@ -41,7 +41,7 @@
 
 	<properties>
 		<jpmml-converter.version>1.6.11</jpmml-converter.version>
-		<jpmml-evaluator.version>1.7.7</jpmml-evaluator.version>
+		<jpmml-evaluator.version>1.7.8</jpmml-evaluator.version>
 		<arrow.version>19.0.0</arrow.version>
 		<pickle.version>1.5</pickle.version>
 		<serpent.version>1.43</serpent.version>
