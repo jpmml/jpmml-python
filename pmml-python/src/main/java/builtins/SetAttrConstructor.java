@@ -18,8 +18,13 @@
  */
 package builtins;
 
+import java.util.Arrays;
+import java.util.Objects;
+
+import net.razorvine.pickle.PickleException;
 import net.razorvine.pickle.objects.ClassDict;
 import net.razorvine.pickle.objects.ClassDictConstructor;
+import org.jpmml.python.ClassDictConstructorUtil;
 
 public class SetAttrConstructor extends ClassDictConstructor {
 
@@ -31,9 +36,19 @@ public class SetAttrConstructor extends ClassDictConstructor {
 	public Object construct(Object[] args){
 
 		if(args.length == 3){
-			ClassDict dict = (ClassDict)args[0];
+			Object object = args[0];
 			String name = (String)args[1];
 			Object value = args[2];
+
+			if(object instanceof ClassDictConstructor){
+				ClassDictConstructor dictConstructor = (ClassDictConstructor)object;
+
+				setTypeAttr(dictConstructor, name, value);
+
+				return null;
+			}
+
+			ClassDict dict = (ClassDict)object;
 
 			dict.put(name, value);
 
@@ -41,5 +56,20 @@ public class SetAttrConstructor extends ClassDictConstructor {
 		}
 
 		return super.construct(args);
+	}
+
+	static
+	private void setTypeAttr(ClassDictConstructor dictConstructor, String name, Object value){
+
+		if(Objects.equals("__qualname__", name)){
+
+			if(!Objects.equals(ClassDictConstructorUtil.getName(dictConstructor), value)){
+				throw new PickleException(Arrays.deepToString(new Object[]{dictConstructor, name, value}));
+			}
+		} else
+
+		{
+			throw new PickleException(Arrays.deepToString(new Object[]{dictConstructor, name, value}));
+		}
 	}
 }
