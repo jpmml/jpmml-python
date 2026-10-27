@@ -263,7 +263,8 @@ public class DumpTest extends UnpicklerTest {
 		unpicklePandasAll("3.11", pandasVersions);
 
 		String[] polarsVersions = {
-			"1.8.0", "1.36.1", "1.42.0"
+			"1.8.0", "1.36.1", "1.42.0",
+			"2.0.0"
 		};
 
 		unpicklePolarsAll("3.11", polarsVersions);
@@ -308,7 +309,8 @@ public class DumpTest extends UnpicklerTest {
 		unpicklePandasAll("3.12", pandasVersions);
 
 		String[] polarsVersions = {
-			"1.8.0", "1.36.1", "1.42.0"
+			"1.8.0", "1.36.1", "1.42.0",
+			"2.0.0"
 		};
 
 		unpicklePolarsAll("3.12", polarsVersions);
@@ -353,7 +355,8 @@ public class DumpTest extends UnpicklerTest {
 		unpicklePandasAll("3.13", pandasVersions);
 
 		String[] polarsVersions = {
-			"1.8.0", "1.36.1", "1.42.0"
+			"1.8.0", "1.36.1", "1.42.0",
+			"2.0.0"
 		};
 
 		unpicklePolarsAll("3.13", polarsVersions);
