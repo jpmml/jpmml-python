@@ -224,9 +224,13 @@ public class TypeDescriptor {
 						case 4:
 							return Integer.toUnsignedLong(NDArrayUtil.readInt(is, byteOrder));
 						case 8:
-							String string = Long.toUnsignedString(NDArrayUtil.readLong(is, byteOrder));
+							long value = NDArrayUtil.readLong(is, byteOrder);
 
-							return Long.parseUnsignedLong(string);
+							if(value < 0L){
+								throw new IllegalArgumentException(Long.toUnsignedString(value));
+							}
+
+							return value;
 						default:
 							break;
 					}
