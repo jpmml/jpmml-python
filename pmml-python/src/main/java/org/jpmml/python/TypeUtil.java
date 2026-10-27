@@ -49,7 +49,7 @@ public class TypeUtil {
 	static
 	public boolean isObjectType(String module, String name){
 
-		if(Objects.equals("builtins", module)){
+		if(Objects.equals("__builtin__", module) || Objects.equals("builtins", module)){
 			return Objects.equals("object", name);
 		} else
 
@@ -68,7 +68,7 @@ public class TypeUtil {
 	static
 	public DataType parseDataType(String module, String name){
 
-		if(Objects.equals("builtins", module)){
+		if(Objects.equals("__builtin__", module) || Objects.equals("builtins", module)){
 			return parseBuiltinType(module, name);
 		} else
 

@@ -33,12 +33,14 @@ import java.util.stream.Collectors;
 
 import builtins.ObjectType;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import net.razorvine.pickle.Unpickler;
 import numpy.DType;
 import numpy.core.Complex;
 import numpy.core.NDArray;
 import numpy.random.Generator;
 import numpy.random.LegacyRandomState;
+import org.dmg.pmml.DataType;
 import org.jpmml.converter.FortranMatrixUtil;
 import org.junit.jupiter.api.Test;
 import pandas.core.BlockManager;
@@ -213,6 +215,7 @@ public class DumpTest extends UnpicklerTest {
 
 	@Test
 	public void python311() throws Exception {
+		unpickleBuiltinDtypes("3.11", "p2");
 		unpickleBuiltinDtypes("3.11");
 
 		unpickleEnums("3.11");
@@ -272,6 +275,7 @@ public class DumpTest extends UnpicklerTest {
 
 	@Test
 	public void python312() throws Exception {
+		unpickleBuiltinDtypes("3.12", "p2");
 		unpickleBuiltinDtypes("3.12");
 
 		unpickleEnums("3.12");
@@ -318,6 +322,7 @@ public class DumpTest extends UnpicklerTest {
 
 	@Test
 	public void python313() throws Exception {
+		unpickleBuiltinDtypes("3.13", "p2");
 		unpickleBuiltinDtypes("3.13");
 
 		unpickleEnums("3.13");
@@ -360,6 +365,23 @@ public class DumpTest extends UnpicklerTest {
 		};
 
 		unpicklePolarsAll("3.13", polarsVersions);
+	}
+
+	private void unpickleBuiltinDtypes(String pythonVersion, String pickleVersion) throws IOException {
+		List<?> dtypes = (List<?>)unpickle("python-" + pythonVersion + "/dtypes-" + pickleVersion + ".pkl");
+
+		List<TypeInfo> typeInfos = Lists.transform(dtypes, new DTypeCastFunction<>(TypeInfo.class));
+
+		assertEquals(DataType.BOOLEAN, (typeInfos.get(0)).getDataType());
+
+		assertEquals(DataType.INTEGER, (typeInfos.get(1)).getDataType());
+
+		assertEquals(DataType.DOUBLE, (typeInfos.get(2)).getDataType());
+
+		assertEquals(DataType.STRING, (typeInfos.get(3)).getDataType());
+		assertEquals(DataType.STRING, (typeInfos.get(4)).getDataType());
+
+		assertInstanceOf(ObjectType.class, typeInfos.get(5));
 	}
 
 	private void unpickleBuiltinDtypes(String pythonVersion) throws IOException {

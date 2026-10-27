@@ -58,6 +58,7 @@ if with_sklearn:
 		_pickle(iris_classifier, "dump/" + _platform_module("pickle", "p" + str(protocol)) + ".pkl", protocol = protocol)
 
 def _pickle_builtin_dtypes(dtypes):
+	_pickle(dtypes, "dump/" + _platform() + "/dtypes-p2.pkl", protocol = 2)
 	_pickle(dtypes, "dump/" + _platform() + "/dtypes.pkl")
 
 def _pickle_enums(enums):
