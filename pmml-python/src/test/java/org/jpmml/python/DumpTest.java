@@ -230,7 +230,7 @@ public class DumpTest extends UnpicklerTest {
 		unpickleDill("3.11", dillVersions);
 
 		String[] joblibVersions = {
-			"1.2.0", "1.3.1", "1.3.2", "1.4.2", "1.5.3"
+			"1.2.0", "1.3.1", "1.3.2", "1.4.2", "1.5.3", "1.6.0"
 		};
 
 		unpickleJoblib("3.11", joblibVersions);
@@ -288,7 +288,7 @@ public class DumpTest extends UnpicklerTest {
 		unpickleDill("3.12", dillVersions);
 
 		String[] joblibVersions = {
-			"1.3.2", "1.4.2", "1.5.3"
+			"1.3.2", "1.4.2", "1.5.3", "1.6.0"
 		};
 
 		unpickleJoblib("3.12", joblibVersions);
@@ -333,7 +333,7 @@ public class DumpTest extends UnpicklerTest {
 		unpickleDill("3.13", dillVersions);
 
 		String[] joblibVersions = {
-			"1.4.2", "1.5.3"
+			"1.4.2", "1.5.3", "1.6.0"
 		};
 
 		unpickleJoblib("3.13", joblibVersions);
