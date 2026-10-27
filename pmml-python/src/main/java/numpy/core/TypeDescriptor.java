@@ -28,6 +28,7 @@ import java.util.concurrent.TimeUnit;
 import numpy.DType;
 import org.dmg.pmml.DataType;
 import org.jpmml.python.CalendarUtil;
+import org.jpmml.python.TypeMappingException;
 
 /**
  * https://docs.scipy.org/doc/numpy/reference/arrays.dtypes.html
@@ -136,7 +137,7 @@ public class TypeDescriptor {
 					case 8:
 						return DataType.DOUBLE;
 					default:
-						throw new IllegalArgumentException(descr);
+						throw new TypeMappingException(descr);
 				}
 			case COMPLEX_FLOAT:
 				switch(size){
@@ -145,7 +146,7 @@ public class TypeDescriptor {
 					case 16:
 						return DataType.DOUBLE;
 					default:
-						throw new IllegalArgumentException(descr);
+						throw new TypeMappingException(descr);
 				}
 			case DATETIME:
 				switch(size){
@@ -166,7 +167,7 @@ public class TypeDescriptor {
 							case "ns":
 								return DataType.DATE_TIME;
 							default:
-								throw new IllegalArgumentException(datetimeUnit);
+								throw new TypeMappingException(descr + "[" + datetimeUnit + "]");
 						}
 					default:
 						throw new IllegalArgumentException(descr);
@@ -177,7 +178,7 @@ public class TypeDescriptor {
 			case UNICODE:
 				return DataType.STRING;
 			default:
-				throw new IllegalArgumentException(descr);
+				throw new TypeMappingException(descr);
 		}
 	}
 
