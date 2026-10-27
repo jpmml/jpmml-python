@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.function.IntFunction;
 import java.util.stream.Collectors;
 
-import builtins.Type;
+import builtins.ObjectType;
 import com.google.common.collect.Iterables;
 import net.razorvine.pickle.Unpickler;
 import numpy.DType;
@@ -365,10 +365,16 @@ public class DumpTest extends UnpicklerTest {
 	private void unpickleBuiltinDtypes(String pythonVersion) throws IOException {
 		List<?> dtypes = (List<?>)unpickle("python-" + pythonVersion + "/dtypes.pkl");
 
-		for(Object dtype : dtypes){
-			Type type = (Type)dtype;
+		DTypeCastFunction<TypeInfo> castFunction = new DTypeCastFunction<>(TypeInfo.class);
 
-			assertNotNull(type.getDataType());
+		for(Object dtype : dtypes){
+			TypeInfo typeInfo = castFunction.apply(dtype);
+
+			if(typeInfo instanceof ObjectType){
+				continue;
+			}
+
+			assertNotNull(typeInfo.getDataType());
 		}
 	}
 
@@ -535,10 +541,16 @@ public class DumpTest extends UnpicklerTest {
 	private void unpickleNumPyDtypes(String prefix) throws IOException {
 		List<?> dtypes = (List<?>)unpickle(prefix + "/dtypes.pkl");
 
-		for(Object dtype : dtypes){
-			Type type = (Type)dtype;
+		DTypeCastFunction<TypeInfo> castFunction = new DTypeCastFunction<>(TypeInfo.class);
 
-			assertNotNull(type.getDataType());
+		for(Object dtype : dtypes){
+			TypeInfo typeInfo = castFunction.apply(dtype);
+
+			if(typeInfo instanceof ObjectType){
+				continue;
+			}
+
+			assertNotNull(typeInfo.getDataType());
 		}
 	}
 

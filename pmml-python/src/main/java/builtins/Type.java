@@ -54,6 +54,10 @@ public class Type extends PythonObject implements TypeInfo {
 			name = className;
 		}
 
+		if(TypeUtil.isObjectType(module, name)){
+			return new ObjectType();
+		} // End if
+
 		return new Type(module, name);
 	}
 }

@@ -47,6 +47,20 @@ public class TypeUtil {
 	}
 
 	static
+	public boolean isObjectType(String module, String name){
+
+		if(Objects.equals("builtins", module)){
+			return Objects.equals("object", name);
+		} else
+
+		if(Objects.equals("numpy", module)){
+			return Objects.equals("object_", canonicalizeNumPyType(name));
+		}
+
+		return false;
+	}
+
+	static
 	public DataType parseDataType(Identifiable identifiabe){
 		return parseDataType(identifiabe.getModule(), identifiabe.getName());
 	}

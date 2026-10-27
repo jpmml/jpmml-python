@@ -231,7 +231,8 @@ dtypes = [
 	builtins.int,
 	builtins.float,
 	builtins.bytes,
-	builtins.str
+	builtins.str,
+	builtins.object
 ]
 
 _pickle_builtin_dtypes(dtypes)
@@ -247,7 +248,8 @@ dtypes = [
 	numpy.int8, numpy.int16, numpy.int32, numpy.int64,
 	numpy.uint8, numpy.uint16, numpy.uint32, numpy.uint64,
 	numpy.float32, numpy.float64,
-	numpy.bytes_, numpy.str_
+	numpy.bytes_, numpy.str_,
+	numpy.object_, numpy.dtype("O")
 ]
 
 _pickle_numpy_dtypes(dtypes)

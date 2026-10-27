@@ -18,9 +18,13 @@
  */
 package org.jpmml.python;
 
+import builtins.ObjectConstructor;
+import builtins.ObjectType;
 import builtins.Type;
 import builtins.TypeConstructor;
+import numpy.DType;
 import numpy.core.ScalarUtil;
+import numpy.core.TypeDescriptor;
 
 public class DTypeCastFunction<E extends TypeInfo> extends CastFunction<E> {
 
@@ -32,10 +36,24 @@ public class DTypeCastFunction<E extends TypeInfo> extends CastFunction<E> {
 	public E apply(Object object){
 		object = ScalarUtil.decode(object);
 
+		if(object instanceof ObjectConstructor){
+			object = new ObjectType();
+		} else
+
 		if(object instanceof TypeConstructor){
 			TypeConstructor typeConstructor = (TypeConstructor)object;
 
 			object = typeConstructor.construct();
+		} else
+
+		if(object instanceof DType){
+			DType dtype = (DType)object;
+
+			TypeDescriptor typeDescriptor = new TypeDescriptor(dtype);
+
+			if(typeDescriptor.isObject()){
+				object = new ObjectType();
+			}
 		} else
 
 		if(object instanceof String){
