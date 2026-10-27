@@ -27,7 +27,12 @@ public class TypeUtilTest {
 
 	@Test
 	public void getModule(){
+		assertEquals("builtins", TypeUtil.getModule("bytes"));
+		assertEquals("builtins", TypeUtil.getModule("complex"));
 		assertEquals("builtins", TypeUtil.getModule("float"));
+		assertEquals("builtins", TypeUtil.getModule("long"));
+		assertEquals("builtins", TypeUtil.getModule("object"));
+		assertEquals("builtins", TypeUtil.getModule("unicode"));
 
 		assertEquals("numpy", TypeUtil.getModule("float_"));
 		assertEquals("numpy", TypeUtil.getModule("float32"));
@@ -35,7 +40,22 @@ public class TypeUtilTest {
 	}
 
 	@Test
-	public void parseDataType(){
+	public void parseBuiltinType(){
+		assertEquals(DataType.BOOLEAN, parseDataType("bool"));
+
+		assertEquals(DataType.INTEGER, parseDataType("int"));
+		assertEquals(DataType.INTEGER, parseDataType("long"));
+
+		assertEquals(DataType.DOUBLE, parseDataType("float"));
+
+		assertEquals(DataType.STRING, parseDataType("bytes"));
+
+		assertEquals(DataType.STRING, parseDataType("str"));
+		assertEquals(DataType.STRING, parseDataType("unicode"));
+	}
+
+	@Test
+	public void parseNumPyType(){
 		assertEquals(DataType.BOOLEAN, parseDataType("bool_"));
 		assertEquals(DataType.BOOLEAN, parseDataType("?"));
 		assertEquals(DataType.BOOLEAN, parseDataType("|b1"));

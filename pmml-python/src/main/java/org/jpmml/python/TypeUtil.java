@@ -32,9 +32,14 @@ public class TypeUtil {
 
 		switch(name){
 			case "bool":
+			case "bytes":
+			case "complex":
 			case "float":
 			case "int":
+			case "long":
+			case "object":
 			case "str":
+			case "unicode":
 				return "builtins";
 			default:
 				return "numpy";
@@ -70,11 +75,15 @@ public class TypeUtil {
 		switch(name){
 			case "bool":
 				return DataType.BOOLEAN;
+			case "bytes":
+				return DataType.STRING;
 			case "float":
 				return DataType.DOUBLE;
 			case "int":
+			case "long":
 				return DataType.INTEGER;
 			case "str":
+			case "unicode":
 				return DataType.STRING;
 			default:
 				break;

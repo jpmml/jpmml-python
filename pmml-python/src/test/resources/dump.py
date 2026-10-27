@@ -230,6 +230,7 @@ dtypes = [
 	builtins.bool,
 	builtins.int,
 	builtins.float,
+	builtins.bytes,
 	builtins.str
 ]
 
