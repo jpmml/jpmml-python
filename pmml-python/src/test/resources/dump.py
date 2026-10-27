@@ -55,7 +55,7 @@ if with_sklearn:
 	joblib.dump(iris_classifier, "dump/" + _platform_module("joblib", joblib.__version__) + ".pkl.z", compress = True)
 
 	for protocol in range(2, pickle.HIGHEST_PROTOCOL + 1):
-		_pickle(iris_classifier, "dump/" + _platform_module("pickle", "p" + str(protocol)) + ".pkl")
+		_pickle(iris_classifier, "dump/" + _platform_module("pickle", "p" + str(protocol)) + ".pkl", protocol = protocol)
 
 def _pickle_builtin_dtypes(dtypes):
 	_pickle(dtypes, "dump/" + _platform() + "/dtypes.pkl")
