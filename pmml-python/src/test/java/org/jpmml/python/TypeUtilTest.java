@@ -18,6 +18,7 @@
  */
 package org.jpmml.python;
 
+import org.dmg.pmml.DataType;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -31,5 +32,43 @@ public class TypeUtilTest {
 		assertEquals("numpy", TypeUtil.getModule("float_"));
 		assertEquals("numpy", TypeUtil.getModule("float32"));
 		assertEquals("numpy", TypeUtil.getModule("float64"));
+	}
+
+	@Test
+	public void parseDataType(){
+		assertEquals(DataType.BOOLEAN, parseDataType("bool_"));
+		assertEquals(DataType.BOOLEAN, parseDataType("?"));
+		assertEquals(DataType.BOOLEAN, parseDataType("|b1"));
+
+		assertEquals(DataType.INTEGER, parseDataType("int8"));
+		assertEquals(DataType.INTEGER, parseDataType("b"));
+		assertEquals(DataType.INTEGER, parseDataType("i4"));
+		assertEquals(DataType.INTEGER, parseDataType("<i8"));
+		assertEquals(DataType.INTEGER, parseDataType("Q"));
+		assertEquals(DataType.INTEGER, parseDataType(">u2"));
+
+		assertEquals(DataType.FLOAT, parseDataType("float32"));
+		assertEquals(DataType.FLOAT, parseDataType("f"));
+		assertEquals(DataType.FLOAT, parseDataType("<f4"));
+
+		assertEquals(DataType.DOUBLE, parseDataType("float64"));
+		assertEquals(DataType.DOUBLE, parseDataType("d"));
+		assertEquals(DataType.DOUBLE, parseDataType("f8"));
+
+		assertEquals(DataType.DATE, parseDataType("datetime64[D]"));
+		assertEquals(DataType.DATE, parseDataType("<M8[D]"));
+		assertEquals(DataType.DATE_TIME, parseDataType("M8[s]"));
+		assertEquals(DataType.DATE_TIME, parseDataType("<M8[s]"));
+
+		assertEquals(DataType.STRING, parseDataType("str_"));
+		assertEquals(DataType.STRING, parseDataType("U"));
+		assertEquals(DataType.STRING, parseDataType("<U10"));
+	}
+
+	static
+	private DataType parseDataType(String className){
+		builtins.Type type = builtins.Type.forClassName(className);
+
+		return type.getDataType();
 	}
 }

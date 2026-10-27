@@ -85,8 +85,9 @@ public class TypeUtil {
 
 	static
 	private DataType parseNumPyType(String module, String name){
+		String canonicalName = canonicalizeNumPyType(name);
 
-		switch(name){
+		switch(canonicalName){
 			case "bool_":
 				return DataType.BOOLEAN;
 			case "datetime64[D]":
@@ -115,7 +116,115 @@ public class TypeUtil {
 				break;
 		}
 
-		throw new TypeResolutionException(module, name);
+		throw new TypeResolutionException(module, canonicalName);
+	}
+
+	static
+	private String canonicalizeNumPyType(String name){
+		String code = name;
+
+		if(!code.isEmpty()){
+
+			switch(code.charAt(0)){
+				case '=':
+				case '>':
+				case '<':
+				case '|':
+					code = code.substring(1);
+					break;
+				default:
+					break;
+			}
+		}
+
+		switch(code){
+			case "?":
+			case "b1":
+				return "bool_";
+			case "S":
+				return "bytes_";
+			case "G":
+				return "clongdouble";
+			case "F":
+			case "c8":
+				return "complex64";
+			case "D":
+			case "c16":
+				return "complex128";
+			case "M":
+			case "M8":
+				return "datetime64";
+			case "e":
+			case "f2":
+				return "float16";
+			case "f":
+			case "f4":
+				return "float32";
+			case "d":
+			case "f8":
+				return "float64";
+			case "b":
+			case "i1":
+				return "int8";
+			case "h":
+			case "i2":
+				return "int16";
+			case "i":
+			case "i4":
+				return "int32";
+			case "l":
+			case "q":
+			case "i8":
+				return "int64";
+			case "g":
+				return "longdouble";
+			case "O":
+				return "object_";
+			case "U":
+				return "str_";
+			case "m":
+			case "m8":
+				return "timedelta64";
+			case "B":
+			case "u1":
+				return "uint8";
+			case "H":
+			case "u2":
+				return "uint16";
+			case "I":
+			case "u4":
+				return "uint32";
+			case "L":
+			case "Q":
+			case "u8":
+				return "uint64";
+			case "V":
+				return "void";
+			default:
+				break;
+		}
+
+		if(code.matches("S\\d+")){
+			return "bytes_";
+		} else
+
+		if(code.matches("M8\\[\\w+\\]")){
+			return "datetime64" + code.substring("M8".length());
+		} else
+
+		if(code.matches("U\\d+")){
+			return "str_";
+		} else
+
+		if(code.matches("m8\\[\\w+\\]")){
+			return "timedelta64" + code.substring("m8".length());
+		} else
+
+		if(code.matches("V\\d+")){
+			return "void";
+		}
+
+		return name;
 	}
 
 	static
