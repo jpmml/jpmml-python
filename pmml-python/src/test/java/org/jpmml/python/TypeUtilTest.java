@@ -60,6 +60,10 @@ public class TypeUtilTest {
 		assertEquals(DataType.DATE_TIME, parseDataType("M8[s]"));
 		assertEquals(DataType.DATE_TIME, parseDataType("<M8[s]"));
 
+		assertEquals(DataType.STRING, parseDataType("bytes_"));
+		assertEquals(DataType.STRING, parseDataType("S"));
+		assertEquals(DataType.STRING, parseDataType("|S10"));
+
 		assertEquals(DataType.STRING, parseDataType("str_"));
 		assertEquals(DataType.STRING, parseDataType("U"));
 		assertEquals(DataType.STRING, parseDataType("<U10"));

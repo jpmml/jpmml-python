@@ -90,6 +90,8 @@ public class TypeUtil {
 		switch(canonicalName){
 			case "bool_":
 				return DataType.BOOLEAN;
+			case "bytes_":
+				return DataType.STRING;
 			case "datetime64[D]":
 				return DataType.DATE;
 			case "datetime64[s]":
