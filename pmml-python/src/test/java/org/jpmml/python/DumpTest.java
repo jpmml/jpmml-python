@@ -264,7 +264,7 @@ public class DumpTest extends UnpicklerTest {
 
 		String[] polarsVersions = {
 			"1.8.0", "1.36.1", "1.42.0",
-			"2.0.0"
+			"2.0.0", "2.1.0"
 		};
 
 		unpicklePolarsAll("3.11", polarsVersions);
@@ -310,7 +310,7 @@ public class DumpTest extends UnpicklerTest {
 
 		String[] polarsVersions = {
 			"1.8.0", "1.36.1", "1.42.0",
-			"2.0.0"
+			"2.0.0", "2.1.0"
 		};
 
 		unpicklePolarsAll("3.12", polarsVersions);
@@ -356,7 +356,7 @@ public class DumpTest extends UnpicklerTest {
 
 		String[] polarsVersions = {
 			"1.8.0", "1.36.1", "1.42.0",
-			"2.0.0"
+			"2.0.0", "2.1.0"
 		};
 
 		unpicklePolarsAll("3.13", polarsVersions);
