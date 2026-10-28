@@ -20,6 +20,8 @@ package org.jpmml.python;
 
 import java.util.List;
 
+import numpy.core.TypeDescriptor;
+import org.dmg.pmml.DataType;
 import org.dmg.pmml.Field;
 import org.jpmml.converter.CategoricalFeature;
 import org.jpmml.converter.Feature;
@@ -33,6 +35,20 @@ import polars.datatypes.Enum;
 public class DTypeUtil {
 
 	private DTypeUtil(){
+	}
+
+	static
+	public DataType getDataType(Object descr){
+
+		if(descr instanceof TypeInfo){
+			TypeInfo typeInfo = (TypeInfo)descr;
+
+			return typeInfo.getDataType();
+		}
+
+		TypeDescriptor typeDescriptor = new TypeDescriptor(descr);
+
+		return typeDescriptor.getDataType();
 	}
 
 	static

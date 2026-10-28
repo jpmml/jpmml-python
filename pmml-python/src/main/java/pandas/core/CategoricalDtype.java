@@ -21,9 +21,9 @@ package pandas.core;
 import java.util.List;
 
 import org.dmg.pmml.DataType;
+import org.jpmml.python.DTypeUtil;
 import org.jpmml.python.PythonObject;
 import org.jpmml.python.TypeInfo;
-import org.jpmml.python.TypeInfoUtil;
 
 public class CategoricalDtype extends PythonObject implements TypeInfo {
 
@@ -35,7 +35,7 @@ public class CategoricalDtype extends PythonObject implements TypeInfo {
 	public DataType getDataType(){
 		Object descr = getDescr();
 
-		return TypeInfoUtil.getDataType(descr);
+		return DTypeUtil.getDataType(descr);
 	}
 
 	public Object getDescr(){
