@@ -50,7 +50,7 @@ public class Series extends PythonObject implements HasArray {
 
 		if(categories != null){
 			List<?> categoryValues = categories.getArrayContent();
-			List<Number> indices = ArrayUtil.decodeInts(buffers.get(0), nullCount, buffers.get(1), 0, length, getBitWidth(), isSigned());
+			List<Number> indices = ArrayUtil.decodeInts(buffers.get(0), nullCount, buffers.get(1), 0, length, getBitWidth(), getSigned());
 
 			return ArrayUtil.decodeDictionary(categoryValues, indices);
 		}
@@ -59,7 +59,7 @@ public class Series extends PythonObject implements HasArray {
 			case Type.Bool:
 				return ArrayUtil.decodeBooleans(buffers.get(0), nullCount, buffers.get(1), 0, length);
 			case Type.Int:
-				return ArrayUtil.decodeInts(buffers.get(0), nullCount, buffers.get(1), 0, length, getBitWidth(), isSigned());
+				return ArrayUtil.decodeInts(buffers.get(0), nullCount, buffers.get(1), 0, length, getBitWidth(), getSigned());
 			case Type.FloatingPoint:
 				return ArrayUtil.decodeFloatingPoints(buffers.get(0), nullCount, buffers.get(1), 0, length, getPrecision());
 			case Type.Utf8View:
@@ -90,7 +90,7 @@ public class Series extends PythonObject implements HasArray {
 				name = "Boolean";
 				break;
 			case Type.Int:
-				name = (isSigned() ? "" : "U") + "Int" + getBitWidth();
+				name = (getSigned() ? "" : "U") + "Int" + getBitWidth();
 				break;
 			case Type.FloatingPoint:
 				name = "Float" + toBitWidth(getPrecision());
@@ -141,7 +141,7 @@ public class Series extends PythonObject implements HasArray {
 		return getOptionalInteger("precision");
 	}
 
-	public Boolean isSigned(){
+	public Boolean getSigned(){
 		return getOptionalBoolean("signed");
 	}
 
