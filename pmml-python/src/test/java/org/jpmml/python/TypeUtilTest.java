@@ -37,6 +37,10 @@ public class TypeUtilTest {
 		assertEquals("numpy", TypeUtil.getModule("float_"));
 		assertEquals("numpy", TypeUtil.getModule("float32"));
 		assertEquals("numpy", TypeUtil.getModule("float64"));
+
+		assertEquals("pandas", TypeUtil.getModule("Int64"));
+		assertEquals("pandas", TypeUtil.getModule("string"));
+		assertEquals("pandas", TypeUtil.getModule("string[python]"));
 	}
 
 	@Test
@@ -87,6 +91,24 @@ public class TypeUtilTest {
 		assertEquals(DataType.STRING, parseDataType("str_"));
 		assertEquals(DataType.STRING, parseDataType("U"));
 		assertEquals(DataType.STRING, parseDataType("<U10"));
+	}
+
+	@Test
+	public void parsePandasType(){
+		assertEquals(DataType.BOOLEAN, parseDataType("boolean"));
+
+		assertEquals(DataType.INTEGER, parseDataType("Int8"));
+		assertEquals(DataType.INTEGER, parseDataType("Int64"));
+		assertEquals(DataType.INTEGER, parseDataType("UInt8"));
+		assertEquals(DataType.INTEGER, parseDataType("UInt64"));
+
+		assertEquals(DataType.FLOAT, parseDataType("Float32"));
+
+		assertEquals(DataType.DOUBLE, parseDataType("Float64"));
+
+		assertEquals(DataType.STRING, parseDataType("string"));
+		assertEquals(DataType.STRING, parseDataType("string[pyarrow]"));
+		assertEquals(DataType.STRING, parseDataType("string[python]"));
 	}
 
 	static

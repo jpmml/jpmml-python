@@ -41,6 +41,21 @@ public class TypeUtil {
 			case "str":
 			case "unicode":
 				return "builtins";
+			case "boolean":
+			case "Float32":
+			case "Float64":
+			case "Int8":
+			case "Int16":
+			case "Int32":
+			case "Int64":
+			case "string":
+			case "string[pyarrow]":
+			case "string[python]":
+			case "UInt8":
+			case "UInt16":
+			case "UInt32":
+			case "UInt64":
+				return "pandas";
 			default:
 				return "numpy";
 		}
@@ -74,6 +89,10 @@ public class TypeUtil {
 
 		if(Objects.equals("numpy", module)){
 			return parseNumPyType(module, name);
+		} else
+
+		if(Objects.equals("pandas", module)){
+			return parsePandasType(module, name);
 		} else
 
 		if(Objects.equals("pyarrow", module)){
@@ -250,6 +269,37 @@ public class TypeUtil {
 		}
 
 		return name;
+	}
+
+	static
+	private DataType parsePandasType(String module, String name){
+
+		switch(name){
+			case "boolean":
+				return DataType.BOOLEAN;
+			case "Float32":
+				return DataType.FLOAT;
+			case "Float64":
+				return DataType.DOUBLE;
+			case "Int8":
+			case "Int16":
+			case "Int32":
+			case "Int64":
+				return DataType.INTEGER;
+			case "string":
+			case "string[pyarrow]":
+			case "string[python]":
+				return DataType.STRING;
+			case "UInt8":
+			case "UInt16":
+			case "UInt32":
+			case "UInt64":
+				return DataType.INTEGER;
+			default:
+				break;
+		}
+
+		throw new TypeResolutionException(module, name);
 	}
 
 	static
