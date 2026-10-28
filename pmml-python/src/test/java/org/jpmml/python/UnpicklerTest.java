@@ -28,20 +28,7 @@ public class UnpicklerTest {
 
 	static
 	protected Object unpickle(String dir, String name) throws IOException {
-		String path = ("/" + dir + "/") + name;
-
-		byte[] bytes;
-
-		InputStream is = (UnpicklerTest.class).getResourceAsStream(path);
-		if(is == null){
-			throw new FileNotFoundException(path);
-		}
-
-		try {
-			bytes = is.readAllBytes();
-		} finally {
-			is.close();
-		}
+		byte[] bytes = readResource(dir, name);
 
 		return unpickle(bytes);
 	}
@@ -54,6 +41,22 @@ public class UnpicklerTest {
 			PythonUnpickler pythonUnpickler = new JoblibUnpickler();
 
 			return pythonUnpickler.load(storage);
+		}
+	}
+
+	static
+	protected byte[] readResource(String dir, String name) throws IOException {
+		String path = ("/" + dir + "/") + name;
+
+		InputStream is = (UnpicklerTest.class).getResourceAsStream(path);
+		if(is == null){
+			throw new FileNotFoundException(path);
+		}
+
+		try {
+			return is.readAllBytes();
+		} finally {
+			is.close();
 		}
 	}
 

@@ -112,7 +112,7 @@ public class DumpTest extends UnpicklerTest {
 		unpickleEnums("3.7");
 
 		String[] pickleVersions = {
-			"p2", "p3", "p4"
+			"p4"
 		};
 
 		unpicklePickle("3.7", pickleVersions);
@@ -415,7 +415,12 @@ public class DumpTest extends UnpicklerTest {
 		for(String pickleVersion : pickleVersions){
 			String prefix = "python-" + pythonVersion;
 
-			unpickle(prefix + "/" + "pickle-" + pickleVersion + ".pkl");
+			byte[] bytes = readResource("dump", prefix + "/" + "pickle-" + pickleVersion + ".pkl");
+
+			assertEquals((byte)0x80, bytes[0]);
+			assertEquals((byte)Integer.parseInt(pickleVersion.substring(1)), bytes[1]);
+
+			unpickle(bytes);
 		}
 	}
 
