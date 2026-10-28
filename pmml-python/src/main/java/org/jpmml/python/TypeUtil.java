@@ -138,6 +138,8 @@ public class TypeUtil {
 				return DataType.DATE;
 			case "datetime64[s]":
 				return DataType.DATE_TIME;
+			case "float16":
+				throw new TypeMappingException(module, canonicalName);
 			case "float32":
 				return DataType.FLOAT;
 			case "float_":
@@ -149,6 +151,8 @@ public class TypeUtil {
 			case "int32":
 			case "int64":
 				return DataType.INTEGER;
+			case "longdouble":
+				throw new TypeMappingException(module, canonicalName);
 			case "str_":
 				return DataType.STRING;
 			case "uint8":
@@ -156,6 +160,8 @@ public class TypeUtil {
 			case "uint32":
 			case "uint64":
 				return DataType.INTEGER;
+			case "void":
+				throw new TypeMappingException(module, canonicalName);
 			default:
 				break;
 		}
